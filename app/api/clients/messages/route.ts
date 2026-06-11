@@ -13,7 +13,7 @@ const MAX_BODY = 2000;
 /**
  * GET /api/clients/messages?contactId=… — thread for one contact, scoped to
  * the signed-in client by clientOwnsContact (verified email is the boundary).
- * Marks the realtor's messages as read on fetch.
+ * Marks the rep's messages as read on fetch.
  */
 export async function GET(req: NextRequest) {
   const user = await getClientUser();
@@ -31,12 +31,12 @@ export async function GET(req: NextRequest) {
     .eq('contactId', contactId)
     .order('createdAt', { ascending: true });
 
-  // Mark realtor → client messages read now that the client has loaded them.
+  // Mark rep → client messages read now that the client has loaded them.
   await supabase
     .from('ClientMessage')
     .update({ readAt: new Date().toISOString() })
     .eq('contactId', contactId)
-    .eq('senderType', 'realtor')
+    .eq('senderType', 'rep')
     .is('readAt', null);
 
   return NextResponse.json({ messages: data ?? [] });
@@ -44,7 +44,7 @@ export async function GET(req: NextRequest) {
 
 /**
  * POST /api/clients/messages — client sends a message on a contact they own.
- * Optionally notifies the realtor by email (best-effort).
+ * Optionally notifies the rep by email (best-effort).
  */
 export async function POST(req: NextRequest) {
   const user = await getClientUser();
@@ -67,7 +67,7 @@ export async function POST(req: NextRequest) {
   const { allowed } = await checkRateLimit(`clients:msg:${user.id}`, 30, 60);
   if (!allowed) return NextResponse.json({ error: 'Too many messages. Slow down.' }, { status: 429 });
 
-  // Resolve the contact's space (needed for the row + realtor lookup).
+  // Resolve the contact's space (needed for the row + rep lookup).
   const { data: contact } = await supabase
     .from('Contact')
     .select('spaceId, Space(ownerId)')
@@ -91,7 +91,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Failed to send.' }, { status: 500 });
   }
 
-  // Best-effort realtor notification. Resolve the owner's email via User.
+  // Best-effort rep notification. Resolve the owner's email via User.
   const space = contact.Space as { ownerId?: string | null } | null;
   if (space?.ownerId) {
     const { data: owner } = await supabase

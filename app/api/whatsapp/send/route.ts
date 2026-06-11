@@ -1,7 +1,7 @@
 /**
  * POST /api/whatsapp/send
  *
- * Send a WhatsApp message through the realtor's Business account. Body:
+ * Send a WhatsApp message through the rep's Business account. Body:
  *   { slug, to, body }
  *
  * Channel is implied. The shared validator's whatsapp branch is what

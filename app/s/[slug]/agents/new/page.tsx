@@ -4,7 +4,7 @@ import { getSpaceFromSlug } from '@/lib/space';
 import { supabase } from '@/lib/supabase';
 import { AgentBuilderForm } from '@/components/agents/agent-builder-form';
 
-export const metadata = { title: 'New Agent — Chippi' };
+export const metadata = { title: 'New Agent — Koala' };
 
 export default async function NewAgentPage({
   params,
@@ -13,7 +13,7 @@ export default async function NewAgentPage({
 }) {
   const { slug } = await params;
   const { userId } = await auth();
-  if (!userId) redirect('/login/realtor');
+  if (!userId) redirect('/login/rep');
 
   const space = await getSpaceFromSlug(slug);
   if (!space) notFound();

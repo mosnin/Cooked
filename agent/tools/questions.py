@@ -1,4 +1,4 @@
-"""Question tool — agents use this to ask the realtor for guidance when uncertain."""
+"""Question tool — agents use this to ask the rep for guidance when uncertain."""
 
 from __future__ import annotations
 
@@ -14,14 +14,14 @@ from tools.streaming import publish_event
 
 
 @function_tool(strict_mode=False)
-async def ask_realtor(
+async def ask_rep(
     ctx: RunContextWrapper[AgentContext],
     question: str,
     context: str | None = None,
     contact_id: str | None = None,
     priority: int = 0,
 ) -> dict[str, Any]:
-    """Queue a question for the realtor; returns immediately, answer is async."""
+    """Queue a question for the rep; returns immediately, answer is async."""
     # question: 10-500 chars. context: optional, <=1000 chars.
     # priority: 0 normal, 50 important, 100 urgent.
     space_id = ctx.context.space_id
@@ -72,7 +72,7 @@ async def ask_realtor(
     await publish_event(
         ctx.context,
         "info",
-        f"Question queued for realtor: {question[:80]}",
+        f"Question queued for rep: {question[:80]}",
         agent_type=ctx.context.current_agent_type,
         metadata={"questionId": question_id, "priority": priority},
     )
@@ -80,5 +80,5 @@ async def ask_realtor(
     return {
         "questionId": question_id,
         "status": "pending",
-        "message": "Question queued for realtor review",
+        "message": "Question queued for rep review",
     }

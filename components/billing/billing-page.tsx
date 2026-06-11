@@ -60,16 +60,16 @@ interface BillingPageProps {
   usageStats?: {
     contacts: number;
     deals: number;
-    tours: number;
+    demos: number;
   };
   /** ISO date string for when canceled access ends */
   canceledAccessEnd?: string;
   /** Support email or URL */
   supportUrl?: string;
   /**
-   * Endpoint overrides so this same component can serve the broker surface,
-   * where portal/cancel must act on the BROKERAGE's Stripe identity instead of
-   * a Space the caller owns. Defaults are the realtor space routes.
+   * Endpoint overrides so this same component can serve the manager surface,
+   * where portal/cancel must act on the TEAM's Stripe identity instead of
+   * a Space the caller owns. Defaults are the rep space routes.
    */
   endpoints?: { checkout?: string; portal?: string; cancel?: string };
   /** The account's plan tier — drives the displayed name + price. Without this
@@ -167,7 +167,7 @@ export function BillingPage({
   trialDays = 7,
   usageStats,
   canceledAccessEnd,
-  supportUrl = 'mailto:support@chippi.com',
+  supportUrl = 'mailto:support@koala.com',
   endpoints,
   plan = 'solo',
 }: BillingPageProps) {
@@ -384,7 +384,7 @@ export function BillingPage({
             )}
             {!isActive && (
               <p className="text-xs text-muted-foreground">
-                Subscribe to unlock full access to Chippi
+                Subscribe to unlock full access to Koala
               </p>
             )}
           </div>
@@ -451,8 +451,8 @@ export function BillingPage({
                   <MapPin size={14} className="text-primary" />
                 </div>
               </div>
-              <p className="text-2xl font-bold tabular-nums">{usageStats.tours.toLocaleString()}</p>
-              <p className="text-xs text-muted-foreground mt-0.5">Tours</p>
+              <p className="text-2xl font-bold tabular-nums">{usageStats.demos.toLocaleString()}</p>
+              <p className="text-xs text-muted-foreground mt-0.5">Demos</p>
             </div>
           </div>
         </SectionBlock>

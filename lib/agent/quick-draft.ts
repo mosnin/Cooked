@@ -1,8 +1,8 @@
 /**
  * Quick-draft compose engine — the shared OpenAI call that powers BOTH:
  *
- *   • POST /api/agent/quick-draft (preview mode) — the /chippi home's
- *     inline draft engine, the realtor's "Send a check-in" tap.
+ *   • POST /api/agent/quick-draft (preview mode) — the /koala home's
+ *     inline draft engine, the rep's "Send a check-in" tap.
  *   • lib/ai-tools/tools/draft-{email,sms}.ts — the on-demand agent
  *     tools that the SDK chat loop calls during a turn.
  *
@@ -34,9 +34,9 @@ export type Context = 'deal' | 'person';
 export type Channel = 'email' | 'sms' | 'note';
 
 const SYSTEM_PROMPT =
-  "You are Chippi, an AI assistant for a real-estate CRM. Compose ONE short outbound message the realtor can send right now. " +
+  "You are Koala, an AI assistant for a real-estate CRM. Compose ONE short outbound message the rep can send right now. " +
   "Voice: warm, direct, human. No marketing fluff. Skip stale email openers and corporate filler. No subject lines longer than 8 words. " +
-  "Email body: 2-4 sentences, plain text, no markdown, no signature (the realtor's name is appended downstream). " +
+  "Email body: 2-4 sentences, plain text, no markdown, no signature (the rep's name is appended downstream). " +
   "Note body (when channel is 'note'): a single line summarizing what was discussed on a call — past tense, factual. " +
   "Output strict JSON with this shape and nothing else: {\"subject\": string|null, \"body\": string}. " +
   "Subject is a non-empty string for emails, null for notes.";
@@ -54,7 +54,7 @@ const SYSTEM_PROMPT =
 function buildVoiceMessage(samples: VoiceSample[]): string {
   if (samples.length === 0) return '';
   const lines: string[] = [
-    "The realtor's voice — recent emails they sent to OTHER people. Match cadence, sentence length, and word choice only.",
+    "The rep's voice — recent emails they sent to OTHER people. Match cadence, sentence length, and word choice only.",
     "Do NOT address the new recipient by any name that appears in these samples. Do NOT mention any deal, property, address, date, or detail from these samples — those belong to other recipients and would be a privacy breach.",
     "Use only the new recipient's facts from the user message; the samples are tone reference, never content.",
     '',

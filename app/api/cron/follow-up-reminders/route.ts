@@ -9,11 +9,11 @@ import { monitorCron } from '@/lib/cron-monitor';
 /**
  * GET /api/cron/follow-up-reminders
  *
- * Daily at 9 AM UTC. Emails + texts realtors a digest of contacts whose
+ * Daily at 9 AM UTC. Emails + texts reps a digest of contacts whose
  * followUpAt has come due in the last 24 hours.
  *
  * Idempotency: a SETNX day-lock prevents a duplicate cron invocation
- * (Vercel retry, manual re-trigger) from double-blasting every realtor
+ * (Vercel retry, manual re-trigger) from double-blasting every rep
  * with two identical "you have 3 follow-ups today" notifications.
  */
 async function handler(req: NextRequest) {
@@ -27,7 +27,7 @@ async function handler(req: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  // Day-level idempotency. The realtor schedule revolves around days,
+  // Day-level idempotency. The rep schedule revolves around days,
   // so locking by UTC date is the right granularity. 25h TTL absorbs
   // any clock skew or DST edge case without going stale.
   const today = new Date().toISOString().slice(0, 10);

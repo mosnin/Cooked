@@ -288,7 +288,7 @@ export function FollowUpsView({ slug, contacts: initialContacts, deals: initialD
                         </span>
                       )}
                       <span className="text-[10px] text-muted-foreground bg-muted rounded px-1.5 py-0.5">
-                        {contact.type === 'QUALIFICATION' ? 'Qual' : contact.type === 'TOUR' ? 'Tour' : 'App'}
+                        {contact.type === 'QUALIFICATION' ? 'Qual' : contact.type === 'DEMO' ? 'Demo' : 'App'}
                       </span>
                     </div>
                     <div className="flex items-center gap-3 mt-0.5 flex-wrap">

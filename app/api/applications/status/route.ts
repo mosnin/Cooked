@@ -14,7 +14,7 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ error: 'contactId and status required' }, { status: 400 });
   }
 
-  const validStatuses = ['received', 'under_review', 'tour_scheduled', 'approved', 'needs_info', 'declined', 'waitlisted'];
+  const validStatuses = ['received', 'under_review', 'demo_scheduled', 'approved', 'needs_info', 'declined', 'waitlisted'];
   if (!validStatuses.includes(status)) {
     return NextResponse.json({ error: 'Invalid status' }, { status: 400 });
   }

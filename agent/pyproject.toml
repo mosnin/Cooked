@@ -1,7 +1,7 @@
 [project]
-name = "chippi-agent"
+name = "koala-agent"
 version = "0.1.0"
-description = "Chippi background AI agent — Modal + OpenAI Agents SDK"
+description = "Koala background AI agent — Modal + OpenAI Agents SDK"
 requires-python = ">=3.12"
 
 dependencies = [
@@ -30,9 +30,9 @@ dependencies = [
   "pypdf>=5.0.0,<6",
   "python-docx>=1.1.0,<2",
   "openpyxl>=3.1.0,<4",
-  # Composio integrations — load realtor's connected toolkits (Gmail,
+  # Composio integrations — load rep's connected toolkits (Gmail,
   # Slack, HubSpot, etc.) and present them as agent tools so chat AND
-  # autonomous runs can act on the realtor's behalf through their
+  # autonomous runs can act on the rep's behalf through their
   # connected accounts. Mirrors the TypeScript-side wiring in
   # lib/integrations/composio.ts.
   #

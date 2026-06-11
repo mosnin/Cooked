@@ -1,17 +1,17 @@
 # AI Agent Runtime
 
-> The core agent runtime that turns a realtor's natural-language request into a
+> The core agent runtime that turns a rep's natural-language request into a
 > streamed sequence of tool calls, approval prompts for mutations, and final
 > text — all persisted as a typed `MessageBlock[]` so conversations survive
-> reload and broker-review.
+> reload and manager-review.
 
-A realtor types `"email Jane about the tour Friday"`; the server opens an SSE
+A rep types `"email Jane about the demo Friday"`; the server opens an SSE
 stream, the model plans a `send_email` call, the client shows an approval
-card, the realtor approves, the email ships, and a `ToolCallBlock` lands in
+card, the rep approves, the email ships, and a `ToolCallBlock` lands in
 the transcript. This doc is the reference for every contract that makes that
 flow work: the SSE event union, the persisted block shape, the tool registry, the pending-approval store, and the sub-agent ("Skill") pattern layered on top.
 
-**Runtime status (May 2026).** Chat turns run inside a **Modal sandbox** (`agent/modal_app.py`) via the **OpenAI Agents SDK** Python package (`openai-agents`), using **gpt-5-mini** with `reasoning_effort="medium"` enabled. The Next.js layer in `POST /api/ai/task` proxies SSE events from Modal, translates them to the standard `AgentEvent` wire format, and persists the turn on completion. Reasoning tokens stream to the browser as `reasoning_delta` events and surface in the collapsible "Thinking" UI. Background, event-driven autonomous activation is handled by Redis + Modal webhook triggers in `POST /api/agent/trigger` (policy controlled by `AGENT_IMMEDIATE_EVENTS`: `all` by default, or a comma-separated subset of event names; invalid values fail safe to `all`). Set `CHIPPI_CHAT_RUNTIME=ts` to fall back to the in-process TypeScript runtime for local development without a Modal deployment.
+**Runtime status (May 2026).** Chat turns run inside a **Modal sandbox** (`agent/modal_app.py`) via the **OpenAI Agents SDK** Python package (`openai-agents`), using **gpt-5-mini** with `reasoning_effort="medium"` enabled. The Next.js layer in `POST /api/ai/task` proxies SSE events from Modal, translates them to the standard `AgentEvent` wire format, and persists the turn on completion. Reasoning tokens stream to the browser as `reasoning_delta` events and surface in the collapsible "Thinking" UI. Background, event-driven autonomous activation is handled by Redis + Modal webhook triggers in `POST /api/agent/trigger` (policy controlled by `AGENT_IMMEDIATE_EVENTS`: `all` by default, or a comma-separated subset of event names; invalid values fail safe to `all`). Set `KOALA_CHAT_RUNTIME=ts` to fall back to the in-process TypeScript runtime for local development without a Modal deployment.
 
 **Table of contents**
 
@@ -30,7 +30,7 @@ flow work: the SSE event union, the persisted block shape, the tool registry, th
 ## 1. Architecture
 
 ```
-ChippiWorkspace (components/chippi/chippi-workspace.tsx)
+KoalaWorkspace (components/koala/koala-workspace.tsx)
    │  useAgentTask hook  (components/ai/hooks/use-agent-task.ts)
    ▼
 POST /api/ai/task  (app/api/ai/task/route.ts)
@@ -203,14 +203,14 @@ layer — **intentionally NOT in `ALL_TOOLS`** so that `validateSkill`
 |---|---|---|---|
 | `search_contacts` | auto | none | Space-scoped ILIKE search |
 | `search_deals` | auto | none | Same, joins DealStage |
-| `get_contact` | auto | none | Single contact + linked deals + recent tours |
+| `get_contact` | auto | none | Single contact + linked deals + recent demos |
 | `pipeline_summary` | auto | none | Classifies deals via `lib/deals/health.ts` |
 | `send_email` | required | **50/hr** (send-email.ts:76) | Sends via `sendEmailFromCRM`; logs `ContactActivity` |
 | `send_sms` | required | **30/hr** (send-sms.ts:63) | Telnyx; logs ContactActivity as `type:'note', metadata.channel:'sms'` |
 | `update_contact` | required | **100/hr** (update-contact.ts:68) | Fires `syncContact` for search reindex |
 | `advance_deal_stage` | required | **60/hr** (advance-deal-stage.ts:48) | Writes `stage_change` DealActivity + `syncDeal` |
 | `create_deal` | required | **30/hr** (create-deal.ts:62) | Mirrors POST /api/deals including buyer-pipeline auto-routing |
-| `schedule_tour` | required | **30/hr** (schedule-tour.ts:70) | Accepts contactId OR walk-in guest fields |
+| `schedule_demo` | required | **30/hr** (schedule-demo.ts:70) | Accepts contactId OR walk-in guest fields |
 | `add_checklist_item` | required | **60/hr** (add-checklist-item.ts:62) | Single item; seeding templates is explicit, not a tool |
 | `delegate_to_subagent` | auto | **20/hr** (delegate-to-subagent.ts:63) | Meta-tool; dispatches to Skills (see §6) |
 

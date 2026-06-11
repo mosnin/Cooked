@@ -38,7 +38,7 @@ interface PortalMessage {
   createdAt: string;
 }
 
-interface PortalTour {
+interface PortalDemo {
   id: string;
   startsAt: string;
   endsAt: string;
@@ -61,7 +61,7 @@ interface ApplicationStatusClientProps {
   portalMode: boolean;
   statusHistory: StatusUpdate[];
   messages: PortalMessage[];
-  tours: PortalTour[];
+  demos: PortalDemo[];
   token: string | null;
   slug: string;
 }
@@ -84,8 +84,8 @@ const STATUS_CONFIG: Record<
     color: 'text-amber-500',
     bgColor: 'bg-amber-100 dark:bg-amber-900/30',
   },
-  tour_scheduled: {
-    label: 'Tour Scheduled',
+  demo_scheduled: {
+    label: 'Demo Scheduled',
     icon: CalendarCheck,
     color: 'text-violet-500',
     bgColor: 'bg-violet-100 dark:bg-violet-900/30',
@@ -152,12 +152,12 @@ export function ApplicationStatusClient({
   portalMode,
   statusHistory: initialHistory,
   messages: initialMessages,
-  tours: initialTours,
+  demos: initialDemos,
   token,
 }: ApplicationStatusClientProps) {
   const [messages, setMessages] = useState<PortalMessage[]>(initialMessages);
   const [statusHistory] = useState<StatusUpdate[]>(initialHistory);
-  const [tours, setTours] = useState<PortalTour[]>(initialTours);
+  const [demos, setDemos] = useState<PortalDemo[]>(initialDemos);
   const [messageText, setMessageText] = useState('');
   const [sending, setSending] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -195,7 +195,7 @@ export function ApplicationStatusClient({
       if (res.ok) {
         const data = await res.json();
         setMessages(data.messages ?? []);
-        if (Array.isArray(data.tours)) setTours(data.tours);
+        if (Array.isArray(data.demos)) setDemos(data.demos);
       }
     } catch (err) {
       console.error('[portal] Refresh failed:', err);
@@ -404,24 +404,24 @@ export function ApplicationStatusClient({
         </div>
       )}
 
-      {/* Your tours — what's scheduled, awaiting confirmation, or completed.
-          Each scheduled tour gets a Confirm / Can't make it action pair so
-          the realtor doesn't have to chase the applicant via SMS. */}
-      {token && contact.applicationRef && tours.length > 0 && (
-        <YourToursPanel
+      {/* Your demos — what's scheduled, awaiting confirmation, or completed.
+          Each scheduled demo gets a Confirm / Can't make it action pair so
+          the rep doesn't have to chase the applicant via SMS. */}
+      {token && contact.applicationRef && demos.length > 0 && (
+        <YourDemosPanel
           applicationRef={contact.applicationRef}
           token={token}
-          tours={tours}
+          demos={demos}
           onResponded={() => { void refreshData(); }}
         />
       )}
 
-      {/* Tour request — quiet CTA above the message thread. Opens an inline
-          form; submit lands as a structured AgentQuestion in the realtor's
-          Chippi focus card and as a message in this thread. Only rendered
+      {/* Demo request — quiet CTA above the message thread. Opens an inline
+          form; submit lands as a structured AgentQuestion in the rep's
+          Koala focus card and as a message in this thread. Only rendered
           when the applicant is authenticated via portal token. */}
       {token && contact.applicationRef && (
-        <TourRequestPanel
+        <DemoRequestPanel
           applicationRef={contact.applicationRef}
           token={token}
           onSubmitted={() => { void refreshData(); }}
@@ -726,35 +726,35 @@ function SimpleStatusView({
 // ── Shared Next Steps Text ────────────────────────────────────────────────────
 
 /**
- * Your-tours panel — surfaces tours linked to this contact. Three states
- * per tour:
+ * Your-demos panel — surfaces demos linked to this contact. Three states
+ * per demo:
  *   - scheduled  → applicant sees Confirm / Can't make it actions
  *   - confirmed  → applicant sees a calm "Confirmed" badge, no actions
  *   - completed  → quiet receipt; no actions
  *
  * Read-only views (no token) skip this panel entirely; the parent gates
- * rendering on `token && tours.length > 0`. The respond endpoint is
- * idempotent so double-clicks don't double-message the realtor.
+ * rendering on `token && demos.length > 0`. The respond endpoint is
+ * idempotent so double-clicks don't double-message the rep.
  */
-function YourToursPanel({
+function YourDemosPanel({
   applicationRef,
   token,
-  tours,
+  demos,
   onResponded,
 }: {
   applicationRef: string;
   token: string;
-  tours: PortalTour[];
+  demos: PortalDemo[];
   onResponded: () => void;
 }) {
   const [pending, setPending] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  async function respond(tourId: string, action: 'confirm' | 'decline') {
-    setPending(`${action}:${tourId}`);
+  async function respond(demoId: string, action: 'confirm' | 'decline') {
+    setPending(`${action}:${demoId}`);
     setError(null);
     try {
-      const res = await fetch(`/api/applications/portal/tour/${tourId}/respond`, {
+      const res = await fetch(`/api/applications/portal/demo/${demoId}/respond`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ applicationRef, token, action }),
@@ -774,18 +774,18 @@ function YourToursPanel({
 
   return (
     <section
-      aria-label="Your tours"
+      aria-label="Your demos"
       className="rounded-xl bg-card border border-border/60 shadow-sm overflow-hidden"
     >
       <div className="px-5 py-3 border-b border-border/40 flex items-center gap-2">
         <CalendarCheck size={14} className="text-muted-foreground" aria-hidden="true" />
-        <h2 className="text-sm font-semibold text-foreground">Your tours</h2>
-        <span className="text-xs text-muted-foreground">({tours.length})</span>
+        <h2 className="text-sm font-semibold text-foreground">Your demos</h2>
+        <span className="text-xs text-muted-foreground">({demos.length})</span>
       </div>
 
       <ul className="divide-y divide-border/40">
-        {tours.map((tour) => {
-          const startsAt = new Date(tour.startsAt);
+        {demos.map((demo) => {
+          const startsAt = new Date(demo.startsAt);
           const dateLine = startsAt.toLocaleString('en-US', {
             weekday: 'short',
             month: 'short',
@@ -793,25 +793,25 @@ function YourToursPanel({
             hour: 'numeric',
             minute: '2-digit',
           });
-          const isScheduled = tour.status === 'scheduled';
-          const isConfirmed = tour.status === 'confirmed';
-          const isCompleted = tour.status === 'completed';
-          const confirming = pending === `confirm:${tour.id}`;
-          const declining = pending === `decline:${tour.id}`;
+          const isScheduled = demo.status === 'scheduled';
+          const isConfirmed = demo.status === 'confirmed';
+          const isCompleted = demo.status === 'completed';
+          const confirming = pending === `confirm:${demo.id}`;
+          const declining = pending === `decline:${demo.id}`;
 
           return (
-            <li key={tour.id} className="px-5 py-4">
+            <li key={demo.id} className="px-5 py-4">
               <div className="flex items-start justify-between gap-3 flex-wrap">
                 <div className="min-w-0 space-y-1">
                   <p className="text-sm font-medium text-foreground tabular-nums">
                     {dateLine}
                   </p>
-                  {tour.propertyAddress && (
-                    <p className="text-xs text-muted-foreground">{tour.propertyAddress}</p>
+                  {demo.propertyAddress && (
+                    <p className="text-xs text-muted-foreground">{demo.propertyAddress}</p>
                   )}
-                  {tour.notes && (
+                  {demo.notes && (
                     <p className="text-xs text-muted-foreground italic leading-relaxed">
-                      {tour.notes}
+                      {demo.notes}
                     </p>
                   )}
                 </div>
@@ -834,7 +834,7 @@ function YourToursPanel({
                 <div className="mt-3 flex items-center gap-2">
                   <button
                     type="button"
-                    onClick={() => void respond(tour.id, 'confirm')}
+                    onClick={() => void respond(demo.id, 'confirm')}
                     disabled={!!pending}
                     className="inline-flex items-center justify-center gap-1.5 rounded-md bg-foreground text-background px-3.5 py-1.5 text-sm font-medium transition-opacity duration-150 hover:opacity-90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
                   >
@@ -843,7 +843,7 @@ function YourToursPanel({
                   </button>
                   <button
                     type="button"
-                    onClick={() => void respond(tour.id, 'decline')}
+                    onClick={() => void respond(demo.id, 'decline')}
                     disabled={!!pending}
                     className="inline-flex items-center justify-center gap-1.5 rounded-md border border-border bg-transparent text-muted-foreground hover:text-foreground hover:bg-foreground/[0.04] px-3.5 py-1.5 text-sm transition-colors duration-150 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
                   >
@@ -868,11 +868,11 @@ function YourToursPanel({
 }
 
 /**
- * Tour-request panel — collapsed by default to keep the portal calm.
- * Click "Request a tour" → inline form opens. Submit hits
- * /api/applications/portal/tour-request, which logs an ApplicationMessage
+ * Demo-request panel — collapsed by default to keep the portal calm.
+ * Click "Request a demo" → inline form opens. Submit hits
+ * /api/applications/portal/demo-request, which logs an ApplicationMessage
  * (visible immediately in the thread below) and creates an AgentQuestion
- * scoped to the realtor (visible in their Chippi focus card).
+ * scoped to the rep (visible in their Koala focus card).
  *
  * Single primary CTA + a Cancel link. Sweat-the-detail rules:
  *   - placeholder text is example-driven, not instructions
@@ -882,7 +882,7 @@ function YourToursPanel({
  *   - rate-limit / network errors surface inline, not as a toast (the
  *     applicant may be on a slow connection in a hallway)
  */
-function TourRequestPanel({
+function DemoRequestPanel({
   applicationRef,
   token,
   onSubmitted,
@@ -907,7 +907,7 @@ function TourRequestPanel({
     setSubmitting(true);
     setSubmitError(null);
     try {
-      const res = await fetch('/api/applications/portal/tour-request', {
+      const res = await fetch('/api/applications/portal/demo-request', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -945,8 +945,8 @@ function TourRequestPanel({
       >
         <CalendarCheck size={16} className="text-emerald-600 dark:text-emerald-400 flex-shrink-0" aria-hidden="true" />
         <div className="flex-1 min-w-0 text-sm">
-          <p className="font-medium text-foreground">Tour request sent.</p>
-          <p className="text-muted-foreground">Your realtor will respond shortly.</p>
+          <p className="font-medium text-foreground">Demo request sent.</p>
+          <p className="text-muted-foreground">Your rep will respond shortly.</p>
         </div>
         <button
           type="button"
@@ -973,8 +973,8 @@ function TourRequestPanel({
           <CalendarCheck size={14} className="text-muted-foreground group-hover:text-foreground transition-colors" strokeWidth={1.75} />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-foreground">Request a tour</p>
-          <p className="text-xs text-muted-foreground">Tell your realtor when you&apos;re free; they&apos;ll set it up.</p>
+          <p className="text-sm font-medium text-foreground">Request a demo</p>
+          <p className="text-xs text-muted-foreground">Tell your rep when you&apos;re free; they&apos;ll set it up.</p>
         </div>
       </button>
     );
@@ -984,19 +984,19 @@ function TourRequestPanel({
     <form
       onSubmit={handleSubmit}
       className="rounded-xl bg-card border border-border/60 shadow-sm p-5 space-y-4"
-      aria-label="Request a tour"
+      aria-label="Request a demo"
     >
       <div className="flex items-center gap-2">
         <CalendarCheck size={14} className="text-muted-foreground" aria-hidden="true" />
-        <h2 className="text-sm font-semibold text-foreground">Request a tour</h2>
+        <h2 className="text-sm font-semibold text-foreground">Request a demo</h2>
       </div>
 
       <div className="space-y-1.5">
-        <label htmlFor="tour-times" className="text-xs font-medium text-muted-foreground">
+        <label htmlFor="demo-times" className="text-xs font-medium text-muted-foreground">
           When are you free?
         </label>
         <textarea
-          id="tour-times"
+          id="demo-times"
           rows={2}
           value={preferredTimes}
           onChange={(e) => setPreferredTimes(e.target.value)}
@@ -1009,11 +1009,11 @@ function TourRequestPanel({
       </div>
 
       <div className="space-y-1.5">
-        <label htmlFor="tour-address" className="text-xs font-medium text-muted-foreground">
+        <label htmlFor="demo-address" className="text-xs font-medium text-muted-foreground">
           Property (optional)
         </label>
         <input
-          id="tour-address"
+          id="demo-address"
           type="text"
           value={propertyAddress}
           onChange={(e) => setPropertyAddress(e.target.value)}
@@ -1025,11 +1025,11 @@ function TourRequestPanel({
       </div>
 
       <div className="space-y-1.5">
-        <label htmlFor="tour-notes" className="text-xs font-medium text-muted-foreground">
+        <label htmlFor="demo-notes" className="text-xs font-medium text-muted-foreground">
           Anything else? (optional)
         </label>
         <textarea
-          id="tour-notes"
+          id="demo-notes"
           rows={2}
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
@@ -1088,10 +1088,10 @@ function NextStepsText({ status, businessName }: { status: string; businessName:
           additional information. Hang tight!
         </p>
       );
-    case 'tour_scheduled':
+    case 'demo_scheduled':
       return (
         <p className="text-sm text-muted-foreground">
-          A tour has been scheduled for you. {businessName} will reach out with details about
+          A demo has been scheduled for you. {businessName} will reach out with details about
           timing and location.
         </p>
       );

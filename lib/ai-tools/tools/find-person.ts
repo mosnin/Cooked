@@ -54,7 +54,7 @@ interface PersonContext {
   phone: string | null;
   leadScore: number | null;
   scoreLabel: string | null;
-  type: 'QUALIFICATION' | 'TOUR' | 'APPLICATION';
+  type: 'QUALIFICATION' | 'DEMO' | 'APPLICATION';
   status: 'active' | 'snoozed';
   followUpAt: string | null;
   days_since_last_touch: number | null;
@@ -91,7 +91,7 @@ interface RawContact {
   phone: string | null;
   leadScore: number | null;
   scoreLabel: string | null;
-  type: 'QUALIFICATION' | 'TOUR' | 'APPLICATION';
+  type: 'QUALIFICATION' | 'DEMO' | 'APPLICATION';
   followUpAt: string | null;
   lastContactedAt: string | null;
   snoozedUntil: string | null;
@@ -189,7 +189,7 @@ export const findPersonTool = defineTool<typeof parameters, FindPersonResult>({
         'id, name, email, phone, leadScore, scoreLabel, type, followUpAt, lastContactedAt, snoozedUntil',
       )
       .eq('spaceId', ctx.space.id)
-      .is('brokerageId', null)
+      .is('teamId', null)
       .order('updatedAt', { ascending: false })
       .limit(limit);
 

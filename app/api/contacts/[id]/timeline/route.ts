@@ -5,7 +5,7 @@ import { getSpaceForUser } from '@/lib/space';
 
 /**
  * Returns system-generated timeline events for a contact:
- * - Tour bookings, confirmations, completions, cancellations
+ * - Demo bookings, confirmations, completions, cancellations
  * - Deal creation events
  * These are merged with manual activities on the client side.
  */
@@ -34,64 +34,64 @@ export async function GET(
     createdAt: string;
   }> = [];
 
-  // Fetch tours for this contact
-  const { data: tours } = await supabase
-    .from('Tour')
+  // Fetch demos for this contact
+  const { data: demos } = await supabase
+    .from('Demo')
     .select('id, startsAt, endsAt, status, propertyAddress, createdAt, updatedAt')
     .eq('contactId', contactId)
     .eq('spaceId', space.id)
     .order('startsAt', { ascending: false })
     .limit(50);
 
-  for (const t of tours ?? []) {
+  for (const t of demos ?? []) {
     const dateStr = new Date(t.startsAt).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
     const timeStr = new Date(t.startsAt).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
 
-    // Tour creation event
+    // Demo creation event
     events.push({
-      id: `tour-${t.id}-created`,
-      kind: 'tour',
-      type: 'tour_scheduled',
-      content: `Tour scheduled for ${dateStr} at ${timeStr}${t.propertyAddress ? ` — ${t.propertyAddress}` : ''}`,
-      metadata: { tourId: t.id },
+      id: `demo-${t.id}-created`,
+      kind: 'demo',
+      type: 'demo_scheduled',
+      content: `Demo scheduled for ${dateStr} at ${timeStr}${t.propertyAddress ? ` — ${t.propertyAddress}` : ''}`,
+      metadata: { demoId: t.id },
       createdAt: t.createdAt,
     });
 
     // Status events (if not still scheduled)
     if (t.status === 'confirmed') {
       events.push({
-        id: `tour-${t.id}-confirmed`,
-        kind: 'tour',
-        type: 'tour_confirmed',
-        content: `Tour confirmed for ${dateStr}`,
-        metadata: { tourId: t.id },
+        id: `demo-${t.id}-confirmed`,
+        kind: 'demo',
+        type: 'demo_confirmed',
+        content: `Demo confirmed for ${dateStr}`,
+        metadata: { demoId: t.id },
         createdAt: t.updatedAt || t.createdAt,
       });
     } else if (t.status === 'completed') {
       events.push({
-        id: `tour-${t.id}-completed`,
-        kind: 'tour',
-        type: 'tour_completed',
-        content: `Tour completed${t.propertyAddress ? ` — ${t.propertyAddress}` : ''}`,
-        metadata: { tourId: t.id },
+        id: `demo-${t.id}-completed`,
+        kind: 'demo',
+        type: 'demo_completed',
+        content: `Demo completed${t.propertyAddress ? ` — ${t.propertyAddress}` : ''}`,
+        metadata: { demoId: t.id },
         createdAt: t.updatedAt || t.createdAt,
       });
     } else if (t.status === 'cancelled') {
       events.push({
-        id: `tour-${t.id}-cancelled`,
-        kind: 'tour',
-        type: 'tour_cancelled',
-        content: 'Tour was cancelled',
-        metadata: { tourId: t.id },
+        id: `demo-${t.id}-cancelled`,
+        kind: 'demo',
+        type: 'demo_cancelled',
+        content: 'Demo was cancelled',
+        metadata: { demoId: t.id },
         createdAt: t.updatedAt || t.createdAt,
       });
     } else if (t.status === 'no_show') {
       events.push({
-        id: `tour-${t.id}-noshow`,
-        kind: 'tour',
-        type: 'tour_no_show',
-        content: 'Guest did not show up for the tour',
-        metadata: { tourId: t.id },
+        id: `demo-${t.id}-noshow`,
+        kind: 'demo',
+        type: 'demo_no_show',
+        content: 'Guest did not show up for the demo',
+        metadata: { demoId: t.id },
         createdAt: t.updatedAt || t.createdAt,
       });
     }

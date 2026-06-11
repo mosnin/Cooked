@@ -1,6 +1,6 @@
 /**
  * POST /api/internal/integrations/execute — internal endpoint for the
- * Chippi agent (Modal/Python). Authed by AGENT_INTERNAL_SECRET.
+ * Koala agent (Modal/Python). Authed by AGENT_INTERNAL_SECRET.
  *
  * Executes ONE Composio action by slug for a (spaceId, userId). The Modal
  * dispatcher's call_integration_tool POSTs here; the sibling /search route
@@ -12,7 +12,7 @@
  * composio?: { code, statusCode, errorId, requestId, possibleFixes } }.
  * The Python side passes the JSON straight back to the model as the tool
  * result; the model uses `composio.possibleFixes` to self-correct on
- * recoverable errors and surfaces `requestId` to the realtor if they
+ * recoverable errors and surfaces `requestId` to the rep if they
  * need to file a Composio support ticket.
  */
 
@@ -106,7 +106,7 @@ export async function POST(req: NextRequest) {
     //                   version: 'latest' or dangerouslySkipVersionCheck")
     // Flattening to .message strips every clue the model would need to
     // self-correct. Surface the lot — the agent gets the actionable hint,
-    // the realtor gets the request_id for Composio support.
+    // the rep gets the request_id for Composio support.
     const e = err as {
       message?: string;
       code?: string;
@@ -149,7 +149,7 @@ export async function POST(req: NextRequest) {
 
   // Composio's ToolExecuteResponse: { successful, error, data, logId,
   // sessionInfo: { requestId } }. Normalize to {ok, data, error, composio}
-  // and KEEP the requestId so the realtor (and Chippi) can mention it if
+  // and KEEP the requestId so the rep (and Koala) can mention it if
   // they need to file a support ticket.
   const r = (result || {}) as {
     successful?: boolean;
@@ -165,11 +165,11 @@ export async function POST(req: NextRequest) {
       : JSON.stringify(r.error)
     : undefined;
 
-  // Slack `channel_not_found` happens when the realtor names a channel the
+  // Slack `channel_not_found` happens when the rep names a channel the
   // workspace doesn't have. The default behaviour (model retries with a
   // different channel) silently picks one — we never want that. List the
   // workspace's channels, find the closest match, and surface a "did you
-  // mean" so the realtor (or Chippi) can pick the real one explicitly.
+  // mean" so the rep (or Koala) can pick the real one explicitly.
   let finalError = ok ? undefined : `Composio error: ${slug} — ${errMsg ?? 'failed'}`;
   if (!ok && slug === 'SLACK_SEND_MESSAGE' && errMsg && /channel[_\s]?not[_\s]?found/i.test(errMsg)) {
     const requested = typeof (args as Record<string, unknown>).channel === 'string'
@@ -197,7 +197,7 @@ export async function POST(req: NextRequest) {
       if (names.length > 0) {
         const want = requested.toLowerCase().replace(/^#/, '');
         // Cheap prefix/substring match — Levenshtein adds a dependency for
-        // the same realtor-readable outcome on 99% of typos.
+        // the same rep-readable outcome on 99% of typos.
         const close = names.find((n) => n.toLowerCase() === want)
           ?? names.find((n) => n.toLowerCase().startsWith(want))
           ?? names.find((n) => n.toLowerCase().includes(want));

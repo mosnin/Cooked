@@ -13,7 +13,7 @@ describe('parseImmediateEvents', () => {
       'goal_completed',
       'inbound_message',
       'new_lead',
-      'tour_completed',
+      'demo_completed',
     ]);
     expect([...parseImmediateEvents('all')].sort()).toEqual([
       'application_submitted',
@@ -21,26 +21,26 @@ describe('parseImmediateEvents', () => {
       'goal_completed',
       'inbound_message',
       'new_lead',
-      'tour_completed',
+      'demo_completed',
     ]);
   });
 
   it('returns only valid subset', () => {
-    expect([...parseImmediateEvents('tour_completed,application_submitted')].sort()).toEqual([
+    expect([...parseImmediateEvents('demo_completed,application_submitted')].sort()).toEqual([
       'application_submitted',
-      'tour_completed',
+      'demo_completed',
     ]);
   });
 
   it('fails safe to all on invalid token and warns', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    expect([...parseImmediateEvents('tour_completed,nope')].sort()).toEqual([
+    expect([...parseImmediateEvents('demo_completed,nope')].sort()).toEqual([
       'application_submitted',
       'deal_stage_changed',
       'goal_completed',
       'inbound_message',
       'new_lead',
-      'tour_completed',
+      'demo_completed',
     ]);
     expect(warn).toHaveBeenCalled();
   });

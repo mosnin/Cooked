@@ -31,7 +31,7 @@ export function createFormSnapshot(config: IntakeFormConfig): IntakeFormConfig {
 
 export interface ResolvedFormConfig {
   config: IntakeFormConfig | null;
-  source: 'custom' | 'brokerage' | 'legacy';
+  source: 'custom' | 'team' | 'legacy';
 }
 
 /**
@@ -39,7 +39,7 @@ export interface ResolvedFormConfig {
  *
  * Resolution order:
  *   1. SpaceSetting.formConfig if source is 'custom'
- *   2. Brokerage.brokerageFormConfig if source is 'brokerage'
+ *   2. Team.teamFormConfig if source is 'team'
  *   3. SpaceSetting.formConfig if present (fallback)
  *   4. null for legacy spaces with no dynamic form
  */
@@ -68,31 +68,31 @@ export async function resolveFormConfig(
     return { config: setting.formConfig as IntakeFormConfig, source: 'custom' };
   }
 
-  // Brokerage — fetch from the brokerage row for the freshest version
-  if (source === 'brokerage') {
+  // Team — fetch from the team row for the freshest version
+  if (source === 'team') {
     // First try the space's cached copy
     if (setting.formConfig) {
-      return { config: setting.formConfig as IntakeFormConfig, source: 'brokerage' };
+      return { config: setting.formConfig as IntakeFormConfig, source: 'team' };
     }
 
-    // Fall back to brokerage row
+    // Fall back to team row
     const { data: space } = await supabase
       .from('Space')
-      .select('brokerageId')
+      .select('teamId')
       .eq('id', spaceId)
       .maybeSingle();
 
-    if (space?.brokerageId) {
-      const { data: brokerage } = await supabase
-        .from('Brokerage')
-        .select('brokerageFormConfig')
-        .eq('id', space.brokerageId)
+    if (space?.teamId) {
+      const { data: team } = await supabase
+        .from('Team')
+        .select('teamFormConfig')
+        .eq('id', space.teamId)
         .maybeSingle();
 
-      if (brokerage?.brokerageFormConfig) {
+      if (team?.teamFormConfig) {
         return {
-          config: brokerage.brokerageFormConfig as IntakeFormConfig,
-          source: 'brokerage',
+          config: team.teamFormConfig as IntakeFormConfig,
+          source: 'team',
         };
       }
     }

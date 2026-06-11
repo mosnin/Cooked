@@ -1,7 +1,7 @@
 /**
  * POST /api/agent/activity/[id]/reverse
  *
- * Undo an autonomous action Chippi took. Reverses the side effect when the
+ * Undo an autonomous action Koala took. Reverses the side effect when the
  * action type is in the supported set, then marks the activity log row's
  * reversedAt so the UI can show "undone" state. The Python agent flags
  * actions as `reversible` at log time; we additionally check our own

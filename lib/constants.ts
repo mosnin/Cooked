@@ -30,8 +30,8 @@ export const CONTACT_STAGES = [
     headerBg: 'bg-blue-50/60 dark:bg-blue-500/5',
   },
   {
-    key: 'TOUR' as const,
-    label: 'Tour',
+    key: 'DEMO' as const,
+    label: 'Demo',
     description: 'Showing scheduled',
     className: 'bg-amber-50 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400',
     dotColor: 'bg-amber-400',
@@ -114,7 +114,7 @@ export const WARM_LEAD_THRESHOLD = 40;
 // Contact UI only exposes the first 5 (no stage_change / status_change).
 //
 // One muted neutral for every activity icon. Differentiation is the icon
-// shape — not color. Brand orange is sacred (logo, Chippi cues, agent
+// shape — not color. Brand orange is sacred (logo, Koala cues, agent
 // output, lead-warm) and does not appear on generic timeline chrome.
 // Mirrors the discipline applied to deal-detail-client.tsx (commit 28994e9).
 
@@ -132,5 +132,5 @@ export type ActivityType = keyof typeof ACTIVITY_META;
 
 // ── Contact type union ──────────────────────────────────────────────────────
 
-export const CLIENT_TYPES = ['QUALIFICATION', 'TOUR', 'APPLICATION'] as const;
+export const CLIENT_TYPES = ['QUALIFICATION', 'DEMO', 'APPLICATION'] as const;
 export type ClientType = (typeof CLIENT_TYPES)[number];

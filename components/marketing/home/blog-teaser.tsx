@@ -13,8 +13,8 @@ import { MediaSlot } from './media-slot';
 
 const POSTS = [
   { tag: 'Product', title: 'Why an agent beats another CRM tab.', read: '5 min read' },
-  { tag: 'Playbook', title: 'The first hour: triaging leads with Chippi.', read: '4 min read' },
-  { tag: 'Brokerage', title: 'Running a floor without nagging for updates.', read: '6 min read' },
+  { tag: 'Playbook', title: 'The first hour: triaging leads with Koala.', read: '4 min read' },
+  { tag: 'Team', title: 'Running a floor without nagging for updates.', read: '6 min read' },
 ];
 
 export function BlogTeaser() {

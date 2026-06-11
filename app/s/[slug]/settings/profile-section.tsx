@@ -19,10 +19,10 @@ interface ProfileSectionProps {
 }
 
 /**
- * Profile fields shown on the realtor's intake page — name, photo, bio,
+ * Profile fields shown on the rep's intake page — name, photo, bio,
  * social. Folded inline into /settings; the dedicated /settings/profile
  * page was overhead. The privacy-policy rich text editor was cut: the
- * realtor side only consumes the policy URL, so the HTML editor was
+ * rep side only consumes the policy URL, so the HTML editor was
  * persisting bytes nothing read.
  */
 export function ProfileSection({ slug }: ProfileSectionProps) {
@@ -37,7 +37,7 @@ export function ProfileSection({ slug }: ProfileSectionProps) {
   }>({ instagram: '', linkedin: '', facebook: '' });
   const [phone, setPhone] = useState('');
   const [businessName, setBusinessName] = useState('');
-  const [realtorPhotoUrl, setRealtorPhotoUrl] = useState('');
+  const [repPhotoUrl, setRepPhotoUrl] = useState('');
   const [photoUploading, setPhotoUploading] = useState(false);
   const [initialized, setInitialized] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -62,7 +62,7 @@ export function ProfileSection({ slug }: ProfileSectionProps) {
         setSocialLinks(s.socialLinks ?? { instagram: '', linkedin: '', facebook: '' });
         setPhone(s.phoneNumber ?? '');
         setBusinessName(s.businessName ?? '');
-        setRealtorPhotoUrl(s.realtorPhotoUrl ?? '');
+        setRepPhotoUrl(s.repPhotoUrl ?? '');
       })
       .catch(() => {})
       .finally(() => setLoading(false));
@@ -91,7 +91,7 @@ export function ProfileSection({ slug }: ProfileSectionProps) {
           slug,
           bio: bio.trim() || null,
           socialLinks,
-          realtorPhotoUrl: realtorPhotoUrl.trim() || null,
+          repPhotoUrl: repPhotoUrl.trim() || null,
           phoneNumber: phone,
           businessName,
         }),
@@ -133,11 +133,11 @@ export function ProfileSection({ slug }: ProfileSectionProps) {
     <form onSubmit={handleSave} className="space-y-8">
       {/* Identity */}
       <div className="flex items-center gap-4">
-        {realtorPhotoUrl ? (
+        {repPhotoUrl ? (
           // Profile photo as displayed publicly
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={realtorPhotoUrl}
+            src={repPhotoUrl}
             alt=""
             className="h-14 w-14 rounded-full object-cover bg-foreground/[0.06]"
             onError={(e) => {
@@ -163,7 +163,7 @@ export function ProfileSection({ slug }: ProfileSectionProps) {
             disabled={photoUploading}
             className="text-sm text-foreground hover:text-foreground/80 underline-offset-4 hover:underline transition-colors duration-150 disabled:opacity-60 inline-flex items-center gap-1.5"
           >
-            {photoUploading ? 'Uploading' : realtorPhotoUrl ? 'Change photo' : 'Upload photo'}
+            {photoUploading ? 'Uploading' : repPhotoUrl ? 'Change photo' : 'Upload photo'}
             {photoUploading && <Loader2 size={13} className="animate-spin text-muted-foreground" />}
           </button>
           <p className={CAPTION}>PNG, JPG, or WebP. Max 2MB.</p>
@@ -188,7 +188,7 @@ export function ProfileSection({ slug }: ProfileSectionProps) {
               const res = await fetch('/api/upload', { method: 'POST', body: formData });
               const data = await res.json();
               if (res.ok && data.url) {
-                setRealtorPhotoUrl(data.url);
+                setRepPhotoUrl(data.url);
                 toast.success('Photo uploaded.');
               } else {
                 toast.error(data.error || "Upload didn't go through. Try again.");

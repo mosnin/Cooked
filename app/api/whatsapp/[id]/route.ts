@@ -3,7 +3,7 @@
  *
  * One WhatsApp conversation, fully loaded. Backs the thread page at
  * /s/[slug]/whatsapp/[id] — messages sorted oldest → newest so the
- * realtor reads top-down.
+ * rep reads top-down.
  *
  * Composio's WhatsApp toolkit again best-effort: try each get-candidate
  * slug in order; if none resolves, surface a clean error.

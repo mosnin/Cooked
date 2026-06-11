@@ -82,7 +82,7 @@ def test_cache_markers_rewrite_system_string_to_block_array():
     """
     kwargs = {
         "messages": [
-            {"role": "system", "content": "You are Chippi..."},
+            {"role": "system", "content": "You are Koala..."},
             {"role": "user", "content": "hi"},
         ],
         "tools": [],
@@ -94,7 +94,7 @@ def test_cache_markers_rewrite_system_string_to_block_array():
     assert len(system["content"]) == 1
     block = system["content"][0]
     assert block["type"] == "text"
-    assert block["text"] == "You are Chippi..."
+    assert block["text"] == "You are Koala..."
     assert block["cache_control"] == {"type": "ephemeral"}
     # User message untouched.
     assert kwargs["messages"][1] == {"role": "user", "content": "hi"}
@@ -248,26 +248,26 @@ def test_make_chat_model_does_not_wrap_non_cache_providers():
 )
 def test_decide_reasoning_effort_heuristic(message, expected):
     # Ensure env override doesn't bleed in from the test runner.
-    os.environ.pop("CHIPPI_REASONING_EFFORT", None)
+    os.environ.pop("KOALA_REASONING_EFFORT", None)
     assert decide_reasoning_effort(message) == expected
 
 
 def test_decide_reasoning_effort_env_override_low(monkeypatch):
     """A cost emergency can force every turn to "low" via the env var,
     even a turn that would normally escalate. The env var wins."""
-    monkeypatch.setenv("CHIPPI_REASONING_EFFORT", "low")
+    monkeypatch.setenv("KOALA_REASONING_EFFORT", "low")
     assert decide_reasoning_effort("build a plan for the week") == "low"
 
 
 def test_decide_reasoning_effort_env_override_high(monkeypatch):
     """An investor demo can force every turn to "high"."""
-    monkeypatch.setenv("CHIPPI_REASONING_EFFORT", "high")
+    monkeypatch.setenv("KOALA_REASONING_EFFORT", "high")
     assert decide_reasoning_effort("hi") == "high"
 
 
 def test_decide_reasoning_effort_invalid_env_falls_through(monkeypatch):
     """A typo in the env var must not break every turn. Bad values are
     ignored and the heuristic still answers."""
-    monkeypatch.setenv("CHIPPI_REASONING_EFFORT", "extreme")
+    monkeypatch.setenv("KOALA_REASONING_EFFORT", "extreme")
     assert decide_reasoning_effort("hi") == "low"
     assert decide_reasoning_effort("build a plan") == "medium"

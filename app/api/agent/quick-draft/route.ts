@@ -1,9 +1,9 @@
 /**
  * POST /api/agent/quick-draft
  *
- * The /chippi home's inline draft engine. Phase 7 — no more chat teleport.
- * The realtor taps "Send a check-in" on the home, this composes a draft
- * inline and returns it; the UI shows it; the realtor taps Send and the
+ * The /koala home's inline draft engine. Phase 7 — no more chat teleport.
+ * The rep taps "Send a check-in" on the home, this composes a draft
+ * inline and returns it; the UI shows it; the rep taps Send and the
  * existing AgentDraft → PATCH approve → sendDraft pipeline fires the email
  * (or SMS, or note). One surface, one tap, done.
  *
@@ -65,8 +65,8 @@ const ALLOWED_CHANNELS: Channel[] = ['email', 'sms', 'note'];
 
 /**
  * Map an intent to a channel. Log-call is always a note (internal record);
- * everything else is email — that's the realtor's primary outbound rail and
- * the only one the chat tool fires today. The realtor can always Edit →
+ * everything else is email — that's the rep's primary outbound rail and
+ * the only one the chat tool fires today. The rep can always Edit →
  * chat to switch channels.
  */
 function channelForIntent(intent: Intent): Channel {
@@ -196,7 +196,7 @@ export async function POST(req: NextRequest) {
         channel: sendBody.channel,
         subject: sendBody.channel === 'email' ? sendBody.subject!.trim() : null,
         content: sendBody.body.trim(),
-        reasoning: `Quick draft from /chippi home (${sendBody.intent}).`,
+        reasoning: `Quick draft from /koala home (${sendBody.intent}).`,
         priority: 0,
         status: 'pending',
       })

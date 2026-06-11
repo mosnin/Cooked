@@ -4,9 +4,9 @@
 -- when the real error is a type mismatch.
 
 -----------------------------------------------------------------------
--- 1. book_tour_atomic — change UUID params to TEXT
+-- 1. book_demo_atomic — change UUID params to TEXT
 -----------------------------------------------------------------------
-CREATE OR REPLACE FUNCTION book_tour_atomic(
+CREATE OR REPLACE FUNCTION book_demo_atomic(
   p_id            TEXT,
   p_space_id      TEXT,
   p_contact_id    TEXT,
@@ -23,8 +23,8 @@ CREATE OR REPLACE FUNCTION book_tour_atomic(
 DECLARE
   v_conflict_count INT;
 BEGIN
-  -- Lock existing overlapping tours to prevent concurrent inserts
-  PERFORM id FROM "Tour"
+  -- Lock existing overlapping demos to prevent concurrent inserts
+  PERFORM id FROM "Demo"
     WHERE "spaceId" = p_space_id
       AND status IN ('scheduled', 'confirmed')
       AND "startsAt" < p_ends_at
@@ -33,7 +33,7 @@ BEGIN
 
   -- Count conflicts (after acquiring lock)
   SELECT COUNT(*) INTO v_conflict_count
-    FROM "Tour"
+    FROM "Demo"
     WHERE "spaceId" = p_space_id
       AND status IN ('scheduled', 'confirmed')
       AND "startsAt" < p_ends_at
@@ -43,7 +43,7 @@ BEGIN
     RETURN NULL;  -- Conflict found; caller should return 409
   END IF;
 
-  INSERT INTO "Tour" (
+  INSERT INTO "Demo" (
     id, "spaceId", "contactId", "guestName", "guestEmail", "guestPhone",
     "propertyAddress", notes, "startsAt", "endsAt", "propertyProfileId", "manageToken"
   ) VALUES (
@@ -99,22 +99,22 @@ END;
 $$ LANGUAGE plpgsql;
 
 -----------------------------------------------------------------------
--- 3. create_brokerage_with_owner — change UUID params to TEXT
+-- 3. create_team_with_owner — change UUID params to TEXT
 -----------------------------------------------------------------------
-CREATE OR REPLACE FUNCTION create_brokerage_with_owner(
+CREATE OR REPLACE FUNCTION create_team_with_owner(
   p_name     TEXT,
   p_owner_id TEXT
 ) RETURNS TEXT AS $$
 DECLARE
-  v_brokerage_id TEXT;
+  v_team_id TEXT;
 BEGIN
-  INSERT INTO "Brokerage" (name, "ownerId")
+  INSERT INTO "Team" (name, "ownerId")
     VALUES (p_name, p_owner_id)
-    RETURNING id INTO v_brokerage_id;
+    RETURNING id INTO v_team_id;
 
-  INSERT INTO "BrokerageMembership" ("brokerageId", "userId", role)
-    VALUES (v_brokerage_id, p_owner_id, 'broker_owner');
+  INSERT INTO "TeamMembership" ("teamId", "userId", role)
+    VALUES (v_team_id, p_owner_id, 'manager_owner');
 
-  RETURN v_brokerage_id;
+  RETURN v_team_id;
 END;
 $$ LANGUAGE plpgsql;

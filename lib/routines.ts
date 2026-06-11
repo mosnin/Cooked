@@ -35,14 +35,14 @@ export type RoutineWeekday = (typeof ROUTINE_WEEKDAYS)[number];
 export const ROUTINE_MAX_DAY_OF_MONTH = 28;
 
 /**
- * Structured provenance for runs the realtor did not initiate by chat.
+ * Structured provenance for runs the rep did not initiate by chat.
  * Currently only `composio_trigger` exists; the kind discriminator is
  * here so future inbound paths (calendar webhook, MLS push, etc.) can
  * layer on the same column without a schema change.
  *
  * The orchestrator stashes this on AgentContext; the drafts tool writes
  * it to AgentDraft.triggerSource. The inbox UI then renders a small
- * "Chippi noticed because..." breadcrumb under each draft.
+ * "Koala noticed because..." breadcrumb under each draft.
  */
 export interface TriggerSource {
   kind: 'composio_trigger';
@@ -77,7 +77,7 @@ export async function fireRoutineRun(
     //
     // trigger_source flows through the Python AgentContext so the draft
     // tool can persist it on AgentDraft.triggerSource. Absent for chat /
-    // routine / sweep runs — the orchestrator treats null as "realtor-
+    // routine / sweep runs — the orchestrator treats null as "rep-
     // initiated" and renders nothing in the inbox breadcrumb.
     const body: Record<string, unknown> = { space_id: spaceId, secret, instruction };
     if (userId) body.user_id = userId;

@@ -3,10 +3,10 @@
  *
  * Returns the day's items for the dispatch console's "What's coming" section:
  *   - followUpsDue: contacts whose followUpAt is in the past or today
- *   - toursUpcoming: scheduled or confirmed tours from now forward
+ *   - demosUpcoming: scheduled or confirmed demos from now forward
  *
  * One endpoint, one shape — keeps the dispatch console rendering one fetch
- * per section instead of N. Realtor space only (not brokerage-routed).
+ * per section instead of N. Rep space only (not team-routed).
  */
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
@@ -24,7 +24,7 @@ export interface FollowUpDue {
   scoreLabel: string | null;
 }
 
-export interface UpcomingTour {
+export interface UpcomingDemo {
   id: string;
   guestName: string | null;
   startsAt: string;
@@ -43,18 +43,18 @@ export async function GET(_req: NextRequest) {
 
   const nowIso = new Date().toISOString();
 
-  const [followUpsRes, toursRes] = await Promise.all([
+  const [followUpsRes, demosRes] = await Promise.all([
     supabase
       .from('Contact')
       .select('id, name, phone, email, type, followUpAt, leadScore, scoreLabel')
       .eq('spaceId', space.id)
-      .is('brokerageId', null)
+      .is('teamId', null)
       .not('followUpAt', 'is', null)
       .lte('followUpAt', nowIso)
       .order('followUpAt', { ascending: true })
       .limit(10),
     supabase
-      .from('Tour')
+      .from('Demo')
       .select('id, guestName, startsAt, endsAt, propertyAddress, status')
       .eq('spaceId', space.id)
       .gte('startsAt', nowIso)
@@ -65,6 +65,6 @@ export async function GET(_req: NextRequest) {
 
   return NextResponse.json({
     followUpsDue: (followUpsRes.data ?? []) as FollowUpDue[],
-    toursUpcoming: (toursRes.data ?? []) as UpcomingTour[],
+    demosUpcoming: (demosRes.data ?? []) as UpcomingDemo[],
   });
 }

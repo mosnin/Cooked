@@ -16,14 +16,14 @@ CREATE INDEX IF NOT EXISTS idx_contact_application_ref
   ON "Contact"("applicationRef") WHERE "applicationRef" IS NOT NULL;
 
 -- ============================================================
--- ApplicationMessage: messages between applicant and realtor
+-- ApplicationMessage: messages between applicant and rep
 -- ============================================================
 
 CREATE TABLE IF NOT EXISTS "ApplicationMessage" (
   id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   "contactId" text NOT NULL REFERENCES "Contact"(id) ON DELETE CASCADE,
   "spaceId"   text NOT NULL REFERENCES "Space"(id) ON DELETE CASCADE,
-  "senderType" text NOT NULL CHECK ("senderType" IN ('applicant', 'realtor')),
+  "senderType" text NOT NULL CHECK ("senderType" IN ('applicant', 'rep')),
   content     text NOT NULL CHECK (char_length(content) <= 2000),
   "readAt"    timestamptz,
   "createdAt" timestamptz NOT NULL DEFAULT now()

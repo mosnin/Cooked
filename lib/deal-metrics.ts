@@ -1,5 +1,5 @@
 /**
- * Pure broker/realtor performance metrics over Deal rows.
+ * Pure manager/rep performance metrics over Deal rows.
  *
  * These functions take already-fetched deal rows (no DB calls, no I/O) and
  * compute the three foundational pipeline metrics:
@@ -7,8 +7,8 @@
  *   - conversion rate (won vs lost)
  *   - per-stage bottlenecks (where active deals stall)
  *
- * Keeping them pure means the same logic backs the forecast page, a realtor
- * profile, and a Chippi tool without any of them owning a query. Callers fetch
+ * Keeping them pure means the same logic backs the forecast page, a rep
+ * profile, and a Koala tool without any of them owning a query. Callers fetch
  * the rows; these functions do the math.
  *
  * Timestamps (closedAt, stageChangedAt) are maintained by the deal write paths

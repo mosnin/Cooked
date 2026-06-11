@@ -1,11 +1,11 @@
 'use client';
 
 /**
- * DocumentsPanel — list + editor for the realtor's own documents.
+ * DocumentsPanel — list + editor for the rep's own documents.
  *
- * A document is a file the realtor authored in-app. Two modes, swapped in
+ * A document is a file the rep authored in-app. Two modes, swapped in
  * place (no routing): a divide-y list of documents, and an editor for
- * one. Chippi can read and attach these, but the realtor is always the
+ * one. Koala can read and attach these, but the rep is always the
  * author — nothing here is machine-written.
  *
  * The editor is TipTap (ProseMirror-based, ~80kb gzip) — code-split via
@@ -81,8 +81,8 @@ export function DocumentsPanel() {
   const [mode, setMode] = useState<'list' | 'edit'>('list');
   const [draft, setDraft] = useState<Draft | null>(null);
   // Edit/Preview toggle inside the document editor — preview by default
-  // for existing docs (the realtor opens to read), edit by default for
-  // new ones (the realtor opens to write).
+  // for existing docs (the rep opens to read), edit by default for
+  // new ones (the rep opens to write).
   const [editorMode, setEditorMode] = useState<EditorMode>('edit');
   const [saving, setSaving] = useState(false);
   const [opening, setOpening] = useState(false);
@@ -183,7 +183,7 @@ export function DocumentsPanel() {
 
   // Sanitize the HTML content before rendering inside Preview. TipTap's
   // own serializer is well-formed but the content field can in theory be
-  // seeded from external sources (paste, API import, future Chippi
+  // seeded from external sources (paste, API import, future Koala
   // export) — sanitize defensively.
   const sanitizedHtml = useMemo(
     () => (draft ? DOMPurify.sanitize(draft.content ?? '') : ''),
@@ -252,7 +252,7 @@ export function DocumentsPanel() {
           />
         ) : (
           // Read mode tinted bg-muted/10 — distinct from the bg-card edit
-          // surface so the realtor can tell at a glance whether they're
+          // surface so the rep can tell at a glance whether they're
           // viewing or editing.
           <div className="rounded-xl border border-border/70 bg-muted/10 px-3.5 py-3 min-h-[60vh]">
             {/* Sanitized HTML — see sanitizedHtml memo above. */}
@@ -264,7 +264,7 @@ export function DocumentsPanel() {
         )}
 
         <p className="text-[11px] text-muted-foreground">
-          Saved to your documents. Chippi can read it and attach it to a deal — it won&apos;t change your wording.
+          Saved to your documents. Koala can read it and attach it to a deal — it won&apos;t change your wording.
         </p>
       </div>
     );
@@ -416,7 +416,7 @@ function ErrorBanner({
   );
 }
 
-/** When the realtor lands in Preview mode with empty content, show a calm
+/** When the rep lands in Preview mode with empty content, show a calm
  *  fact instead of a blank rectangle. Matches the empty-state vocabulary
  *  from the stylesheet. */
 function emptyDocPlaceholder(): string {

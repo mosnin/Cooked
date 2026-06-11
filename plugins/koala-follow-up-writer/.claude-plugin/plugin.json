@@ -1,0 +1,8 @@
+{
+  "name": "koala-follow-up-writer",
+  "description": "Draft personalized follow-up messages using your Koala contact data. Email templates, text messages, and re-engagement campaigns.",
+  "version": "1.0.0",
+  "author": { "name": "Koala", "url": "https://usekoala.com" },
+  "homepage": "https://usekoala.com",
+  "keywords": ["crm", "follow-up", "email", "real-estate", "koala"]
+}

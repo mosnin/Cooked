@@ -388,7 +388,7 @@ export async function PATCH(
     syncDeal({ ...deal, stage: deal.stage ?? undefined }).catch(console.error);
     void audit({ actorClerkId: userId, action: 'UPDATE', resource: 'Deal', resourceId: id, spaceId: space.id, req });
 
-    // Fire the agent trigger on stage transitions so Chippi reacts in real
+    // Fire the agent trigger on stage transitions so Koala reacts in real
     // time to a deal moving stages (e.g. drafts a "we're under contract" SMS
     // to the contact, or marks the win/loss). Never fails the response.
     if (stageChanged) {

@@ -35,7 +35,7 @@ interface PortalMessage {
 const STATUSES = [
   { key: 'received', label: 'Received', icon: Inbox, color: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' },
   { key: 'under_review', label: 'Under Review', icon: Search, color: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300' },
-  { key: 'tour_scheduled', label: 'Tour Scheduled', icon: CalendarCheck, color: 'bg-orange-50 text-orange-700 dark:bg-orange-500/10 dark:text-orange-400' },
+  { key: 'demo_scheduled', label: 'Demo Scheduled', icon: CalendarCheck, color: 'bg-orange-50 text-orange-700 dark:bg-orange-500/10 dark:text-orange-400' },
   { key: 'approved', label: 'Approved', icon: CheckCircle2, color: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300' },
   { key: 'declined', label: 'Declined', icon: XCircle, color: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300' },
   { key: 'waitlisted', label: 'Waitlisted', icon: Clock, color: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300' },
@@ -271,7 +271,7 @@ export function ApplicationStatusManager({
         <button
           onClick={() => setShowMessages(!showMessages)}
           aria-expanded={showMessages}
-          aria-controls="realtor-messages-panel"
+          aria-controls="rep-messages-panel"
           className="flex items-center gap-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors min-h-[44px]"
         >
           <MessageSquare size={12} aria-hidden="true" />
@@ -292,7 +292,7 @@ export function ApplicationStatusManager({
         </button>
 
         {showMessages && (
-          <div id="realtor-messages-panel" className="rounded-lg border border-border overflow-hidden">
+          <div id="rep-messages-panel" className="rounded-lg border border-border overflow-hidden">
             {/* Message list */}
             <div
               role="log"
@@ -311,25 +311,25 @@ export function ApplicationStatusManager({
                 </p>
               ) : (
                 messages.map((msg: PortalMessage) => {
-                  const isRealtor = msg.senderType === 'realtor';
+                  const isRep = msg.senderType === 'rep';
                   return (
                     <div
                       key={msg.id}
                       className={cn(
                         'flex',
-                        isRealtor ? 'justify-end' : 'justify-start',
+                        isRep ? 'justify-end' : 'justify-start',
                       )}
                     >
                       <div
                         className={cn(
                           'max-w-[80%] rounded-lg px-3 py-2 text-xs',
-                          isRealtor
+                          isRep
                             ? 'bg-foreground text-background rounded-br-sm'
                             : 'bg-card border border-border rounded-bl-sm',
                         )}
                       >
                         <p className="font-medium mb-0.5 opacity-70">
-                          {isRealtor ? 'You' : 'Applicant'}
+                          {isRep ? 'You' : 'Applicant'}
                         </p>
                         <p className="whitespace-pre-wrap break-words">{msg.content}</p>
                         <time

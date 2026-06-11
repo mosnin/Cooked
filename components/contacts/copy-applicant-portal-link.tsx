@@ -12,7 +12,7 @@ interface Props {
 
 /**
  * Copy applicant portal link — small affordance on the contact detail page
- * so the realtor can paste the URL into a text or email manually. v0
+ * so the rep can paste the URL into a text or email manually. v0
  * discoverability for the applicant portal; in a later pass the agent can
  * embed this link in outbound SMS/email automatically.
  *

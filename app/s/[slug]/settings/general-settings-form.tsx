@@ -32,7 +32,7 @@ interface GeneralSettingsFormProps {
 /**
  * Danger zone — delete the entire workspace. Typed-confirmation modal so a
  * misclick can't destroy the space. The button alone is too cheap to trust;
- * the realtor has to type the name back to prove intent. Matches the
+ * the rep has to type the name back to prove intent. Matches the
  * AlertDialog pattern from components/deals/deal-delete-button.tsx.
  */
 export function DangerZone({ space }: { space: Space }) {
@@ -246,7 +246,7 @@ export function GeneralSettingsForm({ space }: GeneralSettingsFormProps) {
               </div>
             )}
           </div>
-          <p className={CAPTION}>Your intake link: chippi.com/apply/{newSlug}</p>
+          <p className={CAPTION}>Your intake link: koala.com/apply/{newSlug}</p>
         </div>
       </div>
 

@@ -3,14 +3,14 @@
  *
  * Scheduled background sweep. Every 4 hours, walk all active spaces and
  * trigger the existing Modal `run_now_webhook` so the agent can prepare
- * AgentDraft records ahead of the realtor opening the app.
+ * AgentDraft records ahead of the rep opening the app.
  *
  * IMPORTANT: This endpoint never sends email or SMS. It only triggers the
  * Modal agent path that produces AgentDraft rows with `status: 'pending'`.
- * The realtor approves drafts in the FocusCard; only that approval flow
+ * The rep approves drafts in the FocusCard; only that approval flow
  * fires outbound channels.
  *
- * Auth: Bearer ${CRON_SECRET} (matches broker-weekly-report).
+ * Auth: Bearer ${CRON_SECRET} (matches manager-weekly-report).
  * Disable: set CRON_SWEEP_DISABLED=1 to short-circuit without doing work.
  */
 
@@ -33,10 +33,10 @@ function agentInternalSecret(): string {
 const MIN_INTERVAL_MS = 3 * 60 * 60 * 1000; // 3 hours
 
 // Skip a space when its pending-draft backlog is at or above this. The
-// realtor isn't burning down what's already there; piling on doesn't help.
+// rep isn't burning down what's already there; piling on doesn't help.
 const PENDING_DRAFT_BACKLOG_LIMIT = 10;
 
-// Cap on parallel Modal calls so a brokerage of 100 active realtors doesn't
+// Cap on parallel Modal calls so a team of 100 active reps doesn't
 // fire 100 simultaneous webhooks.
 const MAX_CONCURRENCY = 8;
 

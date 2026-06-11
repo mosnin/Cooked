@@ -16,11 +16,11 @@
  *   property-photos/{spaceId}/{propertyId}/{uuid}-{filename}
  *   onboarding/{userId}/{uuid}-{filename}
  *   studio/{spaceId}/{uuid}-{filename}          — Studio-generated media
- *   profile-cover/{spaceId}/{uuid}-{filename}   — realtor's public-page cover photo
+ *   profile-cover/{spaceId}/{uuid}-{filename}   — rep's public-page cover photo
  *
  * Public vs signed: feature attachments stay PRIVATE — we serve them via
  * `getSignedUrl()` with a short TTL. Property photos and avatars can be
- * PUBLIC (the realtor wants them on a public-facing intake form anyway);
+ * PUBLIC (the rep wants them on a public-facing intake form anyway);
  * those use `getPublicUrl()`.
  */
 
@@ -35,7 +35,7 @@ import {
 import { getSignedUrl as awsGetSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { getWasabiClient, getWasabiBucket } from './client';
 
-/** Default signed URL lifetime (seconds). 1 hour — enough for the realtor
+/** Default signed URL lifetime (seconds). 1 hour — enough for the rep
  *  to actually download a doc; short enough that a leaked URL is bounded. */
 export const DEFAULT_SIGNED_URL_TTL_SECONDS = 60 * 60;
 

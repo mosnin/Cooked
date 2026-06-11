@@ -70,7 +70,7 @@ const GRANTABLE_PLANS = new Set<PlanId>(['solo', 'pro', 'team', 'team_plus']);
 
 /**
  * Grant a plan's monthly credits when an invoice is paid. Tolerant of the raw
- * plan string stored on Space/Brokerage (legacy `starter`/`enterprise` carry no
+ * plan string stored on Space/Team (legacy `starter`/`enterprise` carry no
  * defined monthly grant → no-op). Returns the credits granted (0 if none).
  */
 export async function grantPlanMonthly(

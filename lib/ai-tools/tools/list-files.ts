@@ -1,9 +1,9 @@
 /**
- * `list_files` — list files the realtor uploaded to the Files page.
+ * `list_files` — list files the rep uploaded to the Files page.
  *
  * Read-only. Searchable by filename substring and filterable by category
  * (image / document / video / audio / other). Returns up to 20 most-recent
- * matching rows; the realtor can refine with a more specific query when
+ * matching rows; the rep can refine with a more specific query when
  * there are more matches.
  */
 
@@ -30,7 +30,7 @@ const parameters = z
       ),
     limit: z.number().int().min(1).max(50).optional().describe('Max rows. Defaults to 20.'),
   })
-  .describe('List files in the realtor\'s Files surface, optionally filtered.');
+  .describe('List files in the rep\'s Files surface, optionally filtered.');
 
 interface FileRow {
   id: string;
@@ -49,7 +49,7 @@ export const listFilesTool = defineTool<typeof parameters, ListFilesResult>({
   name: 'list_files',
   riskLevel: 'safe',
   description:
-    'List the realtor\'s uploaded files (images, documents, videos, audio). Use to find a file by name before passing it to send_email, attach_file_to_property, or read_file.',
+    'List the rep\'s uploaded files (images, documents, videos, audio). Use to find a file by name before passing it to send_email, attach_file_to_property, or read_file.',
   parameters,
   requiresApproval: false,
 

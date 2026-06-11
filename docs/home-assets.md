@@ -22,10 +22,10 @@ PII scrubbed**:
 
 | File | Surface |
 |---|---|
-| `card-inbox.png` | inbox triage — Chippi surfacing the one to read first |
-| `card-draft.png` | Chippi drafting a reply in your voice |
+| `card-inbox.png` | inbox triage — Koala surfacing the one to read first |
+| `card-draft.png` | Koala drafting a reply in your voice |
 | `card-leads.png` | lead scoring / people |
-| `card-calendar.png` | tour booking on the calendar |
+| `card-calendar.png` | demo booking on the calendar |
 | `card-pipeline.png` | the deal pipeline board |
 
 ## Priority 3 — deep features + logos
@@ -33,7 +33,7 @@ PII scrubbed**:
 | File | Spec |
 |---|---|
 | `workspace.png` | 1600×1200 (4:3) — the workspace overview |
-| `logo-*.svg` | monochrome SVGs of what Chippi connects to (Gmail, Outlook, Google Calendar, …) or real brokerage logos you have rights to |
+| `logo-*.svg` | monochrome SVGs of what Koala connects to (Gmail, Outlook, Google Calendar, …) or real team logos you have rights to |
 
 ## Recommend CUT for launch (so you don't fake them)
 

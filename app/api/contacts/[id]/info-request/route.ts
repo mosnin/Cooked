@@ -10,12 +10,12 @@ export const runtime = 'nodejs';
 const MAX_MESSAGE = 1000;
 
 /**
- * POST /api/contacts/[id]/info-request — realtor asks a client to send
+ * POST /api/contacts/[id]/info-request — rep asks a client to send
  * information. Creates a pending ClientInfoRequest and emails the client. The
  * client answers from their portal (see /api/clients/info-request).
  *
- * Realtor auth via requireContactAccess (the protected-system pattern) — the
- * realtor must own the space the contact belongs to.
+ * Rep auth via requireContactAccess (the protected-system pattern) — the
+ * rep must own the space the contact belongs to.
  */
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id: contactId } = await params;

@@ -51,9 +51,9 @@ export function generateSystemFields(): FormQuestion[] {
 }
 
 // ── Default Rental Form Config ──
-// The 10-question rental intake used when a realtor hasn't customized
-// their form. Also the fallback IntakeChat uses on the brokerage variant
-// when no brokerage-level config exists.
+// The 10-question rental intake used when a rep hasn't customized
+// their form. Also the fallback IntakeChat uses on the team variant
+// when no team-level config exists.
 // Step 1: Getting Started  |  Step 2: Basics  |  Step 3: Move Timing  |  Step 4: Location
 // Step 5: Budget  |  Step 6: Income  |  Step 7: Employment  |  Step 8: Household
 // Step 9: Additional Info  |  Step 10: Ready?
@@ -269,9 +269,9 @@ export const DEFAULT_RENTAL_FORM_CONFIG: IntakeFormConfig = {
 };
 
 // ── Default Buyer Form Config ──
-// The 9-question buyer intake used when a realtor hasn't customized
-// their form. Also the fallback IntakeChat uses on the brokerage variant
-// when no brokerage-level config exists.
+// The 9-question buyer intake used when a rep hasn't customized
+// their form. Also the fallback IntakeChat uses on the team variant
+// when no team-level config exists.
 // Step 1: Getting Started  |  Step 2: Basics  |  Step 3: Budget
 // Step 4: Pre-Approval  |  Step 5: Property Type  |  Step 6: Must-Haves
 // Step 7: Timeline  |  Step 8: About You  |  Step 9: Ready?
@@ -550,7 +550,7 @@ export function validateFormConfig(config: unknown) {
 /**
  * Fetches the form config for a given space, with the following fallback chain:
  * 1. If SpaceSetting.formConfig is set and formConfigSource is 'custom', use it
- * 2. If formConfigSource is 'brokerage', fetch from the linked Brokerage.brokerageFormConfig
+ * 2. If formConfigSource is 'team', fetch from the linked Team.teamFormConfig
  * 3. Otherwise (formConfigSource is 'legacy' or formConfig is null), return null (legacy mode)
  */
 export async function getFormConfig(
@@ -575,30 +575,30 @@ export async function getFormConfig(
     return result.success ? result.data : null;
   }
 
-  // Brokerage-inherited form: fetch from the linked brokerage
-  if (source === 'brokerage') {
+  // Team-inherited form: fetch from the linked team
+  if (source === 'team') {
     const { data: space } = await supabase
       .from('Space')
-      .select('"brokerageId"')
+      .select('"teamId"')
       .eq('id', spaceId)
       .single();
 
-    if (space?.brokerageId) {
-      const { data: brokerage } = await supabase
-        .from('Brokerage')
-        .select('"brokerageFormConfig"')
-        .eq('id', space.brokerageId)
+    if (space?.teamId) {
+      const { data: team } = await supabase
+        .from('Team')
+        .select('"teamFormConfig"')
+        .eq('id', space.teamId)
         .single();
 
-      if (brokerage?.brokerageFormConfig) {
+      if (team?.teamFormConfig) {
         const result = formConfigSchema.safeParse(
-          brokerage.brokerageFormConfig
+          team.teamFormConfig
         );
         return result.success ? result.data : null;
       }
     }
 
-    // Brokerage config missing: fall back to legacy
+    // Team config missing: fall back to legacy
     return null;
   }
 
@@ -611,7 +611,7 @@ export async function getFormConfig(
 export type DualFormConfigs = {
   rental: IntakeFormConfig | null;
   buyer: IntakeFormConfig | null;
-  source: 'custom' | 'brokerage' | 'legacy';
+  source: 'custom' | 'team' | 'legacy';
 };
 
 /** Safely parse a raw JSON value as IntakeFormConfig, returning null on failure. */
@@ -627,13 +627,13 @@ function safeParseConfig(raw: unknown): IntakeFormConfig | null {
  * Fallback chain per lead type:
  *   1. SpaceSetting.[rental|buyer]FormConfig (dual config columns)
  *   2. SpaceSetting.formConfig (legacy single column, treated as rental or buyer based on its leadType)
- *   3. Brokerage.[brokerage[Rental|Buyer]FormConfig] (if formConfigSource === 'brokerage')
- *   4. Brokerage.brokerageFormConfig (legacy single brokerage column)
+ *   3. Team.[team[Rental|Buyer]FormConfig] (if formConfigSource === 'team')
+ *   4. Team.teamFormConfig (legacy single team column)
  *   5. null (caller should use DEFAULT_*_FORM_CONFIG or legacy scoring)
  */
 export async function getFormConfigs(
   spaceId: string,
-  brokerageId?: string | null,
+  teamId?: string | null,
 ): Promise<DualFormConfigs> {
   const { data: setting, error: settingError } = await supabase
     .from('SpaceSetting')
@@ -668,32 +668,32 @@ export async function getFormConfigs(
     return { rental: rentalConfig, buyer: buyerConfig, source: 'custom' };
   }
 
-  if (source === 'brokerage') {
-    // Resolve brokerageId if not provided
-    let resolvedBrokerageId = brokerageId;
-    if (!resolvedBrokerageId) {
+  if (source === 'team') {
+    // Resolve teamId if not provided
+    let resolvedTeamId = teamId;
+    if (!resolvedTeamId) {
       const { data: space } = await supabase
         .from('Space')
-        .select('"brokerageId"')
+        .select('"teamId"')
         .eq('id', spaceId)
         .maybeSingle();
-      resolvedBrokerageId = space?.brokerageId ?? null;
+      resolvedTeamId = space?.teamId ?? null;
     }
 
-    if (resolvedBrokerageId) {
-      const { data: brokerage } = await supabase
-        .from('Brokerage')
-        .select('"brokerageFormConfig", "brokerageRentalFormConfig", "brokerageBuyerFormConfig"')
-        .eq('id', resolvedBrokerageId)
+    if (resolvedTeamId) {
+      const { data: team } = await supabase
+        .from('Team')
+        .select('"teamFormConfig", "teamRentalFormConfig", "teamBuyerFormConfig"')
+        .eq('id', resolvedTeamId)
         .maybeSingle();
 
-      if (brokerage) {
-        let rentalConfig = safeParseConfig(brokerage.brokerageRentalFormConfig);
-        let buyerConfig = safeParseConfig(brokerage.brokerageBuyerFormConfig);
+      if (team) {
+        let rentalConfig = safeParseConfig(team.teamRentalFormConfig);
+        let buyerConfig = safeParseConfig(team.teamBuyerFormConfig);
 
-        // Legacy compatibility: single brokerageFormConfig
-        if (!rentalConfig && !buyerConfig && brokerage.brokerageFormConfig) {
-          const legacySingle = safeParseConfig(brokerage.brokerageFormConfig);
+        // Legacy compatibility: single teamFormConfig
+        if (!rentalConfig && !buyerConfig && team.teamFormConfig) {
+          const legacySingle = safeParseConfig(team.teamFormConfig);
           if (legacySingle) {
             if (legacySingle.leadType === 'buyer') {
               buyerConfig = legacySingle;
@@ -703,11 +703,11 @@ export async function getFormConfigs(
           }
         }
 
-        return { rental: rentalConfig, buyer: buyerConfig, source: 'brokerage' };
+        return { rental: rentalConfig, buyer: buyerConfig, source: 'team' };
       }
     }
 
-    return { rental: null, buyer: null, source: 'brokerage' };
+    return { rental: null, buyer: null, source: 'team' };
   }
 
   // Legacy mode
@@ -716,7 +716,7 @@ export async function getFormConfigs(
 
 /**
  * Resolves the correct form config for a specific lead type using the full fallback chain:
- *   1. Custom or brokerage config for the specific lead type
+ *   1. Custom or team config for the specific lead type
  *   2. Default template for the lead type
  *
  * Returns { config, isCustom } so callers know whether to use dynamic scoring
@@ -725,9 +725,9 @@ export async function getFormConfigs(
 export async function getFormConfigForLeadType(
   spaceId: string,
   leadType: 'rental' | 'buyer',
-  brokerageId?: string | null,
+  teamId?: string | null,
 ): Promise<{ config: IntakeFormConfig; isCustom: boolean }> {
-  const dual = await getFormConfigs(spaceId, brokerageId);
+  const dual = await getFormConfigs(spaceId, teamId);
 
   const customConfig = leadType === 'buyer'
     ? dual.buyer

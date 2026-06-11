@@ -9,7 +9,7 @@
       "schedule": "0 9 * * *"
     },
     {
-      "path": "/api/cron/broker-weekly-report",
+      "path": "/api/cron/manager-weekly-report",
       "schedule": "0 9 * * 1"
     },
     {

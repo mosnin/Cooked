@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Operating manual for AI coding agents working in the Chippi repository.
+Operating manual for AI coding agents working in the Koala repository.
 
 All AI agents must read and follow this file before making any changes.
 
@@ -8,13 +8,13 @@ All AI agents must read and follow this file before making any changes.
 
 ## 1. Project summary
 
-Chippi is an **agentic operating system for U.S. real estate agents and brokerages.** The realtor's book of business — contacts, deals, stages, tours, applications — is the workspace; Chippi is an autonomous agent that works inside it on the realtor's behalf, with sign-off only where it's needed. The launch wedge is solo realtors handling renter and leasing leads; the product emphasizes speed, clarity, and a polished brand experience.
+Koala is an **agentic operating system for U.S. real estate agents and teams.** The rep's book of business — contacts, deals, stages, demos, applications — is the workspace; Koala is an autonomous agent that works inside it on the rep's behalf, with sign-off only where it's needed. The launch wedge is solo reps handling renter and leasing leads; the product emphasizes speed, clarity, and a polished brand experience.
 
-CRM-style data structures (contacts, deals, pipelines) are the substrate, not the product. New work should make Chippi do **more** on the realtor's behalf — not add more configuration surfaces the realtor has to operate themselves.
+CRM-style data structures (contacts, deals, pipelines) are the substrate, not the product. New work should make Koala do **more** on the rep's behalf — not add more configuration surfaces the rep has to operate themselves.
 
 **Stack**: Next.js 15 (App Router), React 19, TypeScript, Tailwind 4, Supabase (PostgreSQL, accessed via `@supabase/supabase-js` with the service-role key; schema lives in `supabase/schema.sql`), Clerk (auth), OpenAI (scoring + embeddings + assistant), Supabase pgvector (vector search via the `DocumentEmbedding` table and `match_documents` RPC — see `lib/zilliz.ts` for the pgvector wrapper), Upstash Redis (legacy metadata + rate limiting + pending-approval state), Resend (email), Telnyx (SMS), Stripe (billing), Vercel (deployment target). Prisma is **not** in use — there is no `prisma/schema.prisma`, no `prisma.config.ts`, and `@prisma/client` is not imported anywhere in the codebase.
 
-**AI agent runtime**: Interactive chat turns **default to the in-process TypeScript runtime** (`@openai/agents`, via `app/api/ai/task/route.ts` → `lib/ai-tools/sdk-chat-stream.ts`) — no cold start. The chat model is the realtor's selected model through OpenRouter; the default is **`x-ai/grok-4.3`** (see `lib/chat-models.ts` / `agent/llm.py`). A **Modal Python sandbox** (`agent/modal_app.py`, OpenAI Agents SDK) is **opt-in** via `CHIPPI_CHAT_RUNTIME=modal` and is the target for delegated/autonomous sub-agent ("swarm") runs. The single source of truth for the default is `lib/ai-tools/runtime-flag.ts` (`'ts'` unless the env var says `'modal'`). NOTE: a prior version of this line claimed Modal was the "mandatory runtime" and told you not to use the TS path — that was **wrong and inverted the actual default**; trust `runtime-flag.ts`, not prose.
+**AI agent runtime**: Interactive chat turns **default to the in-process TypeScript runtime** (`@openai/agents`, via `app/api/ai/task/route.ts` → `lib/ai-tools/sdk-chat-stream.ts`) — no cold start. The chat model is the rep's selected model through OpenRouter; the default is **`x-ai/grok-4.3`** (see `lib/chat-models.ts` / `agent/llm.py`). A **Modal Python sandbox** (`agent/modal_app.py`, OpenAI Agents SDK) is **opt-in** via `KOALA_CHAT_RUNTIME=modal` and is the target for delegated/autonomous sub-agent ("swarm") runs. The single source of truth for the default is `lib/ai-tools/runtime-flag.ts` (`'ts'` unless the env var says `'modal'`). NOTE: a prior version of this line claimed Modal was the "mandatory runtime" and told you not to use the TS path — that was **wrong and inverted the actual default**; trust `runtime-flag.ts`, not prose.
 
 ---
 
@@ -22,13 +22,13 @@ CRM-style data structures (contacts, deals, pipelines) are the substrate, not th
 
 The launch wedge is narrow and intentional:
 
-- **Who**: new solo realtors in the U.S.
+- **Who**: new solo reps in the U.S.
 - **What**: renter and leasing lead qualification
 - **How**: fast setup, intake link activation, explainable AI-assisted scoring, an agent that actually does the work
 - **Activation event**: intake link generation
 - **Retention signal**: completed applications and repeated workflow use
 
-Do **not** treat this repo as a generic CRM expansion project. The agentic OS positioning means new work should make Chippi act on the realtor's behalf, not add configuration surfaces the realtor has to operate themselves.
+Do **not** treat this repo as a generic CRM expansion project. The agentic OS positioning means new work should make Koala act on the rep's behalf, not add configuration surfaces the rep has to operate themselves.
 
 ---
 
@@ -91,7 +91,7 @@ Do **not** modify these unless the task explicitly requires it:
 | 11 | Core routing and middleware | `middleware.ts`, route matchers, redirect logic |
 | 12 | Environment variable handling | `lib/utils.ts` (protocol/domain), `lib/supabase.ts`, `lib/redis.ts` |
 | 13 | AI tool registry | `lib/ai-tools/tools/index.ts` (source-of-truth list of every agent-callable tool), `lib/ai-tools/registry.ts`, individual `lib/ai-tools/tools/*.ts` files (each ships its own `requiresApproval` + `rateLimit` contract) |
-| 14 | Broker permission helpers | `lib/permissions.ts` (`requireBroker`, `getBrokerContext`, `getBrokerMemberContext`, role predicates) and `lib/api-auth.ts` (`requireAuth`, `requireSpaceOwner`, `requireContactAccess`). Never bypass these with raw `auth()` or ad-hoc role checks. |
+| 14 | Manager permission helpers | `lib/permissions.ts` (`requireManager`, `getManagerContext`, `getManagerMemberContext`, role predicates) and `lib/api-auth.ts` (`requireAuth`, `requireSpaceOwner`, `requireContactAccess`). Never bypass these with raw `auth()` or ad-hoc role checks. |
 
 ---
 

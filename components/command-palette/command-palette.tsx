@@ -37,7 +37,7 @@ interface Props {
  * the /s/:slug layout.
  *
  *   - Nav actions are static (Today, People, Deals, …).
- *   - Create actions route to the create-deal / add-contact / schedule-tour
+ *   - Create actions route to the create-deal / add-contact / schedule-demo
  *     flows the app already has (keeping the palette a router, not its own
  *     subsystem — easier to maintain).
  *   - Search actions hit /api/contacts and /api/deals/search when the query
@@ -77,7 +77,7 @@ export function CommandPalette({ slug }: Props) {
     // Create
     { kind: 'route', id: 'new-deal',    group: 'Create', label: 'New deal',      icon: Plus,      href: `${base}/deals/new` },
     { kind: 'route', id: 'new-contact', group: 'Create', label: 'Add contact',   icon: UserPlus,  href: `${base}/contacts` },
-    { kind: 'route', id: 'new-tour',    group: 'Create', label: 'Schedule tour', icon: PhoneCall, href: `${base}/calendar` },
+    { kind: 'route', id: 'new-demo',    group: 'Create', label: 'Schedule demo', icon: PhoneCall, href: `${base}/calendar` },
   ], [base]);
 
   // Global shortcut
@@ -112,7 +112,7 @@ export function CommandPalette({ slug }: Props) {
 
     searchRef.current = setTimeout(async () => {
       try {
-        // /api/search returns { contacts, deals, tours } in one call.
+        // /api/search returns { contacts, deals, demos } in one call.
         const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
         if (!res.ok) { setRemote([]); return; }
         const payload = await res.json() as {

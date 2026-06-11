@@ -1,8 +1,8 @@
 /**
- * Chippi voice for in-app notifications.
+ * Koala voice for in-app notifications.
  *
- * One file, one voice. Every in-app notification string the realtor reads
- * — the bell feed, realtime toasts, broker notifications stored in the
+ * One file, one voice. Every in-app notification string the rep reads
+ * — the bell feed, realtime toasts, manager notifications stored in the
  * database — composes through here so future copy edits live in one place.
  *
  * Voice rules (Jobs lens):
@@ -23,7 +23,7 @@
 
 /**
  * Title-line + supporting line. Matches the existing Notification interface
- * used by the bell dropdown and BrokerNotification rows in the database.
+ * used by the bell dropdown and ManagerNotification rows in the database.
  */
 export interface NotificationCopy {
   title: string;
@@ -32,7 +32,7 @@ export interface NotificationCopy {
 
 /**
  * Format a Date as "10:30am" or "2pm" — short, lowercase meridiem, no
- * trailing zeros on the hour. Used for the inline tour-time mention.
+ * trailing zeros on the hour. Used for the inline demo-time mention.
  */
 function formatClockTime(d: Date): string {
   const hour = d.getHours();
@@ -83,18 +83,18 @@ export function notificationForNewLeadsCount(count: number): NotificationCopy {
   };
 }
 
-// ── New lead through brokerage intake (broker-side) ──────────────────────
+// ── New lead through team intake (manager-side) ──────────────────────
 
 /**
- * Brokerage intake fed a new lead to the broker dashboard. Stored on
- * BrokerNotification, rendered in the broker bell.
+ * Team intake fed a new lead to the manager dashboard. Stored on
+ * ManagerNotification, rendered in the manager bell.
  */
-export function notificationForNewBrokerageLead(
+export function notificationForNewTeamLead(
   name: string,
   contact: { phone?: string | null; email?: string | null },
 ): NotificationCopy {
   return {
-    title: `${name} just applied through brokerage intake.`,
+    title: `${name} just applied through team intake.`,
     description: contact.phone ?? contact.email ?? 'New application submitted.',
   };
 }
@@ -120,28 +120,28 @@ export function notificationForLeadScored(name: string, scoreLabel: string, lead
   };
 }
 
-// ── Tour scheduled ───────────────────────────────────────────────────────
+// ── Demo scheduled ───────────────────────────────────────────────────────
 
 /**
- * A new tour just landed on the calendar. "On the calendar" plants the
+ * A new demo just landed on the calendar. "On the calendar" plants the
  * fact; the address (if present) anchors it in space.
  */
-export function notificationForNewTour(
+export function notificationForNewDemo(
   guestName: string,
   property?: string | null,
 ): string {
   if (property) {
-    return `On the calendar — tour with ${guestName} at ${property}.`;
+    return `On the calendar — demo with ${guestName} at ${property}.`;
   }
-  return `On the calendar — tour with ${guestName}.`;
+  return `On the calendar — demo with ${guestName}.`;
 }
 
 /**
- * Bell-feed entry for an upcoming tour in the next 24h. The time is the
+ * Bell-feed entry for an upcoming demo in the next 24h. The time is the
  * lead fact; address fills the description if we have it. No filler when
  * the address is missing — the title already plants the calendar fact.
  */
-export function notificationForUpcomingTour(
+export function notificationForUpcomingDemo(
   guestName: string,
   startsAt: Date,
   property?: string | null,
@@ -150,17 +150,17 @@ export function notificationForUpcomingTour(
   const day = formatDayWord(startsAt, now);
   const time = formatClockTime(startsAt);
   return {
-    title: `Tour with ${guestName} ${day} at ${time}.`,
+    title: `Demo with ${guestName} ${day} at ${time}.`,
     description: property ?? '',
   };
 }
 
-// ── Tour status changes (confirmed / completed / cancelled / no-show) ────
+// ── Demo status changes (confirmed / completed / cancelled / no-show) ────
 
 /**
- * Tour status moved. Past tense for the event, the guest's name first.
+ * Demo status moved. Past tense for the event, the guest's name first.
  */
-export function notificationForTourStatus(
+export function notificationForDemoStatus(
   guestName: string,
   status: 'confirmed' | 'completed' | 'cancelled' | 'no_show',
   property?: string | null,
@@ -172,26 +172,26 @@ export function notificationForTourStatus(
     no_show: 'was a no-show',
   };
   return {
-    title: `${guestName}'s tour ${verbs[status]}.`,
+    title: `${guestName}'s demo ${verbs[status]}.`,
     description: property ?? '',
   };
 }
 
-// ── Tours waiting for follow-up ──────────────────────────────────────────
+// ── Demos waiting for follow-up ──────────────────────────────────────────
 
 /**
- * Bell-feed entry for completed tours with no deal yet — the realtor
+ * Bell-feed entry for completed demos with no deal yet — the rep
  * walked someone through and never opened a pipeline card.
  */
-export function notificationForToursNeedingFollowUp(count: number): NotificationCopy {
+export function notificationForDemosNeedingFollowUp(count: number): NotificationCopy {
   if (count === 1) {
     return {
-      title: '1 tour wrapped without a deal.',
+      title: '1 demo wrapped without a deal.',
       description: 'Worth a check.',
     };
   }
   return {
-    title: `${count} tours wrapped without a deal.`,
+    title: `${count} demos wrapped without a deal.`,
     description: 'Worth a check.',
   };
 }
@@ -200,7 +200,7 @@ export function notificationForToursNeedingFollowUp(count: number): Notification
 
 /**
  * Bell-feed entry for a follow-up that's hit its date. The slip count
- * tells the realtor how stale this is.
+ * tells the rep how stale this is.
  */
 export function notificationForFollowUpDue(
   name: string,
@@ -232,18 +232,18 @@ export function notificationForFollowUpDue(
 // ── Waitlist ─────────────────────────────────────────────────────────────
 
 /**
- * People are stacked on the tour waitlist — they want a slot we haven't
+ * People are stacked on the demo waitlist — they want a slot we haven't
  * given them. State the fact plainly.
  */
 export function notificationForWaitlist(count: number): NotificationCopy {
   if (count === 1) {
     return {
-      title: '1 person is still waiting for a tour slot.',
+      title: '1 person is still waiting for a demo slot.',
       description: 'Worth opening a window.',
     };
   }
   return {
-    title: `${count} people are still waiting for a tour slot.`,
+    title: `${count} people are still waiting for a demo slot.`,
     description: 'Worth opening a window.',
   };
 }
@@ -267,18 +267,18 @@ export function notificationForDealStageMove(dealTitle: string, stageName: strin
   return `Pipeline moved: ${dealTitle} is in ${stageName}.`;
 }
 
-// ── Brokerage events (broker-only) ───────────────────────────────────────
+// ── Team events (manager-only) ───────────────────────────────────────
 
 /**
- * Someone joined the brokerage via the public join code.
+ * Someone joined the team via the public join code.
  */
 export function notificationForMemberJoined(
   identifier: string,
-  role: 'broker_admin' | 'realtor_member',
+  role: 'manager_admin' | 'rep_member',
   via: 'join_code' | 'email_invitation',
 ): NotificationCopy {
-  const roleWord = role === 'broker_admin' ? 'Admin' : 'Realtor';
-  const verb = via === 'join_code' ? 'joined the brokerage' : 'accepted the invitation';
+  const roleWord = role === 'manager_admin' ? 'Admin' : 'Rep';
+  const verb = via === 'join_code' ? 'joined the team' : 'accepted the invitation';
   return {
     title: `${identifier} ${verb}.`,
     description: roleWord,
@@ -286,7 +286,7 @@ export function notificationForMemberJoined(
 }
 
 /**
- * Member left or was removed from the brokerage.
+ * Member left or was removed from the team.
  */
 export function notificationForMemberRemoved(identifier: string): NotificationCopy {
   return {
@@ -296,7 +296,7 @@ export function notificationForMemberRemoved(identifier: string): NotificationCo
 }
 
 /**
- * An agent flagged a deal for broker review. The agent's name is the
+ * An agent flagged a deal for manager review. The agent's name is the
  * subject; the deal is what they're asking about.
  */
 export function notificationForReviewRequested(
@@ -311,7 +311,7 @@ export function notificationForReviewRequested(
 }
 
 /**
- * A deal closed won. Past tense — it already happened — and the brokerage
+ * A deal closed won. Past tense — it already happened — and the team
  * gets the announcement without the marketing veneer.
  */
 export function notificationForDealWon(dealTitle: string, agentName?: string | null): NotificationCopy {
@@ -324,10 +324,10 @@ export function notificationForDealWon(dealTitle: string, agentName?: string | n
 }
 
 /**
- * A new deal landed on the brokerage radar (broker-side mirror of the
+ * A new deal landed on the team radar (manager-side mirror of the
  * agent's pipeline-added toast).
  */
-export function notificationForBrokerageDealCreated(
+export function notificationForTeamDealCreated(
   dealTitle: string,
   agentName?: string | null,
 ): NotificationCopy {

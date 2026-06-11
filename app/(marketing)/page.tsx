@@ -1,7 +1,7 @@
 /**
- * `/` (home): Chippi homepage, rebuilt on the fortitudo "studio ASCII" design system.
+ * `/` (home): Koala homepage, rebuilt on the fortitudo "studio ASCII" design system.
  *
- * One scrolling experience in fortitudo's section vocabulary, carrying Chippi's
+ * One scrolling experience in fortitudo's section vocabulary, carrying Koala's
  * real-estate-CRM substance: meet the agent (ASCII hero with the rotating job
  * word) → the honest number strip (stats) → the work it handles (gradient
  * cards) → the flow (how it works) → why it exists (about) → the ask (ASCII
@@ -24,7 +24,7 @@ import { HomeCTA } from '@/components/marketing/fortitudo/home/cta';
 export default async function MarketingHomePage() {
   const { userId } = await auth();
   if (userId) {
-    redirect('/auth/redirect?intent=realtor');
+    redirect('/auth/redirect?intent=rep');
   }
 
   return (

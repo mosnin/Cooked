@@ -39,7 +39,7 @@ const contactsByStageConfig = {
 
 const STAGE_FILLS: Record<string, string> = {
   Qualifying: 'hsl(var(--muted-foreground) / 0.5)',
-  Tour: 'hsl(var(--foreground) / 0.7)',
+  Demo: 'hsl(var(--foreground) / 0.7)',
   Applied: 'hsl(var(--foreground))',
 };
 

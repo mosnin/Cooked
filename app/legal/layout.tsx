@@ -15,7 +15,7 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
       <header className="border-b border-border bg-background/90 backdrop-blur">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <BrandLogo className="h-7" alt="Chippi" />
+            <BrandLogo className="h-7" alt="Koala" />
           </Link>
           <Link href="/sign-up" className="text-sm rounded-full bg-primary text-primary-foreground px-4 py-2 font-medium">
             Start free trial

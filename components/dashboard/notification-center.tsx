@@ -29,10 +29,10 @@ interface Notification {
 
 const TYPE_ICONS: Record<string, typeof Bell> = {
   new_lead: PhoneIncoming,
-  upcoming_tour: CalendarDays,
+  upcoming_demo: CalendarDays,
   follow_up_due: Clock,
   waitlist: Users,
-  tour_needs_action: Briefcase,
+  demo_needs_action: Briefcase,
 };
 
 const PRIORITY_COLORS: Record<string, string> = {
@@ -66,7 +66,7 @@ export function NotificationCenter({ slug, spaceId }: { slug: string; spaceId?: 
     return () => clearInterval(interval);
   }, [loadNotifications]);
 
-  // Realtime: refetch notifications when this space's Contact or Tour
+  // Realtime: refetch notifications when this space's Contact or Demo
   // rows change. The channel name includes spaceId so two tabs of the
   // same workspace each get their own channel (Supabase rejects
   // duplicate channel names on the same client) and the postgres_changes
@@ -86,7 +86,7 @@ export function NotificationCenter({ slug, spaceId }: { slug: string; spaceId?: 
       )
       .on(
         'postgres_changes' as any,
-        { event: '*', schema: 'public', table: 'Tour', filter: `spaceId=eq.${spaceId}` },
+        { event: '*', schema: 'public', table: 'Demo', filter: `spaceId=eq.${spaceId}` },
         () => { loadNotifications(); },
       )
       .subscribe();

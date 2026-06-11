@@ -1,5 +1,5 @@
 -- ============================================================================
--- Brokerage offboarding hardening (follow-up to 20260506000000)
+-- Team offboarding hardening (follow-up to 20260506000000)
 -- ============================================================================
 -- Audit of BP1 found two SECURITY items:
 --
@@ -18,7 +18,7 @@
 -- ============================================================================
 
 -- 1. Tighten grant.
-REVOKE EXECUTE ON FUNCTION offboard_brokerage_member(text, text, text, boolean)
+REVOKE EXECUTE ON FUNCTION offboard_team_member(text, text, text, boolean)
   FROM authenticated;
 
 -- 2. Replace the function body with one that also guards the destination's
@@ -27,10 +27,10 @@ REVOKE EXECUTE ON FUNCTION offboard_brokerage_member(text, text, text, boolean)
 -- function (locking, transfer scope, return shape) is unchanged — copy the
 -- body verbatim from the original migration and add the destination check
 -- near the top alongside the existing Space lookups.
-CREATE OR REPLACE FUNCTION offboard_brokerage_member(
+CREATE OR REPLACE FUNCTION offboard_team_member(
   p_leaving_user_id     text,
   p_destination_user_id text,
-  p_brokerage_id        text,
+  p_team_id        text,
   p_dry_run             boolean DEFAULT false
 ) RETURNS json
 LANGUAGE plpgsql
@@ -43,7 +43,7 @@ DECLARE
   v_destination_status   text;
   v_contact_count        integer := 0;
   v_deal_count           integer := 0;
-  v_tour_count           integer := 0;
+  v_demo_count           integer := 0;
 BEGIN
   -- Destination must still be 'active' — we accept the column not existing
   -- on pre-migration databases by treating NULL as active for forward-compat.
@@ -89,7 +89,7 @@ BEGIN
   INSERT INTO _moved_contacts (id)
   SELECT id FROM "Contact"
    WHERE "spaceId" = v_leaving_space_id
-     AND "brokerageId" = p_brokerage_id;
+     AND "teamId" = p_team_id;
 
   INSERT INTO _moved_deals (id)
   SELECT d.id
@@ -103,8 +103,8 @@ BEGIN
 
   SELECT count(*) INTO v_contact_count FROM _moved_contacts;
   SELECT count(*) INTO v_deal_count    FROM _moved_deals;
-  SELECT count(*) INTO v_tour_count
-    FROM "Tour" t
+  SELECT count(*) INTO v_demo_count
+    FROM "Demo" t
    WHERE t."spaceId" = v_leaving_space_id
      AND t."contactId" IN (SELECT id FROM _moved_contacts)
      AND t."startsAt" >= now();
@@ -114,7 +114,7 @@ BEGIN
       'dryRun', true,
       'contactCount', v_contact_count,
       'dealCount', v_deal_count,
-      'openTourCount', v_tour_count
+      'openDemoCount', v_demo_count
     );
   END IF;
 
@@ -144,24 +144,24 @@ BEGIN
    WHERE "spaceId" = v_leaving_space_id
      AND "dealId" IN (SELECT id FROM _moved_deals);
 
-  UPDATE "Tour"
+  UPDATE "Demo"
      SET "spaceId" = v_destination_space_id
    WHERE "spaceId" = v_leaving_space_id
      AND "contactId" IN (SELECT id FROM _moved_contacts);
 
-  DELETE FROM "BrokerageMembership"
+  DELETE FROM "TeamMembership"
    WHERE "userId" = p_leaving_user_id
-     AND "brokerageId" = p_brokerage_id;
+     AND "teamId" = p_team_id;
 
   -- Only flip User.status to 'offboarded' if this was the user's LAST
-  -- brokerage membership. Dual-brokerage realtors (members of two
-  -- brokerages at once) leaving one shouldn't be locked out of Chippi
+  -- team membership. Dual-team reps (members of two
+  -- teams at once) leaving one shouldn't be locked out of Koala
   -- entirely — the API gate in lib/api-auth.ts treats 'offboarded' as
   -- a hard account stop. We still record offboardedAt + offboardedToUserId
   -- so the audit trail for THIS transfer survives, but leave status active
-  -- so their other brokerage's membership keeps working.
+  -- so their other team's membership keeps working.
   IF NOT EXISTS (
-    SELECT 1 FROM "BrokerageMembership" WHERE "userId" = p_leaving_user_id
+    SELECT 1 FROM "TeamMembership" WHERE "userId" = p_leaving_user_id
   ) THEN
     UPDATE "User"
        SET status = 'offboarded',
@@ -179,11 +179,11 @@ BEGIN
     'dryRun', false,
     'contactsMoved', v_contact_count,
     'dealsMoved', v_deal_count,
-    'toursMoved', v_tour_count
+    'demosMoved', v_demo_count
   );
 END;
 $$;
 
 -- Re-grant to service_role only — authenticated is deliberately excluded.
-GRANT EXECUTE ON FUNCTION offboard_brokerage_member(text, text, text, boolean)
+GRANT EXECUTE ON FUNCTION offboard_team_member(text, text, text, boolean)
   TO service_role;

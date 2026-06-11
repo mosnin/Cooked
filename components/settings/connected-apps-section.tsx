@@ -8,19 +8,19 @@
  *   - expired  → amber dot + "Reconnect" link
  *   - none     → "Connect" pill
  *
- * The realtor sees one row per app. Connect → OAuth at the provider →
+ * The rep sees one row per app. Connect → OAuth at the provider →
  * Composio sends them back to /integrations/callback → row appears
  * connected. Disconnect → one tap, no confirm. Reconnect = disconnect
- * + connect, but the realtor sees one tap.
+ * + connect, but the rep sees one tap.
  *
  * Categories are guidance, not a filter dropdown — they help the
- * realtor scan, not configure.
+ * rep scan, not configure.
  *
  * Health badges: after the connection list loads, we fire a separate
  * non-blocking fetch to /api/integrations/health so each connected row
  * shows a live status badge (healthy / expired / error / disconnected).
  * The badge refreshes on window focus — stale auth shows up the moment
- * the realtor comes back to the tab, not just when they next open a chat.
+ * the rep comes back to the tab, not just when they next open a chat.
  */
 
 import { useEffect, useMemo, useState, useCallback } from 'react';
@@ -43,12 +43,12 @@ interface ConnectionRow {
   /** Aggregate state of the connection's Composio trigger subscriptions.
    *  'off'    — no curated triggers for this toolkit (the inbound half
    *             of integrations isn't wired for this app yet)
-   *  'active' — at least one trigger registered and listening; Chippi
-   *             will draft something the next time the realtor's app
+   *  'active' — at least one trigger registered and listening; Koala
+   *             will draft something the next time the rep's app
    *             emits an event we care about
-   *  'paused' — triggers exist but the realtor turned them off
+   *  'paused' — triggers exist but the rep turned them off
    *  'failed' — registration was attempted but Composio rejected. The
-   *             realtor sees this as "couldn't tune in" so silent
+   *             rep sees this as "couldn't tune in" so silent
    *             failure doesn't masquerade as off-by-design.            */
   triggers?: 'off' | 'active' | 'paused' | 'failed';
 }
@@ -177,9 +177,9 @@ export interface CallbackResult {
 
 /**
  * Translate the raw `reason` string from the OAuth callback into a sentence
- * the realtor can act on. Composio errors like `Auth_Config_NotFound` are
+ * the rep can act on. Composio errors like `Auth_Config_NotFound` are
  * meaningless to a non-engineer — we map them to "set up the auth config in
- * the Composio dashboard" so the realtor knows where to go.
+ * the Composio dashboard" so the rep knows where to go.
  */
 function explainCallbackReason(reason: string | null, toolkit: string | null): string {
   const tk = toolkit ? ` (${toolkit})` : '';
@@ -210,17 +210,17 @@ interface SetupHealth {
 /**
  * `showSetupHealth` gates the env-var / plumbing banners (missing
  * COMPOSIO_API_KEY, missing NEXT_PUBLIC_APP_URL, the "not configured"
- * checklist). Those messages name infrastructure the realtor can't act
+ * checklist). Those messages name infrastructure the rep can't act
  * on — they belong on the admin-flavored /settings surface, not on
- * /integrations where the realtor lives. Default: off (realtor view).
+ * /integrations where the rep lives. Default: off (rep view).
  * Pass `showSetupHealth` from /settings to keep the warnings where the
  * operator can fix them.
  */
 /**
- * Endpoint set the panel talks to. Defaults to the realtor routes so existing
- * callers are untouched. The brokerage integrations surface passes the
- * /api/broker/integrations routes instead — same component, same rendering,
- * different scope. `health` is optional: the brokerage surface has no health
+ * Endpoint set the panel talks to. Defaults to the rep routes so existing
+ * callers are untouched. The team integrations surface passes the
+ * /api/manager/integrations routes instead — same component, same rendering,
+ * different scope. `health` is optional: the team surface has no health
  * endpoint (no curated triggers yet), so it falls back to the static status
  * pill when omitted.
  */
@@ -231,7 +231,7 @@ export interface ConnectedAppsEndpoints {
   health?: string;
 }
 
-const REALTOR_ENDPOINTS: ConnectedAppsEndpoints = {
+const REP_ENDPOINTS: ConnectedAppsEndpoints = {
   list: '/api/integrations',
   connect: (toolkit) => `/api/integrations/connect/${toolkit}`,
   item: (id) => `/api/integrations/${id}`,
@@ -241,7 +241,7 @@ const REALTOR_ENDPOINTS: ConnectedAppsEndpoints = {
 export function ConnectedAppsSection({
   callbackResult,
   showSetupHealth = false,
-  endpoints = REALTOR_ENDPOINTS,
+  endpoints = REP_ENDPOINTS,
 }: {
   callbackResult?: CallbackResult | null;
   showSetupHealth?: boolean;
@@ -252,7 +252,7 @@ export function ConnectedAppsSection({
   const [setup, setSetup] = useState<SetupHealth | null>(null);
   const [busyToolkit, setBusyToolkit] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  // Auto-clear the callback banner when the realtor dismisses it. Persisted
+  // Auto-clear the callback banner when the rep dismisses it. Persisted
   // in component state — refreshing the page brings it back via searchParams,
   // which is the right behaviour (the banner reflects the URL, not history).
   const [callbackDismissed, setCallbackDismissed] = useState(false);
@@ -290,7 +290,7 @@ export function ConnectedAppsSection({
   // fetchHealth is intentionally non-blocking — it updates the health badges
   // after the connections list is already on screen.
   const fetchHealth = useCallback(async () => {
-    // No health endpoint (e.g. brokerage surface) → skip; the static status
+    // No health endpoint (e.g. team surface) → skip; the static status
     // pill renders instead of a live badge.
     if (!endpoints.health) return;
     setHealthLoading(true);
@@ -311,7 +311,7 @@ export function ConnectedAppsSection({
   }, [endpoints.health]);
 
   // Fetch health on mount and whenever the window regains focus.
-  // This catches stale auth that expires while the realtor is away.
+  // This catches stale auth that expires while the rep is away.
   useEffect(() => {
     void fetchHealth();
 
@@ -364,7 +364,7 @@ export function ConnectedAppsSection({
   }
 
   /**
-   * Pause or resume Chippi's watch on this connection. PATCHes the
+   * Pause or resume Koala's watch on this connection. PATCHes the
    * connection's trigger subscriptions in bulk (one toggle, all
    * triggers). Optimistic update — the UI flips immediately and rolls
    * back on a non-OK response.
@@ -392,7 +392,7 @@ export function ConnectedAppsSection({
               : c,
           ),
         );
-        setError("Couldn't change Chippi's watch on that app.");
+        setError("Couldn't change Koala's watch on that app.");
       }
     } catch {
       setConnections((prev) =>
@@ -425,9 +425,9 @@ export function ConnectedAppsSection({
 
   if (configured === false) {
     // The "not configured" state is plumbing — env vars, OAuth dashboards,
-    // redeploys. The realtor can't act on any of it. The admin-flavored
+    // redeploys. The rep can't act on any of it. The admin-flavored
     // /settings view passes `showSetupHealth` to surface the checklist
-    // where someone can fix it; the realtor sees the canonical empty
+    // where someone can fix it; the rep sees the canonical empty
     // state instead.
     if (!showSetupHealth) {
       return (
@@ -461,16 +461,16 @@ export function ConnectedAppsSection({
 
   // Configured, but the callback URL env var is missing — this is the silent
   // killer the audit identified: OAuth completes, Composio redirects to a
-  // default URL, the realtor never lands back in the app and the connection
+  // default URL, the rep never lands back in the app and the connection
   // never persists. Surface it loud — but only on the admin surface; the
-  // realtor can't act on a missing env var.
+  // rep can't act on a missing env var.
   const showAppUrlWarning = showSetupHealth && setup && setup.apiKeySet && !setup.appUrlSet;
   const showCallbackBanner = callbackResult && !callbackDismissed;
 
   return (
     <div className="space-y-8">
       {/* OAuth callback banner — green on success, amber on failure. The
-          previous build silently dropped these results so the realtor never
+          previous build silently dropped these results so the rep never
           knew the connection had failed; now the failure reason gets
           translated to a sentence they can act on. */}
       {showCallbackBanner && (
@@ -532,7 +532,7 @@ export function ConnectedAppsSection({
         // Coming-soon entries get filtered at the render boundary — don't
         // market what doesn't exist. The catalog data still carries them
         // (the connect route uses COMING_SOON_TOOLKITS as its defense-in-
-        // depth 501 list) but the realtor never sees a row they can't act
+        // depth 501 list) but the rep never sees a row they can't act
         // on.
         const apps = (grouped[cat] ?? []).filter((a) => !a.comingSoon);
         if (apps.length === 0) return null;
@@ -696,12 +696,12 @@ function IntegrationRow({
         )}
         {showWatch && isFailed && (
           <p className="mt-1 text-[11px] text-amber-700 dark:text-amber-400 leading-relaxed">
-            Chippi couldn&apos;t tune in to this app. Try reconnecting.
+            Koala couldn&apos;t tune in to this app. Try reconnecting.
           </p>
         )}
         {showWatch && !isFailed && (
           <p className="mt-1 text-[11px] text-muted-foreground leading-relaxed">
-            {isPaused ? 'Quiet here.' : 'Chippi is listening.'}{' '}
+            {isPaused ? 'Quiet here.' : 'Koala is listening.'}{' '}
             <button
               type="button"
               onClick={onTogglePause}
@@ -757,7 +757,7 @@ function Action({
     return <Loader2 size={14} className="animate-spin text-muted-foreground" />;
   }
   if (action.kind === 'coming-soon') {
-    // Disabled, no click target. The realtor can read the row, can see
+    // Disabled, no click target. The rep can read the row, can see
     // the app exists, and isn't lured into tapping a button that 501s.
     return (
       <span

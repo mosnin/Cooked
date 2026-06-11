@@ -2,7 +2,7 @@
  * The Vitruvian macro frame — Phase 6.
  *
  * Single source of truth for every layout width above ~200px. Components
- * that lay out the shell (sidebar, page container, FocusCard, ChippiBar)
+ * that lay out the shell (sidebar, page container, FocusCard, KoalaBar)
  * import their width from here so the geometry can never silently drift.
  *
  * ── The lattice ────────────────────────────────────────────────────────────
@@ -13,7 +13,7 @@
  *    spacing ladder 48 → 24 → 16 → 12, Pythagorean octave → fifth → fourth).
  *
  *      Sidebar       = U × 5  = 240
- *      ChippiBar     = U × 16 = 768
+ *      KoalaBar     = U × 16 = 768
  *      Page padding  = U × 1  = 48   (lg, single side)
  *
  * 2. The φ family — the FocusCard inscribed inside the content column.
@@ -60,8 +60,8 @@ export const SIDEBAR_WIDTH_PX = 240;
 /** Collapsed sidebar — icon-rail convention. Not derived from RHYTHM_U;
  *  this is the named exception so it doesn't drift. */
 export const SIDEBAR_COLLAPSED_PX = 56;
-/** ChippiBar (persistent floating composer) — `RHYTHM_U × 16`. */
-export const CHIPPI_BAR_WIDTH_PX = 768;
+/** KoalaBar (persistent floating composer) — `RHYTHM_U × 16`. */
+export const KOALA_BAR_WIDTH_PX = 768;
 /** Page padding, large viewport, single side — `RHYTHM_U × 1`. */
 export const PAGE_PAD_LG_PX = 48;
 
@@ -85,6 +85,6 @@ export const SIDEBAR_COLLAPSED = 'w-[56px]';
 export const PAGE_MAX = 'max-w-[1500px]';
 /** FocusCard max width — the golden inset. */
 export const FOCUS_CARD_MAX = 'max-w-[868px]';
-/** ChippiBar max width — 768px matches Tailwind's `max-w-3xl`, kept as
+/** KoalaBar max width — 768px matches Tailwind's `max-w-3xl`, kept as
  *  a named export so the intent reads clearly at the call site. */
-export const CHIPPI_BAR_MAX = 'max-w-3xl';
+export const KOALA_BAR_MAX = 'max-w-3xl';

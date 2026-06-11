@@ -1,7 +1,7 @@
 /**
  * GET /api/whatsapp?slug=xxx
  *
- * The realtor's WhatsApp Business conversations, grouped per contact.
+ * The rep's WhatsApp Business conversations, grouped per contact.
  *   - Nothing connected → `{ connected: false }`
  *   - Connected → `{ connected: true, conversations: [] }`
  *
@@ -12,7 +12,7 @@
  *
  * If the list slug returns flat messages (not pre-grouped conversations),
  * we group them client-side by phone number — the conversation is what
- * the realtor wants to see, not raw messages.
+ * the rep wants to see, not raw messages.
  */
 
 import { NextRequest, NextResponse } from 'next/server';

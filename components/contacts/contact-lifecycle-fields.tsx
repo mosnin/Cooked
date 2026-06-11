@@ -12,7 +12,7 @@ interface Props {
 }
 
 /**
- * Sidebar card with two low-touch lifecycle fields realtors want:
+ * Sidebar card with two low-touch lifecycle fields reps want:
  *   - referralSource: "who sent this lead" (free text)
  *   - snoozedUntil: park the contact out of the main view until a date
  *

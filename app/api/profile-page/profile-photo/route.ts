@@ -2,9 +2,9 @@
  * POST   /api/profile-page/profile-photo — upload the public-page profile photo.
  * DELETE /api/profile-page/profile-photo — clear it.
  *
- * Distinct from /api/upload (which writes the dashboard's realtorPhotoUrl on
+ * Distinct from /api/upload (which writes the dashboard's repPhotoUrl on
  * SpaceSetting). This one writes ProfilePage.profilePhotoUrl — a face the
- * realtor picks specifically for /p/[slug] without disturbing the photo their
+ * rep picks specifically for /p/[slug] without disturbing the photo their
  * dashboard chrome / intake form / booking page display. Stored private,
  * signed on read — same contract as the cover photo.
  */

@@ -6,7 +6,7 @@
 --   - app/api/cron/draft-outcomes/route.ts (draft-outcome classifier)
 -- but the column only existed on Contact (added in 20260316000004), so both
 -- paths failed with `column Deal.stageChangedAt does not exist`. The chat
--- error was visible to the realtor on the first deal-adjacent question.
+-- error was visible to the rep on the first deal-adjacent question.
 --
 -- The corresponding Deal write site is the deal-update API, which sets
 -- stageChangedAt to now() whenever stageId changes (analogous to the existing

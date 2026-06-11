@@ -7,7 +7,7 @@ import { getSpaceForUser } from '@/lib/space';
 // Returns rich data for expandable chat cards. Auth required — user must own
 // the space. spaceId is validated against the authenticated user's space.
 
-const ALLOWED_TYPES = ['contact', 'deal', 'tour', 'property'] as const;
+const ALLOWED_TYPES = ['contact', 'deal', 'demo', 'property'] as const;
 type CardType = (typeof ALLOWED_TYPES)[number];
 
 function isCardType(v: string): v is CardType {
@@ -50,8 +50,8 @@ export async function GET(
         return handleContact(id, space.id);
       case 'deal':
         return handleDeal(id, space.id);
-      case 'tour':
-        return handleTour(id, space.id);
+      case 'demo':
+        return handleDemo(id, space.id);
       case 'property':
         return handleProperty(id, space.id);
     }
@@ -232,11 +232,11 @@ async function handleDeal(id: string, spaceId: string): Promise<NextResponse> {
   });
 }
 
-// ── Tour ─────────────────────────────────────────────────────────────────────
+// ── Demo ─────────────────────────────────────────────────────────────────────
 
-async function handleTour(id: string, spaceId: string): Promise<NextResponse> {
+async function handleDemo(id: string, spaceId: string): Promise<NextResponse> {
   const { data: row, error } = await supabase
-    .from('Tour')
+    .from('Demo')
     .select(
       'id, startsAt, endsAt, status, notes, contactId, propertyAddress, guestName, guestEmail, guestPhone',
     )
@@ -245,8 +245,8 @@ async function handleTour(id: string, spaceId: string): Promise<NextResponse> {
     .maybeSingle();
 
   if (error) {
-    console.error('[cards/tour/GET] query error:', error);
-    return NextResponse.json({ error: 'Failed to fetch tour' }, { status: 500 });
+    console.error('[cards/demo/GET] query error:', error);
+    return NextResponse.json({ error: 'Failed to fetch demo' }, { status: 500 });
   }
   if (!row) return NextResponse.json({ error: 'Not found' }, { status: 404 });
 
@@ -269,7 +269,7 @@ async function handleTour(id: string, spaceId: string): Promise<NextResponse> {
     }
   }
 
-  // Tour doesn't have a linked Property row; it stores propertyAddress as a
+  // Demo doesn't have a linked Property row; it stores propertyAddress as a
   // string. Build a minimal property shape if the address is present.
   const property: { id: string; address: string; price: number | null } | null =
     row.propertyAddress
@@ -288,7 +288,7 @@ async function handleTour(id: string, spaceId: string): Promise<NextResponse> {
 
   return NextResponse.json({
     data: {
-      tourId: row.id,
+      demoId: row.id,
       scheduledAt: row.startsAt,
       endsAt: row.endsAt ?? null,
       status: row.status,

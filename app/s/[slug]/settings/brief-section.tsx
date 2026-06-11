@@ -1,14 +1,14 @@
 'use client';
 
 /**
- * Brief settings — two switches the realtor cares about, no more.
+ * Brief settings — two switches the rep cares about, no more.
  *
  *   On / Off  — opt out of the daily brief entirely.
- *   Time      — hour of day in the realtor's timezone.
+ *   Time      — hour of day in the rep's timezone.
  *
  * Configuration is failure to decide. We picked: 7 AM default, in-app
  * delivery only (B4 adds email + SMS), no audio. The brief is the
- * sentence on the morning surface; if a realtor wants more knobs,
+ * sentence on the morning surface; if a rep wants more knobs,
  * the next thing they want is to ignore it. Don't give them either.
  */
 
@@ -61,7 +61,7 @@ export function BriefSection({ slug }: BriefSectionProps) {
   const [loading, setLoading] = useState(true);
   const [sendingTest, setSendingTest] = useState(false);
   // The last-saved snapshot — Save button stays disabled until the
-  // realtor changes something. Saving a no-op is a small lie ("I saved
+  // rep changes something. Saving a no-op is a small lie ("I saved
   // your changes") that erodes the calm-confidence voice.
   const lastSaved = useRef<Snapshot | null>(null);
 

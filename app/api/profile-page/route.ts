@@ -1,5 +1,5 @@
 /**
- * GET   /api/profile-page — the realtor's public-page config (defaults if unset).
+ * GET   /api/profile-page — the rep's public-page config (defaults if unset).
  * PATCH /api/profile-page — update enabled / headline / section toggles / links / videos.
  */
 
@@ -16,20 +16,20 @@ import { SOCIAL_PLATFORMS, type SocialPlatform } from '@/components/profile-page
 export const runtime = 'nodejs';
 
 const SELECT =
-  'enabled, headline, showIntake, showTours, showProperties, customLinks, videos, coverPhotoUrl, profilePhotoUrl, featuredPropertyIds';
+  'enabled, headline, showIntake, showDemos, showProperties, customLinks, videos, coverPhotoUrl, profilePhotoUrl, featuredPropertyIds';
 
 // Brand identity bits (verified badge, social handles) live on SpaceSetting
 // rather than ProfilePage because they're inherited across every public
-// surface the realtor owns — the public page, the application, the booking
+// surface the rep owns — the public page, the application, the booking
 // page all read these. The PATCH below threads them through.
 const SETTINGS_SELECT = 'isVerified, socialLinks';
 
 // The picker only needs to render — full property pages live elsewhere.
-// We cap the list at 50 so the editor stays snappy; if a realtor truly has
+// We cap the list at 50 so the editor stays snappy; if a rep truly has
 // more, the picker isn't the right tool for the long tail.
 const AVAILABLE_PROPERTIES_CAP = 50;
 
-// Cap the realtor's curated set at 12 — enough for a carousel without
+// Cap the rep's curated set at 12 — enough for a carousel without
 // drowning the page. Matches the editor's own UI cap.
 const FEATURED_CAP = 12;
 
@@ -37,7 +37,7 @@ const DEFAULTS = {
   enabled: true,
   headline: null as string | null,
   showIntake: true,
-  showTours: true,
+  showDemos: true,
   showProperties: true,
   customLinks: [] as Array<{ id: string; label: string; url: string; thumbnail: string }>,
   videos: [] as Array<{ id: string; url: string; title: string }>,
@@ -87,7 +87,7 @@ export async function GET() {
       .eq('spaceId', space.id)
       .maybeSingle(),
     // The picker shows every active listing in the space. Capped at 50 —
-    // beyond that the realtor isn't picking from a list any more, they're
+    // beyond that the rep isn't picking from a list any more, they're
     // hunting, and that belongs in the listings management surface, not
     // here.
     supabase
@@ -164,7 +164,7 @@ export async function PATCH(req: NextRequest) {
   const body = (await req.json().catch(() => ({}))) as Record<string, unknown>;
   const patch: Record<string, unknown> = { updatedAt: new Date().toISOString() };
 
-  for (const key of ['enabled', 'showIntake', 'showTours', 'showProperties'] as const) {
+  for (const key of ['enabled', 'showIntake', 'showDemos', 'showProperties'] as const) {
     if (typeof body[key] === 'boolean') patch[key] = body[key];
   }
   if (body.headline === null || typeof body.headline === 'string') {
@@ -222,7 +222,7 @@ export async function PATCH(req: NextRequest) {
         .eq('listingStatus', 'active')
         .in('id', raw);
       const valid = new Set((validRows ?? []).map((r: { id: string }) => r.id));
-      // Preserve the realtor's submitted order — `.in()` returns rows in
+      // Preserve the rep's submitted order — `.in()` returns rows in
       // whatever order Postgres feels like.
       patch.featuredPropertyIds = raw.filter((id) => valid.has(id));
     }
@@ -240,7 +240,7 @@ export async function PATCH(req: NextRequest) {
   }
 
   // socialLinks + isVerified live on SpaceSetting (they're brand-level —
-  // every public surface the realtor owns reads from there). Build a
+  // every public surface the rep owns reads from there). Build a
   // separate settings patch and apply it if anything came through.
   const settingsPatch: Record<string, unknown> = {};
 

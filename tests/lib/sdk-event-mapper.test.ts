@@ -150,7 +150,7 @@ describe('mapSdkEvent — tool calls', () => {
 });
 
 describe('mapSdkEvent — approval requests', () => {
-  it('maps tool_approval_requested to permission_required with realtor-facing summary', () => {
+  it('maps tool_approval_requested to permission_required with rep-facing summary', () => {
     const out = mapSdkEvent(
       {
         type: 'run_item_stream_event',

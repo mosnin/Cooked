@@ -45,7 +45,7 @@ export function YourDataSection({ spaceName }: { spaceName: string }) {
       a.href = url;
       const disposition = res.headers.get('Content-Disposition') ?? '';
       const match = disposition.match(/filename="([^"]+)"/);
-      a.download = match?.[1] ?? 'chippi-export.json';
+      a.download = match?.[1] ?? 'koala-export.json';
       document.body.appendChild(a);
       a.click();
       a.remove();

@@ -1,11 +1,11 @@
-# Chippi agent eval — tool-routing regression net
+# Koala agent eval — tool-routing regression net
 
 A short offline check that catches the failure mode every recent fix has
 re-introduced: **the model picks the wrong tool**.
 
 "Send X@gmail.com a test email" should call `draft_message`. It started
 calling `find_integration_tool` last week. The fix shipped. The next prompt
-re-broke it. Nobody noticed until the realtor yelled.
+re-broke it. Nobody noticed until the rep yelled.
 
 This runner re-checks 28 hand-picked routing decisions in under a minute and
 exits non-zero on regression — so you find out before merge, not after.
@@ -19,7 +19,7 @@ Tool-routing regressions only. Examples:
   dispatcher
 - "Read my Gmail" calling `draft_message` (the recipient/reader mix-up)
 - Sweep prompts ("who haven't I followed up with") calling the wrong filter
-- Ambiguous prompts firing tools instead of `ask_realtor`
+- Ambiguous prompts firing tools instead of `ask_rep`
 - Greetings triggering a sweep loop
 - Stage moves routing through `update_deal` instead of `advance_deal_stage`
 
@@ -58,11 +58,11 @@ supposed to always run.
 
 ## How the offline part works
 
-The runner builds a real Chippi agent — same `make_chippi_agent` call as
+The runner builds a real Koala agent — same `make_koala_agent` call as
 `modal_app.chat_turn` — with the case's `connected_toolkits` injected into
 `workspace_info`. The model sees the full tool catalog (native tools + the
 curated FunctionTools per connected toolkit + the dispatcher fallback) and
-the real CHIPPI_INSTRUCTIONS prompt.
+the real KOALA_INSTRUCTIONS prompt.
 
 The curated tools (e.g. `gmail_send_email`, `googlecalendar_events_list`)
 are synthesized locally from `integrations_curated.CURATED_ACTIONS` —
@@ -93,7 +93,7 @@ $0.005 per case at gpt-5-mini, ~$0.15 for the whole suite. Worth it.
 
 ## Why this lives outside vitest
 
-`vitest` is TypeScript and runs against the Next.js side. Chippi is Python,
+`vitest` is TypeScript and runs against the Next.js side. Koala is Python,
 runs on Modal, and uses the openai-agents Python SDK. Driving the agent
 from TS would mean re-implementing the prompt and tool registration in TS
 — two sources of truth, drift guaranteed. Python eval against the same
@@ -103,12 +103,12 @@ Python code that ships to prod is the only way.
 
 Before merging any change that touches:
 
-- `agent/chippi.py` (the system prompt or the tool list)
+- `agent/koala.py` (the system prompt or the tool list)
 - `agent/tools/*` (tool descriptions, argument schemas)
 - `agent/integrations.py` or `agent/tools/integrations_dispatcher.py`
 - `agent/modal_app.py` workspace_info construction
 
-Or whenever a realtor reports "Chippi did the wrong thing." Add a case
+Or whenever a rep reports "Koala did the wrong thing." Add a case
 covering the failure shape; ship the fix; re-run; merge.
 
 ## Adding a new case
@@ -118,7 +118,7 @@ Open `cases.json`, append to `cases[]`:
 ```json
 {
   "id": "short-kebab-id",
-  "prompt": "the exact realtor utterance",
+  "prompt": "the exact rep utterance",
   "context": {"connected_toolkits": ["gmail"]},
   "expected": {
     "tool_calls_must_include": ["draft_message"],

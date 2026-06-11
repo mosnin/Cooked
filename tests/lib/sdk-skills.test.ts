@@ -41,7 +41,7 @@ describe('buildPipelineAnalystAgent', () => {
     expect(names).toContain('find_overdue_followups');
   });
 
-  it('asTool() produces a FunctionTool with the realtor-tuned name + description', () => {
+  it('asTool() produces a FunctionTool with the rep-tuned name + description', () => {
     const agent = buildPipelineAnalystAgent(makeCtx());
     const asTool = agent.asTool({
       toolName: 'analyze_pipeline',
@@ -73,7 +73,7 @@ describe('buildContactResearcherAgent', () => {
     expect(names).toContain('find_deal');
   });
 
-  it('asTool() produces a FunctionTool with the realtor-tuned name + description', () => {
+  it('asTool() produces a FunctionTool with the rep-tuned name + description', () => {
     const agent = buildContactResearcherAgent(makeCtx());
     const asTool = agent.asTool({
       toolName: 'research_person',

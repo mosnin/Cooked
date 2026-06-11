@@ -17,7 +17,7 @@ xAI's ceiling is 200; the cap is a guard rail with margin. The cap is
 enforced in `load_integration_tools` by trimming the curated slug list
 before schema fetch, not by failing late.
 
-A realtor with Gmail + HubSpot + Slack + Google Calendar connected
+A rep with Gmail + HubSpot + Slack + Google Calendar connected
 loads: 33 native + 24 curated (6+6+5+6 across those four toolkits) + 2
 dispatcher = **59 total tools**. Plenty of headroom.
 
@@ -42,7 +42,7 @@ Logs already shipped:
 
 - `agent/integrations.py` — `integration_tools_loaded` on agent build
   with `curated_count`, `curated_requested`, `dispatcher_count`,
-  `total`, `connected_toolkits`. Tells us the realistic per-realtor
+  `total`, `connected_toolkits`. Tells us the realistic per-rep
   tool count.
 - `agent/integrations.py:_build_curated_tool` — `curated_call_invoked`
   fires on every curated FunctionTool execution with `slug`, `toolkit`,
@@ -87,13 +87,13 @@ Compare `avg_turn_latency_ms` across the buckets.
   current state on docs.composio.dev).
 - **Curated wins by <0.5s** → the model isn't really using the fast
   path; check whether the prompt is steering it to dispatcher even when
-  a curated tool fits. Likely a chippi.py prompt fix.
+  a curated tool fits. Likely a koala.py prompt fix.
 - **Dispatcher wins** → either (a) the model wastes turns choosing the
   wrong pre-loaded tool from a too-long list, or (b) prompt-token cost
   of curated definitions is dominating. Shrink the allowlist to the 3-4
   highest-confidence slugs per toolkit and re-measure.
 
-The decision threshold is **net realtor-perceived latency** —
+The decision threshold is **net rep-perceived latency** —
 prompt-token cost rolls into model latency anyway, so the
 `avg_turn_latency_ms` number captures both directions of the tradeoff
 without needing a separate token accounting.
@@ -156,6 +156,6 @@ build a week of data before running the query.
 A microbenchmark of one curated call vs. one dispatcher call would
 show the curated path is faster by exactly the LLM-turn cost of a
 dispatcher hop (~1-3s on most chat models). That's not the interesting
-number. The interesting number is whether the realtor's chats — which
+number. The interesting number is whether the rep's chats — which
 are a mix of curated-fittable and long-tail actions — feel faster in
 aggregate. Only production traffic tells us that.

@@ -26,15 +26,15 @@ describe('buildPeopleDetailActions', () => {
     expect(actions).toEqual([]);
   });
 
-  it('hot + quiet 9 days → check-in + schedule a tour', () => {
+  it('hot + quiet 9 days → check-in + schedule a demo', () => {
     const actions = buildPeopleDetailActions({
       ...base,
       scoreLabel: 'hot',
       daysQuiet: 9,
     });
-    expect(actions.map((a) => a.id)).toEqual(['check-in', 'schedule-tour']);
+    expect(actions.map((a) => a.id)).toEqual(['check-in', 'schedule-demo']);
     expect(actions[0].label).toBe('Send a check-in');
-    expect(actions[1].intent).toBe('schedule-tour');
+    expect(actions[1].intent).toBe('schedule-demo');
   });
 
   it('cold + quiet 9 days → check-in + log a call', () => {
@@ -82,7 +82,7 @@ describe('buildPeopleDetailActions', () => {
       daysQuiet: 4,
       followUpAt: isoDaysFromNow(3),
     });
-    expect(actions.map((a) => a.id)).toEqual(['check-in', 'schedule-tour']);
+    expect(actions.map((a) => a.id)).toEqual(['check-in', 'schedule-demo']);
   });
 
   it('uncontacted, not new → single reach-out pill', () => {

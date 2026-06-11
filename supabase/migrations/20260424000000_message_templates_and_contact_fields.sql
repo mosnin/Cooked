@@ -1,7 +1,7 @@
 -- Phase 7 of the deals redesign: three small-but-daily quality-of-life wins.
 --
 -- 1. MessageTemplate: canned SMS/email/note bodies with simple {{placeholder}}
---    variables, owned by a space. Realtors write the 10-12 canonical messages
+--    variables, owned by a space. Reps write the 10-12 canonical messages
 --    they send every week once, then fire them per deal/contact.
 --
 -- 2. Contact.snoozedUntil: hide a contact from the main People view until a

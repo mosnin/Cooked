@@ -24,7 +24,7 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, Send } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
-import { ShimmerText } from '@/components/chippi/shimmer-text';
+import { ShimmerText } from '@/components/koala/shimmer-text';
 import { cn } from '@/lib/utils';
 import { EASE_APPLE } from '@/lib/motion';
 import {
@@ -183,7 +183,7 @@ export function WhatsAppThreadView({
       setSendError(
         err instanceof Error ? err.message : 'That didn’t go through.',
       );
-      // Roll back optimistic on failure so the realtor sees they need to retry.
+      // Roll back optimistic on failure so the rep sees they need to retry.
       setMessages((prev) => prev.filter((m) => m.id !== optimistic.id));
       setDraft(text);
     } finally {

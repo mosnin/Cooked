@@ -3,7 +3,7 @@
 /**
  * BrandPanel — the interactive surface of /s/[slug]/studio/brand.
  *
- * The realtor's brand kit: palette, caption voice, social handles. Studio
+ * The rep's brand kit: palette, caption voice, social handles. Studio
  * folds the palette into image generations so output comes out on-brand;
  * the voice primes caption writing.
  */
@@ -141,7 +141,7 @@ export function BrandPanel() {
         <div>
           <p className={SECTION_LABEL}>Voice</p>
           <p className={cn(CAPTION, 'mt-1')}>
-            How your captions should sound — Chippi writes to this.
+            How your captions should sound — Koala writes to this.
           </p>
         </div>
         <Textarea

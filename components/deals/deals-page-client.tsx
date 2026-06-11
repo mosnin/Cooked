@@ -21,7 +21,7 @@ export type BoardStatus = 'active' | 'closed';
 /**
  * The narrowing focus selected from the stat strip / narration line.
  * `null` means "show me everything in this status." A focus is a way for the
- * realtor to pull a specific story out of the data — "show me what's at
+ * rep to pull a specific story out of the data — "show me what's at
  * risk", "show me what's closing this month" — without configuring a popover.
  */
 export type BoardFocus = 'at-risk' | 'closing-month' | null;
@@ -69,14 +69,14 @@ export function DealsPageClient({
   const [searchQuery, setSearchQuery] = useState('');
   // Bumped by the kanban after every mutation refetch so the stat strip
   // (`PipelineSummary`) re-fetches in lockstep. Without this the strip would
-  // still say "0 active deals" right after the realtor created one.
+  // still say "0 active deals" right after the rep created one.
   const [summaryRefreshKey, setSummaryRefreshKey] = useState(0);
 
   // Load pipelines (triggers bootstrap if this is the first visit).
   // When the server already gave us pipelines we still want to restore the
   // last-active pipeline from localStorage on mount, but we skip the API
   // round-trip — pipelines barely change between renders, and the server's
-  // payload is good for the realtor's first paint.
+  // payload is good for the rep's first paint.
   useEffect(() => {
     if (!slug) return;
     let cancelled = false;
@@ -85,7 +85,7 @@ export function DealsPageClient({
     // selection from localStorage if there is one.
     if (initialPipelines.length > 0) {
       try {
-        const stored = localStorage.getItem(`chippi:deals:pipeline:${slug}`);
+        const stored = localStorage.getItem(`koala:deals:pipeline:${slug}`);
         const found = stored ? initialPipelines.find((p) => p.id === stored) : null;
         if (found && found.id !== activePipelineId) {
           setActivePipelineId(found.id);
@@ -107,7 +107,7 @@ export function DealsPageClient({
           setPipelines(data);
           // Restore last active pipeline from localStorage
           try {
-            const stored = localStorage.getItem(`chippi:deals:pipeline:${slug}`);
+            const stored = localStorage.getItem(`koala:deals:pipeline:${slug}`);
             const found = stored ? data.find((p) => p.id === stored) : null;
             setActivePipelineId(found ? found.id : data[0].id);
           } catch {
@@ -131,7 +131,7 @@ export function DealsPageClient({
   function handleSelectPipeline(id: string) {
     setActivePipelineId(id);
     try {
-      localStorage.setItem(`chippi:deals:pipeline:${slug}`, id);
+      localStorage.setItem(`koala:deals:pipeline:${slug}`, id);
     } catch {
       // quota exceeded / storage disabled
     }
@@ -167,7 +167,7 @@ export function DealsPageClient({
   return (
     <div className="space-y-8 max-w-[1500px] mx-auto pb-12">
       {/* Page header — serif H1 + single primary pill. The H1 is the noun
-          realtors use ("deals"); the URL, narration, and Add button all
+          reps use ("deals"); the URL, narration, and Add button all
           agree. */}
       <header className="flex items-end justify-between gap-4">
         <h1 className={H1} style={TITLE_FONT}>
@@ -178,10 +178,10 @@ export function DealsPageClient({
             {/* The conversation is the front door. Saying it out loud is
                 faster than any form, so it gets the primary pill. */}
             <Link
-              href={`/s/${slug}/chippi?prefill=${encodeURIComponent("I'm adding a new deal — ")}`}
+              href={`/s/${slug}/koala?prefill=${encodeURIComponent("I'm adding a new deal — ")}`}
               className={PRIMARY_PILL}
             >
-              Tell Chippi →
+              Tell Koala →
             </Link>
             {/* The form still exists for those who want it; offered quietly. */}
             <Link href={`/s/${slug}/deals/new`} className={QUIET_LINK}>
@@ -200,15 +200,15 @@ export function DealsPageClient({
           onAddDeal={handleAddDeal}
           refreshKey={summaryRefreshKey}
           // Hand the server-fetched stages to the summary only when the
-          // displayed pipeline matches what we pre-loaded. Once the realtor
+          // displayed pipeline matches what we pre-loaded. Once the rep
           // picks a different pipeline the prop falls through to undefined
           // and the summary falls back to its client fetch.
           initialStages={activePipelineId === initialPipelineId ? initialStages : undefined}
         />
       )}
 
-      {/* Pipeline tabs — only when the realtor actually has more than one
-          board to choose between. Most realtors have a single Sales pipeline;
+      {/* Pipeline tabs — only when the rep actually has more than one
+          board to choose between. Most reps have a single Sales pipeline;
           showing "[Sales] [+]" by itself was a row of chrome that paid no
           rent. The "+ new pipeline" affordance comes back when there are
           two or more — which is when it stops being a power-user feature. */}
@@ -320,7 +320,7 @@ export function DealsPageClient({
             setPipelines([p]);
             setActivePipelineId(p.id);
             try {
-              localStorage.setItem(`chippi:deals:pipeline:${slug}`, p.id);
+              localStorage.setItem(`koala:deals:pipeline:${slug}`, p.id);
             } catch {}
           }}
         />

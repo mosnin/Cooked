@@ -73,7 +73,7 @@ function isExcluded(relPath: string): boolean {
   if (/\.(test|spec)\.(ts|tsx)$/.test(relPath)) return true;
 
   // Whole trees we never audit:
-  //   - app/(auth)/**  Clerk/system flows; copy isn't Chippi's voice.
+  //   - app/(auth)/**  Clerk/system flows; copy isn't Koala's voice.
   //   - app/admin/**   Internal tooling; not the user's product.
   //   - app/api/**     Route handlers; wire format, not UI copy.
   if (/^app\/\(auth\)\//.test(relPath)) return true;

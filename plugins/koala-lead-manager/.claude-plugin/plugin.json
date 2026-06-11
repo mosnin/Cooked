@@ -1,0 +1,8 @@
+{
+  "name": "koala-lead-manager",
+  "description": "Manage your rental leads from Claude. View hot leads, check follow-ups, and add new leads using your Koala CRM data.",
+  "version": "1.0.0",
+  "author": { "name": "Koala", "url": "https://usekoala.com" },
+  "homepage": "https://usekoala.com",
+  "keywords": ["crm", "leads", "real-estate", "koala"]
+}

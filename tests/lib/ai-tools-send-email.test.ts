@@ -101,7 +101,7 @@ describe('sendEmailTool handler — contactId path', () => {
     const result = await sendEmailTool.handler(
       {
         contactId: 'c_1',
-        subject: 'Tour Friday',
+        subject: 'Demo Friday',
         body: 'Looking forward to it.',
       },
       makeCtx(),
@@ -111,7 +111,7 @@ describe('sendEmailTool handler — contactId path', () => {
     expect((sendEmailFromCRMMock.mock.calls as unknown[][])[0][0]).toMatchObject({
       toEmail: 'jane@example.com',
       fromName: 'Jane Realty',
-      subject: 'Tour Friday',
+      subject: 'Demo Friday',
     });
     expect(result.summary).toContain('jane@example.com');
     expect(result.display).toBe('success');

@@ -6,10 +6,10 @@ import { ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 /**
- * Thinking indicator shown while Chippi is mid-turn.
+ * Thinking indicator shown while Koala is mid-turn.
  *
  * The whole indicator is one alive line: the current action text shimmers
- * through `chippi-thinking-shimmer`, transitions smoothly when the action
+ * through `koala-thinking-shimmer`, transitions smoothly when the action
  * changes ("Thinking…" → "Reading HubSpot…" → "Drafting…"), and gets
  * out of the way the moment real text starts streaming.
  *
@@ -49,7 +49,7 @@ export function ThinkingIndicator({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -4 }}
               transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-              className="chippi-thinking-shimmer text-[13px] font-medium leading-relaxed"
+              className="koala-thinking-shimmer text-[13px] font-medium leading-relaxed"
             >
               {action}
             </motion.span>
@@ -87,7 +87,7 @@ export function ThinkingIndicator({
           >
             <p className="text-[12px] text-foreground/35 leading-relaxed max-w-prose whitespace-pre-wrap pl-0.5 pb-1">
               {streamingReasoning}
-              <span className="chippi-cursor" aria-hidden="true" />
+              <span className="koala-cursor" aria-hidden="true" />
             </p>
           </motion.div>
         )}

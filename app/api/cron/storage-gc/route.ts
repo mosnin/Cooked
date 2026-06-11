@@ -172,7 +172,7 @@ const PREFIX_SPECS: PrefixSpec[] = [
     // previous object inline now, but historical replacements (pre-
     // inline-fix) plus any inline-cleanup misses survive in storage
     // — the sweeper catches them. The DELETE handler intentionally
-    // keeps the object until the next upload so the realtor can
+    // keeps the object until the next upload so the rep can
     // revert, so the active row's coverPhotoUrl is the only thing
     // we need to keep.
     prefix: STORAGE_PREFIXES.profileCover,
@@ -205,14 +205,14 @@ const PREFIX_SPECS: PrefixSpec[] = [
     },
   },
   {
-    // Branding assets uploaded via /api/upload — logo, realtor photo,
+    // Branding assets uploaded via /api/upload — logo, rep photo,
     // favicon. SpaceSetting columns store full public URLs; we map each
     // back to a key via publicUrlToKey and intersect with the
     // candidates the sweeper just listed.
     //
     // Also covers /api/upload/onboarding pre-space uploads — those
     // start under onboarding/{userId}/ and are orphaned at the point
-    // the realtor abandons onboarding or replaces the file before
+    // the rep abandons onboarding or replaces the file before
     // committing it to a SpaceSetting column. Either way, the active
     // SpaceSetting reference is the only thing that should survive.
     prefix: STORAGE_PREFIXES.onboarding,
@@ -220,15 +220,15 @@ const PREFIX_SPECS: PrefixSpec[] = [
     referencedKeys: async (candidates) => {
       const { data } = await supabase
         .from('SpaceSetting')
-        .select('logoUrl, realtorPhotoUrl, intakeFaviconUrl')
+        .select('logoUrl, repPhotoUrl, intakeFaviconUrl')
         .limit(5000);
       const referenced = new Set<string>();
       for (const row of (data ?? []) as {
         logoUrl: string | null;
-        realtorPhotoUrl: string | null;
+        repPhotoUrl: string | null;
         intakeFaviconUrl: string | null;
       }[]) {
-        for (const url of [row.logoUrl, row.realtorPhotoUrl, row.intakeFaviconUrl]) {
+        for (const url of [row.logoUrl, row.repPhotoUrl, row.intakeFaviconUrl]) {
           if (!url) continue;
           const key = publicUrlToKey(url);
           if (key) referenced.add(key);

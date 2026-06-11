@@ -2,7 +2,7 @@
  * `move_deal_stage` — move a Deal to a new DealStage.
  *
  * Approval-gated: stage moves are high-signal in the pipeline view
- * (the kanban card physically jumps), so the realtor wants a clear
+ * (the kanban card physically jumps), so the rep wants a clear
  * "yes that's the move I meant" confirmation.
  *
  * Intentionally narrow in scope. This tool does NOT:

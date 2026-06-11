@@ -1,9 +1,9 @@
 import type { MetadataRoute } from 'next';
 
 /**
- * PWA manifest — makes Chippi installable to the realtor's home screen.
+ * PWA manifest — makes Koala installable to the rep's home screen.
  *
- * Realtors live between showings; a tab they have to remember to open is
+ * Reps live between showings; a tab they have to remember to open is
  * dramatically less useful than an icon next to their phone app drawer.
  * The manifest alone gives the "Add to Home Screen" prompt + branded
  * splash on iOS 16.4+, Chrome desktop/mobile, Edge, and Safari macOS 17+.
@@ -22,10 +22,10 @@ import type { MetadataRoute } from 'next';
  */
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Chippi — Agentic OS for Real Estate Agents & Brokerages',
-    short_name: 'Chippi',
+    name: 'Koala — Agentic OS for Real Estate Agents & Teams',
+    short_name: 'Koala',
     description:
-      'An AI agent that runs your realtor workspace — qualifies leads, drafts follow-ups, schedules tours, and keeps your pipeline current.',
+      'An AI agent that runs your rep workspace — qualifies leads, drafts follow-ups, schedules demos, and keeps your pipeline current.',
     start_url: '/',
     display: 'standalone',
     orientation: 'portrait',

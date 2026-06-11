@@ -11,16 +11,16 @@ import {
 } from '@/components/ui/tooltip';
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Sidebar collapse — desktop-only icon-rail mode for the realtor sidebar.
+// Sidebar collapse — desktop-only icon-rail mode for the rep sidebar.
 //
-// State lives in localStorage under `chippi.sidebar.collapsed`. To avoid an
+// State lives in localStorage under `koala.sidebar.collapsed`. To avoid an
 // SSR/CSR width flash on first paint, the provider starts as expanded on the
 // server and switches to the persisted value on mount with `transitions`
 // suppressed for that single sync (so the user only sees animations on
 // genuine toggles, not on hydration).
 // ─────────────────────────────────────────────────────────────────────────────
 
-const STORAGE_KEY = 'chippi.sidebar.collapsed';
+const STORAGE_KEY = 'koala.sidebar.collapsed';
 
 interface SidebarCollapseContextValue {
   collapsed: boolean;
@@ -74,13 +74,13 @@ export function SidebarCollapseProvider({ children }: { children: React.ReactNod
 
 export function useSidebarCollapsed() {
   const ctx = useContext(SidebarCollapseContext);
-  // When the sidebar isn't wrapped (e.g. broker sidebar), behave as expanded.
+  // When the sidebar isn't wrapped (e.g. manager sidebar), behave as expanded.
   if (!ctx) return { collapsed: false, animating: false, toggle: () => {} };
   return ctx;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Toggle button — pinned just above the user-footer divider in the realtor
+// Toggle button — pinned just above the user-footer divider in the rep
 // sidebar. Single tiny button, ChevronLeft when expanded, ChevronRight when
 // collapsed. Tooltip explains the action.
 // ─────────────────────────────────────────────────────────────────────────────

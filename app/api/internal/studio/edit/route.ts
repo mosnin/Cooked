@@ -1,5 +1,5 @@
 /**
- * POST /api/internal/studio/edit — internal edit endpoint for the Chippi
+ * POST /api/internal/studio/edit — internal edit endpoint for the Koala
  * agent (Modal/Python). Authed by AGENT_INTERNAL_SECRET, not Clerk. Edits an
  * existing File the agent references by id (e.g. an image it just generated).
  */
@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Daily spend cap — shared budget with the realtor-facing routes.
+  // Daily spend cap — shared budget with the rep-facing routes.
   const budget = await checkStudioSpendBudget(spaceId);
   if (!budget.allowed) {
     return NextResponse.json(

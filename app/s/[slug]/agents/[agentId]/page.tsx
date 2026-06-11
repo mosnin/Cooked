@@ -5,7 +5,7 @@ import { supabase } from '@/lib/supabase';
 import { AgentBuilderForm } from '@/components/agents/agent-builder-form';
 import type { CustomAgent } from '@/lib/swarm-types';
 
-export const metadata = { title: 'Edit Agent — Chippi' };
+export const metadata = { title: 'Edit Agent — Koala' };
 
 export default async function EditAgentPage({
   params,
@@ -14,7 +14,7 @@ export default async function EditAgentPage({
 }) {
   const { slug, agentId } = await params;
   const { userId } = await auth();
-  if (!userId) redirect('/login/realtor');
+  if (!userId) redirect('/login/rep');
 
   const space = await getSpaceFromSlug(slug);
   if (!space) notFound();

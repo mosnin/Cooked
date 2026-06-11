@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { buildMorningActions } from '@/components/chippi/morning-actions';
+import { buildMorningActions } from '@/components/koala/morning-actions';
 import type { MorningSummary } from '@/app/api/agent/morning/route';
 import type { MorningDoorway } from '@/lib/morning-story';
 

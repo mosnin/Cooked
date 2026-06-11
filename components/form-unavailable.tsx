@@ -1,7 +1,7 @@
 import { AlertCircle } from 'lucide-react';
 
 /**
- * Shown on public intake / booking pages when the realtor's subscription
+ * Shown on public intake / booking pages when the rep's subscription
  * is not active (i.e. stripeSubscriptionStatus is neither 'active' nor 'trialing').
  *
  * This is a server component — no client JS required.

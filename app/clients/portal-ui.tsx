@@ -11,11 +11,11 @@ const STATUS_TONE: Record<string, string> = {
   received: 'text-blue-700 bg-blue-50 dark:text-blue-400 dark:bg-blue-500/15',
   under_review: 'text-amber-700 bg-amber-50 dark:text-amber-400 dark:bg-amber-500/15',
   needs_info: 'text-amber-700 bg-amber-50 dark:text-amber-400 dark:bg-amber-500/15',
-  tour_scheduled: 'text-violet-700 bg-violet-50 dark:text-violet-400 dark:bg-violet-500/15',
+  demo_scheduled: 'text-violet-700 bg-violet-50 dark:text-violet-400 dark:bg-violet-500/15',
   approved: 'text-emerald-700 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-500/15',
   waitlisted: 'text-amber-700 bg-amber-50 dark:text-amber-400 dark:bg-amber-500/15',
   declined: 'text-rose-700 bg-rose-50 dark:text-rose-400 dark:bg-rose-500/15',
-  // tour statuses
+  // demo statuses
   scheduled: 'text-amber-700 bg-amber-50 dark:text-amber-400 dark:bg-amber-500/15',
   confirmed: 'text-emerald-700 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-500/15',
   completed: 'text-muted-foreground bg-muted',
@@ -26,7 +26,7 @@ const STATUS_LABEL: Record<string, string> = {
   received: 'Received',
   under_review: 'Under review',
   needs_info: 'Needs info',
-  tour_scheduled: 'Tour scheduled',
+  demo_scheduled: 'Demo scheduled',
   approved: 'Approved',
   waitlisted: 'Waitlisted',
   declined: 'Declined',
@@ -71,7 +71,7 @@ export function PortalEmptyState({
 
 /* ─── Date formatting ─────────────────────────────────────────────────────── */
 
-export function formatTourDate(iso: string | null): string {
+export function formatDemoDate(iso: string | null): string {
   if (!iso) return 'Time to be set';
   return new Date(iso).toLocaleString('en-US', {
     weekday: 'short',

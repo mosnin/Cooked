@@ -183,7 +183,7 @@ export function AffiliateView({ slug }: { slug: string }) {
     if (status.state === 'unconfigured')
       return 'Affiliate program is not active on this server.';
     if (status.state === 'unenrolled')
-      return 'Refer realtors and brokerages. Earn on every subscription.';
+      return 'Refer reps and teams. Earn on every subscription.';
     const s = status.stats;
     if (!s) return 'Your referral link is active.';
     if (s.referrals === 0) return 'Your link is live. Share it.';
@@ -196,7 +196,7 @@ export function AffiliateView({ slug }: { slug: string }) {
       <header className="space-y-1.5">
         <p className={cn(BODY_MUTED)}>Affiliate.</p>
         <h1 className={cn(H1)} style={TITLE_FONT}>
-          Earn with Chippi.
+          Earn with Koala.
         </h1>
         <p className={cn(BODY_MUTED)}>{statusSentence}</p>
       </header>
@@ -240,13 +240,13 @@ export function AffiliateView({ slug }: { slug: string }) {
               <p className={cn(SECTION_LABEL)}>How it works</p>
             </div>
             <p className={cn(BODY)}>
-              You get a personal referral link. Share it with other realtors or
-              brokerages. When they subscribe to Chippi through your link, you
+              You get a personal referral link. Share it with other reps or
+              teams. When they subscribe to Koala through your link, you
               earn a commission on their subscription — recurring, for as long
               as they stay active.
             </p>
             <p className={cn(BODY_MUTED)}>
-              One link works for both individual agents and entire brokerages.
+              One link works for both individual agents and entire teams.
               Payouts are configured in the FirstPromoter dashboard via PayPal,
               Wise, or Stripe — no setup needed here.
             </p>
@@ -282,7 +282,7 @@ export function AffiliateView({ slug }: { slug: string }) {
               </button>
             </div>
             <p className={cn(CAPTION)}>
-              Works for individual realtors and entire brokerages — share freely.
+              Works for individual reps and entire teams — share freely.
             </p>
           </div>
 

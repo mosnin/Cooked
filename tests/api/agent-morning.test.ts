@@ -39,7 +39,7 @@ vi.mock('@/lib/morning-story-agent', () => ({
  * maybeSingle → `{ data: row | null }`).
  *
  * Calls and their captured chain method args are stored on `supabaseCalls` so
- * tests can assert e.g. `.is('brokerageId', null)` was applied.
+ * tests can assert e.g. `.is('teamId', null)` was applied.
  */
 type Terminal = { count?: number | null; data?: unknown; error?: unknown };
 let supabaseQueue: Terminal[] = [];
@@ -111,7 +111,7 @@ const SPACE = {
   name: 'Test Space',
   emoji: null,
   ownerId: 'user_owner',
-  brokerageId: null,
+  teamId: null,
   createdAt: new Date().toISOString(),
   stripeSubscriptionStatus: null,
 } as unknown as NonNullable<Awaited<ReturnType<typeof getSpaceForUser>>>;
@@ -344,7 +344,7 @@ describe('GET /api/agent/morning — public contract', () => {
     expect(body.stuckDealsCount).toBe(0);
   });
 
-  it('brokerage-routed contacts excluded: each Contact query chains .is("brokerageId", null)', async () => {
+  it('team-routed contacts excluded: each Contact query chains .is("teamId", null)', async () => {
     queueSupabase({});
 
     await GET();
@@ -355,10 +355,10 @@ describe('GET /api/agent/morning — public contract', () => {
     expect(contactCalls).toHaveLength(6);
     for (const call of contactCalls) {
       const isCalls = call.chain.filter(([m]) => m === 'is');
-      const hasBrokerageFilter = isCalls.some(
-        ([, args]) => args[0] === 'brokerageId' && args[1] === null,
+      const hasTeamFilter = isCalls.some(
+        ([, args]) => args[0] === 'teamId' && args[1] === null,
       );
-      expect(hasBrokerageFilter, 'every Contact query must filter brokerageId IS NULL').toBe(true);
+      expect(hasTeamFilter, 'every Contact query must filter teamId IS NULL').toBe(true);
     }
     // Sanity: the Deal query was made and is filtered to active.
     const dealCalls = supabaseCalls.filter((c) => c.table === 'Deal');

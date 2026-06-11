@@ -3,7 +3,7 @@
 The agent calls publish_event() throughout its run to narrate what it's doing.
 These events flow: Modal agent → POST /api/agent/events → Redis → SSE → Browser.
 
-This is the "Claude Code feel" — realtors can watch their agent work in real-time.
+This is the "Claude Code feel" — reps can watch their agent work in real-time.
 """
 
 from __future__ import annotations

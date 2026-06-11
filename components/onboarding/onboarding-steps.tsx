@@ -359,7 +359,7 @@ export function SlugStep({
   onNext,
   onCheck,
   busy,
-  urlPrefix = 'chippi.app/',
+  urlPrefix = 'koala.app/',
 }: SlugStepProps) {
   const [available, setAvailable] = useState<boolean | null>(null);
   const [checking, setChecking] = useState(false);
@@ -546,8 +546,8 @@ interface PhotoStepProps {
   onNext: () => void;
   onSkip: () => void;
   uploadUrl?: string;
-  /** Must match one of the server's accepted types: 'logo' | 'photo' | 'broker_logo' */
-  uploadKind?: 'logo' | 'photo' | 'broker_logo';
+  /** Must match one of the server's accepted types: 'logo' | 'photo' | 'manager_logo' */
+  uploadKind?: 'logo' | 'photo' | 'manager_logo';
   busy?: boolean;
 }
 

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { localHourIn, localDateIn, shouldGenerateFor } from '@/lib/briefing/timing';
 
-describe('briefing — per-realtor timing', () => {
+describe('briefing — per-rep timing', () => {
   describe('localHourIn', () => {
     it('converts a UTC noon to local hour in New York (EST is UTC-5)', () => {
       // 2026-01-15 12:00 UTC = 07:00 EST (no DST in January)
@@ -70,7 +70,7 @@ describe('briefing — per-realtor timing', () => {
       expect(shouldGenerateFor(at, 'America/New_York', 24)).toBeNull();
     });
 
-    it('uses the local date — Pacific realtor at briefHour=7 gets the right day', () => {
+    it('uses the local date — Pacific rep at briefHour=7 gets the right day', () => {
       // 2026-01-15 15:00 UTC = 07:00 PST on 2026-01-15
       const at = new Date('2026-01-15T15:00:00Z');
       expect(shouldGenerateFor(at, 'America/Los_Angeles', 7)).toBe('2026-01-15');

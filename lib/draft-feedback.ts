@@ -1,7 +1,7 @@
 /**
  * Per-draft feedback helpers.
  *
- * The agent emits a draft. The realtor either ships it as written, edits
+ * The agent emits a draft. The rep either ships it as written, edits
  * it, or rejects it. Edit distance — the count of single-character edits
  * needed to turn the agent's text into what actually went out — is the
  * cleanest one-number signal of "how close was the model to right?"
@@ -10,7 +10,7 @@
  * O(min(n,m)) space. No third-party dep — it's thirty lines.
  *
  * Capped at LEVENSHTEIN_CAP. A 5,000-character email vs. a complete
- * rewrite is the same signal as 1,000 vs. 1,000: "the realtor rewrote it."
+ * rewrite is the same signal as 1,000 vs. 1,000: "the rep rewrote it."
  * The cap stops a pathological draft from chewing CPU on a request path.
  */
 
@@ -21,7 +21,7 @@ export const LEVENSHTEIN_CAP = 1000;
  *
  * Unicode-safe: iterates code points (via `Array.from`), so a curly quote
  * or em-dash counts as one character, not three bytes. Identity is by
- * code-point equality, which is what we want for "did the realtor change
+ * code-point equality, which is what we want for "did the rep change
  * this character" — not Unicode normalization (NFC vs. NFD), which would
  * be a different question.
  */
@@ -71,7 +71,7 @@ export function levenshtein(a: string, b: string): number {
  * Collapse all whitespace runs to a single space and trim ends.
  *
  * The point: "Hi Maya," vs "Hi Maya, " (trailing space) is not a real edit;
- * neither is "Hi\n\nMaya" vs "Hi\nMaya". We measure how much the realtor
+ * neither is "Hi\n\nMaya" vs "Hi\nMaya". We measure how much the rep
  * changed the *content*, not whether they hit return one extra time. Trimming
  * and collapsing strips that noise without altering any actual character.
  *

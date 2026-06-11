@@ -119,7 +119,7 @@ describe('catalog entry shape', () => {
     expect(INTEGRATIONS.length).toBe(44);
   });
 
-  it('includes the load-bearing realtor apps', () => {
+  it('includes the load-bearing rep apps', () => {
     // These specific slugs are read by route logic and the chat — they
     // disappearing silently would be a bigger bug than a snapshot count.
     const slugs = new Set(allToolkitSlugs());
@@ -130,11 +130,11 @@ describe('catalog entry shape', () => {
 });
 
 describe('catalog cuts (audit 7→8)', () => {
-  it('Linear is gone — developer issue tracker, not a realtor tool', () => {
+  it('Linear is gone — developer issue tracker, not a rep tool', () => {
     expect(findIntegration('linear')).toBeUndefined();
   });
 
-  it('Monday is gone — enterprise PM, not a realtor tool', () => {
+  it('Monday is gone — enterprise PM, not a rep tool', () => {
     expect(findIntegration('monday')).toBeUndefined();
   });
 
@@ -174,7 +174,7 @@ describe('COMING_SOON_TOOLKITS', () => {
   it('matches the set of catalog entries flagged comingSoon: true (no drift)', () => {
     // Drift between the per-entry flag and the centralized set is the
     // bug we're guarding against — if the route's 501-list goes stale,
-    // the realtor taps Connect and Composio returns a confusing error.
+    // the rep taps Connect and Composio returns a confusing error.
     const flaggedInCatalog = new Set(
       INTEGRATIONS.filter((e) => e.comingSoon).map((e) => e.toolkit),
     );

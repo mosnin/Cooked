@@ -1,5 +1,5 @@
 /**
- * GET /api/studio/library — the realtor's recent Studio generations, newest
+ * GET /api/studio/library — the rep's recent Studio generations, newest
  * first, each with a signed URL to its asset.
  */
 

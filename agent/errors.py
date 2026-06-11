@@ -25,7 +25,7 @@ Valid error codes
 'NETWORK_ERROR'    – transient connectivity failure
 'VALIDATION_ERROR' – arguments or data failed schema validation
 'DB_ERROR'         – database read/write failure
-'SPACE_DISABLED'   – the realtor's space has been suspended
+'SPACE_DISABLED'   – the rep's space has been suspended
 'BUDGET_EXCEEDED'  – the caller has exhausted their token/credit budget
 'TIMEOUT'          – operation exceeded its deadline
 'UNKNOWN'          – none of the above; inspect context for details

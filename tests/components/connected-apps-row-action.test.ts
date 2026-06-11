@@ -9,10 +9,10 @@
  *     request in flight, and there's no Composio toolkit behind the
  *     slug to even attempt one against.
  *   - `busy` wins over status because the spinner is a fresh action
- *     the realtor just kicked off.
+ *     the rep just kicked off.
  *   - `expired` and `failed` both produce "reconnect" — we don't show
  *     "reconnect" vs "fix" as separate verbs, that's two ideas to
- *     remember and the realtor doesn't care which underlying state we
+ *     remember and the rep doesn't care which underlying state we
  *     stored. Both mean: tap to fix.
  *   - Default (no connection) is "connect", not "add".
  */

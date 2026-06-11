@@ -10,7 +10,7 @@ import { resolveBillingAccount } from '@/lib/billing/account';
  * Buy-more-credits checkout — a one-time Stripe payment for a top-up pack.
  * On success the webhook (checkout.session.completed, mode=payment) grants the
  * credits via grantTopup. Credits land on the space's billing account, which is
- * the brokerage pool for Team/Team Plus (resolveBillingAccount handles that).
+ * the team pool for Team/Team Plus (resolveBillingAccount handles that).
  */
 export async function POST(req: NextRequest) {
   try {
@@ -39,17 +39,17 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Stripe not configured. Contact support.' }, { status: 500 });
     }
 
-    // Which balance does this space fund? Team/Team Plus pool at the brokerage.
+    // Which balance does this space fund? Team/Team Plus pool at the team.
     const { account } = await resolveBillingAccount(space.id);
 
     // Use the FUNDING account's Stripe customer, not the space's. For a
-    // Team/Team Plus space the balance pools at the brokerage, whose customer
-    // lives on Brokerage.stripeCustomerId — the space's own customer is usually
+    // Team/Team Plus space the balance pools at the team, whose customer
+    // lives on Team.stripeCustomerId — the space's own customer is usually
     // null. Reading it from the space made checkout mint a brand-new guest
     // customer, which the webhook's anti-poisoning guard (it compares the
     // account's stored customer to session.customer) then rejected → the team
     // was CHARGED but granted ZERO credits.
-    const customerTable = account.type === 'brokerage' ? 'Brokerage' : 'Space';
+    const customerTable = account.type === 'team' ? 'Team' : 'Space';
     const { data: custRow } = await supabase
       .from(customerTable)
       .select('stripeCustomerId')
@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
       .single();
     const customerId = custRow?.stripeCustomerId ?? undefined;
 
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://my.usechippi.com';
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://my.usekoala.com';
     // Recorded on both the session and the payment intent so the webhook can
     // read it regardless of which object it inspects.
     const metadata = {

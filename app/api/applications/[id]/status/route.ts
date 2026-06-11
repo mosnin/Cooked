@@ -6,7 +6,7 @@ import { sendStatusUpdateEmail } from '@/lib/email';
 const VALID_STATUSES = [
   'received',
   'under_review',
-  'tour_scheduled',
+  'demo_scheduled',
   'approved',
   'declined',
   'waitlisted',
@@ -15,7 +15,7 @@ const VALID_STATUSES = [
 /**
  * PATCH /api/applications/[id]/status
  *
- * Auth'd endpoint for realtors to update application status.
+ * Auth'd endpoint for reps to update application status.
  * Creates an ApplicationStatusUpdate audit record and sends
  * email notification to applicant.
  */

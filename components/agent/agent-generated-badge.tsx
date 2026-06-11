@@ -1,13 +1,13 @@
 /**
- * Agent authorship badges — the "this came from Chippi" cue stamped
+ * Agent authorship badges — the "this came from Koala" cue stamped
  * on AgentDraft rows, conversation messages, activity rows, etc.
  *
  * Two primitives:
- *   - `AgentGeneratedBadge` — inline pill with the Chippi mark and
+ *   - `AgentGeneratedBadge` — inline pill with the Koala mark and
  *     wordmark. Phase 2 upgrade: bigger, tactile, opt-in trigger
  *     source hover.
  *   - `AgentGeneratedBorder` — left-border treatment that says "the
- *     whole block below is Chippi's work."
+ *     whole block below is Koala's work."
  *
  * Both reach for `BRAND_ORANGE_CONTEXTS.AGENT_BADGE` via the
  * `brandOrange()` wrapper so the stray-orange lint rule (Phase 2)
@@ -19,7 +19,7 @@ import { cn } from '@/lib/utils';
 import { brandOrange } from '@/lib/colors';
 
 /**
- * `AgentGeneratedBadge` — Chippi's authorship pill.
+ * `AgentGeneratedBadge` — Koala's authorship pill.
  *
  * Phase 2 upgrade: was a 3px pill that barely existed. Now a 12px
  * chip — readable without leaning in, still under-emphatic compared
@@ -29,10 +29,10 @@ import { brandOrange } from '@/lib/colors';
  * on hover via the `title` attribute (tooltip on desktop, ignored on
  * touch — that's fine; the breadcrumb also lives inline in the row
  * body where touch users will see it). When absent the badge just
- * says "Chippi."
+ * says "Koala."
  *
  * Tip: pair with `aria-label` on the surrounding row so screen
- * readers say "Authored by Chippi, [row content]" not just "Chippi."
+ * readers say "Authored by Koala, [row content]" not just "Koala."
  */
 export function AgentGeneratedBadge({
   className,
@@ -44,7 +44,7 @@ export function AgentGeneratedBadge({
 }) {
   return (
     <span
-      title={triggerSource ?? 'Authored by Chippi'}
+      title={triggerSource ?? 'Authored by Koala'}
       className={brandOrange(
         'AGENT_BADGE',
         cn(
@@ -57,14 +57,14 @@ export function AgentGeneratedBadge({
       )}
     >
       <Bot size={10} strokeWidth={2.25} />
-      Chippi
+      Koala
     </span>
   );
 }
 
 /**
  * `AgentGeneratedBorder` — left-edge treatment that scopes a block
- * of content to "this was Chippi's work."
+ * of content to "this was Koala's work."
  *
  * Used to wrap whole draft rows, agent-suggested cards, and the
  * morning replay narrative. The border is 2px not 1px because it's

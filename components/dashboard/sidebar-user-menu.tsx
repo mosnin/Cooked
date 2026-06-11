@@ -21,7 +21,7 @@ import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover
 import { useTheme } from '@/components/theme-provider';
 
 // ─────────────────────────────────────────────────────────────────────────────
-// SidebarUserMenu — the realtor's footer chip + popover. Avatar + online dot
+// SidebarUserMenu — the rep's footer chip + popover. Avatar + online dot
 // + name + email, with a MoreHorizontal trigger that opens a menu of account
 // actions. The trigger is the WHOLE chip on the avatar+name region; the ⋯ is
 // purely a visual hint. Tapping anywhere on the chip opens the menu.
@@ -76,7 +76,7 @@ export function SidebarUserMenu({
   const base = `/s/${slug}`;
 
   const handleSignOut = () => {
-    void signOut({ redirectUrl: '/login/realtor' });
+    void signOut({ redirectUrl: '/login/rep' });
   };
 
   const rows: MenuRow[] = [

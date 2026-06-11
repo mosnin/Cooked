@@ -1,7 +1,7 @@
 /**
  * CMA (Comparative Market Analysis) — pure logic.
  *
- * In-house only. Comps come from the realtor's own Property rows (the same
+ * In-house only. Comps come from the rep's own Property rows (the same
  * source `find_comparable_properties` uses) — never MLS, never an external API.
  *
  * `buildCma` selects comps for a subject (by beds/baths/price/area similarity),
@@ -71,7 +71,7 @@ export interface CmaPayload {
 
 // ── Subject input ────────────────────────────────────────────────────────────
 
-/** Free-typed subject fields (when the realtor isn't picking a saved row). */
+/** Free-typed subject fields (when the rep isn't picking a saved row). */
 export interface SubjectFields {
   address: string;
   city?: string | null;

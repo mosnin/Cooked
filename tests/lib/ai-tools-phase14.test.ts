@@ -87,7 +87,7 @@ describe('logCallTool', () => {
   it('logs a call against an existing contact', async () => {
     mockByTable = { Contact: { single: { id: 'c_1', name: 'Sam' } } };
     const result = await logCallTool.handler(
-      { personId: 'c_1', summary: 'Walked through Friday tour follow-up.', sentiment: 'positive', durationMins: 12 },
+      { personId: 'c_1', summary: 'Walked through Friday demo follow-up.', sentiment: 'positive', durationMins: 12 },
       makeCtx(),
     );
     expect(result.display).toBe('success');
@@ -110,7 +110,7 @@ describe('logMeetingTool', () => {
   it('logs a meeting with a location', async () => {
     mockByTable = { Contact: { single: { id: 'c_1', name: 'Sam' } } };
     const result = await logMeetingTool.handler(
-      { personId: 'c_1', summary: 'Toured 123 Main', location: '123 Main' },
+      { personId: 'c_1', summary: 'Demoed 123 Main', location: '123 Main' },
       makeCtx(),
     );
     expect(result.display).toBe('success');

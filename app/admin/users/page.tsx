@@ -3,7 +3,7 @@ import { UserListClient } from './user-list-client';
 import { isPlatformAdmin } from '@/lib/permissions';
 import { redirect } from 'next/navigation';
 
-export const metadata = { title: 'Users — Admin — Chippi' };
+export const metadata = { title: 'Users — Admin — Koala' };
 
 export default async function AdminUsersPage({
   searchParams,

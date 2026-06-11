@@ -2,9 +2,9 @@
 
 /**
  * AvailabilityPickerCard — renders the slots returned by the
- * `propose_tour_times` tool as a tappable day-by-day grid. Click a slot
- * → the workspace fires a "Schedule the tour at <slot>" prompt, which
- * Chippi handles via the normal schedule_tour approval flow. No new
+ * `propose_demo_times` tool as a tappable day-by-day grid. Click a slot
+ * → the workspace fires a "Schedule the demo at <slot>" prompt, which
+ * Koala handles via the normal schedule_demo approval flow. No new
  * endpoint, no permission bypass.
  *
  * Slots arrive pre-formatted with `label` ("Tue, May 20 · 10:00 AM") so
@@ -28,8 +28,8 @@ export interface AvailabilityPickerCardProps {
   contactId?: string;
   propertyAddress?: string;
   durationMinutes: number;
-  /** Called with a pre-formatted prompt the workspace forwards to Chippi
-   *  as the realtor's next message. When omitted the card renders as
+  /** Called with a pre-formatted prompt the workspace forwards to Koala
+   *  as the rep's next message. When omitted the card renders as
    *  read-only — slots become inert pills. */
   onSelectSlot?: (prompt: string) => void;
 }
@@ -82,7 +82,7 @@ export function AvailabilityPickerCard({
         <CalendarDays size={13} className="text-muted-foreground flex-shrink-0" aria-hidden />
         <div className="flex-1 min-w-0">
           <p className="text-[12px] font-medium text-foreground truncate">
-            {propertyAddress ? `Tour · ${propertyAddress}` : 'Pick a tour time'}
+            {propertyAddress ? `Demo · ${propertyAddress}` : 'Pick a demo time'}
           </p>
           <p className="text-[11px] text-muted-foreground">{durationMinutes}-minute slots · tap to schedule</p>
         </div>
@@ -127,10 +127,10 @@ function SlotButton({
   const interactive = Boolean(onSelectSlot);
   const handleClick = () => {
     if (!onSelectSlot) return;
-    // Pre-format the prompt Chippi will receive. Include enough context
+    // Pre-format the prompt Koala will receive. Include enough context
     // (contact, property) that the model doesn't need to re-ask. The
-    // ISO timestamp is the load-bearing detail — schedule_tour parses it.
-    const parts = ['Schedule the tour at', slot.label];
+    // ISO timestamp is the load-bearing detail — schedule_demo parses it.
+    const parts = ['Schedule the demo at', slot.label];
     if (propertyAddress) parts.push(`for ${propertyAddress}`);
     if (contactId) parts.push(`(contact ${contactId})`);
     parts.push(`— startsAt ${slot.startsAt}`);

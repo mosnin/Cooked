@@ -131,7 +131,7 @@ describe('composeAgentSentence — happy path', () => {
     };
     expect(body.model).toBe('gpt-4.1-mini');
     expect(body.messages[0]!.role).toBe('system');
-    expect(body.messages[0]!.content).toMatch(/Chippi/);
+    expect(body.messages[0]!.content).toMatch(/Koala/);
     const userPayload = JSON.parse(body.messages[1]!.content);
     expect(userPayload.stuckDeal).toEqual({
       id: 'deal_42',

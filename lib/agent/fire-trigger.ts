@@ -2,7 +2,7 @@
  * fireAgentTrigger — server-side helper for queueing an agent trigger.
  *
  * Extracted from app/api/agent/trigger so any server-side mutation route
- * (contacts.POST creating a lead, deal stage change, tour completion, etc.)
+ * (contacts.POST creating a lead, deal stage change, demo completion, etc.)
  * can fire a trigger without going through the public REST endpoint and its
  * Clerk auth. The route now does auth + delegates here.
  *

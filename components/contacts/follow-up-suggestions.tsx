@@ -9,7 +9,7 @@ interface FollowUpSuggestionsProps {
   contactId: string;
   scoreLabel: string | null;
   contactType: string;
-  hasTours: boolean;
+  hasDemos: boolean;
   hasDeals: boolean;
   hasFollowUp: boolean;
 }
@@ -21,7 +21,7 @@ interface Suggestion {
 }
 
 function getSuggestions(props: FollowUpSuggestionsProps): Suggestion[] {
-  const { scoreLabel, contactType, hasTours, hasDeals, hasFollowUp } = props;
+  const { scoreLabel, contactType, hasDemos, hasDeals, hasFollowUp } = props;
 
   if (hasFollowUp) return [];
 
@@ -48,11 +48,11 @@ function getSuggestions(props: FollowUpSuggestionsProps): Suggestion[] {
     });
   }
 
-  // Tour-based suggestions
-  if (hasTours && contactType === 'TOUR' && !hasDeals) {
+  // Demo-based suggestions
+  if (hasDemos && contactType === 'DEMO' && !hasDeals) {
     suggestions.push({
-      label: 'Post-tour follow-up',
-      description: 'Tour completed — check in on their interest level',
+      label: 'Post-demo follow-up',
+      description: 'Demo completed — check in on their interest level',
       delayHours: 24,
     });
   }

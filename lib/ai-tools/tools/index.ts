@@ -7,10 +7,10 @@
  *
  * These TypeScript tools run in the Next.js loop (`lib/ai-tools/loop.ts`)
  * — the deprecated approval-resume path and the in-process sub-agent
- * skills. **The realtor's chat agent runs in Modal/Python** and has its
+ * skills. **The rep's chat agent runs in Modal/Python** and has its
  * OWN tool catalog at `agent/tools/*.py`.
  *
- * Adding a tool here does NOT add it to the chat the realtor uses. The
+ * Adding a tool here does NOT add it to the chat the rep uses. The
  * two lists are hand-maintained today. If you need a new verb available
  * to the chat agent, you also need a Python equivalent in `agent/tools/`.
  *
@@ -55,11 +55,11 @@ import { markDealLostTool } from './mark-deal-lost';
 import { noteOnDealTool } from './note-on-deal';
 import { addChecklistItemTool } from './add-checklist-item';
 
-// Tours
-import { scheduleTourTool } from './schedule-tour';
-import { rescheduleTourTool } from './reschedule-tour';
-import { cancelTourTool } from './cancel-tour';
-import { findToursTool } from './find-tours';
+// Demos
+import { scheduleDemoTool } from './schedule-demo';
+import { rescheduleDemoTool } from './reschedule-demo';
+import { cancelDemoTool } from './cancel-demo';
+import { findDemosTool } from './find-demos';
 
 // Properties
 import { findPropertyTool } from './find-property';
@@ -71,7 +71,7 @@ import { noteOnPropertyTool } from './note-on-property';
 // Calendar
 import { checkAvailabilityTool } from './check-availability';
 import { blockTimeTool } from './block-time';
-import { proposeTourTimesTool } from './propose-tour-times';
+import { proposeDemoTimesTool } from './propose-demo-times';
 
 // Pipeline aggregates
 import { pipelineSummaryTool } from './pipeline-summary';
@@ -88,10 +88,10 @@ import { sendPropertyPacketTool } from './send-property-packet';
 import { logEmailSentTool } from './log-email-sent';
 import { logSmsSentTool } from './log-sms-sent';
 
-// Brokerage — broker-role gated
-import { summarizeRealtorTool } from './summarize-realtor';
-import { analyzeRealtorTool } from './analyze-realtor';
-import { assignLeadToRealtorTool } from './assign-lead-to-realtor';
+// Team — manager-role gated
+import { summarizeRepTool } from './summarize-rep';
+import { analyzeRepTool } from './analyze-rep';
+import { assignLeadToRepTool } from './assign-lead-to-rep';
 import { requestDealReviewTool } from './request-deal-review';
 
 // Memory
@@ -141,11 +141,11 @@ export const ALL_TOOLS: ToolDefinition[] = [
   noteOnDealTool as ToolDefinition,
   addChecklistItemTool as ToolDefinition,
 
-  // ── Tours ──────────────────────────────────────────────────────────────
-  scheduleTourTool as ToolDefinition,
-  rescheduleTourTool as ToolDefinition,
-  cancelTourTool as ToolDefinition,
-  findToursTool as ToolDefinition,
+  // ── Demos ──────────────────────────────────────────────────────────────
+  scheduleDemoTool as ToolDefinition,
+  rescheduleDemoTool as ToolDefinition,
+  cancelDemoTool as ToolDefinition,
+  findDemosTool as ToolDefinition,
 
   // ── Properties ─────────────────────────────────────────────────────────
   findPropertyTool as ToolDefinition,
@@ -157,7 +157,7 @@ export const ALL_TOOLS: ToolDefinition[] = [
   // ── Calendar ───────────────────────────────────────────────────────────
   checkAvailabilityTool as ToolDefinition,
   blockTimeTool as ToolDefinition,
-  proposeTourTimesTool as ToolDefinition,
+  proposeDemoTimesTool as ToolDefinition,
 
   // ── Pipeline aggregates ────────────────────────────────────────────────
   pipelineSummaryTool as ToolDefinition,
@@ -174,10 +174,10 @@ export const ALL_TOOLS: ToolDefinition[] = [
   logEmailSentTool as ToolDefinition,
   logSmsSentTool as ToolDefinition,
 
-  // ── Brokerage ──────────────────────────────────────────────────────────
-  summarizeRealtorTool as ToolDefinition,
-  analyzeRealtorTool as ToolDefinition,
-  assignLeadToRealtorTool as ToolDefinition,
+  // ── Team ──────────────────────────────────────────────────────────
+  summarizeRepTool as ToolDefinition,
+  analyzeRepTool as ToolDefinition,
+  assignLeadToRepTool as ToolDefinition,
   requestDealReviewTool as ToolDefinition,
 
   // ── Memory ─────────────────────────────────────────────────────────────

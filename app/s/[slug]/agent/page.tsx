@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 
 /**
- * /agent is an old route name. The unified Chippi workspace lives at /chippi —
+ * /agent is an old route name. The unified Koala workspace lives at /koala —
  * preserve ?tab=settings (and any other tab values) for legacy deep links.
  */
 export default async function AgentRedirect({
@@ -13,6 +13,6 @@ export default async function AgentRedirect({
 }) {
   const { slug } = await params;
   const { tab } = await searchParams;
-  const target = tab ? `/s/${slug}/chippi?tab=${encodeURIComponent(tab)}` : `/s/${slug}/chippi`;
+  const target = tab ? `/s/${slug}/koala?tab=${encodeURIComponent(tab)}` : `/s/${slug}/koala`;
   redirect(target);
 }

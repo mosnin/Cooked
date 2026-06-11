@@ -3,10 +3,10 @@
 /**
  * ClickToCallButton — place a call to a contact from anywhere it's embedded.
  *
- * POSTs to /api/calls, which dials the realtor's own phone first and bridges to
+ * POSTs to /api/calls, which dials the rep's own phone first and bridges to
  * the contact when they pick up. The button reflects the lifecycle locally:
  * idle → calling → connected, then settles back to idle. The actual call rings
- * the realtor's phone, so "Connected" here means the call was placed, not that
+ * the rep's phone, so "Connected" here means the call was placed, not that
  * the contact answered.
  *
  * Reusable: pass slug + the contact's phone (and optionally contactId so the

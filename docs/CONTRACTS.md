@@ -1,4 +1,4 @@
-# Chippi Architecture Contracts
+# Koala Architecture Contracts
 
 These are the canonical contracts that govern onboarding, identity, and public intake. All code paths must conform to these. If you are changing any of the systems below, read this first.
 

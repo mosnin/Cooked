@@ -51,8 +51,8 @@ export default async function AdminOverviewPage() {
     usersWithSpace = 0,
     totalContacts = 0,
     totalLeads = 0,
-    totalBrokerages = 0,
-    activeBrokerages = 0,
+    totalTeams = 0,
+    activeTeams = 0,
     totalDeals = 0,
     totalPipelineValue = 0,
     signupsLast7 = 0,
@@ -69,8 +69,8 @@ export default async function AdminOverviewPage() {
   // Feature usage metrics
   let spacesWithLeads = 0,
     spacesWithDeals = 0,
-    spacesWithTours = 0,
-    totalTours = 0,
+    spacesWithDemos = 0,
+    totalDemos = 0,
     totalFollowUps = 0,
     totalSpaces = 0;
 
@@ -116,7 +116,7 @@ export default async function AdminOverviewPage() {
   let inactiveWorkspacesTotal = 0;
   let signupsByDay: { date: string; count: number }[] = [];
   let recentActivity: {
-    type: 'signup' | 'lead' | 'deal' | 'brokerage';
+    type: 'signup' | 'lead' | 'deal' | 'team';
     label: string;
     detail: string;
     time: string;
@@ -129,8 +129,8 @@ export default async function AdminOverviewPage() {
       withSpaceRes,
       contactsRes,
       leadsRes,
-      brokerageRes,
-      activeBrokerageRes,
+      teamRes,
+      activeTeamRes,
       dealsRes,
       signups7Res,
       signups30Res,
@@ -139,7 +139,7 @@ export default async function AdminOverviewPage() {
       signupsRaw,
       recentLeads,
       recentDeals,
-      recentBrokerages,
+      recentTeams,
     ] = await Promise.all([
       supabase.from('User').select('*', { count: 'exact', head: true }),
       supabase.from('User').select('*', { count: 'exact', head: true }).eq('onboard', true),
@@ -149,9 +149,9 @@ export default async function AdminOverviewPage() {
         .from('Contact')
         .select('*', { count: 'exact', head: true })
         .contains('tags', ['application-link']),
-      supabase.from('Brokerage').select('*', { count: 'exact', head: true }),
+      supabase.from('Team').select('*', { count: 'exact', head: true }),
       supabase
-        .from('Brokerage')
+        .from('Team')
         .select('*', { count: 'exact', head: true })
         .eq('status', 'active'),
       supabase.from('Deal').select('value'),
@@ -192,9 +192,9 @@ export default async function AdminOverviewPage() {
         .select('title, value, createdAt, Space(name)')
         .order('createdAt', { ascending: false })
         .limit(3),
-      // Recent brokerages for activity feed
+      // Recent teams for activity feed
       supabase
-        .from('Brokerage')
+        .from('Team')
         .select('name, createdAt')
         .order('createdAt', { ascending: false })
         .limit(2),
@@ -205,8 +205,8 @@ export default async function AdminOverviewPage() {
     usersWithSpace = withSpaceRes.count ?? 0;
     totalContacts = contactsRes.count ?? 0;
     totalLeads = leadsRes.count ?? 0;
-    totalBrokerages = brokerageRes.count ?? 0;
-    activeBrokerages = activeBrokerageRes.count ?? 0;
+    totalTeams = teamRes.count ?? 0;
+    activeTeams = activeTeamRes.count ?? 0;
     signupsLast7 = signups7Res.count ?? 0;
     signupsLast30 = signups30Res.count ?? 0;
     leadsLast7 = leads7Res.count ?? 0;
@@ -262,11 +262,11 @@ export default async function AdminOverviewPage() {
         time: d.createdAt,
       });
     }
-    for (const b of (recentBrokerages.data ?? []) as any[]) {
+    for (const b of (recentTeams.data ?? []) as any[]) {
       activities.push({
-        type: 'brokerage',
+        type: 'team',
         label: b.name,
-        detail: 'Brokerage created',
+        detail: 'Team created',
         time: b.createdAt,
       });
     }
@@ -297,12 +297,12 @@ export default async function AdminOverviewPage() {
 
     // ── Feature usage metrics ─────────────────────────────────────────
     try {
-      const [contactSpaces, dealSpaces, tourSpaces, toursCount, followUpsCount] =
+      const [contactSpaces, dealSpaces, demoSpaces, demosCount, followUpsCount] =
         await Promise.all([
           supabase.from('Contact').select('spaceId').limit(1000),
           supabase.from('Deal').select('spaceId').limit(1000),
-          supabase.from('Tour').select('spaceId').limit(1000),
-          supabase.from('Tour').select('*', { count: 'exact', head: true }),
+          supabase.from('Demo').select('spaceId').limit(1000),
+          supabase.from('Demo').select('*', { count: 'exact', head: true }),
           supabase
             .from('Contact')
             .select('*', { count: 'exact', head: true })
@@ -314,10 +314,10 @@ export default async function AdminOverviewPage() {
       spacesWithDeals = new Set(
         (dealSpaces.data ?? []).map((r: any) => r.spaceId).filter(Boolean)
       ).size;
-      spacesWithTours = new Set(
-        (tourSpaces.data ?? []).map((r: any) => r.spaceId).filter(Boolean)
+      spacesWithDemos = new Set(
+        (demoSpaces.data ?? []).map((r: any) => r.spaceId).filter(Boolean)
       ).size;
-      totalTours = toursCount.count ?? 0;
+      totalDemos = demosCount.count ?? 0;
       totalFollowUps = followUpsCount.count ?? 0;
     } catch (e) {
       console.error('[admin] Feature usage queries failed', e);
@@ -491,7 +491,7 @@ export default async function AdminOverviewPage() {
     signup: UserPlus,
     lead: PhoneIncoming,
     deal: Briefcase,
-    brokerage: Building2,
+    team: Building2,
   };
 
   return (
@@ -500,7 +500,7 @@ export default async function AdminOverviewPage() {
       <header className="space-y-1.5">
         <p className={BODY_MUTED}>Platform.</p>
         <h1 className={H1} style={TITLE_FONT}>
-          Chippi admin
+          Koala admin
         </h1>
         <p className={BODY_MUTED}>
           {totalUsers} users · {activeSubscriptions} active · ${mrr.toLocaleString()} MRR.
@@ -534,9 +534,9 @@ export default async function AdminOverviewPage() {
             sub: `${activeSubscriptions} active`,
           },
           {
-            label: 'Brokerages',
-            value: totalBrokerages,
-            sub: `${activeBrokerages} active`,
+            label: 'Teams',
+            value: totalTeams,
+            sub: `${activeTeams} active`,
           },
           {
             label: 'Total leads',
@@ -710,8 +710,8 @@ export default async function AdminOverviewPage() {
               {[
                 { label: 'Spaces with leads', value: spacesWithLeads, total: totalSpaces, icon: PhoneIncoming },
                 { label: 'Spaces with deals', value: spacesWithDeals, total: totalSpaces, icon: Briefcase },
-                { label: 'Spaces with tours', value: spacesWithTours, total: totalSpaces, icon: Calendar },
-                { label: 'Total tours booked', value: totalTours, total: null, icon: Calendar },
+                { label: 'Spaces with demos', value: spacesWithDemos, total: totalSpaces, icon: Calendar },
+                { label: 'Total demos booked', value: totalDemos, total: null, icon: Calendar },
                 { label: 'Follow-ups set', value: totalFollowUps, total: null, icon: Bell },
               ].map(({ label, value, total, icon: Icon }) => {
                 const pct = total && total > 0 ? Math.round((value / total) * 100) : null;

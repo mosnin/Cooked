@@ -4,7 +4,7 @@ import { supabase } from '@/lib/supabase';
 import { checkRateLimit } from '@/lib/rate-limit';
 import { auth } from '@clerk/nextjs/server';
 
-/** GET /api/admin/invitations — list all invitations across all brokerages */
+/** GET /api/admin/invitations — list all invitations across all teams */
 export async function GET() {
   try {
     await requirePlatformAdmin();
@@ -17,7 +17,7 @@ export async function GET() {
 
   const { data: invitations, error } = await supabase
     .from('Invitation')
-    .select('id, email, roleToAssign, status, expiresAt, createdAt, brokerageId, Brokerage(name)')
+    .select('id, email, roleToAssign, status, expiresAt, createdAt, teamId, Team(name)')
     .order('createdAt', { ascending: false })
     .limit(200);
 

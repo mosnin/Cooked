@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
     const { data: contactRow, error: fetchErr } = await supabase
       .from('Contact')
       .select(
-        'id, spaceId, name, email, phone, budget, leadType, formLeadType, applicationData, formConfigSnapshot, scoringStatus, Space(id, brokerageId)',
+        'id, spaceId, name, email, phone, budget, leadType, formLeadType, applicationData, formConfigSnapshot, scoringStatus, Space(id, teamId)',
       )
       .eq('id', contactId)
       .maybeSingle();
@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
       applicationData: Record<string, unknown> | null;
       formConfigSnapshot: IntakeFormConfig | null;
       scoringStatus: string;
-      Space: { id: string; brokerageId: string | null } | null;
+      Space: { id: string; teamId: string | null } | null;
     };
 
     const oldStatus = contact.scoringStatus;
@@ -84,7 +84,7 @@ export async function POST(req: NextRequest) {
     }
     if (!formConfig && contact.Space) {
       try {
-        const dual = await getFormConfigs(contact.spaceId, contact.Space.brokerageId);
+        const dual = await getFormConfigs(contact.spaceId, contact.Space.teamId);
         formConfig = resolvedLeadType === 'buyer' ? dual.buyer : dual.rental;
       } catch (err) {
         console.warn('[retry-scoring] getFormConfigs failed', { err });

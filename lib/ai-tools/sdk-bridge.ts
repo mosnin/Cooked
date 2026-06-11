@@ -29,7 +29,7 @@
  *   - our `requiresApproval: 'maybe'`       → SDK `needsApproval: async (...)` that
  *                                              calls our `shouldApprove(args, ctx)`
  *
- * The realtor-facing `summariseCall` is OUR concern, not the SDK's. The
+ * The rep-facing `summariseCall` is OUR concern, not the SDK's. The
  * caller of `run()` reads `result.interruptions` and renders the message
  * via the original tool definition's `summariseCall` — see
  * `summariseInterruption()` below.
@@ -92,9 +92,9 @@ export function toSdkTool<TArgs, TData>(def: ToolDefinition<TArgs, TData>, ctx: 
         // A tool handler threw instead of returning { display: 'error' }.
         // Without this catch, the raw exception (or stack trace shape)
         // would land in the model's context — and from there, in the
-        // realtor's chat. Reformat to the same `Error: ` prefix the
+        // rep's chat. Reformat to the same `Error: ` prefix the
         // success/error paths use so the model continues normally and
-        // can paraphrase to the realtor in Chippi voice.
+        // can paraphrase to the rep in Koala voice.
         //
         // We log the original at warn — the actual stack stays in our
         // server logs for debugging; only the friendly summary reaches
@@ -302,7 +302,7 @@ interface RunAgentInput {
  */
 export async function runAgent({ systemPrompt, input, tools, ctx, model = DEFAULT_MODEL }: RunAgentInput) {
   const agent = new Agent({
-    name: "Chippi",
+    name: "Koala",
     instructions: systemPrompt,
     tools: tools.map((t) => toSdkTool(t, ctx)),
     model,
@@ -313,7 +313,7 @@ export async function runAgent({ systemPrompt, input, tools, ctx, model = DEFAUL
 
 /**
  * Render a domain-specific approval prompt for an interrupted tool call.
- * The SDK gives us the tool name + raw args; the realtor sees the
+ * The SDK gives us the tool name + raw args; the rep sees the
  * `summariseCall` we attached on the original definition. If the tool
  * doesn't define one (read-only tools wouldn't), fall back to the name.
  */
@@ -357,12 +357,12 @@ export function summariseInterruption(
 //   - Re-running with `run(agent, state)` continues from where it paused.
 //
 // That matches our PendingState lifecycle exactly: serialize → store →
-// realtor decides → reload → apply decision → resume. The helpers below
+// rep decides → reload → apply decision → resume. The helpers below
 // wrap those primitives so consumers (the chat route, the persistence
 // layer) talk in our vocabulary instead of fishing through the SDK API.
 
 /**
- * Realtor-facing approval prompt extracted from one SDK interruption.
+ * Rep-facing approval prompt extracted from one SDK interruption.
  * The chat route serialises this and emits it as our existing
  * `permission_required` SSE event so the UI stays unchanged.
  */
@@ -374,7 +374,7 @@ export interface ApprovalPrompt {
   /** Parsed arguments. We parse the SDK's JSON-string `arguments` here
    *  so consumers don't have to duplicate the JSON.parse + try/catch. */
   arguments: unknown;
-  /** What the realtor reads in the prompt — domain-specific via summariseCall. */
+  /** What the rep reads in the prompt — domain-specific via summariseCall. */
   summary: string;
 }
 
@@ -412,7 +412,7 @@ export function extractApprovals(
       parsedArgs = argsStr ? JSON.parse(argsStr) : {};
     } catch {
       // Malformed JSON from the model is rare but real — fall back to the
-      // raw string so the realtor at least sees what was attempted.
+      // raw string so the rep at least sees what was attempted.
       parsedArgs = { raw: argsStr };
     }
     return {
@@ -426,7 +426,7 @@ export function extractApprovals(
 
 /**
  * Persist a paused run as an opaque string. Stored on AgentDraft.metadata
- * (or AgentQuestion) and rehydrated when the realtor decides.
+ * (or AgentQuestion) and rehydrated when the rep decides.
  */
 export function serializeRunState(state: { toString(): string }): string {
   return state.toString();
@@ -451,11 +451,11 @@ export async function restoreRunState(
   return RunState.fromString(agent, serialized);
 }
 
-/** What the realtor's PATCH /api/agent/drafts/[id] resolves to. */
+/** What the rep's PATCH /api/agent/drafts/[id] resolves to. */
 export type ApprovalDecision = { approved: true } | { approved: false; message?: string };
 
 /**
- * Apply the realtor's approve/reject decision to a rehydrated state.
+ * Apply the rep's approve/reject decision to a rehydrated state.
  * The SDK mutates the state in place; we return it for clarity at the
  * call site. After this, pass the state back to `run(agent, state)` to
  * continue from where it paused.

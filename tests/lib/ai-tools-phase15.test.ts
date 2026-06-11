@@ -1,6 +1,6 @@
 /**
  * Phase 15 (Phase B) tool catalog — happy + sad path coverage for the 10
- * deal/tour/property tools. Mock pattern mirrors phase5: a `mockByTable`
+ * deal/demo/property tools. Mock pattern mirrors phase5: a `mockByTable`
  * dictionary maps table name → either {single} or {rows} so chained query
  * shapes resolve to the right data on each .from('Table') call.
  */
@@ -68,9 +68,9 @@ vi.mock('@/lib/vectorize', () => ({
 import { updateDealValueTool } from '@/lib/ai-tools/tools/update-deal-value';
 import { updateDealCloseDateTool, resolveCloseDate } from '@/lib/ai-tools/tools/update-deal-close-date';
 import { attachPropertyToDealTool } from '@/lib/ai-tools/tools/attach-property-to-deal';
-import { rescheduleTourTool } from '@/lib/ai-tools/tools/reschedule-tour';
-import { cancelTourTool } from '@/lib/ai-tools/tools/cancel-tour';
-import { findToursTool } from '@/lib/ai-tools/tools/find-tours';
+import { rescheduleDemoTool } from '@/lib/ai-tools/tools/reschedule-demo';
+import { cancelDemoTool } from '@/lib/ai-tools/tools/cancel-demo';
+import { findDemosTool } from '@/lib/ai-tools/tools/find-demos';
 import { updatePropertyStatusTool } from '@/lib/ai-tools/tools/update-property-status';
 import { noteOnPropertyTool } from '@/lib/ai-tools/tools/note-on-property';
 import { findPropertyTool } from '@/lib/ai-tools/tools/find-property';
@@ -183,28 +183,28 @@ describe('attachPropertyToDealTool', () => {
   });
 });
 
-// ── reschedule_tour ──────────────────────────────────────────────────────
-describe('rescheduleTourTool', () => {
+// ── reschedule_demo ──────────────────────────────────────────────────────
+describe('rescheduleDemoTool', () => {
   it('requires approval', () => {
-    expect(rescheduleTourTool.requiresApproval).toBe(true);
+    expect(rescheduleDemoTool.requiresApproval).toBe(true);
   });
 
-  it('errors when tour is missing', async () => {
-    mockByTable = { Tour: { single: null } };
-    const result = await rescheduleTourTool.handler(
+  it('errors when demo is missing', async () => {
+    mockByTable = { Demo: { single: null } };
+    const result = await rescheduleDemoTool.handler(
       {
-        tourId: 'missing',
+        demoId: 'missing',
         newStartsAt: '2026-06-01T15:00:00.000Z',
       },
       makeCtx(),
     );
     expect(result.display).toBe('error');
-    expect(result.summary).toMatch(/No tour/);
+    expect(result.summary).toMatch(/No demo/);
   });
 
   it('reschedules and preserves duration when newEndsAt is omitted', async () => {
     mockByTable = {
-      Tour: {
+      Demo: {
         single: {
           id: 't_1',
           startsAt: '2026-05-01T14:00:00.000Z',
@@ -216,8 +216,8 @@ describe('rescheduleTourTool', () => {
         },
       },
     };
-    const result = await rescheduleTourTool.handler(
-      { tourId: 't_1', newStartsAt: '2026-06-01T18:00:00.000Z' },
+    const result = await rescheduleDemoTool.handler(
+      { demoId: 't_1', newStartsAt: '2026-06-01T18:00:00.000Z' },
       makeCtx(),
     );
     expect(result.display).toBe('success');
@@ -226,25 +226,25 @@ describe('rescheduleTourTool', () => {
   });
 });
 
-// ── cancel_tour ──────────────────────────────────────────────────────────
-describe('cancelTourTool', () => {
+// ── cancel_demo ──────────────────────────────────────────────────────────
+describe('cancelDemoTool', () => {
   it('requires approval', () => {
-    expect(cancelTourTool.requiresApproval).toBe(true);
+    expect(cancelDemoTool.requiresApproval).toBe(true);
   });
 
-  it('errors when the tour is missing', async () => {
-    mockByTable = { Tour: { single: null } };
-    const result = await cancelTourTool.handler(
-      { tourId: 'missing', reason: 'guest fell ill' },
+  it('errors when the demo is missing', async () => {
+    mockByTable = { Demo: { single: null } };
+    const result = await cancelDemoTool.handler(
+      { demoId: 'missing', reason: 'guest fell ill' },
       makeCtx(),
     );
     expect(result.display).toBe('error');
-    expect(result.summary).toMatch(/No tour/);
+    expect(result.summary).toMatch(/No demo/);
   });
 
   it('flips status to cancelled and acknowledges the guest', async () => {
     mockByTable = {
-      Tour: {
+      Demo: {
         single: {
           id: 't_1',
           contactId: null,
@@ -254,8 +254,8 @@ describe('cancelTourTool', () => {
         },
       },
     };
-    const result = await cancelTourTool.handler(
-      { tourId: 't_1', reason: 'guest fell ill' },
+    const result = await cancelDemoTool.handler(
+      { demoId: 't_1', reason: 'guest fell ill' },
       makeCtx(),
     );
     expect(result.display).toBe('success');
@@ -264,22 +264,22 @@ describe('cancelTourTool', () => {
   });
 });
 
-// ── find_tours ───────────────────────────────────────────────────────────
-describe('findToursTool', () => {
+// ── find_demos ───────────────────────────────────────────────────────────
+describe('findDemosTool', () => {
   it('is read-only', () => {
-    expect(findToursTool.requiresApproval).toBe(false);
+    expect(findDemosTool.requiresApproval).toBe(false);
   });
 
   it('returns an empty list cleanly', async () => {
-    mockByTable = { Tour: { rows: [] } };
-    const result = await findToursTool.handler({ status: 'scheduled' }, makeCtx());
-    expect(result.summary).toMatch(/No tours/);
-    expect((result.data as { tours: unknown[] }).tours).toHaveLength(0);
+    mockByTable = { Demo: { rows: [] } };
+    const result = await findDemosTool.handler({ status: 'scheduled' }, makeCtx());
+    expect(result.summary).toMatch(/No demos/);
+    expect((result.data as { demos: unknown[] }).demos).toHaveLength(0);
   });
 
-  it('summarises a list of tours', async () => {
+  it('summarises a list of demos', async () => {
     mockByTable = {
-      Tour: {
+      Demo: {
         rows: [
           {
             id: 't_1',
@@ -300,9 +300,9 @@ describe('findToursTool', () => {
         ],
       },
     };
-    const result = await findToursTool.handler({}, makeCtx());
-    expect(result.display).toBe('tours');
-    expect((result.data as { tours: unknown[] }).tours).toHaveLength(2);
+    const result = await findDemosTool.handler({}, makeCtx());
+    expect(result.display).toBe('demos');
+    expect((result.data as { demos: unknown[] }).demos).toHaveLength(2);
     expect(result.summary).toMatch(/Sam/);
     expect(result.summary).toMatch(/Jane/);
   });

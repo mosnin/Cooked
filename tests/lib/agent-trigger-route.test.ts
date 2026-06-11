@@ -34,7 +34,7 @@ describe('POST /api/agent/trigger', () => {
   }
 
   it('queues to redis and fires modal when event is configured immediate', async () => {
-    process.env.AGENT_IMMEDIATE_EVENTS = 'tour_completed';
+    process.env.AGENT_IMMEDIATE_EVENTS = 'demo_completed';
     const fetchMock = vi.fn(async (url: string) => {
       if (url.includes('/incr/')) return new Response(JSON.stringify({ result: 1 }), { status: 200 });
       if (url.includes('/expire/')) return new Response('OK', { status: 200 });
@@ -43,13 +43,13 @@ describe('POST /api/agent/trigger', () => {
       return new Response('not found', { status: 404 });
     });
 
-    const out = await call('tour_completed', {}, fetchMock);
+    const out = await call('demo_completed', {}, fetchMock);
     expect(out.res.status).toBe(200);
     expect(out.body.firedImmediately).toBe(true);
   });
 
   it('queues to redis but does not fire modal for non-immediate event subset', async () => {
-    process.env.AGENT_IMMEDIATE_EVENTS = 'tour_completed';
+    process.env.AGENT_IMMEDIATE_EVENTS = 'demo_completed';
     const fetchMock = vi.fn(async (url: string) => {
       if (url.includes('/incr/')) return new Response(JSON.stringify({ result: 1 }), { status: 200 });
       if (url.includes('/expire/')) return new Response('OK', { status: 200 });

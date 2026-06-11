@@ -1,10 +1,10 @@
 /**
  * GET /api/studio/recent-job — the most recent in-flight or just-finished
- * Studio job for the realtor's space.
+ * Studio job for the rep's space.
  *
  * Studio generation is synchronous (the route holds the connection open until
  * fal returns), so a refresh / nav / tab-close mid-job used to lose the result
- * — the realtor paid $0.50 for a seedance-video and saw a black hole. The
+ * — the rep paid $0.50 for a seedance-video and saw a black hole. The
  * StudioGeneration row is the source of truth; the Create / Edit panels poll
  * this endpoint on mount to pick the job back up.
  *

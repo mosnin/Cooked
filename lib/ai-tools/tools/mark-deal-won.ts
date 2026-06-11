@@ -1,8 +1,8 @@
 /**
  * `mark_deal_won` — close a deal as won.
  *
- * Approval-gated: this is the moment the brokerage's commission ledger
- * gets a row. The realtor signs off.
+ * Approval-gated: this is the moment the team's commission ledger
+ * gets a row. The rep signs off.
  *
  * Sets Deal.status='won', writes wonLostNote (the audit trail of why this
  * was a win), optionally updates Deal.value with the final sale price, logs

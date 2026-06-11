@@ -65,7 +65,7 @@ async function authenticateKey(req: NextRequest): Promise<{ spaceId: string; ip:
 // ---------------------------------------------------------------------------
 function buildServer(spaceId: string): McpServer {
   const server = new McpServer({
-    name: 'Chippi CRM',
+    name: 'Koala CRM',
     version: '1.0.0',
   });
 
@@ -76,7 +76,7 @@ function buildServer(spaceId: string): McpServer {
     {
       query: z.string().optional().describe('Search by name, email, or phone'),
       type: z
-        .enum(['QUALIFICATION', 'TOUR', 'APPLICATION'])
+        .enum(['QUALIFICATION', 'DEMO', 'APPLICATION'])
         .optional()
         .describe('Filter by contact type'),
       leadType: z.enum(['rental', 'buyer']).optional().describe('Filter by lead type'),
@@ -164,10 +164,10 @@ function buildServer(spaceId: string): McpServer {
     },
   );
 
-  // ── list_tours ──
+  // ── list_demos ──
   server.tool(
-    'list_tours',
-    'List upcoming and recent tours.',
+    'list_demos',
+    'List upcoming and recent demos.',
     {
       status: z
         .enum(['scheduled', 'confirmed', 'completed', 'cancelled', 'no_show'])
@@ -176,7 +176,7 @@ function buildServer(spaceId: string): McpServer {
     },
     async ({ status, limit }) => {
       let q = supabase
-        .from('Tour')
+        .from('Demo')
         .select(
           'id, guestName, guestEmail, guestPhone, propertyAddress, startsAt, endsAt, status, createdAt',
         )
@@ -270,11 +270,11 @@ function buildServer(spaceId: string): McpServer {
   // ── dashboard_summary ──
   server.tool(
     'dashboard_summary',
-    'Get a high-level summary: lead count, deal pipeline value, upcoming tours, overdue follow-ups.',
+    'Get a high-level summary: lead count, deal pipeline value, upcoming demos, overdue follow-ups.',
     {},
     async () => {
       const now = new Date().toISOString();
-      const [contactCount, dealAgg, tourCount, followUpCount, buyerLeadCount] = await Promise.all([
+      const [contactCount, dealAgg, demoCount, followUpCount, buyerLeadCount] = await Promise.all([
         supabase
           .from('Contact')
           .select('*', { count: 'exact', head: true })
@@ -293,7 +293,7 @@ function buildServer(spaceId: string): McpServer {
             ),
           })),
         supabase
-          .from('Tour')
+          .from('Demo')
           .select('*', { count: 'exact', head: true })
           .eq('spaceId', spaceId)
           .in('status', ['scheduled', 'confirmed'])
@@ -324,7 +324,7 @@ function buildServer(spaceId: string): McpServer {
                 rentalLeads: (contactCount as number) - (buyerLeadCount as number),
                 activeDeals: dealAgg.count,
                 pipelineValue: dealAgg.totalValue,
-                upcomingTours: tourCount,
+                upcomingDemos: demoCount,
                 overdueFollowUps: followUpCount,
               },
               null,
@@ -374,7 +374,7 @@ export async function POST(req: NextRequest) {
 
   const BASE_URL = process.env.NEXT_PUBLIC_ROOT_DOMAIN
     ? `https://${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`
-    : 'https://my.usechippi.com';
+    : 'https://my.usekoala.com';
 
   const authResult = await authenticateKey(req);
   if (!authResult) {
@@ -429,7 +429,7 @@ export async function POST(req: NextRequest) {
 export async function GET(req: NextRequest) {
   const BASE_URL = process.env.NEXT_PUBLIC_ROOT_DOMAIN
     ? `https://${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`
-    : 'https://my.usechippi.com';
+    : 'https://my.usekoala.com';
 
   // If no auth, return 401 with resource metadata link (MCP OAuth discovery)
   const auth = req.headers.get('authorization');

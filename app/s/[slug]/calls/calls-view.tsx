@@ -3,13 +3,13 @@
 /**
  * /s/[slug]/calls — Call log.
  *
- * One intent: a quiet record of who you called and what Chippi heard. Each row
+ * One intent: a quiet record of who you called and what Koala heard. Each row
  * is a call with a status pill, the contact (or number), and how long it ran.
- * Tap a row to expand its Chippi summary and full transcript.
+ * Tap a row to expand its Koala summary and full transcript.
  *
  * Design: Jobs lens — paper-flat, hairline-divided rows, calm copy. The
  * summary is the focal payoff inside an expanded row; the transcript sits
- * quietly beneath it. No configuration the realtor operates here — placing a
+ * quietly beneath it. No configuration the rep operates here — placing a
  * call happens from a contact; this surface is the memory.
  */
 
@@ -202,7 +202,7 @@ export function CallsView({ slug }: { slug: string }) {
         </div>
         <p className={cn(CAPTION)}>
           Your phone rings first; once you pick up, we connect you to the contact and record the
-          call. Chippi summarizes it when it ends.
+          call. Koala summarizes it when it ends.
         </p>
       </section>
 
@@ -279,7 +279,7 @@ export function CallsView({ slug }: { slug: string }) {
                       <div className="mt-3 ml-10 space-y-4">
                         {c.summary && (
                           <div className="space-y-1.5">
-                            <p className={cn(SECTION_LABEL)}>Chippi summary</p>
+                            <p className={cn(SECTION_LABEL)}>Koala summary</p>
                             <p className={cn(BODY)}>{c.summary}</p>
                           </div>
                         )}

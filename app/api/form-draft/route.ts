@@ -151,7 +151,7 @@ export async function POST(req: NextRequest) {
     const businessName = settings?.businessName || space.name;
 
     // Send the resume email (fire-and-forget — don't block the response)
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://my.usechippi.com';
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://my.usekoala.com';
     const resumeUrl = `${appUrl}/apply/${space.slug}?resume=${resumeToken}`;
 
     sendDraftResumeEmail({

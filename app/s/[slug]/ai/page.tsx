@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 
 /**
- * /ai is an old route name. The unified Chippi workspace lives at /chippi —
+ * /ai is an old route name. The unified Koala workspace lives at /koala —
  * pass the original ?q= search param through so command-palette deep links
  * keep working.
  */
@@ -14,6 +14,6 @@ export default async function AIRedirect({
 }) {
   const { slug } = await params;
   const { q } = await searchParams;
-  const target = q ? `/s/${slug}/chippi?q=${encodeURIComponent(q)}` : `/s/${slug}/chippi`;
+  const target = q ? `/s/${slug}/koala?q=${encodeURIComponent(q)}` : `/s/${slug}/koala`;
   redirect(target);
 }

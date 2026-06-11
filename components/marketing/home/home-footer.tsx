@@ -2,7 +2,7 @@
 
 /**
  * HomeFooter — the arrival. A last quiet CTA, the full link map, and an
- * oversized Chippi wordmark that anchors the page. Light canvas, editorial.
+ * oversized Koala wordmark that anchors the page. Light canvas, editorial.
  * Used on the rebuilt homepage in place of the shared MarketingFooter.
  */
 
@@ -14,8 +14,8 @@ const COLUMNS: { title: string; links: { label: string; href: string }[] }[] = [
   {
     title: 'Product',
     links: [
-      { label: 'For realtors', href: '/realtors' },
-      { label: 'For brokerages', href: '/brokerages' },
+      { label: 'For reps', href: '/reps' },
+      { label: 'For teams', href: '/teams' },
       { label: 'Integrations', href: '/integrations' },
       { label: 'Pricing', href: '/pricing' },
     ],
@@ -48,7 +48,7 @@ export function HomeFooter() {
           </h2>
           <div className="flex gap-3">
             <Link
-              href="/login/realtor?intent=signup"
+              href="/login/rep?intent=signup"
               className="inline-flex h-12 items-center justify-center rounded-full bg-brand px-7 text-[15px] font-semibold text-brand-foreground shadow-lg shadow-brand/25 transition-all duration-150 hover:brightness-105 active:scale-[0.98]"
             >
               Start free
@@ -65,11 +65,11 @@ export function HomeFooter() {
         {/* link map */}
         <div className="grid grid-cols-2 gap-8 py-16 md:grid-cols-4">
           <div className="col-span-2 md:col-span-1">
-            <Link href="/" aria-label="Chippi home" className="inline-flex items-center">
-              <BrandLogo className="h-6" alt="Chippi" />
+            <Link href="/" aria-label="Koala home" className="inline-flex items-center">
+              <BrandLogo className="h-6" alt="Koala" />
             </Link>
             <p className="mt-4 max-w-[16rem] text-[14px] leading-relaxed text-foreground/50">
-              The agentic OS for real estate. You close; Chippi does the rest.
+              The agentic OS for real estate. You close; Koala does the rest.
             </p>
           </div>
           {COLUMNS.map((col) => (
@@ -100,12 +100,12 @@ export function HomeFooter() {
           style={{ fontFamily: 'var(--font-title)' }}
           className="select-none text-[clamp(4rem,20vw,16rem)] leading-[0.8] tracking-[-0.03em] text-foreground/[0.06]"
         >
-          Chippi
+          Koala
         </div>
       </div>
 
       <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-6 py-8 text-[13px] text-foreground/45 md:flex-row md:px-8">
-        <span>© {new Date().getFullYear()} Chippi. All rights reserved.</span>
+        <span>© {new Date().getFullYear()} Koala. All rights reserved.</span>
         <span className="inline-flex items-center gap-2">
           <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
           All systems operational

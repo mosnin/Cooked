@@ -3,14 +3,14 @@
  *
  * Approval-gated. **Does NOT send anything.** This tool only writes a
  * ContactActivity row tagged with `kind: 'property_packet'` so the
- * realtor's audit trail records that the agent queued the packet. The
+ * rep's audit trail records that the agent queued the packet. The
  * actual delivery (email pipeline, etc.) is fired elsewhere — the agent
  * never moves bytes over the wire.
  *
  * The Python equivalent in `agent/tools/properties.py` creates a real
  * AgentDraft + builds the share URL. The TS chat agent uses the SDK
  * approval flow for messaging tools, so this verb's job is to leave a
- * paper trail that "Chippi proposed sending a packet for X to Y."
+ * paper trail that "Koala proposed sending a packet for X to Y."
  */
 
 import crypto from 'crypto';

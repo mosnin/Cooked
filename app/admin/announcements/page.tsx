@@ -3,7 +3,7 @@ import { isPlatformAdmin } from '@/lib/permissions';
 import { supabase } from '@/lib/supabase';
 import { AnnouncementClient, type Announcement } from './announcement-client';
 
-export const metadata = { title: 'Announcements — Admin — Chippi' };
+export const metadata = { title: 'Announcements — Admin — Koala' };
 
 export default async function AdminAnnouncementsPage() {
   const ok = await isPlatformAdmin();

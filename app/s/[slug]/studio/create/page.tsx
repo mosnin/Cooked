@@ -13,7 +13,7 @@ export default async function StudioCreatePage({
 }: {
   params: Promise<{ slug: string }>;
   // `prompt` + `model` come from the Library "Duplicate" affordance — the
-  // realtor lands here with the form already filled so the next attempt
+  // rep lands here with the form already filled so the next attempt
   // is a one-button re-render.
   searchParams: Promise<{ prompt?: string; model?: string }>;
 }) {

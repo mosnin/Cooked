@@ -4,10 +4,10 @@
  * Hourly tick (UTC). For each Space whose SpaceSetting matches the
  * current local hour in its timezone, generates today's Brief and
  * UPSERTs it. The `forDate` key is the SPACE'S local date — what the
- * realtor sees on their phone, not the server's UTC date.
+ * rep sees on their phone, not the server's UTC date.
  *
- * Why hourly: per-realtor 7am local. A 7am UTC daily cron would deliver
- * to Pacific realtors at midnight. Each tick now scans every space and
+ * Why hourly: per-rep 7am local. A 7am UTC daily cron would deliver
+ * to Pacific reps at midnight. Each tick now scans every space and
  * generates only for those whose briefHour matches the current local
  * hour. Spaces with briefEnabled=false are skipped.
  *
@@ -139,7 +139,7 @@ async function handler(req: NextRequest) {
   }
 
   // Filter to the spaces whose local briefHour matches the current UTC
-  // tick. forDate is computed in the space's timezone so the realtor's
+  // tick. forDate is computed in the space's timezone so the rep's
   // brief is keyed on their local date.
   const due: { spaceId: string; forDate: string }[] = [];
   for (const row of settings as CandidateRow[]) {

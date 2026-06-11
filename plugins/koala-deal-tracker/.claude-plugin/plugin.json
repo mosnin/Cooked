@@ -1,0 +1,8 @@
+{
+  "name": "koala-deal-tracker",
+  "description": "Track your rental deal pipeline from Claude. View deals by stage, check pipeline value, and monitor deal progress.",
+  "version": "1.0.0",
+  "author": { "name": "Koala", "url": "https://usekoala.com" },
+  "homepage": "https://usekoala.com",
+  "keywords": ["crm", "deals", "pipeline", "real-estate", "koala"]
+}

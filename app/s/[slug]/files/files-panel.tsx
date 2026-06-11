@@ -39,7 +39,7 @@ interface FileRow {
   isPublic: boolean;
   createdAt: string;
   /** Where the file came from. 'chat' rows are read-only here; manage them
-   *  by removing the attachment inside the Chippi conversation. */
+   *  by removing the attachment inside the Koala conversation. */
   source: 'file' | 'chat';
   /** Inline-renderable URL for thumbnails. Set by the GET /api/files
    *  endpoint for images + videos (signed for private files; public for
@@ -146,7 +146,7 @@ export function FilesPanel() {
         clearInterval(ticker);
         setError(e instanceof Error ? e.message : 'Upload failed');
       } finally {
-        // Hold the full bar for a beat so the realtor sees the finish
+        // Hold the full bar for a beat so the rep sees the finish
         // line, then collapse back to zero for the next upload.
         setTimeout(() => {
           setUploading(false);
@@ -378,7 +378,7 @@ function FileCard({
     <div
       className="group relative rounded-xl border border-border/60 bg-card overflow-hidden hover:border-border transition-colors"
     >
-      {/* The thumbnail itself is the click target so the realtor doesn't
+      {/* The thumbnail itself is the click target so the rep doesn't
        *  have to hunt for a button. The action overlay (Delete) sits on
        *  top with stopPropagation so it never opens the preview. */}
       <button
@@ -421,7 +421,7 @@ function FileCard({
             </p>
             {file.source === 'chat' && (
               <span
-                title="Uploaded inside a Chippi conversation"
+                title="Uploaded inside a Koala conversation"
                 className="text-[9px] uppercase tracking-wider font-medium px-1.5 py-px rounded-full bg-foreground/[0.06] text-foreground/55"
               >
                 Chat

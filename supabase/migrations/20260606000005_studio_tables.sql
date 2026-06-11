@@ -1,12 +1,12 @@
 -- ═══════════════════════════════════════════════════════════════════════════
--- Studio tables — generative-media studio for the realtor's personal brand.
+-- Studio tables — generative-media studio for the rep's personal brand.
 --
 --   StudioGeneration — one fal.ai generation request and its result. The
 --                      produced image/video is stored as a "File" row, so the
---                      realtor keeps ONE media library (the Files page) — not
+--                      rep keeps ONE media library (the Files page) — not
 --                      a second place. This table is the generation log:
 --                      which model, what prompt, what it cost. costUsd is
---                      summed into the realtor's usage by lib/usage/queries.ts
+--                      summed into the rep's usage by lib/usage/queries.ts
 --                      — the same role ExecutionStep.costUsd plays for the
 --                      agent runtime.
 --
@@ -14,7 +14,7 @@
 --                      platforms + a scheduled time. Inngest fires the publish
 --                      job; platformResults records the per-platform outcome.
 --
---   StudioBrand      — the realtor's brand kit (one row per Space). Logo and
+--   StudioBrand      — the rep's brand kit (one row per Space). Logo and
 --                      headshot are File references; colors / fonts / handles
 --                      let every generation come out on-brand.
 --
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS "StudioGeneration" (
   "prompt"        text,
   "status"        text          NOT NULL DEFAULT 'pending'
                     CHECK ("status" IN ('pending','running','completed','failed')),
-  -- Authoritative dollar cost of this generation. Summed into realtor usage
+  -- Authoritative dollar cost of this generation. Summed into rep usage
   -- by lib/usage/queries.ts.
   "costUsd"       numeric(10,6) NOT NULL DEFAULT 0,
   -- fal.ai queue request id — correlates the async result webhook to this row.

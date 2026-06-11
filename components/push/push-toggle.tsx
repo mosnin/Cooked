@@ -127,8 +127,8 @@ export function PushToggle({ slug }: PushToggleProps) {
         <p className={`${BODY} font-medium`}>Push notifications on this device</p>
         <p className={`${CAPTION} mt-0.5`}>
           {denied
-            ? 'Blocked. Allow notifications for Chippi in your browser settings, then try again.'
-            : "Get a native alert the moment a lead, tour, or deal lands — even when Chippi isn't open."}
+            ? 'Blocked. Allow notifications for Koala in your browser settings, then try again.'
+            : "Get a native alert the moment a lead, demo, or deal lands — even when Koala isn't open."}
         </p>
       </div>
       <Switch checked={enabled} onCheckedChange={handleToggle} disabled={busy || denied} />

@@ -6,7 +6,7 @@
  *     `custom` exists as an escape hatch for user-added rows that don't fit the
  *     canonical flow.
  *   - Due dates are derived from the deal's closeDate via day offsets. When
- *     closeDate is null, items are seeded with dueAt = null and the realtor
+ *     closeDate is null, items are seeded with dueAt = null and the rep
  *     can fill dates in later.
  *   - The template is intentionally residential/buyer-side — commercial and
  *     rental flows can be added later. The UI offers an explicit "seed"

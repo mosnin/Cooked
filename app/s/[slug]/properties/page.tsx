@@ -18,7 +18,7 @@ export default async function PropertiesPage({
   params: Promise<{ slug: string }>;
 }) {
   const { userId } = await auth();
-  if (!userId) redirect('/login/realtor');
+  if (!userId) redirect('/login/rep');
 
   const { slug } = await params;
   const space = await getSpaceFromSlug(slug);
@@ -65,7 +65,7 @@ export default async function PropertiesPage({
     <div className={cn('space-y-6 mx-auto pb-12', PAGE_MAX)}>
       {/* Page header — status-sentence pattern: muted greeting → serif h1
           → one-sentence status. Add-listing CTA sits inline; primary
-          action lives where the realtor's eye lands after the title. */}
+          action lives where the rep's eye lands after the title. */}
       <header className="flex items-start justify-between gap-4">
         <div className="space-y-1.5 min-w-0">
           <p className={cn(BODY_MUTED)}>Properties.</p>
@@ -106,7 +106,7 @@ export default async function PropertiesPage({
       ) : (
         /* divide-y row list — mirrors the deal-property-picker pattern.
            Thumbnail (4:3 ~128px) + facts on the right. A property list is
-           a working register, not a gallery; rows let the realtor scan
+           a working register, not a gallery; rows let the rep scan
            facts horizontally without the 4-column grid feeling like a
            spreadsheet export. */
         <StaggerList stagger={0.03} className="divide-y divide-border/60">

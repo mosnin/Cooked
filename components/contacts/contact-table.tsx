@@ -65,7 +65,7 @@ import { EASE_APPLE } from '@/lib/motion';
 type Client = {
   id: string;
   name: string;
-  type: 'QUALIFICATION' | 'TOUR' | 'APPLICATION';
+  type: 'QUALIFICATION' | 'DEMO' | 'APPLICATION';
   phone: string | null;
   email: string | null;
   budget: number | null;
@@ -103,7 +103,7 @@ function scoreTier(
 
 /**
  * Lead-score chip — a tier dot + the score, scannable at a glance. The one
- * piece of "who's hot" signal a realtor wants without sorting for it.
+ * piece of "who's hot" signal a rep wants without sorting for it.
  */
 function ScoreChip({ score }: { score: number | null }) {
   const tier = scoreTier(score);
@@ -144,13 +144,13 @@ export function ContactTable({ slug }: ContactTableProps) {
   const [loading, setLoading] = useState(true);
   // Set on fetchContacts failure. Used to render an inline banner above the
   // list instead of silently falling through to the "fresh workspace" empty
-  // state — which would tell a realtor with 200 contacts they have none.
+  // state — which would tell a rep with 200 contacts they have none.
   const [error, setError] = useState(false);
   const [view, setView] = useState<'card' | 'list'>('list');
   // Multi-select moves behind a deliberate Select mode. Default is "scan and
   // tap a row" — the row is a link, no checkbox in sight. Hit Select and the
   // checkboxes appear and the row toggles instead of navigating. The
-  // realtor's screenshot showed a permanent checkbox column crowding every
+  // rep's screenshot showed a permanent checkbox column crowding every
   // row; we owe them that space back.
   const [selectMode, setSelectMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
@@ -485,12 +485,12 @@ export function ContactTable({ slug }: ContactTableProps) {
   const stageLabels: Record<string, string> = {
     ALL: 'All stages',
     QUALIFICATION: 'Qualifying',
-    TOUR: 'Tour',
+    DEMO: 'Demo',
     APPLICATION: 'Applied',
   };
 
   // Subtitle copy — one quiet sentence, count-aware. The old loud chrome
-  // ("Qualifying 5 → Tour 0 → Applied 0 → 5 total" pipeline strip) is gone;
+  // ("Qualifying 5 → Demo 0 → Applied 0 → 5 total" pipeline strip) is gone;
   // the stage filter carries the cut, and a sentence carries the count.
   const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
   const newThisWeekCount = contacts.filter(
@@ -509,7 +509,7 @@ export function ContactTable({ slug }: ContactTableProps) {
   return (
     <div className="space-y-6">
       {/* Header — canonical three-line pattern: muted greeting, serif Times
-          h1, one-sentence status. The "Tell Chippi → / or fill out the form"
+          h1, one-sentence status. The "Tell Koala → / or fill out the form"
           pair that used to sit awkwardly inside the h1 row moved to the
           empty state — when there's data, that affordance is noise. */}
       <header className="space-y-1.5">
@@ -601,7 +601,7 @@ export function ContactTable({ slug }: ContactTableProps) {
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-44">
-                {(['ALL', 'QUALIFICATION', 'TOUR', 'APPLICATION'] as const).map((key) => (
+                {(['ALL', 'QUALIFICATION', 'DEMO', 'APPLICATION'] as const).map((key) => (
                   <DropdownMenuItem
                     key={key}
                     onSelect={() => setTypeFilter(key)}
@@ -907,7 +907,7 @@ export function ContactTable({ slug }: ContactTableProps) {
       )}
 
       {/* Empty state — context-aware. The fresh-workspace case is where the
-          "Tell Chippi → / or fill out the form" pair lives now: when the
+          "Tell Koala → / or fill out the form" pair lives now: when the
           list is empty the affordance earns its place; when it isn't, that
           header CTA was just chrome competing with the title. */}
       {!loading && !error && visibleContacts.length === 0 && (() => {
@@ -929,12 +929,12 @@ export function ContactTable({ slug }: ContactTableProps) {
               <p className="text-base text-foreground">No relationships yet.</p>
               <p className={cn(BODY_MUTED, 'mt-1.5')}>
                 <Link
-                  href={`/s/${slug}/chippi?prefill=${encodeURIComponent(
+                  href={`/s/${slug}/koala?prefill=${encodeURIComponent(
                     "I'm adding a new person — ",
                   )}`}
                   className="text-foreground underline underline-offset-2 hover:no-underline"
                 >
-                  Tell Chippi about someone
+                  Tell Koala about someone
                 </Link>
                 {', or '}
                 <button
@@ -1118,7 +1118,7 @@ export function ContactTable({ slug }: ContactTableProps) {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="QUALIFICATION">Qualifying</SelectItem>
-              <SelectItem value="TOUR">Tour</SelectItem>
+              <SelectItem value="DEMO">Demo</SelectItem>
               <SelectItem value="APPLICATION">Applied</SelectItem>
             </SelectContent>
           </Select>
@@ -1291,7 +1291,7 @@ function ContactRow({
           </div>
         )}
       </div>
-      {/* Right metadata — follow-up pill stays visible (the realtor needs
+      {/* Right metadata — follow-up pill stays visible (the rep needs
           to see it without hovering). The action icons hide until row
           hover at lg+; smaller screens fall back to a quiet chevron. */}
       <div className="flex items-center gap-2 flex-shrink-0">
@@ -1317,7 +1317,7 @@ function ContactRow({
           <>
             <div className="hidden lg:flex gap-0.5 opacity-0 group-hover/row:opacity-100 transition-opacity">
               <Link
-                href={`/s/${slug}/chippi/log?personId=${contact.id}`}
+                href={`/s/${slug}/koala/log?personId=${contact.id}`}
                 aria-label={`Log a note for ${contact.name}`}
                 title="Log a note"
                 onClick={(e) => e.stopPropagation()}

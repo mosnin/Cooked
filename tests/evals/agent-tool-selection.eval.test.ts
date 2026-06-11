@@ -6,7 +6,7 @@
  * manually before a prompt change ships, or nightly via a separate CI
  * job that's allowed to spend tokens.
  *
- * What this proves: given a realtor utterance, the agent picks a
+ * What this proves: given a rep utterance, the agent picks a
  * defensible tool (or set of tools) and — for mutations — emits a
  * reasoning sentence before firing. We assert tool NAMES, not args,
  * because args drift with prompt wording. The point is judgment.
@@ -101,7 +101,7 @@ function makeCtx(): ToolContext {
 
 beforeEach(() => {
   mockByTable = {
-    User: { single: { name: 'Eval Realtor', clerkId: 'u_eval', id: 'u_eval' } },
+    User: { single: { name: 'Eval Rep', clerkId: 'u_eval', id: 'u_eval' } },
     Space: { single: { id: 's_eval', name: 'Eval Workspace' } },
     Contact: {
       rows: [

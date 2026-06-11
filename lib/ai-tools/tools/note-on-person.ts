@@ -2,7 +2,7 @@
  * `note_on_person` — append a plain note to a contact's timeline.
  *
  * Plain. No formatting magic, no auto-tagging, no mood inference. The
- * realtor said "log this", we log this.
+ * rep said "log this", we log this.
  */
 
 import crypto from 'crypto';
@@ -45,7 +45,7 @@ export const noteOnPersonTool = defineTool<typeof parameters, NoteOnPersonResult
       .select('id, name')
       .eq('id', args.personId)
       .eq('spaceId', ctx.space.id)
-      .is('brokerageId', null)
+      .is('teamId', null)
       .maybeSingle();
     if (lookupErr) {
       return { summary: `Contact lookup failed: ${lookupErr.message}`, display: 'error' };

@@ -6,7 +6,7 @@
  *
  * IMPORTANT: This endpoint never sends email or SMS. It triggers the same
  * Modal agent path the manual "Run now" and the 4-hour sweep use — the run
- * produces AgentDraft rows with status 'pending'. Only the realtor approving
+ * produces AgentDraft rows with status 'pending'. Only the rep approving
  * a draft fires an outbound channel.
  *
  * Auth: Bearer ${CRON_SECRET}. Disable: set CRON_ROUTINES_DISABLED=1.

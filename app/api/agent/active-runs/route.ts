@@ -2,7 +2,7 @@
  * GET /api/agent/active-runs
  *
  * Returns the agent run IDs currently active for the caller's space.
- * Used by the ChippiActivityToast to discover autonomous runs in real
+ * Used by the KoalaActivityToast to discover autonomous runs in real
  * time without a per-run SSE subscription bound to a runId the UI
  * doesn't yet know.
  *

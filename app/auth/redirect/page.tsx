@@ -3,14 +3,14 @@ import { redirect } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 
 /**
- * /auth/redirect?intent=realtor|broker
+ * /auth/redirect?intent=rep|manager
  *
  * Called after Clerk sign-in from either login page.
  *
- * - intent=broker  → if the user is a broker_owner or broker_admin, go to /broker
- *                    otherwise fall back to the realtor flow
- * - intent=realtor → go to the user's workspace, or /setup if none yet
- * - no intent      → same as realtor
+ * - intent=manager  → if the user is a manager_owner or manager_admin, go to /manager
+ *                    otherwise fall back to the rep flow
+ * - intent=rep → go to the user's workspace, or /setup if none yet
+ * - no intent      → same as rep
  */
 export default async function AuthRedirectPage({
   searchParams,
@@ -18,7 +18,7 @@ export default async function AuthRedirectPage({
   searchParams: Promise<{ intent?: string }>;
 }) {
   const { userId } = await auth();
-  if (!userId) redirect('/login/realtor');
+  if (!userId) redirect('/login/rep');
 
   const { intent } = await searchParams;
 
@@ -32,7 +32,7 @@ export default async function AuthRedirectPage({
   if (!user) {
     // New user — check if they have a pending invitation before sending to setup.
     // This handles the case where Clerk's forceRedirectUrl didn't work and the
-    // user ended up here after signing up for a brokerage invitation.
+    // user ended up here after signing up for a team invitation.
     try {
       const clerkUser = await currentUser();
       const email = clerkUser?.emailAddresses?.[0]?.emailAddress?.trim().toLowerCase();
@@ -56,43 +56,43 @@ export default async function AuthRedirectPage({
     redirect('/setup');
   }
 
-  // If user already has broker-level membership, always route to /broker.
-  // This prevents invited broker_admin users from being pushed into setup/paywall
-  // when they authenticate through non-broker entry points.
-  const { data: brokerMembership } = await supabase
-    .from('BrokerageMembership')
+  // If user already has manager-level membership, always route to /manager.
+  // This prevents invited manager_admin users from being pushed into setup/paywall
+  // when they authenticate through non-manager entry points.
+  const { data: managerMembership } = await supabase
+    .from('TeamMembership')
     .select('id')
     .eq('userId', user.id)
-    .in('role', ['broker_owner', 'broker_admin'])
+    .in('role', ['manager_owner', 'manager_admin'])
     .maybeSingle();
-  if (brokerMembership) {
-    redirect('/broker');
+  if (managerMembership) {
+    redirect('/manager');
   }
 
-  // Broker-only users always go to /broker
-  if (user.accountType === 'broker_only') {
-    redirect('/broker');
+  // Manager-only users always go to /manager
+  if (user.accountType === 'manager_only') {
+    redirect('/manager');
   }
 
-  if (intent === 'broker') {
-    // Check for broker-level membership
+  if (intent === 'manager') {
+    // Check for manager-level membership
     const { data: membership } = await supabase
-      .from('BrokerageMembership')
+      .from('TeamMembership')
       .select('id, role')
       .eq('userId', user.id)
-      .in('role', ['broker_owner', 'broker_admin'])
+      .in('role', ['manager_owner', 'manager_admin'])
       .maybeSingle();
 
     if (membership) {
-      redirect('/broker');
+      redirect('/manager');
     }
 
-    // They logged in via the broker page but don't have broker access yet.
-    // Send them to the brokerage setup page so they can create or join one.
-    redirect('/brokerage');
+    // They logged in via the manager page but don't have manager access yet.
+    // Send them to the team setup page so they can create or join one.
+    redirect('/team');
   }
 
-  // intent=realtor (or no intent) — go to workspace or setup
+  // intent=rep (or no intent) — go to workspace or setup
   const { data: space } = await supabase
     .from('Space')
     .select('slug')

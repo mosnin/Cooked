@@ -3,7 +3,7 @@ import { requireSpaceOwner } from '@/lib/api-auth';
 import { supabase } from '@/lib/supabase';
 import { audit } from '@/lib/audit';
 import { logger } from '@/lib/logger';
-import { notifyBroker } from '@/lib/broker-notify';
+import { notifyManager } from '@/lib/manager-notify';
 import { notificationForReviewRequested } from '@/lib/notification-voice';
 
 type Params = { params: Promise<{ id: string }> };
@@ -16,7 +16,7 @@ type DealLookupRow = {
     | {
         id: string;
         slug: string;
-        brokerageId: string | null;
+        teamId: string | null;
       }
     | null;
 };
@@ -24,11 +24,11 @@ type DealLookupRow = {
 /**
  * POST /api/deals/[id]/review-request
  *
- * Agent flags one of their deals for broker review. Creates a DealReviewRequest
+ * Agent flags one of their deals for manager review. Creates a DealReviewRequest
  * in the open state. A partial unique index enforces at most one open review
  * per deal — we catch the 23505 violation and return 409.
  *
- * Auth: caller must own the deal's space (or manage its brokerage, which is
+ * Auth: caller must own the deal's space (or manage its team, which is
  * what requireSpaceOwner already permits). We first resolve the deal to its
  * Space slug, then delegate to requireSpaceOwner.
  */
@@ -60,7 +60,7 @@ export async function POST(req: NextRequest, { params }: Params) {
   // is then routed through requireSpaceOwner(slug) to mirror the spec.
   const { data: dealRow, error: dealErr } = await supabase
     .from('Deal')
-    .select('id, title, spaceId, Space(id, slug, brokerageId)')
+    .select('id, title, spaceId, Space(id, slug, teamId)')
     .eq('id', dealId)
     .maybeSingle<DealLookupRow>();
 
@@ -85,16 +85,16 @@ export async function POST(req: NextRequest, { params }: Params) {
   }
   const { userId: clerkId, space } = authResult;
 
-  if (!dealRow.Space.brokerageId) {
+  if (!dealRow.Space.teamId) {
     return NextResponse.json(
-      { error: 'Deal is in a non-brokerage workspace; no review possible.' },
+      { error: 'Deal is in a non-team workspace; no review possible.' },
       { status: 409 },
     );
   }
 
   // Resolve the requesting User row (DB id, not clerk id).
-  // Include `name` in the select — notifyBroker wants it in the metadata so
-  // the broker's notification renders "Alice flagged ..." without a second
+  // Include `name` in the select — notifyManager wants it in the metadata so
+  // the manager's notification renders "Alice flagged ..." without a second
   // lookup downstream.
   const { data: userRow, error: userErr } = await supabase
     .from('User')
@@ -115,7 +115,7 @@ export async function POST(req: NextRequest, { params }: Params) {
       id: reviewId,
       dealId,
       requestingUserId: userRow.id,
-      brokerageId: dealRow.Space.brokerageId,
+      teamId: dealRow.Space.teamId,
       status: 'open',
       reason,
       createdAt: nowIso,
@@ -140,7 +140,7 @@ export async function POST(req: NextRequest, { params }: Params) {
     }
     logger.error(
       '[deals/review-request/POST] insert failed',
-      { dealId, brokerageId: dealRow.Space.brokerageId },
+      { dealId, teamId: dealRow.Space.teamId },
       insertErr,
     );
     return NextResponse.json({ error: 'Failed to create review request' }, { status: 500 });
@@ -153,7 +153,7 @@ export async function POST(req: NextRequest, { params }: Params) {
     resourceId: reviewId,
     spaceId: space.id,
     req,
-    metadata: { dealId, brokerageId: dealRow.Space.brokerageId },
+    metadata: { dealId, teamId: dealRow.Space.teamId },
   });
 
   const reviewCopy = notificationForReviewRequested(
@@ -161,8 +161,8 @@ export async function POST(req: NextRequest, { params }: Params) {
     dealRow.title ?? 'Untitled deal',
     reason,
   );
-  void notifyBroker({
-    brokerageId: dealRow.Space.brokerageId,
+  void notifyManager({
+    teamId: dealRow.Space.teamId,
     type: 'review_requested',
     title: reviewCopy.title,
     body: reviewCopy.description,

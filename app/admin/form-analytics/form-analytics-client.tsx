@@ -31,7 +31,7 @@ import {
 } from 'recharts';
 import type {
   ScoreDistribution,
-  BrokerageSubmissionRow,
+  TeamSubmissionRow,
   SpaceSubmissionRow,
   SourceRow,
   TrendPoint,
@@ -48,14 +48,14 @@ type Stats = {
 export function FormAnalyticsClient({
   stats,
   distribution,
-  topBrokerages,
+  topTeams,
   topSpaces,
   trend,
   perSource,
 }: {
   stats: Stats;
   distribution: ScoreDistribution;
-  topBrokerages: BrokerageSubmissionRow[];
+  topTeams: TeamSubmissionRow[];
   topSpaces: SpaceSubmissionRow[];
   trend: TrendPoint[];
   perSource: SourceRow[];
@@ -63,13 +63,13 @@ export function FormAnalyticsClient({
   const [filter, setFilter] = useState('');
   const [days, setDays] = useState(30);
 
-  const filteredBrokerages = useMemo(() => {
+  const filteredTeams = useMemo(() => {
     const q = filter.trim().toLowerCase();
-    if (!q) return topBrokerages;
-    return topBrokerages.filter((b) =>
-      (b.brokerageName ?? b.brokerageId).toLowerCase().includes(q),
+    if (!q) return topTeams;
+    return topTeams.filter((b) =>
+      (b.teamName ?? b.teamId).toLowerCase().includes(q),
     );
-  }, [filter, topBrokerages]);
+  }, [filter, topTeams]);
 
   const filteredSpaces = useMemo(() => {
     const q = filter.trim().toLowerCase();
@@ -185,7 +185,7 @@ export function FormAnalyticsClient({
               className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
             />
             <Input
-              placeholder="Filter brokerages or spaces…"
+              placeholder="Filter teams or spaces…"
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
               className="pl-9"
@@ -352,19 +352,19 @@ export function FormAnalyticsClient({
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="space-y-3">
           <h2 className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
-            Top brokerages
+            Top teams
           </h2>
-          {filteredBrokerages.length === 0 ? (
+          {filteredTeams.length === 0 ? (
             <Card className="rounded-xl border bg-card">
-              <EmptyState icon={Building2} title="No brokerage submissions yet." size="sm" />
+              <EmptyState icon={Building2} title="No team submissions yet." size="sm" />
             </Card>
           ) : (
             <Card className="rounded-xl border bg-card">
               <div className="divide-y divide-border">
-                {filteredBrokerages.map((b) => (
+                {filteredTeams.map((b) => (
                   <Link
-                    key={b.brokerageId}
-                    href={`/admin/brokerages/${b.brokerageId}`}
+                    key={b.teamId}
+                    href={`/admin/teams/${b.teamId}`}
                     className="flex items-center gap-3 px-4 py-3 hover:bg-muted/40 transition-colors"
                   >
                     <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center flex-shrink-0">
@@ -372,7 +372,7 @@ export function FormAnalyticsClient({
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="text-sm font-medium truncate">
-                        {b.brokerageName || b.brokerageId}
+                        {b.teamName || b.teamId}
                       </p>
                     </div>
                     <span className="text-sm font-semibold tabular-nums">{b.count}</span>

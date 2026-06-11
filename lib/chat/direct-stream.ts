@@ -20,12 +20,12 @@
 
 import { logger } from '@/lib/logger';
 import { saveAssistantMessage } from '@/lib/ai-tools/persistence';
-import { chippiErrorMessage } from '@/lib/ai-tools/chippi-voice';
+import { koalaErrorMessage } from '@/lib/ai-tools/koala-voice';
 import { recordChatUsage, type ChatRoute } from '@/lib/usage/record-chat-usage';
 import type { MessageBlock } from '@/lib/ai-tools/blocks';
 import {
   runDirectChat,
-  CHIPPI_INSTRUCTIONS_LITE,
+  KOALA_INSTRUCTIONS_LITE,
   type DirectHistoryRow,
 } from './direct-llm';
 import { retrieveContext } from './vector-context';
@@ -110,7 +110,7 @@ export function streamDirectTurn(input: DirectStreamInput): Response {
         });
 
         const systemMessage = [
-          CHIPPI_INSTRUCTIONS_LITE,
+          KOALA_INSTRUCTIONS_LITE,
           ctx.block, // empty string when no context — splice is harmless
         ]
           .filter((s) => s && s.trim().length > 0)
@@ -167,7 +167,7 @@ export function streamDirectTurn(input: DirectStreamInput): Response {
             return;
           }
           // Couldn't hand off — fall through and commit the direct answer
-          // so the realtor at least sees the model's reasoning.
+          // so the rep at least sees the model's reasoning.
         }
 
         if (result.fallbackNote) {
@@ -176,7 +176,7 @@ export function streamDirectTurn(input: DirectStreamInput): Response {
 
         // Emit the entire reply as one text_delta. Streaming token-by-token
         // is a v1 deferred — the wire frames are identical, the UX is just
-        // less progressive. Realtor sees the answer the moment we get it.
+        // less progressive. Rep sees the answer the moment we get it.
         if (result.text) {
           push({ type: 'text_delta', delta: result.text });
         }
@@ -214,7 +214,7 @@ export function streamDirectTurn(input: DirectStreamInput): Response {
         const aborted = (err as { name?: string })?.name === 'AbortError';
         if (!aborted) {
           logger.error('[direct-stream] crashed', { spaceId: input.spaceId }, err);
-          push({ type: 'error', message: chippiErrorMessage('internal') });
+          push({ type: 'error', message: koalaErrorMessage('internal') });
         }
       } finally {
         try {

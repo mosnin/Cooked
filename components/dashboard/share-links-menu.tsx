@@ -112,7 +112,7 @@ function LinkRow({ icon: Icon, label, description, url, previewHref }: LinkRowPr
 
 export function ShareLinksMenu({ slug }: ShareLinksMenuProps) {
   // Compose absolute URLs only after mount so the value matches the actual
-  // host the realtor is on. Avoids SSR/CSR text mismatch and works on dev,
+  // host the rep is on. Avoids SSR/CSR text mismatch and works on dev,
   // staging, and prod without env-var threading into client components.
   const [origin, setOrigin] = useState<string | null>(null);
   useEffect(() => {
@@ -121,7 +121,7 @@ export function ShareLinksMenu({ slug }: ShareLinksMenuProps) {
     }
   }, []);
 
-  // The realtor's three shareable surfaces. Public profile (the "link in bio"
+  // The rep's three shareable surfaces. Public profile (the "link in bio"
   // at /p/[slug]) leads — it's the personal link they put everywhere.
   const profilePath = `/p/${slug}`;
   const intakePath = `/apply/${slug}`;
@@ -173,8 +173,8 @@ export function ShareLinksMenu({ slug }: ShareLinksMenuProps) {
 
         <LinkRow
           icon={CalendarDays}
-          label="Tour booking"
-          description="Where prospects book a tour"
+          label="Demo booking"
+          description="Where prospects book a demo"
           url={bookingUrl}
           previewHref={bookingPath}
         />

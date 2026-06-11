@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { buildBriefSms } from '@/lib/briefing/sms-template';
 
-const ORIGIN = 'https://my.usechippi.com';
+const ORIGIN = 'https://my.usekoala.com';
 
 describe('briefing — SMS template builder', () => {
   it('produces a single-segment body for a short headline', () => {
@@ -11,9 +11,9 @@ describe('briefing — SMS template builder', () => {
       briefDate: '2026-05-30',
       appOrigin: ORIGIN,
     });
-    expect(body.startsWith('Chippi: ')).toBe(true);
+    expect(body.startsWith('Koala: ')).toBe(true);
     expect(body).toContain('Sarah Chen replied.');
-    expect(body).toContain(`${ORIGIN}/s/patel-realty/chippi?brief=2026-05-30`);
+    expect(body).toContain(`${ORIGIN}/s/patel-realty/koala?brief=2026-05-30`);
     expect(body.length).toBeLessThanOrEqual(160);
     expect(truncated).toBe(false);
   });

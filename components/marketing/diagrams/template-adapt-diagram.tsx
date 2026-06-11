@@ -1,12 +1,12 @@
 'use client';
 
 /**
- * `<TemplateAdaptDiagram />` — Chippi makes a template sound like you.
+ * `<TemplateAdaptDiagram />` — Koala makes a template sound like you.
  *
  * One beat: a template skeleton on the left with placeholder slots; the same
  * template on the right with the slots filling in one at a time. When all
- * slots are filled, the small Chippi badge signs the draft ("Adapted by
- * Chippi") in the draft pane's corner.
+ * slots are filled, the small Koala badge signs the draft ("Adapted by
+ * Koala") in the draft pane's corner.
  *
  * Layout: split-pane (skeleton left, adapted right). Naturally wide, so it
  * holds at the video hero and the 21:9 section alike. The panes flex to fill
@@ -20,10 +20,10 @@
  *   - 800ms hold on the unfilled state.
  *   - Slot fill-ins: 4 slots, 420ms apart. Each: opacity 0 → 1 + 4px y
  *     translate, 220ms, EASE_APPLE.
- *   - 240ms after the last slot, the Chippi badge fades in.
+ *   - 240ms after the last slot, the Koala badge fades in.
  *   - 1.6s hold. Reset, 700ms pause, restart.
  *
- * Reduced-motion: all slots filled + Chippi badge visible.
+ * Reduced-motion: all slots filled + Koala badge visible.
  */
 
 import { useEffect, useState } from 'react';
@@ -31,10 +31,10 @@ import { motion } from 'motion/react';
 import { cn } from '@/lib/utils';
 import { EASE_APPLE } from '@/lib/motion';
 import {
-  ChippiDiagramShell,
-  DiagramChippiBadge,
+  KoalaDiagramShell,
+  DiagramKoalaBadge,
   useDiagramMotion,
-} from './chippi-diagram-shell';
+} from './koala-diagram-shell';
 
 interface TemplateAdaptDiagramProps {
   aspect?: 'video' | 'square' | 'wide' | 'tall';
@@ -52,7 +52,7 @@ const TEMPLATE_LINES: ({ type: 'text'; text: string } | { type: 'slot'; slot: Sl
   { type: 'text', text: ', thanks for the note about ' },
   { type: 'slot', slot: { placeholder: '{property}', filled: '415 Lexington' } },
   { type: 'text', text: '. I have a slot ' },
-  { type: 'slot', slot: { placeholder: '{tour_time}', filled: 'Saturday at 2pm' } },
+  { type: 'slot', slot: { placeholder: '{demo_time}', filled: 'Saturday at 2pm' } },
   { type: 'text', text: ' if that works. I’ll bring ' },
   { type: 'slot', slot: { placeholder: '{packet}', filled: 'comparable sales for the block' } },
   { type: 'text', text: '.' },
@@ -70,9 +70,9 @@ export function TemplateAdaptDiagram({
   className,
 }: TemplateAdaptDiagramProps) {
   return (
-    <ChippiDiagramShell aspect={aspect} pad={6} className={className}>
+    <KoalaDiagramShell aspect={aspect} pad={6} className={className}>
       <TemplateAdaptContent />
-    </ChippiDiagramShell>
+    </KoalaDiagramShell>
   );
 }
 
@@ -131,7 +131,7 @@ function TemplateAdaptContent() {
     <div className="w-full h-full grid grid-cols-2 gap-3 min-h-0">
       {/* LEFT — the template skeleton */}
       <div className="flex flex-col min-h-0 min-w-0 rounded-xl border border-border/70 bg-card overflow-hidden">
-        <PaneHeader label="Template" title="Tour reply · Brooklyn" />
+        <PaneHeader label="Template" title="Demo reply · Brooklyn" />
         <div className="flex-1 min-h-0 overflow-hidden px-3.5 py-3 text-[12px] text-foreground/80 leading-relaxed">
           {TEMPLATE_LINES.map((line, i) =>
             line.type === 'text' ? (
@@ -148,7 +148,7 @@ function TemplateAdaptContent() {
         </div>
       </div>
 
-      {/* RIGHT — the adapted draft. The Chippi badge floats in the corner so
+      {/* RIGHT — the adapted draft. The Koala badge floats in the corner so
           it signs the draft without a fixed footer row that would steal
           height from the body in the short wide box. */}
       <div className="relative flex flex-col min-h-0 min-w-0 rounded-xl border border-border/70 bg-card overflow-hidden">
@@ -186,7 +186,7 @@ function TemplateAdaptContent() {
           transition={{ duration: 0.22, ease: EASE_APPLE }}
           className="absolute bottom-2.5 right-3 z-10"
         >
-          <DiagramChippiBadge label="Adapted by Chippi" />
+          <DiagramKoalaBadge label="Adapted by Koala" />
         </motion.span>
       </div>
     </div>

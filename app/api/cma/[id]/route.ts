@@ -1,5 +1,5 @@
 /**
- * A single CMA report (realtor-facing) — GET / PATCH / DELETE
+ * A single CMA report (rep-facing) — GET / PATCH / DELETE
  *
  *   GET    ?slug=<slug>            → { report }   full report incl. payload
  *   PATCH  { slug, status?, title? } → { report } publish / rename

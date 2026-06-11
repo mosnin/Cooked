@@ -1,6 +1,6 @@
 /**
  * Inline reconcile-on-error: when the chat agent loads Composio tools and
- * a single connected account is dead (the realtor revoked our OAuth grant
+ * a single connected account is dead (the rep revoked our OAuth grant
  * on the provider's side, but our `IntegrationConnection` row still says
  * 'active'), we must:
  *
@@ -115,7 +115,7 @@ describe('loadIntegrationTools — reconcile-on-error', () => {
   it('degrades LOUDLY (not silently) when the SDK is not configured but toolkits are connected', async () => {
     // Old contract: unconfigured → [] before even checking the DB, which made
     // a misconfigured deploy indistinguishable from "nothing connected" — the
-    // model then told realtors their integrations were gone. New contract:
+    // model then told reps their integrations were gone. New contract:
     // the DB is consulted, connected toolkits are reported as UNAVAILABLE
     // (the prompt relays "temporarily unreachable"), and Composio is still
     // never touched.
@@ -137,7 +137,7 @@ describe('loadIntegrationTools — reconcile-on-error', () => {
     expect(buildToolkitAgentToolsMock).not.toHaveBeenCalled();
   });
 
-  it('returns [] when the realtor has no active toolkits', async () => {
+  it('returns [] when the rep has no active toolkits', async () => {
     activeToolkitsMock.mockResolvedValue([]);
     const tools = await loadIntegrationTools(makeCtx());
     expect(tools).toEqual([]);

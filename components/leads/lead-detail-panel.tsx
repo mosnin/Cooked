@@ -246,8 +246,8 @@ export function LeadDetailPanel({
                     <Tag size={10} />
                     {lead.sourceLabel === 'intake-form'
                       ? 'Intake form'
-                      : lead.sourceLabel === 'tour-booking'
-                      ? 'Tour booking'
+                      : lead.sourceLabel === 'demo-booking'
+                      ? 'Demo booking'
                       : lead.sourceLabel}
                   </span>
                 </>

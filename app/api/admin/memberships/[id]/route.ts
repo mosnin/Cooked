@@ -9,7 +9,7 @@ type Params = { params: Promise<{ id: string }> };
 
 /**
  * DELETE /api/admin/memberships/[id]
- * Remove a brokerage membership and unlink the user's space from the brokerage.
+ * Remove a team membership and unlink the user's space from the team.
  */
 export async function DELETE(_req: Request, { params }: Params) {
   let admin: Awaited<ReturnType<typeof requirePlatformAdmin>>;
@@ -30,24 +30,24 @@ export async function DELETE(_req: Request, { params }: Params) {
 
   // Fetch membership first so we can unlink the space
   const { data: membership } = await supabase
-    .from('BrokerageMembership')
-    .select('userId, brokerageId')
+    .from('TeamMembership')
+    .select('userId, teamId')
     .eq('id', id)
     .maybeSingle();
 
   if (!membership) return NextResponse.json({ error: 'Membership not found' }, { status: 404 });
 
-  // Unlink space from brokerage (best-effort)
+  // Unlink space from team (best-effort)
   const { data: space } = await supabase
     .from('Space')
     .select('id')
     .eq('ownerId', membership.userId)
     .maybeSingle();
   if (space) {
-    await supabase.from('Space').update({ brokerageId: null }).eq('id', space.id);
+    await supabase.from('Space').update({ teamId: null }).eq('id', space.id);
   }
 
-  const { error } = await supabase.from('BrokerageMembership').delete().eq('id', id);
+  const { error } = await supabase.from('TeamMembership').delete().eq('id', id);
   if (error) {
     console.error('[admin/memberships] delete failed', error);
     return NextResponse.json({ error: 'Delete failed' }, { status: 500 });

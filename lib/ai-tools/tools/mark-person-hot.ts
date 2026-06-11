@@ -2,7 +2,7 @@
  * `mark_person_hot` — promote a contact to the hot tier.
  *
  * Approval-gated: tier changes drive who appears in the morning story and
- * who triggers brokerage-level new-lead notifications, so the realtor wants
+ * who triggers team-level new-lead notifications, so the rep wants
  * a checkpoint.
  *
  * Sets scoreLabel='hot' and bumps leadScore up to at least HOT_LEAD_THRESHOLD
@@ -53,7 +53,7 @@ export const markPersonHotTool = defineTool<typeof parameters, MarkHotResult>({
       .select('id, name, leadScore')
       .eq('id', args.personId)
       .eq('spaceId', ctx.space.id)
-      .is('brokerageId', null)
+      .is('teamId', null)
       .maybeSingle();
     if (lookupErr) {
       return { summary: `Contact lookup failed: ${lookupErr.message}`, display: 'error' };

@@ -17,7 +17,7 @@ This contract is implemented in `lib/onboarding.ts` and used by:
 
 ## Canonical intake URL format
 
-Chippi intake links are **always path slugs**:
+Koala intake links are **always path slugs**:
 
 - ✅ `https://<root-domain>/apply/<slug>`
 - ❌ `https://<slug>.<root-domain>`
@@ -27,7 +27,7 @@ This contract is implemented in `lib/intake.ts`.
 
 ## Workspace identity rule (hard constraint)
 
-Chippi does **not** use tenant subdomains.
+Koala does **not** use tenant subdomains.
 
 - Workspace identity is the `slug` field on `Space`.
 - Routing identity comes only from path params (`/s/:slug`, `/apply/:slug`).

@@ -2,10 +2,10 @@
  * Email template for the daily brief.
  *
  * Subject = the brief's headline verbatim, capped at 80 chars. No prefix,
- * no [Chippi], no emoji. The realtor's inbox should look like a one-line
+ * no [Koala], no emoji. The rep's inbox should look like a one-line
  * note from a colleague.
  *
- * Body = headline + subheadline + ONE Open in Chippi CTA. No inline cards,
+ * Body = headline + subheadline + ONE Open in Koala CTA. No inline cards,
  * no card previews. The full brief lives in the app. Email is bait, not
  * body — per the delivery design rule.
  *
@@ -30,7 +30,7 @@ export interface BriefEmailHtmlParams {
   brief: Brief;
   spaceSlug: string;
   briefDate: string; // YYYY-MM-DD
-  appOrigin: string; // e.g. https://my.usechippi.com — no trailing slash
+  appOrigin: string; // e.g. https://my.usekoala.com — no trailing slash
   unsubscribeUrl: string;
   businessName: string | null;
 }
@@ -41,7 +41,7 @@ export interface BriefEmailHtmlParams {
  */
 export function briefEmailHtml(params: BriefEmailHtmlParams): string {
   const { brief, spaceSlug, briefDate, appOrigin, unsubscribeUrl, businessName } = params;
-  const deepLink = `${appOrigin}/s/${encodeURIComponent(spaceSlug)}/chippi?brief=${encodeURIComponent(briefDate)}`;
+  const deepLink = `${appOrigin}/s/${encodeURIComponent(spaceSlug)}/koala?brief=${encodeURIComponent(briefDate)}`;
   const dateLine = formatDateLabel(briefDate);
   const subhead = brief.subheadline ? `<p style="margin:14px 0 0;font-size:14px;color:#6b7280;line-height:1.55">${esc(brief.subheadline)}</p>` : '';
   const footerName = esc(businessName ?? 'your workspace');
@@ -53,7 +53,7 @@ export function briefEmailHtml(params: BriefEmailHtmlParams): string {
     <tr><td align="center">
       <table width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:#ffffff;border-radius:12px;border:1px solid #e5e7eb;overflow:hidden">
         <tr><td style="padding:28px 32px 12px;font-size:11px;letter-spacing:0.04em;text-transform:uppercase;color:#9ca3af">
-          Chippi · ${esc(dateLine)}
+          Koala · ${esc(dateLine)}
         </td></tr>
         <tr><td style="padding:0 32px 24px">
           <h1 style="margin:0;font-size:24px;line-height:1.25;color:#111827;font-family:Times,serif;font-weight:normal">${esc(brief.headline)}</h1>

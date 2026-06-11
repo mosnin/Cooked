@@ -1,6 +1,6 @@
 # ENVIRONMENT.md
 
-Configuration and external service reference for Chippi. Based on actual repository code.
+Configuration and external service reference for Koala. Based on actual repository code.
 
 ---
 
@@ -20,15 +20,15 @@ All variables found or inferable from code usage:
 | `NEXT_PUBLIC_ROOT_DOMAIN` | `lib/utils.ts` | Public URL/domain construction for intake links | **Medium** | Falls back to `workflowrouting.com` (prod) or `localhost:3000` (dev); intake link URLs may be wrong if not set correctly |
 | `NEXT_PUBLIC_APP_URL` | `lib/email.ts` | Base URL for links in notification emails (e.g. `https://app.yourdomain.com`) | **Medium** | Email links fall back to `https://app.yourdomain.com` placeholder |
 | `NEXT_PUBLIC_ONBOARDING_V2` | `app/setup/page.tsx` | Rollback opt-out: when set to `'false'`, /setup serves the legacy onboarding flow. Anything else (unset, `'true'`, etc.) serves the V2 storytelling onboarding — the live default. `?legacy=1` on /setup forces legacy for a single request. | **Low** | Unset = V2 (the live default). Set to `'false'` to revert to legacy deploy-wide; the V2 typing-reveal stays dark in that case. |
-| `RESEND_API_KEY` | `lib/email.ts`, `lib/tour-emails.ts` | Resend API key for sending all transactional emails (leads, tours, invitations) | **Medium** | Email notifications silently skipped; leads still saved normally |
-| `RESEND_FROM_EMAIL` | `lib/email.ts`, `lib/tour-emails.ts` | Sender address for notification emails (must be verified in Resend) | **Medium** | Falls back to `notifications@updates.yourdomain.com`; must be set to a verified domain |
+| `RESEND_API_KEY` | `lib/email.ts`, `lib/demo-emails.ts` | Resend API key for sending all transactional emails (leads, demos, invitations) | **Medium** | Email notifications silently skipped; leads still saved normally |
+| `RESEND_FROM_EMAIL` | `lib/email.ts`, `lib/demo-emails.ts` | Sender address for notification emails (must be verified in Resend) | **Medium** | Falls back to `notifications@updates.yourdomain.com`; must be set to a verified domain |
 | `TELNYX_API_KEY` | `lib/sms.ts` | Telnyx API key for SMS notifications and the `send_sms` AI tool | **Medium** | SMS notifications silently skipped; `send_sms` tool returns an error |
 | `TELNYX_FROM_NUMBER` | `lib/sms.ts` | Telnyx phone number to send SMS from (E.164 format, validated `^\+\d{10,15}$`) | **Medium** | SMS notifications silently skipped |
-| `STRIPE_PRICE_STARTER` | `app/api/billing/checkout/route.ts` | Stripe price ID for the Starter brokerage plan | **Medium** | Starter plan checkout cannot be created |
-| `STRIPE_PRICE_TEAM` | `app/api/billing/checkout/route.ts` | Stripe price ID for the Team brokerage plan | **Medium** | Team plan checkout cannot be created |
-| `STRIPE_PRICE_ENTERPRISE` | `app/api/billing/checkout/route.ts` | Stripe price ID for the Enterprise brokerage plan | **Medium** | Enterprise plan checkout cannot be created |
-| `COMPOSIO_API_KEY` | `lib/integrations/composio.ts`, `agent/integrations.py` | Composio API key for loading the realtor's connected toolkits (Gmail, Slack, HubSpot, etc.) into the chat agent AND autonomous runs | **High (when integrations used)** | Connections show "Connected" in /settings but Chippi can't see them as tools. **Must be set in BOTH Vercel env AND the Modal `chippi-secrets` secret** so chat (Modal) and the Next.js callback both work. |
-| `COMPOSIO_WEBHOOK_SECRET` | `app/api/webhooks/composio/route.ts` | Signing secret for inbound Composio trigger webhooks (HMAC-SHA256). Grab it from Composio dashboard → Project Settings → Webhook. Required for the receiver to authenticate trigger deliveries — without it, the receiver returns 500 and Chippi never notices anything happening in the realtor's connected apps. | **High (when triggers used)** | Inbound trigger deliveries rejected; Chippi cannot react to email replies, calendar accepts, deal stage changes, etc. Outbound tool execution still works. |
+| `STRIPE_PRICE_STARTER` | `app/api/billing/checkout/route.ts` | Stripe price ID for the Starter team plan | **Medium** | Starter plan checkout cannot be created |
+| `STRIPE_PRICE_TEAM` | `app/api/billing/checkout/route.ts` | Stripe price ID for the Team team plan | **Medium** | Team plan checkout cannot be created |
+| `STRIPE_PRICE_ENTERPRISE` | `app/api/billing/checkout/route.ts` | Stripe price ID for the Enterprise team plan | **Medium** | Enterprise plan checkout cannot be created |
+| `COMPOSIO_API_KEY` | `lib/integrations/composio.ts`, `agent/integrations.py` | Composio API key for loading the rep's connected toolkits (Gmail, Slack, HubSpot, etc.) into the chat agent AND autonomous runs | **High (when integrations used)** | Connections show "Connected" in /settings but Koala can't see them as tools. **Must be set in BOTH Vercel env AND the Modal `koala-secrets` secret** so chat (Modal) and the Next.js callback both work. |
+| `COMPOSIO_WEBHOOK_SECRET` | `app/api/webhooks/composio/route.ts` | Signing secret for inbound Composio trigger webhooks (HMAC-SHA256). Grab it from Composio dashboard → Project Settings → Webhook. Required for the receiver to authenticate trigger deliveries — without it, the receiver returns 500 and Koala never notices anything happening in the rep's connected apps. | **High (when triggers used)** | Inbound trigger deliveries rejected; Koala cannot react to email replies, calendar accepts, deal stage changes, etc. Outbound tool execution still works. |
 | `NODE_ENV` | `lib/utils.ts` | Protocol selection (http vs https) | **Auto-set** | Set automatically by Next.js; do not override manually |
 
 ### Clerk-specific variables
@@ -48,16 +48,16 @@ Clerk requires additional environment variables that are standard for `@clerk/ne
 
 ## 2. What each service powers
 
-| Service | Role in Chippi | Key integration files |
+| Service | Role in Koala | Key integration files |
 |---|---|---|
 | **Clerk** | Authentication, session management, route protection | `middleware.ts`, `app/(auth)/*`, all API routes using `auth()` |
 | **Supabase** | Source-of-truth for all app data (users, spaces, contacts, deals, stages, messages, embeddings) | `lib/supabase.ts`, `supabase/schema.sql` |
 | **OpenAI** | Lead scoring (gpt-4o-mini), text embeddings (text-embedding-3-small), AI assistant primary provider | `lib/lead-scoring.ts`, `lib/embeddings.ts`, `lib/ai.ts` |
 | **Supabase pgvector** | Vector storage and similarity search for RAG-enriched AI assistant context, scoped per workspace | `lib/zilliz.ts`, `lib/vectorize.ts`, `supabase/schema.sql` (`DocumentEmbedding` table + `match_documents` RPC) |
-| **Resend** | Transactional email — sends lead notifications, tour confirmations/reminders/follow-ups, brokerage invitations, follow-up digests, and CRM emails | `lib/email.ts`, `lib/tour-emails.ts`, `app/api/public/apply/route.ts` |
-| **Telnyx** | SMS notifications — sends text messages to workspace owners for new leads, tour bookings, and deals (opt-in per workspace via settings) | `lib/sms.ts`, `lib/notify.ts` |
+| **Resend** | Transactional email — sends lead notifications, demo confirmations/reminders/follow-ups, team invitations, follow-up digests, and CRM emails | `lib/email.ts`, `lib/demo-emails.ts`, `app/api/public/apply/route.ts` |
+| **Telnyx** | SMS notifications — sends text messages to workspace owners for new leads, demo bookings, and deals (opt-in per workspace via settings) | `lib/sms.ts`, `lib/notify.ts` |
 | **Upstash Redis** | Rate limiting (`lib/rate-limit.ts`), pending-approval state for the AI agent (`lib/ai-tools/pending-approvals.ts`), legacy slug metadata + admin dashboard | `lib/redis.ts`, `lib/rate-limit.ts`, `lib/ai-tools/pending-approvals.ts`, `lib/slugs.ts`, `app/actions.ts` |
-| **Stripe** | Brokerage seat-based billing checkout/portal/webhook | `lib/stripe.ts`, `app/api/billing/checkout/route.ts`, `app/api/billing/portal/route.ts`, `app/api/billing/cancel/route.ts` |
+| **Stripe** | Team seat-based billing checkout/portal/webhook | `lib/stripe.ts`, `app/api/billing/checkout/route.ts`, `app/api/billing/portal/route.ts`, `app/api/billing/cancel/route.ts` |
 | **Vercel** | Deployment target, analytics, speed insights | `@vercel/analytics`, `@vercel/speed-insights` packages |
 
 ---
@@ -88,7 +88,7 @@ Clerk requires additional environment variables that are standard for `@clerk/ne
 | `NEXT_PUBLIC_APP_URL` | For correct contact links in notification emails. |
 | `RESEND_API_KEY` + `RESEND_FROM_EMAIL` | Required for lead notification emails. Notifications are silently skipped if unset. |
 | `TELNYX_API_KEY` + `TELNYX_FROM_NUMBER` | Required for SMS notifications and the `send_sms` AI tool. SMS silently skipped if unset. Users must enable SMS in workspace settings. |
-| `STRIPE_PRICE_STARTER` / `STRIPE_PRICE_TEAM` / `STRIPE_PRICE_ENTERPRISE` | Required to initiate brokerage checkout sessions at each tier. Billing flow fails without the tier's price ID. |
+| `STRIPE_PRICE_STARTER` / `STRIPE_PRICE_TEAM` / `STRIPE_PRICE_ENTERPRISE` | Required to initiate team checkout sessions at each tier. Billing flow fails without the tier's price ID. |
 
 ---
 
@@ -117,9 +117,9 @@ All `.env*` files are gitignored. Create a `.env.local` file locally with the re
 | Supabase pgvector | Yes (via Supabase) | Built into `@supabase/supabase-js` | Vector search for AI RAG context, optional |
 | Upstash Redis | Yes | `@upstash/redis@^1.34.9` | Legacy metadata path |
 | Vercel | Yes (packages) | `@vercel/analytics@^1.5.0`, `@vercel/speed-insights@^1.2.0` | Deployment target |
-| Resend | Yes | `resend@^4.8.0` | All transactional emails (leads, tours, invitations, digests), fully integrated |
-| Telnyx | Yes | `telnyx@^6.26.0` | SMS notifications for leads, tours, and deals, plus the `send_sms` AI tool |
-| Stripe | Yes | `stripe@^20.4.1` | Brokerage seat-based billing (checkout, portal, cancel). Requires `STRIPE_PRICE_STARTER` / `STRIPE_PRICE_TEAM` / `STRIPE_PRICE_ENTERPRISE` <!-- TODO: verify full list of Stripe secrets (webhook secret, API key) — not inspected in this pass --> |
+| Resend | Yes | `resend@^4.8.0` | All transactional emails (leads, demos, invitations, digests), fully integrated |
+| Telnyx | Yes | `telnyx@^6.26.0` | SMS notifications for leads, demos, and deals, plus the `send_sms` AI tool |
+| Stripe | Yes | `stripe@^20.4.1` | Team seat-based billing (checkout, portal, cancel). Requires `STRIPE_PRICE_STARTER` / `STRIPE_PRICE_TEAM` / `STRIPE_PRICE_ENTERPRISE` <!-- TODO: verify full list of Stripe secrets (webhook secret, API key) — not inspected in this pass --> |
 
 ---
 
@@ -131,7 +131,7 @@ The `SpaceSetting` model stores per-workspace configuration:
 |---|---|
 | `aiPersonalization` | AI personalization preferences (tone, style) |
 | `billingSettings` | Billing preferences (string, not yet functional) |
-| `phoneNumber` | Realtor's phone number |
+| `phoneNumber` | Rep's phone number |
 | `businessName` | Business or brand name |
 | `intakePageTitle` | Title shown on public intake form |
 | `intakePageIntro` | Intro text on public intake form |

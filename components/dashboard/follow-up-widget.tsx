@@ -32,7 +32,7 @@ const SNOOZE_OPTIONS = [
 
 const TYPE_LABELS: Record<string, string> = {
   QUALIFICATION: 'Qual',
-  TOUR: 'Tour',
+  DEMO: 'Demo',
   APPLICATION: 'App',
 };
 

@@ -2,7 +2,7 @@
 --
 -- Before this, there was no place to store the PDFs that actually close a
 -- deal — offer, counter, inspection report, appraisal, loan estimate,
--- closing disclosure. Realtors either kept them in email or a separate
+-- closing disclosure. Reps either kept them in email or a separate
 -- folder, which means they weren't visible alongside the rest of the deal.
 --
 -- Storage bucket `deal-documents` is **private** — access happens via

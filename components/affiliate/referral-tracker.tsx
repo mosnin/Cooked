@@ -9,7 +9,7 @@
  * _fprom_tid cookie set by fpr.js when the user first landed via a referral link.
  *
  * Mount this in the authenticated dashboard layout (app/s/[slug]/layout.tsx)
- * so it fires once after the realtor signs in — without touching any protected
+ * so it fires once after the rep signs in — without touching any protected
  * server flows (onboarding, apply, Stripe).
  *
  * Guards:

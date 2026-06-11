@@ -2,7 +2,7 @@
  * `find_comparable_properties` — search local Property rows in this workspace.
  *
  * Read-only. Honest about scope: this is NOT MLS. It searches Property rows
- * the realtor has saved (their own listings, off-market notes, owned). If
+ * the rep has saved (their own listings, off-market notes, owned). If
  * MLS lookup is needed, that's a separate integration that doesn't exist yet.
  *
  * Sort: when a price midpoint is computable from priceMin + priceMax (or one

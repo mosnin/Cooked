@@ -528,7 +528,7 @@ describe('summariseInterruption', () => {
     }),
   ];
 
-  it('renders the realtor-facing approval message via the original tool definition', () => {
+  it('renders the rep-facing approval message via the original tool definition', () => {
     expect(summariseInterruption('send_thing', { to: 'jane@x.com' }, registry)).toBe(
       'Send to jane@x.com',
     );

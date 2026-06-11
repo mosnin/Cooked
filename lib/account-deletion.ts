@@ -10,7 +10,7 @@
  *   - `Space.ownerId REFERENCES "User"(id) ON DELETE CASCADE`
  *   - almost every Space-scoped table is `REFERENCES "Space"(id) ON DELETE CASCADE`
  *   So deleting the single User row cascades to the Space row, which cascades
- *   to Contact, Deal, Property, Conversation, Message, Note, Tour, etc. We do
+ *   to Contact, Deal, Property, Conversation, Message, Note, Demo, etc. We do
  *   not hand-roll a deletion order — Postgres enforces it via the FK graph.
  *
  * What does NOT cascade (and so is swept explicitly here, BEFORE the User
@@ -20,7 +20,7 @@
  *
  * What is intentionally retained (see docs/DATA-DELETION.md §retention):
  *   - Stripe customer/invoice records (held by Stripe; legal/financial retention)
- *   - CommissionLedger (brokerage-owned financial record, not space-owned)
+ *   - CommissionLedger (team-owned financial record, not space-owned)
  *   - SupportTicket / Property pool rows that ON DELETE SET NULL rather than cascade
  *
  * The feature flag (ACCOUNT_DELETION_HARD_DELETE) gates the irreversible DB
@@ -40,20 +40,20 @@ export function hardDeleteEnabled(): boolean {
  * Returns a reason string if the space's owner cannot be hard-deleted yet, or
  * null if deletion is safe to proceed.
  *
- * The one structural blocker: `Brokerage.ownerId REFERENCES "User"(id) ON
- * DELETE RESTRICT`. A broker who owns a brokerage cannot have their User row
- * deleted until the brokerage is transferred or removed — Postgres will reject
+ * The one structural blocker: `Team.ownerId REFERENCES "User"(id) ON
+ * DELETE RESTRICT`. A manager who owns a team cannot have their User row
+ * deleted until the team is transferred or removed — Postgres will reject
  * the delete. We surface that as a clear message rather than letting the DB
  * throw an opaque FK error at the user.
  */
 export async function checkDeletionBlockers(ownerId: string): Promise<string | null> {
-  const { data: ownedBrokerages } = await supabase
-    .from('Brokerage')
+  const { data: ownedTeams } = await supabase
+    .from('Team')
     .select('id, name')
     .eq('ownerId', ownerId);
 
-  if (ownedBrokerages && ownedBrokerages.length > 0) {
-    return 'you own a brokerage. transfer or close it before deleting your account, or contact help@usechippi.com.';
+  if (ownedTeams && ownedTeams.length > 0) {
+    return 'you own a team. transfer or close it before deleting your account, or contact help@usekoala.com.';
   }
   return null;
 }

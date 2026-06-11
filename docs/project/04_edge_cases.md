@@ -12,9 +12,9 @@ Scenario: Logged-in user manually navigates to `/s/[other-user-slug]`.
 Expected system behavior: Layout checks if user owns the space (dbUser.space.id === space.id). If not, return 404. Never expose another user's data.
 Relevant page or module: /s/[slug] layout
 
-### Edge Case: Broker-only user tries to access /dashboard
-Scenario: User with accountType='broker_only' navigates to /dashboard.
-Expected system behavior: Redirect to /broker. Do not show workspace creation form.
+### Edge Case: Manager-only user tries to access /dashboard
+Scenario: User with accountType='manager_only' navigates to /dashboard.
+Expected system behavior: Redirect to /manager. Do not show workspace creation form.
 Relevant page or module: /dashboard
 
 ## Billing Edge Cases
@@ -51,13 +51,13 @@ Scenario: Renter submits the same application form twice (double-click, refresh)
 Expected system behavior: Rate limiting prevents rapid duplicate submissions. If same email exists in space, system should handle gracefully — either update existing contact or create new with dedup note.
 Relevant page or module: /apply/[slug], API route
 
-### Edge Case: Tour double-booking
+### Edge Case: Demo double-booking
 Scenario: Two prospects try to book the same time slot simultaneously.
-Expected system behavior: First booking succeeds. Second receives "slot no longer available" error. Buffer minutes between tours enforced. Availability check is authoritative at booking time.
-Relevant page or module: /book/[slug], tour API
+Expected system behavior: First booking succeeds. Second receives "slot no longer available" error. Buffer minutes between demos enforced. Availability check is authoritative at booking time.
+Relevant page or module: /book/[slug], demo API
 
 ### Edge Case: Delete contact linked to deals
-Scenario: Realtor tries to delete a contact that is linked to one or more deals via DealContact.
+Scenario: Rep tries to delete a contact that is linked to one or more deals via DealContact.
 Expected system behavior: Show warning about linked deals. DealContact has ON DELETE CASCADE so deletion proceeds but user should be informed. Consider soft-delete or archive in future.
 Relevant page or module: /s/[slug]/contacts
 
@@ -69,9 +69,9 @@ Expected system behavior: All pages that query DB have try/catch blocks. Error U
 Relevant page or module: All authenticated pages
 
 ### Edge Case: Google Calendar token expires
-Scenario: Realtor's Google Calendar OAuth token expires.
-Expected system behavior: Tour creation works without calendar sync. Calendar sync fails silently. Prompt to reconnect in tour settings.
-Relevant page or module: /s/[slug]/tours, tour settings
+Scenario: Rep's Google Calendar OAuth token expires.
+Expected system behavior: Demo creation works without calendar sync. Calendar sync fails silently. Prompt to reconnect in demo settings.
+Relevant page or module: /s/[slug]/demos, demo settings
 
 ### Edge Case: OpenAI rate limit exceeded
 Scenario: High volume of applications hits OpenAI rate limit.
@@ -91,8 +91,8 @@ Expected system behavior: Input fields have reasonable maxLength. Data truncated
 Relevant page or module: /apply/[slug], contact detail
 
 ### Edge Case: Invitation token used after expiration
-Scenario: Realtor clicks an invitation link after the 7-day expiry.
-Expected system behavior: Show "Invitation expired" message with prompt to request a new invitation from the broker. Do not auto-accept or create membership.
+Scenario: Rep clicks an invitation link after the 7-day expiry.
+Expected system behavior: Show "Invitation expired" message with prompt to request a new invitation from the manager. Do not auto-accept or create membership.
 Relevant page or module: /invite/[token]
 
 ### Edge Case: Sole owner deletes account

@@ -3,7 +3,7 @@
  *
  * Resume a chat turn that paused on a tool approval. The new SDK-based
  * runtime persists every paused run as one row in `AgentPausedRun`. This
- * endpoint loads that row, applies the realtor's approve/deny decision,
+ * endpoint loads that row, applies the rep's approve/deny decision,
  * and streams the continuation as SSE — same wire format as the fresh
  * turn at /api/ai/task.
  *
@@ -31,7 +31,7 @@ import { requireAuth } from '@/lib/api-auth';
 import { supabase } from '@/lib/supabase';
 import { logger } from '@/lib/logger';
 import { checkRateLimit } from '@/lib/rate-limit';
-import { chippiErrorMessage } from '@/lib/ai-tools/chippi-voice';
+import { koalaErrorMessage } from '@/lib/ai-tools/koala-voice';
 import type { ToolContext } from '@/lib/ai-tools/types';
 import { streamTsResumeTurn } from '@/lib/ai-tools/sdk-chat-stream';
 import { chatRuntime } from '@/lib/ai-tools/runtime-flag';
@@ -85,7 +85,7 @@ export async function POST(
   // Per-user rate limit. Approvals are cheap so we allow plenty of them.
   const { allowed } = await checkRateLimit(`ai:task:resume:${auth.userId}`, 60, 3600);
   if (!allowed) {
-    return NextResponse.json({ error: chippiErrorMessage('rate_limited') }, { status: 429 });
+    return NextResponse.json({ error: koalaErrorMessage('rate_limited') }, { status: 429 });
   }
 
   // Load + scope check. The userId stored on the row is the Clerk userId.
@@ -96,7 +96,7 @@ export async function POST(
     .maybeSingle();
   if (error) {
     logger.error('[ai/task resume] load failed', { pausedRunId }, error);
-    return NextResponse.json({ error: chippiErrorMessage('internal') }, { status: 500 });
+    return NextResponse.json({ error: koalaErrorMessage('internal') }, { status: 500 });
   }
   if (!row) return NextResponse.json({ error: 'Not found' }, { status: 404 });
   const paused = row as PausedRunRow;
@@ -169,7 +169,7 @@ export async function POST(
     .select('id');
   if (markErr) {
     logger.error('[ai/task resume] status update failed', { pausedRunId }, markErr);
-    return NextResponse.json({ error: chippiErrorMessage('internal') }, { status: 500 });
+    return NextResponse.json({ error: koalaErrorMessage('internal') }, { status: 500 });
   }
   if (!marked || marked.length === 0) {
     return NextResponse.json({ error: 'Run is already resumed' }, { status: 409 });

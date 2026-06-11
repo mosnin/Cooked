@@ -32,7 +32,7 @@ const requiredSchema = z.object({
   // OpenAI (powers every interactive chat turn + embeddings)
   OPENAI_API_KEY: z.string().min(1),
 
-  // Clerk (realtor authentication — no request is served without it)
+  // Clerk (rep authentication — no request is served without it)
   CLERK_SECRET_KEY: z.string().min(1),
   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().min(1),
 });
@@ -62,7 +62,7 @@ const optionalSchema = z.object({
   STRIPE_PRICE_TOPUP_STARTER: z.string().optional(),
   STRIPE_PRICE_TOPUP_GROWTH: z.string().optional(),
   STRIPE_PRICE_TOPUP_POWER: z.string().optional(),
-  // Legacy brokerage tier prices still read by the brokerage checkout path.
+  // Legacy team tier prices still read by the team checkout path.
   STRIPE_PRICE_STARTER: z.string().optional(),
   STRIPE_PRICE_ENTERPRISE: z.string().optional(),
 
@@ -101,7 +101,7 @@ const optionalSchema = z.object({
   MODAL_SWARM_URL: z.string().optional(),
   AGENT_INTERNAL_SECRET: z.string().optional(),
   AGENT_IMMEDIATE_EVENTS: z.string().optional(),
-  CHIPPI_CHAT_RUNTIME: z.string().optional(),
+  KOALA_CHAT_RUNTIME: z.string().optional(),
 
   // Composio integrations
   COMPOSIO_API_KEY: z.string().optional(),
@@ -191,7 +191,7 @@ const warnGroups: Array<{ label: string; keys: Array<keyof Env> }> = [
   // Cutover-critical secrets that boot GREEN when missing but then fail
   // silently: without CRON_SECRET every cron route 401s (sweeps / briefings /
   // SLA stop); without AGENT_INTERNAL_SECRET the Modal agent's callbacks 503
-  // (Chippi goes dark). Kept optional so CI/preview boot without them, but
+  // (Koala goes dark). Kept optional so CI/preview boot without them, but
   // warned individually so a real deploy notices.
   { label: 'Cron auth — cron routes 401 without CRON_SECRET', keys: ['CRON_SECRET'] },
   {

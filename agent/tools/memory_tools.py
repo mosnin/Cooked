@@ -102,7 +102,7 @@ async def store_memory(
 ) -> dict[str, Any]:
     """Store a memory for future runs; auto-embedded for semantic recall."""
     # entity_type: contact|deal|space. memory_type: fact|observation|preference|reminder.
-    # importance: 0.0-1.0 (default 0.5). Bar: would a realtor want this in 6 months?
+    # importance: 0.0-1.0 (default 0.5). Bar: would a rep want this in 6 months?
     space_id = ctx.context.space_id
 
     if entity_type not in _VALID_ENTITIES:

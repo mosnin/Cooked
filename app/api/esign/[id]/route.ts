@@ -1,6 +1,6 @@
 /**
  * GET /api/esign/[id]?slug=<slug> — refresh + return one SignatureRequest's
- * status from DocuSign (via the realtor's connected Composio account).
+ * status from DocuSign (via the rep's connected Composio account).
  *
  * Auth: requireSpaceOwner(slug). The request must belong to the caller's
  * space — defence-in-depth on top of the owner check.

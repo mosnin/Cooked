@@ -39,7 +39,7 @@ interface ContactCardProps {
   animDelay?: number;
 }
 
-// Score label → pill colours. Hot uses rose (not orange — orange is Chippi-only per STYLESHEET).
+// Score label → pill colours. Hot uses rose (not orange — orange is Koala-only per STYLESHEET).
 const SCORE_PILL: Record<string, string> = {
   hot: 'text-rose-700 bg-rose-50 dark:text-rose-400 dark:bg-rose-500/15',
   warm: 'text-amber-700 bg-amber-50 dark:text-amber-400 dark:bg-amber-500/15',

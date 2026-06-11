@@ -7,17 +7,17 @@
  *   gross split amount per row = basis==='percent' ? gci * percentOfGci/100 : flatAmount
  *   netToMe = gci - sum(all non-"me" split amounts) + sum("me" split amounts)
  *
- * The last bit deserves a note: by convention we *don't* require the realtor
+ * The last bit deserves a note: by convention we *don't* require the rep
  * to enter their own "me" row. If there are no rows, `netToMe === gci`. If
- * the realtor adds an explicit "me" row with a percentage, that's treated
+ * the rep adds an explicit "me" row with a percentage, that's treated
  * as their slice and everything not assigned is considered overhead /
- * brokerage. This mirrors how most realtors actually model it: they enter
+ * team. This mirrors how most reps actually model it: they enter
  * what they owe others and trust that what's left is theirs.
  */
 
 export type CommissionParty =
   | 'me'
-  | 'brokerage'
+  | 'team'
   | 'co_agent'
   | 'referral_out'
   | 'referral_in'
@@ -42,7 +42,7 @@ export interface CommissionSplit {
 
 export const COMMISSION_PARTIES: { value: CommissionParty; label: string; description: string }[] = [
   { value: 'me',           label: 'Me',            description: 'Your take — explicit if you want to model it.' },
-  { value: 'brokerage',    label: 'Brokerage',     description: 'Your office / brokerage split.' },
+  { value: 'team',    label: 'Team',     description: 'Your office / team split.' },
   { value: 'co_agent',     label: 'Co-agent',      description: 'Another agent on the same side of the deal.' },
   { value: 'referral_out', label: 'Referral out',  description: 'Another agent who sent you the client.' },
   { value: 'referral_in',  label: 'Referral in',   description: 'Someone you referred to — money in.' },

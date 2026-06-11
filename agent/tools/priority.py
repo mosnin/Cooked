@@ -1,4 +1,4 @@
-"""Priority list tool — ranked daily focus list for the realtor.
+"""Priority list tool — ranked daily focus list for the rep.
 
 Called after the main work is done. The result is stored as a space-level
 memory so the UI can surface it without triggering another agent run.
@@ -26,7 +26,7 @@ async def generate_priority_list(
 ) -> dict[str, Any]:
     """Rank today's top contacts by urgency signals; persists result as space memory."""
     # top_n: 1-10. Scoring: +30 overdue follow-up, +20 hot (>=70), +15 recent inbound,
-    # +10 active goal, +8 tour stage, -10 contacted <24h, -20 no email/phone.
+    # +10 active goal, +8 demo stage, -10 contacted <24h, -20 no email/phone.
     space_id = ctx.context.space_id
     db = await supabase()
     now = datetime.now(timezone.utc)
@@ -95,10 +95,10 @@ async def generate_priority_list(
             score += 10
             reasons.append("active goal")
 
-        # Tour contact
-        if c.get("type") == "TOUR":
+        # Demo contact
+        if c.get("type") == "DEMO":
             score += 8
-            reasons.append("tour stage")
+            reasons.append("demo stage")
 
         # No contact info — skip
         if not c.get("email") and not c.get("phone"):

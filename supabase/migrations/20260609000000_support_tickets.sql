@@ -1,7 +1,7 @@
--- Support tickets — a realtor submits a help request from inside the app; it
+-- Support tickets — a rep submits a help request from inside the app; it
 -- lands in the admin dashboard where an admin triages it.
 --
--- spaceId / userId link the ticket to the submitting realtor's workspace and
+-- spaceId / userId link the ticket to the submitting rep's workspace and
 -- Clerk user. email + name are denormalized so the admin sees the submitter
 -- without a join. RLS is enabled but no policies are added — every read/write
 -- goes through the server with the service-role key (same posture as the
@@ -37,7 +37,7 @@ CREATE INDEX IF NOT EXISTS "SupportTicket_status_idx"
 CREATE INDEX IF NOT EXISTS "SupportTicket_createdAt_idx"
   ON "SupportTicket" ("createdAt" DESC);
 
--- Realtor "my tickets" view filters by the submitting user, newest-first.
+-- Rep "my tickets" view filters by the submitting user, newest-first.
 CREATE INDEX IF NOT EXISTS "SupportTicket_userId_idx"
   ON "SupportTicket" ("userId", "createdAt" DESC);
 CREATE INDEX IF NOT EXISTS "SupportTicket_spaceId_idx"

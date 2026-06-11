@@ -4,7 +4,7 @@
  * Old surface: a free-text-only chat that lived alongside the multi-step
  * form. New surface: the chat is the only intake, and it lives at
  * /apply/[slug]. This route stays as a permanent redirect so any links
- * the realtor or their leads have bookmarked / pasted still resolve.
+ * the rep or their leads have bookmarked / pasted still resolve.
  */
 
 import { redirect, permanentRedirect } from 'next/navigation';

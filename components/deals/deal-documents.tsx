@@ -40,7 +40,7 @@ import {
 interface DealDocumentsProps {
   dealId: string;
   slug: string;
-  /** True when the realtor has DocuSign connected (server-resolved). */
+  /** True when the rep has DocuSign connected (server-resolved). */
   docusignConnected?: boolean;
   /** Latest signature request per documentId, for the inline status pill. */
   signatureRequests?: SignatureRequestLite[];
@@ -331,7 +331,7 @@ function AttachFromFilesDialog({
   const [kind, setKind] = useState<DealDocumentKind>(defaultKind);
   const [attaching, setAttaching] = useState(false);
 
-  // Refetch on each open so the list reflects anything the realtor added
+  // Refetch on each open so the list reflects anything the rep added
   // in the meantime. Chat-attachment rows aren't attachable (they're
   // conversation ephemera with their own retention rules) so we skip them.
   useEffect(() => {

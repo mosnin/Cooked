@@ -5,7 +5,7 @@
 -- atomic UPDATE-WHERE-NULL lock so concurrent ticks can't double-send.
 --
 -- briefEmail / briefSms       per-feature opt-ins, default OFF. The
---                              realtor turns them on themselves. Master
+--                              rep turns them on themselves. Master
 --                              `notifications` / `smsNotifications`
 --                              toggles still gate — if master is off,
 --                              the feature can't fire.
@@ -40,7 +40,7 @@ ALTER TABLE "Brief"
   ADD COLUMN IF NOT EXISTS "briefDeliveryErrorCode" text;
 
 -- Backfill unsubscribeToken for existing SpaceSetting rows — the
--- DEFAULT only fires on new inserts. Without this, existing realtors
+-- DEFAULT only fires on new inserts. Without this, existing reps
 -- have a null token until they next update settings, which means
 -- their first email's unsubscribe link would 404.
 UPDATE "SpaceSetting"

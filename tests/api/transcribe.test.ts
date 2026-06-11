@@ -1,5 +1,5 @@
 /**
- * Route-level test for POST /api/chippi/transcribe.
+ * Route-level test for POST /api/koala/transcribe.
  *
  * Covers: auth-fail (401), no-audio body (400), too-large file (413),
  * happy-path (whisper mocked → returns transcript).
@@ -24,19 +24,19 @@ vi.mock('openai', () => {
   };
 });
 
-import { POST } from '@/app/api/chippi/transcribe/route';
+import { POST } from '@/app/api/koala/transcribe/route';
 import { requireAuth } from '@/lib/api-auth';
 
 const mockRequireAuth = vi.mocked(requireAuth);
 
 function makeReq(form: FormData): NextRequest {
-  return new NextRequest('http://localhost/api/chippi/transcribe', {
+  return new NextRequest('http://localhost/api/koala/transcribe', {
     method: 'POST',
     body: form,
   });
 }
 
-describe('POST /api/chippi/transcribe', () => {
+describe('POST /api/koala/transcribe', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     process.env.OPENAI_API_KEY = 'sk-test';

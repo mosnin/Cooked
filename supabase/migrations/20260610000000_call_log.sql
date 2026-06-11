@@ -1,11 +1,11 @@
--- Call log — a realtor clicks "Call" on a contact; Chippi places the call via
+-- Call log — a rep clicks "Call" on a contact; Koala places the call via
 -- Telnyx Voice (Call Control), records it, transcribes it, and summarizes it.
 -- Each placed call gets one CallLog row that the webhook progressively fills in
 -- as the call moves through its lifecycle (initiated → answered → completed) and
 -- the recording lands (recordingUrl + transcript + summary).
 --
--- spaceId links the call to the realtor's workspace; contactId is nullable so a
--- realtor can dial a raw number that isn't yet a contact. telnyxCallId is the
+-- spaceId links the call to the rep's workspace; contactId is nullable so a
+-- rep can dial a raw number that isn't yet a contact. telnyxCallId is the
 -- Telnyx call_control_id used to correlate inbound webhook events back to the
 -- row. RLS is enabled but no policies are added — every read/write goes through
 -- the server with the service-role key (same posture as SupportTicket and the

@@ -1,7 +1,7 @@
 /**
  * POST /api/email/send
  *
- * Send an email through the realtor's connected provider. Reuses the
+ * Send an email through the rep's connected provider. Reuses the
  * shared validator + send helper from `lib/communication/*` — channel is
  * implied to be email here.
  *

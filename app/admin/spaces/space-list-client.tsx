@@ -14,7 +14,7 @@ type SpaceRow = {
   name: string;
   emoji: string;
   ownerId: string;
-  brokerageId: string | null;
+  teamId: string | null;
   createdAt: string;
   stripeSubscriptionStatus: string;
   stripePeriodEnd: string | null;

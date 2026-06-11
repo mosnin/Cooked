@@ -22,7 +22,7 @@ interface ConfigureAccountFormProps {
     intakePageIntro: string;
     notifications: boolean;
     logoUrl: string;
-    realtorPhotoUrl: string;
+    repPhotoUrl: string;
     intakeAccentColor: string;
     intakeBorderRadius: 'rounded' | 'sharp';
     intakeFont: 'system' | 'serif' | 'mono';
@@ -82,7 +82,7 @@ export function ConfigureAccountForm({ initialData, slug }: ConfigureAccountForm
   );
   const [notifications, setNotifications] = useState(initialData.notifications);
   const [logoUrl, setLogoUrl] = useState(initialData.logoUrl || '');
-  const [realtorPhotoUrl, setRealtorPhotoUrl] = useState(initialData.realtorPhotoUrl || '');
+  const [repPhotoUrl, setRepPhotoUrl] = useState(initialData.repPhotoUrl || '');
   const [intakeAccentColor, setIntakeAccentColor] = useState(initialData.intakeAccentColor || '#ff964f');
   const [intakeBorderRadius, setIntakeBorderRadius] = useState<'rounded' | 'sharp'>(initialData.intakeBorderRadius || 'rounded');
   const [intakeFont, setIntakeFont] = useState<'system' | 'serif' | 'mono'>(initialData.intakeFont || 'system');
@@ -95,7 +95,7 @@ export function ConfigureAccountForm({ initialData, slug }: ConfigureAccountForm
   const [intakeDarkMode, setIntakeDarkMode] = useState(initialData.intakeDarkMode || false);
   const [intakeFaviconUrl, setIntakeFaviconUrl] = useState(initialData.intakeFaviconUrl || '');
   const [logoPreview, setLogoPreview] = useState(initialData.logoUrl || '');
-  const [photoPreview, setPhotoPreview] = useState(initialData.realtorPhotoUrl || '');
+  const [photoPreview, setPhotoPreview] = useState(initialData.repPhotoUrl || '');
   const [faviconPreview, setFaviconPreview] = useState(initialData.intakeFaviconUrl || '');
   const logoInputRef = useRef<HTMLInputElement>(null);
   const photoInputRef = useRef<HTMLInputElement>(null);
@@ -146,7 +146,7 @@ export function ConfigureAccountForm({ initialData, slug }: ConfigureAccountForm
     if (file.size > 2 * 1024 * 1024) { toast.error('Keep it under 2MB.'); return; }
     setPhotoPreview(URL.createObjectURL(file));
     const url = await handleUpload(file, 'photo');
-    if (url) { setRealtorPhotoUrl(url); setPhotoPreview(url); }
+    if (url) { setRepPhotoUrl(url); setPhotoPreview(url); }
     else { setPhotoPreview(''); }
   }
 
@@ -204,7 +204,7 @@ export function ConfigureAccountForm({ initialData, slug }: ConfigureAccountForm
           intakePageIntro,
           businessName,
           logoUrl: logoUrl.trim() || null,
-          realtorPhotoUrl: realtorPhotoUrl.trim() || null,
+          repPhotoUrl: repPhotoUrl.trim() || null,
           intakeAccentColor,
           intakeBorderRadius,
           intakeFont,
@@ -407,7 +407,7 @@ export function ConfigureAccountForm({ initialData, slug }: ConfigureAccountForm
           <SectionHeader
             icon={Image}
             title="Branding"
-            description="Customize how your intake and tour booking pages look to prospects."
+            description="Customize how your intake and demo booking pages look to prospects."
           />
           <div className="space-y-4">
             <div className="space-y-1.5">
@@ -437,15 +437,15 @@ export function ConfigureAccountForm({ initialData, slug }: ConfigureAccountForm
                 className="relative flex items-center gap-4 rounded-lg border-2 border-dashed border-border p-4 hover:border-primary/50 transition-colors cursor-pointer"
                 onClick={() => photoInputRef.current?.click()}
               >
-                {photoPreview || realtorPhotoUrl ? (
-                  <img src={photoPreview || realtorPhotoUrl} alt="Photo preview" className="w-12 h-12 rounded-full object-cover ring-2 ring-border" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                {photoPreview || repPhotoUrl ? (
+                  <img src={photoPreview || repPhotoUrl} alt="Photo preview" className="w-12 h-12 rounded-full object-cover ring-2 ring-border" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
                 ) : (
                   <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
                     <Upload size={18} className="text-muted-foreground" />
                   </div>
                 )}
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium">{realtorPhotoUrl ? 'Change photo' : 'Upload photo'}</p>
+                  <p className="text-sm font-medium">{repPhotoUrl ? 'Change photo' : 'Upload photo'}</p>
                   <p className="text-xs text-muted-foreground">PNG, JPG, or WebP. Max 2MB.</p>
                 </div>
               </div>

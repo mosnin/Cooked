@@ -71,7 +71,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'account not found.' }, { status: 404 });
   }
 
-  // Structural blockers (e.g. owning a brokerage → User delete is RESTRICTed).
+  // Structural blockers (e.g. owning a team → User delete is RESTRICTed).
   const blocker = await checkDeletionBlockers(userRow.id);
   if (blocker) {
     return NextResponse.json({ error: blocker }, { status: 409 });
@@ -130,7 +130,7 @@ export async function POST(req: NextRequest) {
         success: false,
         loginRemoved: true,
         error:
-          'your login was removed but data deletion did not finish. contact help@usechippi.com.',
+          'your login was removed but data deletion did not finish. contact help@usekoala.com.',
       },
       { status: 500 },
     );

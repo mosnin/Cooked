@@ -53,8 +53,8 @@ async def add_property(
     listing_url: str | None = None,
     notes: str | None = None,
 ) -> dict[str, Any]:
-    """Add a property to the realtor's inventory; later linkable to deals and tours."""
-    # address required. Capture only what the realtor named; leave rest null.
+    """Add a property to the rep's inventory; later linkable to deals and demos."""
+    # address required. Capture only what the rep named; leave rest null.
     # list_price in dollars. property_type: single_family|condo|townhouse|multi_family|land|commercial|other.
     # listing_status: active|pending|sold|off_market|owned (default active).
     space_id = ctx.context.space_id

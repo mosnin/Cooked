@@ -25,13 +25,13 @@ export function TryFreeCTA() {
           />
           <div className="relative">
             <h2 className="mx-auto max-w-3xl font-title text-[clamp(2rem,5vw,3.75rem)] font-normal leading-[1.04] tracking-[-0.018em] text-white">
-              Bring your inbox. Chippi takes it from there.
+              Bring your inbox. Koala takes it from there.
             </h2>
             <p className="mx-auto mt-5 max-w-xl text-lg text-white/55">
               Seven days free. No credit card. Set up in minutes.
             </p>
             <Link
-              href="/login/realtor?intent=signup"
+              href="/login/rep?intent=signup"
               className="mt-9 inline-flex h-12 items-center justify-center rounded-full bg-brand px-8 text-[15px] font-semibold text-[#2a1402] transition-transform duration-150 active:scale-[0.98]"
             >
               Start free

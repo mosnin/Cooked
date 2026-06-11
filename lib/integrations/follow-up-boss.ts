@@ -6,7 +6,7 @@
  *
  * Docs: https://docs.followupboss.com/  (Basic auth, base https://api.followupboss.com/v1)
  *
- * The realtor pastes their API key once (Follow Up Boss → Admin → API). We
+ * The rep pastes their API key once (Follow Up Boss → Admin → API). We
  * validate it, encrypt it at rest, and read their People list on demand to
  * mirror it on the Smart sync surface.
  *
@@ -58,7 +58,7 @@ export interface FubVerifyResult {
   ok: boolean;
   /** Human-readable account label (the FUB account name) when valid. */
   label: string | null;
-  /** Set when ok=false — a realtor-friendly reason. */
+  /** Set when ok=false — a rep-friendly reason. */
   reason?: string;
 }
 
@@ -144,7 +144,7 @@ function mapPerson(p: FubPerson, idx: number): SyncRecord {
 }
 
 /**
- * Pull the realtor's People list, most-recently-updated first, mapped to the
+ * Pull the rep's People list, most-recently-updated first, mapped to the
  * unified SyncRecord shape. Caps at `limit` (the surface is a mirror, not a
  * paginated table). Returns [] on any upstream failure — the route decides
  * how to present "connected but couldn't read".

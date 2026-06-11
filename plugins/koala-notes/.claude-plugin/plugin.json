@@ -1,0 +1,8 @@
+{
+  "name": "koala-notes",
+  "description": "Access and create Koala CRM notes from Claude. Search notes, create meeting notes, and reference your workspace data.",
+  "version": "1.0.0",
+  "author": { "name": "Koala", "url": "https://usekoala.com" },
+  "homepage": "https://usekoala.com",
+  "keywords": ["crm", "notes", "meetings", "real-estate", "koala"]
+}

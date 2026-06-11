@@ -1,5 +1,5 @@
 /**
- * AI Enhancement Layer for Chippi Lead Scoring
+ * AI Enhancement Layer for Koala Lead Scoring
  *
  * Adds qualitative analysis on top of the deterministic engine score.
  * The AI does NOT determine the score — it explains it and recommends actions.

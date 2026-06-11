@@ -1,6 +1,6 @@
 /**
  * Command-center section data — PIPELINE + OVERNIGHT for the redesigned
- * /chippi/brief surface.
+ * /koala/brief surface.
  *
  * The brief.cards array (ON DECK) and brief.momentum / brief.tomorrow
  * lines come from compose.ts. These two helpers add the two new section
@@ -51,7 +51,7 @@ type DealRow = Pick<
  * Count active deals, deals closing in the next 7 days, and deals
  * flagged at-risk or stuck by the shared dealHealth function. One read,
  * three numbers. Returns null when there are zero active deals — the
- * surface omits the PIPELINE section on day-one realtors.
+ * surface omits the PIPELINE section on day-one reps.
  */
 export async function composePipelineSummary(
   spaceId: string,
@@ -102,7 +102,7 @@ export async function composePipelineSummary(
  * bounded — Jobs cut, 5 max.
  */
 const BUCKET_OF: Record<string, string> = {
-  // Drafts the realtor can review / approve
+  // Drafts the rep can review / approve
   create_draft_message: 'drafts ready',
   message_drafted: 'drafts ready',
   packet_drafted: 'drafts ready',
@@ -127,7 +127,7 @@ const BUCKET_OF: Record<string, string> = {
 
 /**
  * Bucket order — when multiple buckets are present, render in this
- * sequence so the realtor's eye lands on the most actionable item
+ * sequence so the rep's eye lands on the most actionable item
  * (drafts they can approve) first.
  */
 const BUCKET_ORDER = [
@@ -149,7 +149,7 @@ interface ActivityRow {
 /**
  * Roll up the last 12h of completed autonomous agent actions into 3-5
  * buckets. Returns null when there's no overnight activity at all — the
- * surface omits the OVERNIGHT section so day-one realtors don't see a
+ * surface omits the OVERNIGHT section so day-one reps don't see a
  * confusing "0 things happened" header.
  */
 export async function composeOvernight(

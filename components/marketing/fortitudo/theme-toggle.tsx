@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * Marketing theme toggle in the fortitudo round-chip style, wired to Chippi's
+ * Marketing theme toggle in the fortitudo round-chip style, wired to Koala's
  * own ThemeProvider (sets localStorage 'theme' + the `.dark` class). Mount-
  * guarded so the icon doesn't flash the wrong state during hydration.
  */

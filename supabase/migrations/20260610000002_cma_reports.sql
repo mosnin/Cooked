@@ -1,8 +1,8 @@
--- CMA reports — a realtor generates a Comparative Market Analysis from a
+-- CMA reports — a rep generates a Comparative Market Analysis from a
 -- subject property + comparable Property rows already in their workspace, then
 -- shares a public link with a seller.
 --
--- Fully in-house: comps are selected from the realtor's own Property table (no
+-- Fully in-house: comps are selected from the rep's own Property table (no
 -- MLS, no external API). The computed analysis (subject snapshot, chosen comps,
 -- price range, $/sqft) is frozen into `payload` at publish time so the public
 -- page renders a stable report even if the underlying Property rows later
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS "CmaReport" (
 CREATE UNIQUE INDEX IF NOT EXISTS "CmaReport_shareToken_key"
   ON "CmaReport" ("shareToken");
 
--- The realtor's "my CMAs" list reads newest-first within a space.
+-- The rep's "my CMAs" list reads newest-first within a space.
 CREATE INDEX IF NOT EXISTS "CmaReport_space_created_idx"
   ON "CmaReport" ("spaceId", "createdAt" DESC);
 

@@ -21,13 +21,13 @@ import { AsciiBlob } from '@/components/marketing/home/ascii-blob';
 import { Reveal, Eyebrow } from '@/components/marketing/home/home-kit';
 
 // TODO: paste the Calendly inline-embed URL here
-// e.g. 'https://calendly.com/your-org/chippi-walkthrough'
+// e.g. 'https://calendly.com/your-org/koala-walkthrough'
 const CALENDLY_URL = '';
 
 export function DemoBooking() {
   return (
     <section className="relative overflow-hidden">
-      {/* Subtle Chippi-orange atmosphere, kept quiet behind the reading zone. */}
+      {/* Subtle Koala-orange atmosphere, kept quiet behind the reading zone. */}
       <AsciiBlob className="opacity-50" />
       <div
         aria-hidden
@@ -39,17 +39,17 @@ export function DemoBooking() {
       />
 
       <div className="relative z-10 mx-auto max-w-3xl px-6 py-24 md:px-8 md:py-32">
-        {/* Compact hero — one idea: see Chippi run, then book a time. */}
+        {/* Compact hero — one idea: see Koala run, then book a time. */}
         <Reveal className="text-center">
           <Eyebrow>Book a demo</Eyebrow>
           <h1
             style={{ fontFamily: 'var(--font-title)' }}
             className="mx-auto mt-6 max-w-2xl text-[clamp(2.25rem,5.5vw,3.75rem)] font-normal leading-[1.04] tracking-[-0.018em] text-foreground"
           >
-            See Chippi run your floor.
+            See Koala run your floor.
           </h1>
           <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-foreground/60">
-            For brokerages and teams sizing up Chippi. Pick a time and
+            For teams and teams sizing up Koala. Pick a time and
             we&rsquo;ll walk your floor through it live: the inbox, the drafts,
             the deals it keeps current. then we answer how it fits your book.
           </p>
@@ -73,7 +73,7 @@ export function DemoBooking() {
               // Real scheduler: a plain responsive iframe to the Calendly URL.
               <iframe
                 src={CALENDLY_URL}
-                title="Book a demo with Chippi"
+                title="Book a demo with Koala"
                 className="min-h-[680px] w-full border-0 bg-card"
                 loading="lazy"
               />
@@ -101,7 +101,7 @@ export function DemoBooking() {
           <p className="text-sm text-muted-foreground">
             prefer to start now?{' '}
             <Link
-              href="/login/realtor?intent=signup"
+              href="/login/rep?intent=signup"
               className="font-medium text-foreground underline-offset-4 transition-colors hover:underline"
             >
               start free

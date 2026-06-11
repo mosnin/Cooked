@@ -11,7 +11,7 @@
  * Why this exists: adding a slug to CURATED_TRIGGERS that doesn't
  * exist at Composio fails SILENTLY at OAuth-completion time —
  * createTrigger throws, we record `status='failed'` on a fresh
- * IntegrationTrigger row, the realtor sees the connection as green
+ * IntegrationTrigger row, the rep sees the connection as green
  * with no inbound notifications. This script catches that pre-deploy.
  *
  * Usage:

@@ -13,7 +13,7 @@ import type { ToolContext } from './types';
 
 /**
  * Resolve the calling user's Clerk id and the space they're operating in for
- * this turn. We accept `spaceSlug` rather than inferring so brokers managing
+ * this turn. We accept `spaceSlug` rather than inferring so managers managing
  * multiple spaces can route turns to a specific space.
  *
  * Returns either a ToolContext (caller owns / manages the space) or a 4xx
@@ -46,7 +46,7 @@ export async function resolveToolContext(
     return NextResponse.json({ error: 'Space not found' }, { status: 404 });
   }
 
-  // Owner access: direct ownership is the common case. Broker-admin access
+  // Owner access: direct ownership is the common case. Manager-admin access
   // could be layered on here later — intentionally starting strict so the
   // on-demand agent never acts outside the caller's own space.
   if (space.ownerId !== userRow.id) {

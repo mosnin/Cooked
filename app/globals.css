@@ -328,7 +328,7 @@
   }
 }
 
-/* Chippi chat surface — same defensive pattern. The chat workspace's
+/* Koala chat surface — same defensive pattern. The chat workspace's
    inner content wrappers have `px-4 sm:px-6` but production showed the
    composer overflowing the right edge on mobile. Explicit raw CSS class. */
 .chat-content-wrap {
@@ -424,7 +424,7 @@
   box-shadow: none !important;
   outline: none !important;
 }
-/* Primary button: pill, Chippi brand orange (fortitudo auth treatment).
+/* Primary button: pill, Koala brand orange (fortitudo auth treatment).
    Auth is the first impression, where brand expression is allowed; the orange
    CTA matches the logged-out site's primary pills. The product chrome stays
    neutral; this is scoped to the Clerk auth form. */
@@ -629,8 +629,8 @@
 
 
 /* ──────────────────────────────────────────────────────────────────────────
- * AI loader — used by voice-mode + any "Chippi is generating" surface.
- * Orange-themed (Chippi brand-warm) variant of the rotating gradient + letter
+ * AI loader — used by voice-mode + any "Koala is generating" surface.
+ * Orange-themed (Koala brand-warm) variant of the rotating gradient + letter
  * pulse pattern. Box-shadow stops cycle through warm tones; letters fade and
  * scale slightly to add a typewriter-meets-breath feel.
  * ────────────────────────────────────────────────────────────────────────── */
@@ -747,16 +747,16 @@
 }
 
 /* ──────────────────────────────────────────────────────────────────────────
- * Chippi thinking shimmer — used by the chat transcript while the agent is
+ * Koala thinking shimmer — used by the chat transcript while the agent is
  * spinning up or between tool calls. Plays through the muted→foreground→
  * muted gradient so the word "Thinking" reads as alive but calm.
  * ────────────────────────────────────────────────────────────────────────── */
-@keyframes chippi-thinking-shimmer {
+@keyframes koala-thinking-shimmer {
   0%   { background-position: 200% 0; }
   100% { background-position: -200% 0; }
 }
 
-.chippi-thinking-shimmer {
+.koala-thinking-shimmer {
   /* A bright wedge sweeps across the muted base. Foreground colors come
      from CSS vars so dark mode flips automatically. The 200% bg-size lets
      the keyframe push the highlight cleanly off both edges. */
@@ -773,59 +773,59 @@
   -webkit-background-clip: text;
   color: transparent;
   /* 2.4s = calm. ease-in-out softens the turnaround so it never reads jittery. */
-  animation: chippi-thinking-shimmer 2.4s ease-in-out infinite;
+  animation: koala-thinking-shimmer 2.4s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .chippi-thinking-shimmer {
+  .koala-thinking-shimmer {
     animation: none;
     background-position: 0 0;
   }
   /* Legacy inline-style selector kept for any old callsites. */
-  [style*="chippi-thinking-shimmer"] { animation: none !important; background-position: 0 0 !important; }
+  [style*="koala-thinking-shimmer"] { animation: none !important; background-position: 0 0 !important; }
 }
 
-/* ── Chippi streaming cursor ────────────────────────────────────────────────
+/* ── Koala streaming cursor ────────────────────────────────────────────────
  * step-start keeps the blink hard-edged (typewriter), not a gentle fade.
  * 0.9s is slightly irregular against the LLM token cadence so they don't
  * cancel each other out visually. */
-@keyframes chippi-cursor-blink {
+@keyframes koala-cursor-blink {
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
 }
-.chippi-cursor {
+.koala-cursor {
   display: inline-block;
   width: 2px;
   height: 0.9em;
   margin-left: 2px;
   vertical-align: text-bottom;
   background: currentColor;
-  animation: chippi-cursor-blink 0.9s step-start infinite;
+  animation: koala-cursor-blink 0.9s step-start infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .chippi-cursor { animation: none; opacity: 1; }
+  .koala-cursor { animation: none; opacity: 1; }
 }
 
-/* ── Chippi embed mode ─────────────────────────────────────────────────────
- * When a dashboard page renders inside the Chippi RightPanel iframe it
+/* ── Koala embed mode ─────────────────────────────────────────────────────
+ * When a dashboard page renders inside the Koala RightPanel iframe it
  * loads with `?embed=1`. The EmbedDetector component (mounted in
- * app/s/[slug]/layout.tsx) sets `data-chippi-embed="true"` on <html>.
- * The outer Chippi already owns the sidebar, header, and chat input — so
+ * app/s/[slug]/layout.tsx) sets `data-koala-embed="true"` on <html>.
+ * The outer Koala already owns the sidebar, header, and chat input — so
  * the iframe must render ONLY the page content. Hide every chrome layer
  * the iframe shouldn't show. Normal page visits (no `?embed=1`) are
  * unaffected — the attribute is never set, the rules never match. */
-[data-chippi-embed='true'] [data-dashboard-sidebar],
-[data-chippi-embed='true'] [data-dashboard-header],
-[data-chippi-embed='true'] [data-dashboard-mobile-nav],
-[data-chippi-embed='true'] [data-page-chat-input],
-[data-chippi-embed='true'] [data-platform-banner] {
+[data-koala-embed='true'] [data-dashboard-sidebar],
+[data-koala-embed='true'] [data-dashboard-header],
+[data-koala-embed='true'] [data-dashboard-mobile-nav],
+[data-koala-embed='true'] [data-page-chat-input],
+[data-koala-embed='true'] [data-platform-banner] {
   display: none !important;
 }
 /* Sidebar/header collapse means the content column shouldn't carry the
- * extra bottom padding the ChippiBar used to reserve. Tighten it. The
+ * extra bottom padding the KoalaBar used to reserve. Tighten it. The
  * dashboard-content class is set in LayoutShell. */
-[data-chippi-embed='true'] .dashboard-content {
+[data-koala-embed='true'] .dashboard-content {
   padding-bottom: 1rem !important;
 }
 
@@ -835,7 +835,7 @@
  * We don't ship @tailwindcss/typography (one less dep, smaller bundle). The
  * `.prose` classes referenced in editor markup are kept for forward
  * compatibility but resolve to nothing today. These rules give the editor's
- * body the Google-Docs-ish hierarchy the realtor expects: h1 > h2 > h3 step
+ * body the Google-Docs-ish hierarchy the rep expects: h1 > h2 > h3 step
  * down clearly, lists are indented, blockquotes carry a quiet bar, code
  * blocks read as data, etc. Scoped to .ProseMirror so we don't restyle the
  * whole product. Hairline-only — no shadows.
@@ -994,13 +994,13 @@
 }
 
 /* ──────────────────────────────────────────────────────────────────────────
- * MARKETING + AUTH AESTHETIC (fortitudo "studio ASCII" system, Chippi-tinted)
+ * MARKETING + AUTH AESTHETIC (fortitudo "studio ASCII" system, Koala-tinted)
  *
  * Adopted wholesale for the logged-out site and auth pages. The product
- * (dashboard, agent chat, broker app) does NOT use any of this. It stays on
+ * (dashboard, agent chat, manager app) does NOT use any of this. It stays on
  * the paper-flat neutral system above. Everything here is opt-in via a class
  * (`.font-brand`, `.text-gradient-brand`, etc.) so it can't leak into product
- * chrome. Brand orange is Chippi's #ff964f (var --brand), not fortitudo's
+ * chrome. Brand orange is Koala's #ff964f (var --brand), not fortitudo's
  * #F97316. Works in both light and dark because it leans on the semantic
  * tokens (--background / --foreground / --border) for surfaces and reserves
  * orange for the signature glyphs + headline flourish.
@@ -1013,7 +1013,7 @@
   letter-spacing: 0.01em;
 }
 
-/* Orange gradient text: the headline accent word. Tuned to Chippi's #ff964f. */
+/* Orange gradient text: the headline accent word. Tuned to Koala's #ff964f. */
 .text-gradient-brand {
   background: linear-gradient(135deg, #ff964f, #ffb27a, #ffc994);
   -webkit-background-clip: text;

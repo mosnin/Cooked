@@ -1,6 +1,6 @@
 # TESTING.md
 
-Manual validation playbook for Chippi.
+Manual validation playbook for Koala.
 
 No automated test framework is currently configured in this repository. All validation is manual. This playbook defines what to check after changes.
 
@@ -35,7 +35,7 @@ Dev server runs at `http://localhost:3000` with Turbopack.
 | Upstash Redis | Rate limiting, pending-approval state for the AI agent, legacy admin/slug path | `KV_REST_API_URL`, `KV_REST_API_TOKEN` |
 | Resend | Transactional emails | `RESEND_API_KEY`, `RESEND_FROM_EMAIL` |
 | Telnyx | SMS notifications + `send_sms` AI tool | `TELNYX_API_KEY`, `TELNYX_FROM_NUMBER` |
-| Stripe | Brokerage billing (`/api/billing/*`) | `STRIPE_PRICE_STARTER`, `STRIPE_PRICE_TEAM`, `STRIPE_PRICE_ENTERPRISE` (+ the Stripe secret/webhook vars) |
+| Stripe | Team billing (`/api/billing/*`) | `STRIPE_PRICE_STARTER`, `STRIPE_PRICE_TEAM`, `STRIPE_PRICE_ENTERPRISE` (+ the Stripe secret/webhook vars) |
 
 ---
 
@@ -97,7 +97,7 @@ Run these after any change to confirm nothing is fundamentally broken:
 - [ ] Score, budget, timeline, areas, notes render correctly on lead cards
 - [ ] Contacts page (`/s/[slug]/contacts`) loads and shows all contacts
 - [ ] Contact creation via CRM form works (CRUD)
-- [ ] Contact type filter (QUALIFICATION, TOUR, APPLICATION) works
+- [ ] Contact type filter (QUALIFICATION, DEMO, APPLICATION) works
 - [ ] Contact search by name/email/phone/preferences works
 - [ ] Deals page (`/s/[slug]/deals`) loads with kanban board
 - [ ] Deals can be created with stage assignment

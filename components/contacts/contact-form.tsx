@@ -32,7 +32,7 @@ const schema = z.object({
   preferences: z.string().optional(),
   address: z.string().optional(),
   notes: z.string().optional(),
-  type: z.enum(['QUALIFICATION', 'TOUR', 'APPLICATION']),
+  type: z.enum(['QUALIFICATION', 'DEMO', 'APPLICATION']),
   tags: z.string().optional(),
 });
 
@@ -180,7 +180,7 @@ type ParsedContact = {
   email: string | null;
   phone: string | null;
   type: 'rental' | 'buyer' | 'seller' | null;
-  stage: 'Qualifying' | 'Tour' | 'Application' | null;
+  stage: 'Qualifying' | 'Demo' | 'Application' | null;
   monthlyBudget: number | null;
   properties: string[];
   preferences: string | null;
@@ -194,9 +194,9 @@ type ParseErrorCode =
   | 'parse_failed'
   | 'invalid_input';
 
-/** Map the parser's "Qualifying"/"Tour"/"Application" string to the DB enum. */
+/** Map the parser's "Qualifying"/"Demo"/"Application" string to the DB enum. */
 function stageToType(stage: ParsedContact['stage']): FormData['type'] {
-  if (stage === 'Tour') return 'TOUR';
+  if (stage === 'Demo') return 'DEMO';
   if (stage === 'Application') return 'APPLICATION';
   return 'QUALIFICATION';
 }
@@ -239,7 +239,7 @@ export function ContactForm({
   const [parseError, setParseError] = useState<string | null>(null);
   const [pendingPreview, setPendingPreview] = useState<ParsedContact | null>(null);
 
-  // Reset every time the modal opens so the realtor chooses fresh each time.
+  // Reset every time the modal opens so the rep chooses fresh each time.
   useEffect(() => {
     if (!open) return;
     setTab(canType ? 'type' : 'fill');

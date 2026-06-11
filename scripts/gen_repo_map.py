@@ -157,7 +157,7 @@ def collect_services():
     extra = [
         ("Modal — Python agent sandbox (agent/modal_app.py)", "MODAL_*"),
         ("fal.ai — Studio image/video generation", "FAL_KEY"),
-        ("Google Calendar — OAuth tour sync", "GOOGLE_CLIENT_*"),
+        ("Google Calendar — OAuth demo sync", "GOOGLE_CLIENT_*"),
         ("Wasabi — S3-compatible file storage", "WASABI_*"),
         ("Web Push (VAPID) — browser notifications", "VAPID_*"),
         ("FirstPromoter — affiliate tracking", "FIRST_PROMOTER_*"),

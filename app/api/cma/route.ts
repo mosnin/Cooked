@@ -1,5 +1,5 @@
 /**
- * CMA reports (realtor-facing) — GET / POST
+ * CMA reports (rep-facing) — GET / POST
  *
  *   GET  ?slug=<slug>  → { reports: [...] }   the space's CMAs, newest first
  *   POST { slug, subjectPropertyId? | subject:{address,...}, title? }

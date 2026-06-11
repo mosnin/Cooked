@@ -1,6 +1,6 @@
 # ARCHITECTURE.md
 
-System map for Chippi.
+System map for Koala.
 
 > ⚠️ **This prose has drifted from the code in places — do not trust it over the source.** For mechanical structure (every route, table, cron, tool) the **canonical, CI-gated** reference is `docs/repo-map.generated.md`; for the symptom→system→files judgment layer, see `SYSTEMS.md`. Known stale spots below have been corrected inline, but the directory map / route names in §2–§3 still describe an older shape (e.g. it mentions `/dashboard` and `/onboarding` routes that **no longer exist** — real post-login routing is `app/auth/redirect`, onboarding UI is `app/setup`). When in doubt, read the code or the generated map.
 
@@ -26,7 +26,7 @@ System map for Chippi.
 | Auth | Clerk (`@clerk/nextjs@^7.0.1`) | Middleware-based route protection |
 | Database | Supabase PostgreSQL (`@supabase/supabase-js@^2.99.1`) | Service-role key, server-side only |
 | AI - scoring | OpenAI (`openai@^6.26.0`) | `gpt-4o-mini`, structured JSON output (scoring only) |
-| AI - assistant | OpenAI Agents SDK — **in-app TS `@openai/agents` runtime is the DEFAULT** (direct OpenAI, no cold start); Python runtime in **Modal sandbox** is opt-in via `CHIPPI_CHAT_RUNTIME=modal` + the target for delegated sub-agents | `gpt-5-mini`; in-app agent has a `delegate_task` tool that spawns deeper Modal sub-agent runs (swarm) streamed inline in chat |
+| AI - assistant | OpenAI Agents SDK — **in-app TS `@openai/agents` runtime is the DEFAULT** (direct OpenAI, no cold start); Python runtime in **Modal sandbox** is opt-in via `KOALA_CHAT_RUNTIME=modal` + the target for delegated sub-agents | `gpt-5-mini`; in-app agent has a `delegate_task` tool that spawns deeper Modal sub-agent runs (swarm) streamed inline in chat |
 | AI - embeddings | OpenAI `text-embedding-3-small` | 1536-dim vectors |
 | Vector DB | Supabase pgvector (`DocumentEmbedding` table) | Per-space rows, HNSW index, COSINE metric via `match_documents` RPC |
 | Cache/legacy | Upstash Redis (`@upstash/redis@^1.34.9`) | Slug metadata, admin path |
@@ -195,7 +195,7 @@ Completion sets `onboardingCurrentStep = 7` and `onboardingCompletedAt = now()`.
 ## 8. Scoring flow
 
 - **Function**: `scoreLeadApplication` in `lib/lead-scoring.ts`
-- **Model**: the lead *score* is deterministic (rules engine, `lib/scoring/`); the AI *summary* enhancement uses `gpt-4.1-mini` (`lib/scoring/enhance.ts`). The chat agent defaults to `x-ai/grok-4.3` (realtor-selected via OpenRouter), NOT `gpt-5-mini`.
+- **Model**: the lead *score* is deterministic (rules engine, `lib/scoring/`); the AI *summary* enhancement uses `gpt-4.1-mini` (`lib/scoring/enhance.ts`). The chat agent defaults to `x-ai/grok-4.3` (rep-selected via OpenRouter), NOT `gpt-5-mini`.
 - **Format**: Structured JSON output via `response_format.json_schema`
 - **Input**: name, email, phone, budget, timeline, preferredAreas, notes
 - **Output contract** (`LeadScoringResult`):
@@ -211,7 +211,7 @@ Completion sets `onboardingCurrentStep = 7` and `onboardingCompletedAt = now()`.
 ## 9. CRM flow
 
 - **Leads page** (`app/s/[slug]/leads/page.tsx`): Filters contacts by `application-link` tag. Clears `new-lead` tag on page load. Shows score, budget, timeline, areas, notes, scoring summary.
-- **Contacts page** (`app/s/[slug]/contacts/page.tsx`): Full CRUD. Lifecycle types: `QUALIFICATION`, `TOUR`, `APPLICATION`. Search by name/email/phone/preferences.
+- **Contacts page** (`app/s/[slug]/contacts/page.tsx`): Full CRUD. Lifecycle types: `QUALIFICATION`, `DEMO`, `APPLICATION`. Search by name/email/phone/preferences.
 - **Deals page** (`app/s/[slug]/deals/page.tsx`): Kanban board with DealStages. Drag-and-drop via @dnd-kit. Position-based ordering.
 - **Contact detail** (`app/s/[slug]/contacts/[id]/page.tsx`): Individual contact view.
 - **AI assistant** (`app/s/[slug]/ai/page.tsx`): Chat interface with streaming responses and message history.
@@ -220,8 +220,8 @@ Completion sets `onboardingCurrentStep = 7` and `onboardingCompletedAt = now()`.
 
 ## 10. Billing flow
 
-- **Billing IS implemented** (brokerage seat-based). `stripe@^20` is a dependency; `lib/stripe.ts` is the client; routes live at `app/api/billing/{checkout,portal,cancel}` plus the `app/api/webhooks/stripe` receiver. Plans/seats: `lib/brokerage-seats.ts`, price IDs via `STRIPE_PRICE_{STARTER,TEAM,ENTERPRISE}`.
-- `SpaceSetting.billingSettings` is a legacy string column, separate from the brokerage Stripe flow.
+- **Billing IS implemented** (team seat-based). `stripe@^20` is a dependency; `lib/stripe.ts` is the client; routes live at `app/api/billing/{checkout,portal,cancel}` plus the `app/api/webhooks/stripe` receiver. Plans/seats: `lib/team-seats.ts`, price IDs via `STRIPE_PRICE_{STARTER,TEAM,ENTERPRISE}`.
+- `SpaceSetting.billingSettings` is a legacy string column, separate from the team Stripe flow.
 - NOTE: this section previously claimed "No Stripe package, billing not implemented" — that was **wrong**; billing exists and is live.
 
 ---
@@ -239,7 +239,7 @@ Completion sets `onboardingCurrentStep = 7` and `onboardingCompletedAt = now()`.
 
 1. **Legacy Redis path**: `app/actions.ts` and `lib/slugs.ts` use Upstash Redis for slug metadata. The admin dashboard also relies on Redis. Potential for state divergence with Supabase as source of truth.
 2. **Build error suppression**: TypeScript and ESLint errors are ignored during build. Type and lint issues can accumulate silently.
-3. **(Stale — resolved)** Billing **is** implemented via Stripe (brokerage seats); see §10. This item previously read "billing not implemented."
+3. **(Stale — resolved)** Billing **is** implemented via Stripe (team seats); see §10. This item previously read "billing not implemented."
 4. **Tenant isolation**: API routes check auth and all vector queries are scoped by `spaceId`, but workspace ownership verification in other routes varies. Sensitive area for security review.
 5. **Post-login routing** lives in `app/auth/redirect/page.tsx` (NOT `/dashboard` — that route does not exist) and `app/s/[slug]/layout.tsx`. Onboarding completion is gated by `User.onboard` via `lib/onboarding.ts`.
 6. **Two space creation paths**: `app/api/onboarding/route.ts` (create_space action) and `app/actions.ts` (createSlugAction) both create spaces with different default stage names.
@@ -256,8 +256,8 @@ Added in migration `20260314000003_org_system.sql`.
 
 | Level | How determined | Access |
 |---|---|---|
-| **Realtor** | Default for all users | Own workspace only |
-| **Broker** | Has `BrokerageMembership` with `role IN (broker_owner, broker_admin)` | `/broker` dashboard + member oversight |
+| **Rep** | Default for all users | Own workspace only |
+| **Manager** | Has `TeamMembership` with `role IN (manager_owner, manager_admin)` | `/manager` dashboard + member oversight |
 | **Platform Admin** | `User.platformRole = 'admin'` OR Clerk `publicMetadata.role = 'admin'` | `/admin` + all management |
 
 Grant platform admin via DB: `UPDATE "User" SET "platformRole" = 'admin' WHERE "clerkId" = '...';`
@@ -265,50 +265,50 @@ Grant platform admin via DB: `UPDATE "User" SET "platformRole" = 'admin' WHERE "
 ### Organization Model
 
 ```
-User (1) → Space (1, realtor workspace, optional Brokerage FK)
-         → BrokerageMembership (0..n)
+User (1) → Space (1, rep workspace, optional Team FK)
+         → TeamMembership (0..n)
 
-Brokerage (1) → BrokerageMembership (n) → User
+Team (1) → TeamMembership (n) → User
              → Invitation (n)
 ```
 
 Key constraints:
 - One `Space` per `User` — `UNIQUE(Space.ownerId)`
-- One `Brokerage` per owner — `UNIQUE INDEX ON Brokerage(ownerId)`
-- One membership per user per brokerage — `UNIQUE(brokerageId, userId)`
-- Realtor workspace stays fully independent even when linked to a brokerage
+- One `Team` per owner — `UNIQUE INDEX ON Team(ownerId)`
+- One membership per user per team — `UNIQUE(teamId, userId)`
+- Rep workspace stays fully independent even when linked to a team
 
 ### Permission Helpers (`lib/permissions.ts` + `lib/api-auth.ts`)
 
-Four helpers gate every API route and server component. They all share an **offboarding hard-stop**: if the caller's `User.status === 'offboarded'`, the helper rejects (or returns `null`) even when Clerk auth is otherwise valid — a broker-initiated offboarding has to lock the user out of the API immediately, before their Clerk session naturally expires. The check is wrapped in a try/catch so a missing `status` column (pre-BP1a migration) falls through as active.
+Four helpers gate every API route and server component. They all share an **offboarding hard-stop**: if the caller's `User.status === 'offboarded'`, the helper rejects (or returns `null`) even when Clerk auth is otherwise valid — a manager-initiated offboarding has to lock the user out of the API immediately, before their Clerk session naturally expires. The check is wrapped in a try/catch so a missing `status` column (pre-BP1a migration) falls through as active.
 
 | Helper | Module | Returns | Use when |
 |---|---|---|---|
 | `requireAuth()` | `lib/api-auth.ts` | `{ userId }` or a `401`/`403` `NextResponse` | Default on every protected API route — gates on Clerk session + `User.status != 'offboarded'` |
-| `requireBroker()` | `lib/permissions.ts` | `{ brokerage, membership, dbUserId }` — throws `Forbidden: broker access required` otherwise | Routes restricted to `broker_owner` or `broker_admin` (loads `BrokerageMembership` after the shared auth + offboarding check) |
-| `getBrokerContext()` | `lib/permissions.ts` | Same shape as `requireBroker` **or `null`** | Server components / pages that want to redirect instead of 500 on non-brokers (e.g. `app/broker/activity/page.tsx`) |
-| `getBrokerMemberContext()` | `lib/permissions.ts` | Same shape as `getBrokerContext`, including `realtor_member` | Broker-scoped pages that need to be reachable by any brokerage member, not just admins/owners |
+| `requireManager()` | `lib/permissions.ts` | `{ team, membership, dbUserId }` — throws `Forbidden: manager access required` otherwise | Routes restricted to `manager_owner` or `manager_admin` (loads `TeamMembership` after the shared auth + offboarding check) |
+| `getManagerContext()` | `lib/permissions.ts` | Same shape as `requireManager` **or `null`** | Server components / pages that want to redirect instead of 500 on non-managers (e.g. `app/manager/activity/page.tsx`) |
+| `getManagerMemberContext()` | `lib/permissions.ts` | Same shape as `getManagerContext`, including `rep_member` | Manager-scoped pages that need to be reachable by any team member, not just admins/owners |
 
 Supporting helpers: `isPlatformAdmin()` + `requirePlatformAdmin()` for `/admin` routes, `getCurrentDbUser()` for resolving Clerk `userId` → internal `User` row, and role predicates `canManageLeads` / `canEditSettings` / `canManageRoles` / `canChangeRole`.
 
-**Dual-auth pattern** — `POST /api/broker/reviews/[id]/comments` (`app/api/broker/reviews/[id]/comments/route.ts`) accepts **either** a broker member of the review's brokerage **or** the requesting agent who opened the review. This is the canonical template for "a broker OR the involved agent can do X" endpoints: call `requireAuth()` first, load the resource, then allow access if the caller is in the brokerage (via `getBrokerMemberContext` / direct membership lookup) OR if `resource.requestingUserId === dbUser.id`.
+**Dual-auth pattern** — `POST /api/manager/reviews/[id]/comments` (`app/api/manager/reviews/[id]/comments/route.ts`) accepts **either** a manager member of the review's team **or** the requesting agent who opened the review. This is the canonical template for "a manager OR the involved agent can do X" endpoints: call `requireAuth()` first, load the resource, then allow access if the caller is in the team (via `getManagerMemberContext` / direct membership lookup) OR if `resource.requestingUserId === dbUser.id`.
 
 ### Invitation Lifecycle
 
 ```
-pending → accepted   (user clicks accept, creates BrokerageMembership)
+pending → accepted   (user clicks accept, creates TeamMembership)
 pending → expired    (expiresAt < now, auto-marked on accept attempt)
 pending → cancelled  (future: admin cancels)
 ```
 
 Invitation token is a 64-char hex string generated by DB (`encode(gen_random_bytes(32), 'hex')`).
 
-### Broker Dashboard (`/broker`)
+### Manager Dashboard (`/manager`)
 
 - Overview: member count, pending invites, leads needing follow-up, applications received
 - Members: roster with activation status and workspace slug
 - Invitations: sent list + inline send form
 
-### Self-serve Brokerage Creation
+### Self-serve Team Creation
 
-Realtors create a brokerage from **Configure → Brokerage** in their workspace. This calls `POST /api/broker/create`, creates a `Brokerage` + `BrokerageMembership (broker_owner)`, and redirects to `/broker`.
+Reps create a team from **Configure → Team** in their workspace. This calls `POST /api/manager/create`, creates a `Team` + `TeamMembership (manager_owner)`, and redirects to `/manager`.

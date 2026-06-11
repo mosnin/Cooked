@@ -56,15 +56,15 @@ export default async function DealDetailPage({
   const { slug, id } = await params;
   const { tab } = await searchParams;
   // URL contract matches People detail: `?tab=<key>`, default `activity`. The
-  // realtor moves between People and Deals all day; the chrome — and the URL
+  // rep moves between People and Deals all day; the chrome — and the URL
   // shape — needs to read the same on both sides.
   const activeTab: DealTabKey = isDealTabKey(tab) ? tab : 'activity';
 
   // Middleware only requires login; ownership of /s/[slug] is enforced here.
-  // Without this, a logged-in realtor could read another realtor's deal data
+  // Without this, a logged-in rep could read another rep's deal data
   // (value, GCI, address, contacts, activities) by guessing the URL.
   const { userId } = await auth();
-  if (!userId) redirect('/login/realtor');
+  if (!userId) redirect('/login/rep');
 
   const space = await getSpaceFromSlug(slug);
   if (!space) notFound();
@@ -101,7 +101,7 @@ export default async function DealDetailPage({
       supabase.from('DealActivity').select('*').eq('dealId', id).eq('spaceId', space.id).order('createdAt', { ascending: false }).limit(100),
       supabase.from('DealChecklistItem').select('*').eq('dealId', id).eq('spaceId', space.id).order('position', { ascending: true }),
       supabase.from('DealDocument').select('*').eq('dealId', id).eq('spaceId', space.id).order('createdAt', { ascending: false }),
-      // The space's owner IS the assigned realtor for everything inside the
+      // The space's owner IS the assigned rep for everything inside the
       // workspace. We render their avatar + name in the sidebar hero so the
       // page reads as "this deal belongs to a real person", not an anonymous
       // record. One row by primary key — index lookup, no perf concern.
@@ -131,12 +131,12 @@ export default async function DealDetailPage({
         .maybeSingle();
       linkedProperty = (propData as Property | null) ?? null;
     }
-    // Lookup whether this deal already has an open broker review request.
-    // Only meaningful when the space is in a brokerage; we still issue the
+    // Lookup whether this deal already has an open manager review request.
+    // Only meaningful when the space is in a team; we still issue the
     // query unconditionally (it's a single indexed lookup) so the UI below
     // stays simple, and we swallow errors so an as-yet-unapplied migration
     // on another branch doesn't break the page.
-    if (space.brokerageId) {
+    if (space.teamId) {
       try {
         const { data: openReview } = await supabase
           .from('DealReviewRequest')
@@ -222,13 +222,13 @@ export default async function DealDetailPage({
   const gci =
     value != null && commissionRate != null ? (value * commissionRate) / 100 : null;
 
-  // Is DocuSign connected for this realtor? Drives whether the documents tab
+  // Is DocuSign connected for this rep? Drives whether the documents tab
   // shows "Send for signature" or a quiet "Connect DocuSign" link. Gated +
   // best-effort inside the helper — never throws.
   const docusignConnected = await isDocusignConnected(userId);
 
   // Headline is the address when present; the deal title otherwise. Addresses
-  // are how realtors actually talk about deals — "the Maple Ave place", not
+  // are how reps actually talk about deals — "the Maple Ave place", not
   // "Buyer rep — Smith". When the user hasn't entered an address yet, the
   // title is the next-best identity. Either way it's serif Times h1, the
   // one focal element on the page.
@@ -276,32 +276,32 @@ export default async function DealDetailPage({
             {statusSentence}
           </p>
           {/* When the address IS the headline, show the deal title beneath as
-              a secondary identifier. The realtor named the deal for a reason
+              a secondary identifier. The rep named the deal for a reason
               ("Buyer rep — Smith"); don't lose it. */}
           {address && address.trim().length > 0 && title.trim().length > 0 && title.trim() !== address.trim() && (
             <p className={BODY_MUTED}>{title}</p>
           )}
         </div>
 
-        {/* Action row — Log a tour + Flag for review are peers. Delete moves
+        {/* Action row — Log a demo + Flag for review are peers. Delete moves
             into the overflow menu. Destructive actions should never be a
             peer chip on a primary surface. */}
         <div className="flex flex-wrap items-center gap-2">
           <Link
-            href={`/s/${slug}/chippi/log?dealId=${id}`}
+            href={`/s/${slug}/koala/log?dealId=${id}`}
             className={cn(
               'inline-flex items-center gap-1.5 h-9 rounded-full px-4 text-sm transition-colors',
               'border border-border/70 bg-background text-foreground hover:bg-muted/40',
             )}
-            title="Record a quick post-tour debrief"
+            title="Record a quick post-demo debrief"
           >
             <Mic size={13} />
-            Log a tour
+            Log a demo
           </Link>
           <FlagForReviewButton
             dealId={id}
             hasOpenReview={hasOpenReview}
-            visible={!!space.brokerageId}
+            visible={!!space.teamId}
           />
           {/* Overflow — hosts destructive actions so they can't be hit by
               mistake. Same shape contact-table uses for its More menu so the
@@ -389,12 +389,12 @@ export default async function DealDetailPage({
         </section>
       </header>
 
-      {/* Sidebar + main grid. Card wraps both because the realtor reads the
+      {/* Sidebar + main grid. Card wraps both because the rep reads the
           page as one object, not two columns. */}
       <div className="rounded-xl border border-border/70 bg-card overflow-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-[300px_minmax(0,1fr)]">
 
-          {/* LEFT SIDEBAR — hero (assigned realtor + linked contacts) on top,
+          {/* LEFT SIDEBAR — hero (assigned rep + linked contacts) on top,
               then a tight grid of edits-on-this-record below a hairline.
               Previously: 10 stacked cells, each with its own uppercase label,
               no hierarchy. The hero now says "this deal belongs to a person
@@ -403,7 +403,7 @@ export default async function DealDetailPage({
               kinds of information." */}
           <aside className="border-b lg:border-b-0 lg:border-r border-border/60 p-5 space-y-5">
 
-            {/* Hero — the assigned realtor on top, contacts beneath. Avatars
+            {/* Hero — the assigned rep on top, contacts beneath. Avatars
                 make the page feel like it's about real people, not a form. */}
             <div className="space-y-3">
               <div className="flex items-center gap-3">
@@ -413,7 +413,7 @@ export default async function DealDetailPage({
                 </Avatar>
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-medium text-foreground truncate">{ownerName}</p>
-                  <p className="text-[11px] text-muted-foreground">Realtor</p>
+                  <p className="text-[11px] text-muted-foreground">Rep</p>
                 </div>
               </div>
 
@@ -525,7 +525,7 @@ export default async function DealDetailPage({
 
           {/* RIGHT MAIN — URL-driven tabs that mirror the People detail
               page. Same `?tab=` contract, same border-b-2 active underline,
-              same default (`activity`). The realtor switches between People
+              same default (`activity`). The rep switches between People
               and Deals all day; the chrome reads identically by design. */}
           <main className="p-5 min-h-[400px] space-y-5">
 
@@ -533,7 +533,7 @@ export default async function DealDetailPage({
                 the tab strip with the rest of the deal's primary control
                 surface (stage / status / value / follow-up live in the
                 sidebar; next-action lives here so it sits at the top of
-                the realtor's reading order). */}
+                the rep's reading order). */}
             <DealNextActionField
               dealId={id}
               initialAction={nextAction}
@@ -555,7 +555,7 @@ export default async function DealDetailPage({
               <div className="space-y-5">
                 {/* Deal metadata — title / address / notes used to live in
                     the old Overview tab. They're settings on this record,
-                    not "activity", but the realtor wants them visible
+                    not "activity", but the rep wants them visible
                     while logging notes. Park them at the top of Activity
                     rather than spin up a sixth tab for two text fields. */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -711,7 +711,7 @@ function buildStatusSentence({
     return parts.join(' · ') + '.';
   }
 
-  // Lost — short, with last-activity recency so the realtor remembers when
+  // Lost — short, with last-activity recency so the rep remembers when
   // they last touched it.
   if (status === 'lost') {
     const when = stageChangedAt ?? updatedAt;

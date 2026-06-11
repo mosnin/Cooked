@@ -4,7 +4,7 @@
  * Listing status (active / pending / sold / off_market / owned) is metadata,
  * not signal. The stylesheet's tone palette (amber/emerald/rose) is reserved
  * for "you owe action" cues — review states, follow-up timing, agent output.
- * A property being "Active" doesn't ask the realtor to do anything; it's just
+ * A property being "Active" doesn't ask the rep to do anything; it's just
  * a fact. So this badge is intentionally muted: a single neutral pill with
  * a small icon, the same vocabulary on every surface it appears.
  *

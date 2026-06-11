@@ -6,10 +6,10 @@
  * A property is a noun (the thing being sold). A deal is a verb (the
  * transaction on it). They earn different shapes; do not conflate. This
  * page is a single form, no wizard ceremony — every field except address
- * is optional, the form is one screen, the realtor is done in 30s.
+ * is optional, the form is one screen, the rep is done in 30s.
  *
  * Submit → POST /api/properties → navigate to the new property's detail
- * page so the realtor can add photos / refine status next.
+ * page so the rep can add photos / refine status next.
  */
 
 import { useRouter, useParams } from 'next/navigation';

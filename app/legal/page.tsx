@@ -1,5 +1,5 @@
 /**
- * `/legal` — the legal hub. The index of the documents that govern Chippi.
+ * `/legal` — the legal hub. The index of the documents that govern Koala.
  *
  * Why this lives at `app/legal/page.tsx` and not under the (marketing) group:
  * the five real documents (terms, privacy, cookies, acceptable-use, dpa)
@@ -16,7 +16,7 @@
 
 import Link from 'next/link';
 
-export const metadata = { title: 'Legal — Chippi' };
+export const metadata = { title: 'Legal — Koala' };
 
 /** Documents that exist as real pages under `app/legal/*`. */
 const DOCUMENTS: { href: string; label: string; description: string }[] = [
@@ -28,7 +28,7 @@ const DOCUMENTS: { href: string; label: string; description: string }[] = [
   {
     href: '/legal/terms',
     label: 'Terms of service',
-    description: 'The agreement that governs your use of Chippi.',
+    description: 'The agreement that governs your use of Koala.',
   },
   {
     href: '/legal/cookies',
@@ -66,7 +66,7 @@ export default function LegalHubPage() {
           The fine print, in plain sight.
         </h1>
         <p className="text-sm text-muted-foreground">
-          Every document that governs Chippi, one click away.
+          Every document that governs Koala, one click away.
         </p>
       </header>
 
@@ -110,10 +110,10 @@ export default function LegalHubPage() {
             >
               <span className="text-sm text-foreground">{label}</span>
               <a
-                href="mailto:legal@chippi.app"
+                href="mailto:legal@koala.app"
                 className="shrink-0 text-sm text-muted-foreground transition-colors hover:text-foreground"
               >
-                legal@chippi.app
+                legal@koala.app
               </a>
             </li>
           ))}
@@ -121,10 +121,10 @@ export default function LegalHubPage() {
         <p className="text-sm text-muted-foreground">
           Questions about any of these — write to{' '}
           <a
-            href="mailto:legal@chippi.app"
+            href="mailto:legal@koala.app"
             className="underline underline-offset-2 transition-colors hover:text-foreground"
           >
-            legal@chippi.app
+            legal@koala.app
           </a>
           .
         </p>

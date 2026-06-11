@@ -23,7 +23,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  return { title: `Intake -- ${slug} -- Chippi` };
+  return { title: `Intake -- ${slug} -- Koala` };
 }
 
 export default async function IntakeOverviewPage({
@@ -33,7 +33,7 @@ export default async function IntakeOverviewPage({
 }) {
   const { slug } = await params;
   const { userId } = await auth();
-  if (!userId) redirect('/login/realtor');
+  if (!userId) redirect('/login/rep');
 
   const space = await getSpaceFromSlug(slug);
   if (!space) notFound();
@@ -59,14 +59,14 @@ export default async function IntakeOverviewPage({
         .from('Contact')
         .select('*', { count: 'exact', head: true })
         .eq('spaceId', space.id)
-        .is('brokerageId', null)
+        .is('teamId', null)
         .contains('tags', ['application-link'])
         .gte('createdAt', sevenDaysAgo.toISOString()),
       supabase
         .from('Contact')
         .select('*', { count: 'exact', head: true })
         .eq('spaceId', space.id)
-        .is('brokerageId', null)
+        .is('teamId', null)
         .contains('tags', ['application-link'])
         .gte('createdAt', sevenDaysAgo.toISOString())
         .eq('scoreLabel', 'hot'),
@@ -74,7 +74,7 @@ export default async function IntakeOverviewPage({
         .from('Contact')
         .select('id, name, createdAt, tags, leadScore, scoreLabel, leadType')
         .eq('spaceId', space.id)
-        .is('brokerageId', null)
+        .is('teamId', null)
         .contains('tags', ['application-link'])
         .order('createdAt', { ascending: false })
         .limit(5),
@@ -95,9 +95,9 @@ export default async function IntakeOverviewPage({
   // that just redirected to the same surface. Re-enable it only if a real
   // alternate intake variant ships again.
 
-  // Chippi narration ladder — one sentence describing the state of intake
+  // Koala narration ladder — one sentence describing the state of intake
   // right now. No counts in stat tiles; the count lives in the sentence so
-  // the realtor reads it like a thought, not a dashboard.
+  // the rep reads it like a thought, not a dashboard.
   const subtitle = (() => {
     if (totalSubmissions === 0) {
       return 'No submissions yet. Share the link.';
@@ -117,7 +117,7 @@ export default async function IntakeOverviewPage({
 
   return (
     <div className={`${PAGE_RHYTHM} max-w-3xl mx-auto pb-12`}>
-      {/* Header — H1 + Chippi narration */}
+      {/* Header — H1 + Koala narration */}
       <header className="space-y-1.5">
         <h1 className={H1} style={TITLE_FONT}>
           Intake
@@ -125,7 +125,7 @@ export default async function IntakeOverviewPage({
         <p className={BODY_MUTED}>{subtitle}</p>
       </header>
 
-      {/* Your link — the one thing every realtor comes here for */}
+      {/* Your link — the one thing every rep comes here for */}
       <section className="space-y-3">
         <div className="flex items-end justify-between gap-3">
           <div>
@@ -148,7 +148,7 @@ export default async function IntakeOverviewPage({
       {/* AI chat mode — hidden 2026-05-25. The `/apply/<slug>/chat` route
           now permanent-redirects to `/apply/<slug>` (which IS the chat). The
           section advertised a second "mode" that didn't exist; the share
-          link above already gives the realtor the chat surface. */}
+          link above already gives the rep the chat surface. */}
 
       {/* Recent submissions — the second thing they come here for */}
       <section>

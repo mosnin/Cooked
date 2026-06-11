@@ -24,8 +24,8 @@ export function SubscriptionGate({
   const isExemptPath =
     pathname.endsWith('/billing') ||
     pathname.includes('/settings') ||
-    pathname.startsWith('/broker/billing') ||
-    pathname.startsWith('/broker/settings');
+    pathname.startsWith('/manager/billing') ||
+    pathname.startsWith('/manager/settings');
 
   if (isExemptPath) return <>{children}</>;
 
@@ -54,7 +54,7 @@ export function SubscriptionGate({
     'AI-powered lead scoring',
     'Unlimited contacts & deals',
     'Custom intake forms',
-    'Tour scheduling & booking',
+    'Demo scheduling & booking',
     'Follow-up reminders',
     'Notes, calendar & analytics',
     'Voice AI assistant (Chip)',
@@ -72,7 +72,7 @@ export function SubscriptionGate({
             </div>
             <h1 className="text-2xl font-bold tracking-tight">Start your free trial</h1>
             <p className="text-sm text-muted-foreground max-w-sm mx-auto leading-relaxed">
-              Get full access to everything in Chippi for 7 days. No credit card required to start.
+              Get full access to everything in Koala for 7 days. No credit card required to start.
             </p>
           </div>
 
@@ -118,7 +118,7 @@ export function SubscriptionGate({
         {/* Already subscribed? */}
         <p className="text-center text-xs text-muted-foreground">
           Already subscribed?{' '}
-          <a href={pathname.startsWith('/broker') ? '/broker/billing' : `/s/${slug}/billing`} className="text-primary underline hover:text-primary/80">
+          <a href={pathname.startsWith('/manager') ? '/manager/billing' : `/s/${slug}/billing`} className="text-primary underline hover:text-primary/80">
             Manage billing
           </a>
         </p>

@@ -7,7 +7,7 @@
  *   - call.answered         → (agent leg) bridge to the contact + start recording
  *   - call.bridged          → mark answered
  *   - call.hangup           → mark completed/failed/no_answer + duration
- *   - call.recording.saved  → download, transcribe, Chippi-summarize, persist
+ *   - call.recording.saved  → download, transcribe, Koala-summarize, persist
  *
  * Auth: this is a machine-to-machine webhook, so there's no Clerk session. We
  * gate on a shared secret query param (?secret=TELNYX_WEBHOOK_SECRET) when one
@@ -146,7 +146,7 @@ function parseDuration(payload: any): number | null {
   return typeof direct === 'number' ? direct : null;
 }
 
-// ── Recording → transcript → Chippi summary ─────────────────────────────────
+// ── Recording → transcript → Koala summary ─────────────────────────────────
 
 async function handleRecordingSaved(
   callControlId: string | undefined,
@@ -194,7 +194,7 @@ async function handleRecordingSaved(
     return;
   }
 
-  // Chippi summary — 2-3 sentences. Gate on any LLM key being present.
+  // Koala summary — 2-3 sentences. Gate on any LLM key being present.
   let summary: string | null = null;
   try {
     const client = getLLMClient();
@@ -206,7 +206,7 @@ async function handleRecordingSaved(
         {
           role: 'system',
           content:
-            'You are Chippi, a real-estate CRM assistant. Summarize this phone-call ' +
+            'You are Koala, a real-estate CRM assistant. Summarize this phone-call ' +
             'transcript for the agent in 2-3 plain sentences: what was discussed, any ' +
             'commitments, and the next step. Be specific and factual. No preamble.',
         },

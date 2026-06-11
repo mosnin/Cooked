@@ -40,7 +40,7 @@ export interface PermissionPromptData {
 
 /**
  * Human-readable args preview. The JSON dump works for tools where the
- * realtor truly needs to see the shape (update_contact, create_deal), but
+ * rep truly needs to see the shape (update_contact, create_deal), but
  * for send_email / send_sms — the tools where the ACTUAL content matters
  * most — JSON is noisy and the body field escapes newlines. Switch on the
  * tool name and render labeled fields for those.
@@ -89,11 +89,11 @@ function PrettyArgs({ prompt }: { prompt: PermissionPromptData }): React.ReactEl
 }
 
 /**
- * Inline compose card for send_email / send_sms. The realtor edits in place
+ * Inline compose card for send_email / send_sms. The rep edits in place
  * — no JSON, no pencil. Send fires the existing approval pipeline with the
  * edited subject/body, which routes to Resend (email) or Telnyx (SMS) on
  * the server side. Read-only recipient (To:) — recipient selection happens
- * upstream in the Chippi conversation, not in this card.
+ * upstream in the Koala conversation, not in this card.
  */
 function InlineComposeCard({
   kind,
@@ -228,7 +228,7 @@ export function PermissionPromptView({
   // Inline compose state for send_email / send_sms. The draft fields are
   // editable in place — no JSON-pencil step — and ride through to the
   // server as `editedArgs` on Send. Initial values come from the prompt's
-  // args (what Chippi composed). Reset when the prompt id changes so a
+  // args (what Koala composed). Reset when the prompt id changes so a
   // second queued send doesn't show the previous draft.
   const initialCompose = useMemo(() => {
     const a = prompt.args as Record<string, unknown>;

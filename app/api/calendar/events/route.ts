@@ -2,19 +2,19 @@
  * GET  /api/calendar/events?slug=xxx
  * POST /api/calendar/events    (manual event creation)
  *
- * GET: returns the next 30 days of events from the realtor's connected
+ * GET: returns the next 30 days of events from the rep's connected
  * external calendar (Google Calendar via Composio). On-demand fetch —
  * no background sync, no webhook receiver, no cache layer beyond a
  * thin 60s memoization to absorb the page's own re-renders.
  *
- * POST: realtor-initiated manual event creation. Validates ownership,
+ * POST: rep-initiated manual event creation. Validates ownership,
  * connection presence, and the payload shape; pushes to the provider
- * via `writeEventThrough` (same helper tour booking uses) so the event
+ * via `writeEventThrough` (same helper demo booking uses) so the event
  * appears in their actual Google Calendar AND a CalendarEventMirror
  * row lands for forensics. Returns the created event in the same
  * shape GET emits so the client can splice it into the visible view.
  *
- * The Chippi calendar surface is a thin read view; the realtor's
+ * The Koala calendar surface is a thin read view; the rep's
  * external calendar is the truth. If nothing's connected we return
  * `{ connected: false }` so the UI renders the connect prompt without
  * a separate roundtrip.
@@ -41,7 +41,7 @@ export const maxDuration = 30;
 
 const LOOKAHEAD_DAYS = 30;
 
-/** In-process memo. 60s TTL absorbs a realtor flipping between days
+/** In-process memo. 60s TTL absorbs a rep flipping between days
  *  in the UI without hammering Composio. Keyed by spaceId so multi-
  *  tenant calls don't cross-pollinate. The serverless cold-start
  *  ratio means this is mostly a hot-loop guard, not a long-term cache. */
@@ -200,7 +200,7 @@ export async function GET(req: NextRequest) {
       { spaceId: space.id, provider: connection.toolkit },
       err,
     );
-    // Don't 500 — the realtor sees an empty list with the calm empty
+    // Don't 500 — the rep sees an empty list with the calm empty
     // state. Composio's flakiness shouldn't break the calendar page.
     events = [];
   }
@@ -217,9 +217,9 @@ export async function GET(req: NextRequest) {
 /* ── POST ─────────────────────────────────────────────────────────────── */
 
 /**
- * Manual event creation. Validates the realtor owns the space, has an
+ * Manual event creation. Validates the rep owns the space, has an
  * active calendar connection, and that the payload makes sense; then
- * fires `writeEventThrough` (same helper tour booking uses) so the event
+ * fires `writeEventThrough` (same helper demo booking uses) so the event
  * lands in their actual calendar and a forensic mirror row gets written.
  */
 
@@ -261,11 +261,11 @@ export async function POST(req: NextRequest) {
     startsAt: v.startsAt,
     endsAt: v.endsAt,
     attendees: v.attendees,
-    createdBy: 'realtor',
+    createdBy: 'rep',
   });
 
   if (!result.externalOk) {
-    // The mirror row landed (forensics) but the realtor's calendar
+    // The mirror row landed (forensics) but the rep's calendar
     // didn't get the event. Tell them honestly — the optimistic UI
     // shouldn't show success when the calendar doesn't have it.
     return NextResponse.json(

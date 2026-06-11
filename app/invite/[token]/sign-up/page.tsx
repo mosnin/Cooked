@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import type { Metadata } from 'next';
 
-export const metadata: Metadata = { title: 'Join Brokerage — Chippi' };
+export const metadata: Metadata = { title: 'Join Team — Koala' };
 
 export default async function InviteSignUpPage({
   params,
@@ -13,16 +13,16 @@ export default async function InviteSignUpPage({
 }) {
   const { token } = await params;
 
-  // Fetch invitation details to show brokerage name
-  let brokerageName = 'a brokerage';
+  // Fetch invitation details to show team name
+  let teamName = 'a team';
   try {
     const { data } = await supabase
       .from('Invitation')
-      .select('Brokerage(name)')
+      .select('Team(name)')
       .eq('token', token)
       .maybeSingle();
-    if (data?.Brokerage && typeof data.Brokerage === 'object' && 'name' in data.Brokerage) {
-      brokerageName = (data.Brokerage as { name: string }).name;
+    if (data?.Team && typeof data.Team === 'object' && 'name' in data.Team) {
+      teamName = (data.Team as { name: string }).name;
     }
   } catch {
     // Non-blocking
@@ -34,10 +34,10 @@ export default async function InviteSignUpPage({
       <div className="flex-1 flex flex-col items-center justify-center px-6 py-10">
         <div className="w-full max-w-sm space-y-6">
           <div className="text-center space-y-2">
-            <BrandLogo className="h-7 mx-auto" alt="Chippi" />
-            <h1 className="text-xl font-bold mt-4">Join {brokerageName}</h1>
+            <BrandLogo className="h-7 mx-auto" alt="Koala" />
+            <h1 className="text-xl font-bold mt-4">Join {teamName}</h1>
             <p className="text-sm text-muted-foreground">
-              Create your account to accept the invitation and access the brokerage dashboard.
+              Create your account to accept the invitation and access the team dashboard.
             </p>
           </div>
 
@@ -51,7 +51,7 @@ export default async function InviteSignUpPage({
           <p className="text-center text-sm text-muted-foreground">
             Already have an account?{' '}
             <Link
-              href={`/login/realtor?redirect_url=${encodeURIComponent(`/invite/${token}`)}`}
+              href={`/login/rep?redirect_url=${encodeURIComponent(`/invite/${token}`)}`}
               className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
             >
               Sign in
@@ -72,7 +72,7 @@ export default async function InviteSignUpPage({
         <div className="text-center space-y-3 px-8">
           <p className="text-2xl font-bold">Welcome to the team</p>
           <p className="text-muted-foreground max-w-sm">
-            You&apos;ve been invited to join {brokerageName} on Chippi. Create your account to get started.
+            You&apos;ve been invited to join {teamName} on Koala. Create your account to get started.
           </p>
         </div>
       </div>

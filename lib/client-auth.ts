@@ -1,9 +1,9 @@
 /**
- * Client-portal auth — fully separate from the realtor Clerk auth.
+ * Client-portal auth — fully separate from the rep Clerk auth.
  *
- * Email + password accounts for end users (applicants / tour-bookers). Sessions
+ * Email + password accounts for end users (applicants / demo-bookers). Sessions
  * are stateless signed JWTs in an httpOnly cookie scoped to the portal; never
- * touches Clerk, Clerk cookies, or the realtor session. Passwords are scrypt
+ * touches Clerk, Clerk cookies, or the rep session. Passwords are scrypt
  * (node:crypto, no new dependency). Email verification + passwordless login use
  * 6-digit one-time codes (hashed at rest).
  */
@@ -20,7 +20,7 @@ import { SignJWT, jwtVerify } from 'jose';
 import { supabase } from '@/lib/supabase';
 import { logger } from '@/lib/logger';
 
-export const CLIENT_SESSION_COOKIE = 'chippi_client_session';
+export const CLIENT_SESSION_COOKIE = 'koala_client_session';
 const SESSION_TTL = '30d';
 const CODE_TTL_MINUTES = 15;
 const MAX_CODE_ATTEMPTS = 6;

@@ -1,10 +1,10 @@
 /**
  * POST /api/integrations/connect/[toolkit]
  *
- * Initiate an OAuth connection for the calling realtor + the given
+ * Initiate an OAuth connection for the calling rep + the given
  * toolkit (e.g. `gmail`, `slack`, `notion`). Returns the URL the
- * realtor's browser should redirect to so Composio can run the auth
- * flow. After the realtor approves, Composio sends them back to our
+ * rep's browser should redirect to so Composio can run the auth
+ * flow. After the rep approves, Composio sends them back to our
  * /api/integrations/callback route with the connected-account id.
  *
  * IMPORTANT: We persist the IntegrationConnection row HERE — at
@@ -16,7 +16,7 @@
  * the row is in the DB the moment the user leaves for the provider,
  * regardless of whether the callback ever fires. The callback's job
  * shrinks to "update the label / log the result"; if it gets dropped
- * entirely, the realtor still sees the row.
+ * entirely, the rep still sees the row.
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -59,7 +59,7 @@ export async function POST(
   if (!space) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
   // If there's already an active connection for this combo, revoke it
-  // first — reconnect is the realtor explicitly choosing a fresh auth.
+  // first — reconnect is the rep explicitly choosing a fresh auth.
   const existing = await findActive({ spaceId: space.id, userId, toolkit });
   if (existing) {
     await revoke(existing);
@@ -81,7 +81,7 @@ export async function POST(
       callbackUrl,
     });
 
-    // Persist the row NOW, before the realtor leaves for OAuth. The
+    // Persist the row NOW, before the rep leaves for OAuth. The
     // callback used to own this insert; that meant any cross-site cookie
     // drop, redirect-to-homepage glitch, or Vercel preview-domain quirk
     // silently lost the row. Composio's `request.id` IS the
@@ -90,8 +90,8 @@ export async function POST(
     //
     // status='pending', NOT 'active': this row exists so the connection
     // can't be lost, but OAuth hasn't completed — the chat agent must not
-    // load tools for it (a half-finished connection 401s and the realtor
-    // reads it as "Chippi lost my integrations"). Promotion to 'active'
+    // load tools for it (a half-finished connection 401s and the rep
+    // reads it as "Koala lost my integrations"). Promotion to 'active'
     // happens when the callback confirms Composio's account status, or via
     // the reconcile sweep on the next /settings load if the callback drops.
     const inserted = await insertConnection({
@@ -125,7 +125,7 @@ export async function POST(
       { userId, toolkit, err: message },
     );
     // Surface OUR known-actionable error sentences (e.g. "No Auth Config
-    // exists for …") to the realtor verbatim — they tell the realtor what
+    // exists for …") to the rep verbatim — they tell the rep what
     // to do. Raw vendor 5xx/4xx noise stays hidden behind the generic line
     // so we don't leak Composio internals.
     const isActionable = message.startsWith('No Auth Config');
@@ -137,13 +137,13 @@ export async function POST(
 }
 
 /**
- * The URL Composio sends the realtor to after OAuth completes.
+ * The URL Composio sends the rep to after OAuth completes.
  *
  * Returns undefined when neither `NEXT_PUBLIC_APP_URL` nor `APP_URL` is set —
  * Composio falls back to its own default in that case, which means the
- * realtor completes OAuth at the provider but never lands back in the app.
+ * rep completes OAuth at the provider but never lands back in the app.
  * Logs loud on the server so this misconfiguration is detectable in
- * production logs without the realtor having to report a confused
+ * production logs without the rep having to report a confused
  * post-OAuth experience.
  */
 function composioCallbackUrl(): string | undefined {

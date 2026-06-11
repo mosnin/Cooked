@@ -24,7 +24,7 @@ export const runtime = 'nodejs';
 
 const MAX_CAPTION = 2200;
 
-/** The realtor's connected social accounts — active toolkits that live in
+/** The rep's connected social accounts — active toolkits that live in
  *  the catalog's `social` category. Same source the Integrations tab reads. */
 async function connectedSocials(
   spaceId: string,
@@ -78,7 +78,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid form data' }, { status: 400 });
   }
 
-  // Hourly per-realtor cap so a script can't flood StudioPost / Inngest.
+  // Hourly per-rep cap so a script can't flood StudioPost / Inngest.
   const rl = await checkRateLimit(`studio:schedule:${userId}`, 30, 3600);
   if (!rl.allowed) {
     return NextResponse.json(
@@ -136,7 +136,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Pick a time in the future.' }, { status: 400 });
   }
 
-  // Only allow platforms the realtor has actually connected.
+  // Only allow platforms the rep has actually connected.
   const connected = new Set((await connectedSocials(space.id, userId)).map((p) => p.toolkit));
   const targets = requested.filter((p) => connected.has(p));
   if (targets.length === 0) {

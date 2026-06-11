@@ -1,15 +1,15 @@
--- AIUserProfile: realtor self-description used to personalize Chippi's responses.
+-- AIUserProfile: rep self-description used to personalize Koala's responses.
 -- One row per Space. Linked to Space.id (not User) so it travels with the workspace.
 --
 -- Fields:
---   displayName              — how the realtor refers to themselves in Chippi context
+--   displayName              — how the rep refers to themselves in Koala context
 --   businessFocus            — array of focus areas (e.g. 'luxury', 'first-time buyers')
---   yearsExperience          — used to calibrate depth of Chippi's explanations
+--   yearsExperience          — used to calibrate depth of Koala's explanations
 --   workingStyle             — free-text self-description of work habits
---   communicationTone        — preferred tone Chippi should adopt in outputs
---   currentGoals             — short-term objectives Chippi should keep in mind
+--   communicationTone        — preferred tone Koala should adopt in outputs
+--   currentGoals             — short-term objectives Koala should keep in mind
 --   quirksAndPreferences     — catch-all for anything that doesn't fit above
---   agentPersonalizationNote — internal note Chippi can read/write to itself over time
+--   agentPersonalizationNote — internal note Koala can read/write to itself over time
 --
 -- Idempotent: IF NOT EXISTS guards throughout. Safe to re-run.
 

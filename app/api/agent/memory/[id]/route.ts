@@ -1,14 +1,14 @@
 /**
  * DELETE /api/agent/memory/[id]
  *
- * Removes one of Chippi's long-term memories. Scoped to the caller's space —
+ * Removes one of Koala's long-term memories. Scoped to the caller's space —
  * memories outside the caller's space return 404 indistinguishable from
  * non-existent rows so we don't leak existence across tenants.
  *
  * Editing memory content isn't supported in v1: the AgentMemory row carries a
  * vector embedding generated at write time, and editing without re-embedding
  * silently degrades retrieval. Until we wire re-embed-on-edit, the correction
- * pattern is "delete the wrong fact; let Chippi re-learn it."
+ * pattern is "delete the wrong fact; let Koala re-learn it."
  */
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';

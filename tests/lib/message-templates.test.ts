@@ -3,11 +3,11 @@ import { renderTemplate, extractTemplateVariables } from '@/lib/message-template
 
 describe('renderTemplate', () => {
   it('substitutes known variables', () => {
-    const out = renderTemplate('Hi {{contactFirstName}}, tour at {{tourTime}}?', {
+    const out = renderTemplate('Hi {{contactFirstName}}, demo at {{demoTime}}?', {
       contactFirstName: 'Jane',
-      tourTime: '2 PM',
+      demoTime: '2 PM',
     });
-    expect(out).toBe('Hi Jane, tour at 2 PM?');
+    expect(out).toBe('Hi Jane, demo at 2 PM?');
   });
 
   it('drops missing variables rather than leaving stale placeholders', () => {
@@ -30,8 +30,8 @@ describe('renderTemplate', () => {
 
 describe('extractTemplateVariables', () => {
   it('returns the deduplicated set of variables used', () => {
-    const vars = extractTemplateVariables('Hi {{contactName}}, {{contactName}} — tour {{tourDate}}');
-    expect(vars.sort()).toEqual(['contactName', 'tourDate']);
+    const vars = extractTemplateVariables('Hi {{contactName}}, {{contactName}} — demo {{demoDate}}');
+    expect(vars.sort()).toEqual(['contactName', 'demoDate']);
   });
 
   it('returns an empty array when there are no tokens', () => {

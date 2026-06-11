@@ -1,7 +1,7 @@
 /**
- * `/integrations` — every app Chippi can work inside, through Composio.
+ * `/integrations` — every app Koala can work inside, through Composio.
  *
- * One idea: connect the tools you already pay for, and Chippi calls each one
+ * One idea: connect the tools you already pay for, and Koala calls each one
  * as a tool while it works — pulling data out of your workflows and writing
  * results back where they belong.
  *
@@ -15,9 +15,9 @@
 import { IntegrationsPage } from '@/components/marketing/integrations/integrations-page';
 
 export const metadata = {
-  title: 'Integrations · Chippi',
+  title: 'Integrations · Koala',
   description:
-    'Connect the tools you already use. Chippi connects through Composio, then calls each one as a tool while it works, pulling data from and pushing data into your existing workflows.',
+    'Connect the tools you already use. Koala connects through Composio, then calls each one as a tool while it works, pulling data from and pushing data into your existing workflows.',
 };
 
 export default function Page() {

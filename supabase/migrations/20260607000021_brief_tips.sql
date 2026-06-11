@@ -2,15 +2,15 @@
 --
 -- A tip is a Signal subclass with kind='tip'. The composer picks at most
 -- one per brief. Cool-downs prevent the same tip from firing every
--- morning until the realtor either acts on it or it falls out of
+-- morning until the rep either acts on it or it falls out of
 -- relevance.
 --
 -- BriefTipHistory captures every (category, subject) tip that fires,
 -- with the outcome. Outcomes drive cool-down windows:
 --
---   shown     — rendered to the realtor. Default cool-down: 7 days
+--   shown     — rendered to the rep. Default cool-down: 7 days
 --               (14 for trends, 30 for segments — per-category override).
---   acted     — realtor tapped the tip. Cool-down kills naturally — if
+--   acted     — rep tapped the tip. Cool-down kills naturally — if
 --               the trigger re-fires, the tip can show again.
 --   dismissed — (future) explicit dismiss action. 60-day silence on
 --               that subject+category pair.

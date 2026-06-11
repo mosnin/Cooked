@@ -3,15 +3,15 @@
 /**
  * SubagentTaskBlockView — the live inline card for a delegated sub-agent task.
  *
- * When Chippi calls `delegate_task`, it spawns a Modal sub-agent run (a swarm)
+ * When Koala calls `delegate_task`, it spawns a Modal sub-agent run (a swarm)
  * and drops one of these into the chat thread. The card subscribes to the
  * existing swarm SSE stream (/api/swarm/{runId}/stream) and updates in place as
- * the sub-agents plan → work → finish — so the realtor watches the deep work
+ * the sub-agents plan → work → finish — so the rep watches the deep work
  * happen without leaving the conversation.
  *
  * It deliberately stays compact: one task line, one live status line, and the
  * final result when it lands. The full agent-by-agent view lives on the swarm
- * monitor page; here the realtor just needs to feel it working and see the
+ * monitor page; here the rep just needs to feel it working and see the
  * answer when it's ready.
  *
  * On a reloaded conversation, the block persists and the card re-subscribes:

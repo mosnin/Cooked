@@ -7,7 +7,7 @@
  * contacts before we write.
  *
  * Mirrors POST /api/deals but intentionally narrower:
- *   - no milestones / commissionRate / probability (the realtor can set
+ *   - no milestones / commissionRate / probability (the rep can set
  *     these in the deal detail view after creation)
  *   - no custom position (new deals land at the bottom of the stage,
  *     matching the kanban default)
@@ -38,7 +38,7 @@ const parameters = z
       .nullable()
       .optional()
       .describe(
-        'Target DealStage.id. Optional — if omitted or null the deal lands in the first stage of the appropriate pipeline (buyer pipeline when a buyer contact is attached, otherwise the seller pipeline). Only set this when the realtor explicitly named the stage.',
+        'Target DealStage.id. Optional — if omitted or null the deal lands in the first stage of the appropriate pipeline (buyer pipeline when a buyer contact is attached, otherwise the seller pipeline). Only set this when the rep explicitly named the stage.',
       ),
     description: z.string().max(5000).optional(),
     value: z.number().nonnegative().nullable().optional().describe('Deal value in dollars.'),
@@ -91,7 +91,7 @@ export const createDealTool = defineTool<typeof parameters, CreateDealResult>({
         .select('id, leadType')
         .in('id', args.contactIds)
         .eq('spaceId', ctx.space.id)
-        .is('brokerageId', null);
+        .is('teamId', null);
       if (vcErr) {
         return { summary: `Contact validation failed: ${vcErr.message}`, display: 'error' };
       }
@@ -106,7 +106,7 @@ export const createDealTool = defineTool<typeof parameters, CreateDealResult>({
     // Stage resolution. If the model passed a real stageId, validate and
     // use it (with the existing buyer-pipeline auto-route below). If it
     // was omitted or null, default to the first stage of the appropriate
-    // pipeline so the realtor doesn't have to know stage ids.
+    // pipeline so the rep doesn't have to know stage ids.
     type StageRow = { id: string; name: string; pipelineType: string | null };
     let stage: StageRow | null = null;
     if (args.stageId) {
@@ -158,7 +158,7 @@ export const createDealTool = defineTool<typeof parameters, CreateDealResult>({
     }
 
     // Auto-route buyer deals to the buyer pipeline's first stage — mirrors
-    // POST /api/deals. A realtor who says "create a deal for Jane (a buyer)"
+    // POST /api/deals. A rep who says "create a deal for Jane (a buyer)"
     // in the seller pipeline should land the deal where buyer workflows
     // actually live, not in a mismatched stage that will confuse the kanban.
     let finalStageId = stage.id;

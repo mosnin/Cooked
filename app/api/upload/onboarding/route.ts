@@ -20,10 +20,10 @@ export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
     const file = formData.get('file') as File;
-    const type = formData.get('type') as string; // 'logo' | 'photo' | 'broker_logo'
+    const type = formData.get('type') as string; // 'logo' | 'photo' | 'manager_logo'
 
     if (!file) return NextResponse.json({ error: 'No file provided' }, { status: 400 });
-    if (!['logo', 'photo', 'broker_logo'].includes(type)) {
+    if (!['logo', 'photo', 'manager_logo'].includes(type)) {
       return NextResponse.json({ error: 'Invalid upload type' }, { status: 400 });
     }
 

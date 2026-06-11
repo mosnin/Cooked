@@ -15,7 +15,7 @@ import { cn } from '@/lib/utils';
  * lives on a client wrapper. 220ms with the Apple ease — every section
  * arrives as one composed gesture. The focal block (`ContactDetailFocal`)
  * adds a gentle 0.95 → 1 scale on top of the parent fade, landing on the
- * realtor's eye instead of next to it.
+ * rep's eye instead of next to it.
  */
 export function ContactDetailFrame({
   children,
@@ -62,14 +62,14 @@ export type ContactTabKey =
   | 'application'
   | 'documents'
   | 'deals'
-  | 'tours';
+  | 'demos';
 
 const TABS: { key: ContactTabKey; label: string }[] = [
   { key: 'activity', label: 'Activity' },
   { key: 'application', label: 'Application' },
   { key: 'documents', label: 'Documents' },
   { key: 'deals', label: 'Linked deals' },
-  { key: 'tours', label: 'Tours' },
+  { key: 'demos', label: 'Demos' },
 ];
 
 export function ContactTabStrip({
@@ -338,11 +338,11 @@ function verbForType(type: string, kind?: string): string {
     }
   }
   switch (type) {
-    case 'tour_scheduled': return 'Tour scheduled';
-    case 'tour_confirmed': return 'Tour confirmed';
-    case 'tour_completed': return 'Tour completed';
-    case 'tour_cancelled': return 'Tour cancelled';
-    case 'tour_no_show': return 'No-show';
+    case 'demo_scheduled': return 'Demo scheduled';
+    case 'demo_confirmed': return 'Demo confirmed';
+    case 'demo_completed': return 'Demo completed';
+    case 'demo_cancelled': return 'Demo cancelled';
+    case 'demo_no_show': return 'No-show';
     case 'deal_created': return 'Deal created';
     case 'contact_created': return 'Contact added';
     case 'stage_change': return 'Stage changed';
@@ -355,7 +355,7 @@ function verbForType(type: string, kind?: string): string {
 
 export function useActionShortcuts(handlers: {
   onMessage?: () => void;
-  onTour?: () => void;
+  onDemo?: () => void;
   onNote?: () => void;
 }) {
   useEffect(() => {
@@ -373,9 +373,9 @@ export function useActionShortcuts(handlers: {
       if (key === 'm' && handlers.onMessage) {
         e.preventDefault();
         handlers.onMessage();
-      } else if (key === 't' && handlers.onTour) {
+      } else if (key === 't' && handlers.onDemo) {
         e.preventDefault();
-        handlers.onTour();
+        handlers.onDemo();
       } else if (key === 'n' && handlers.onNote) {
         e.preventDefault();
         handlers.onNote();

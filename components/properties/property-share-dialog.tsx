@@ -18,7 +18,7 @@ interface Props {
 /**
  * Dialog for creating / managing listing-packet share links for a property.
  * Fetches existing packets + candidate documents (from deals linked to this
- * property), lets the realtor curate which documents go in, and hands back
+ * property), lets the rep curate which documents go in, and hands back
  * the shareable URL on create.
  */
 export function PropertyShareDialog({ propertyId, linkedDealIds, origin, onClose }: Props) {
@@ -135,7 +135,7 @@ export function PropertyShareDialog({ propertyId, linkedDealIds, origin, onClose
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. Tour packet for Jane"
+              placeholder="e.g. Demo packet for Jane"
               className="w-full text-sm bg-transparent border border-border rounded px-2.5 py-1.5"
               maxLength={200}
             />

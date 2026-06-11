@@ -1,8 +1,8 @@
 'use client';
 
 /**
- * HomeHero — Chippi-orange ASCII blob atmosphere, a serif headline whose last
- * word rotates through the jobs Chippi runs (drafting → booking → scoring →
+ * HomeHero — Koala-orange ASCII blob atmosphere, a serif headline whose last
+ * word rotates through the jobs Koala runs (drafting → booking → scoring →
  * chasing → rest), and the product video framed below in the same app-window
  * language as the cards, drifting on scroll. A center-protect radial keeps the
  * headline zone calm so the ASCII field stays legible-but-quiet behind it.
@@ -20,7 +20,7 @@ const EASE = [0.22, 1, 0.36, 1] as const;
 export function HomeHero() {
   const reduce = useReducedMotion();
 
-  // The rotating "what Chippi does" word — the dynamic power word in the
+  // The rotating "what Koala does" word — the dynamic power word in the
   // headline. Cycles through the real jobs and lands on the tagline.
   const titles = useMemo(
     () => ['drafting', 'booking', 'scoring', 'chasing', 'rest'],
@@ -89,7 +89,7 @@ export function HomeHero() {
             <span className="block">
               You <em className="font-bold">close</em> the deals.
             </span>
-            <span className="block">Chippi does the</span>
+            <span className="block">Koala does the</span>
             <span className="relative mt-1 flex w-full justify-center overflow-hidden pb-3 text-center md:pb-4">
               {reduce ? (
                 <span className="font-bold italic text-brand">rest.</span>
@@ -124,8 +124,8 @@ export function HomeHero() {
             transition={{ duration: 0.9, ease: EASE }}
             className="mx-auto mt-7 max-w-2xl text-lg leading-relaxed text-foreground/60 md:text-xl"
           >
-            Chippi reads your inbox, drafts replies in your voice, books the
-            tours, and keeps every deal current. the busywork runs itself, and
+            Koala reads your inbox, drafts replies in your voice, books the
+            demos, and keeps every deal current. the busywork runs itself, and
             nothing leaves without your name on it.
           </motion.p>
 
@@ -135,7 +135,7 @@ export function HomeHero() {
             className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row"
           >
             <Link
-              href="/login/realtor?intent=signup"
+              href="/login/rep?intent=signup"
               className="inline-flex h-12 items-center justify-center rounded-full bg-foreground px-7 text-[15px] font-medium text-background transition-transform duration-150 active:scale-[0.98]"
             >
               Start free
@@ -163,7 +163,7 @@ export function HomeHero() {
               <span className="h-2.5 w-2.5 rounded-full bg-foreground/12" aria-hidden />
               <span className="h-2.5 w-2.5 rounded-full bg-foreground/12" aria-hidden />
               <span className="mx-auto select-none rounded-md bg-foreground/[0.04] px-3 py-1 text-[11px] text-muted-foreground/80">
-                app.chippi.ai
+                app.koala.ai
               </span>
               <span aria-hidden className="w-[42px]" />
             </div>

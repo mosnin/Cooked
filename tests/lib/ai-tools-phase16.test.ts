@@ -1,5 +1,5 @@
 /**
- * Phase 16 — research, calendar, brokerage, drafts, manual-log tools.
+ * Phase 16 — research, calendar, team, drafts, manual-log tools.
  * Two cases per tool, ~26 total. Mock pattern follows
  * `tests/lib/ai-tools-phase5.test.ts`.
  */
@@ -79,8 +79,8 @@ import { blockTimeTool } from '@/lib/ai-tools/tools/block-time';
 import { findStuckDealsTool } from '@/lib/ai-tools/tools/find-stuck-deals';
 import { findQuietHotPersonsTool } from '@/lib/ai-tools/tools/find-quiet-hot-persons';
 import { findOverdueFollowupsTool } from '@/lib/ai-tools/tools/find-overdue-followups';
-import { summarizeRealtorTool } from '@/lib/ai-tools/tools/summarize-realtor';
-import { assignLeadToRealtorTool } from '@/lib/ai-tools/tools/assign-lead-to-realtor';
+import { summarizeRepTool } from '@/lib/ai-tools/tools/summarize-rep';
+import { assignLeadToRepTool } from '@/lib/ai-tools/tools/assign-lead-to-rep';
 import { draftEmailTool } from '@/lib/ai-tools/tools/draft-email';
 import { draftSmsTool } from '@/lib/ai-tools/tools/draft-sms';
 import { logEmailSentTool } from '@/lib/ai-tools/tools/log-email-sent';
@@ -189,8 +189,8 @@ describe('checkAvailabilityTool', () => {
     expect(checkAvailabilityTool.requiresApproval).toBe(false);
   });
 
-  it('returns free=true when no Tour or CalendarEvent overlap', async () => {
-    mockByTable = { Tour: { rows: [] }, CalendarEvent: { rows: [] } };
+  it('returns free=true when no Demo or CalendarEvent overlap', async () => {
+    mockByTable = { Demo: { rows: [] }, CalendarEvent: { rows: [] } };
     const result = await checkAvailabilityTool.handler(
       { from: '2026-05-01T14:00:00.000Z', to: '2026-05-01T16:00:00.000Z' },
       makeCtx(),
@@ -199,9 +199,9 @@ describe('checkAvailabilityTool', () => {
     expect(result.summary).toMatch(/free/);
   });
 
-  it('reports a Tour conflict in the conflicts array', async () => {
+  it('reports a Demo conflict in the conflicts array', async () => {
     mockByTable = {
-      Tour: {
+      Demo: {
         rows: [
           {
             id: 't1',
@@ -220,7 +220,7 @@ describe('checkAvailabilityTool', () => {
     );
     const conflicts = (result.data as { conflicts: { kind: string }[] }).conflicts;
     expect(conflicts).toHaveLength(1);
-    expect(conflicts[0].kind).toBe('tour');
+    expect(conflicts[0].kind).toBe('demo');
   });
 });
 
@@ -340,43 +340,43 @@ describe('findOverdueFollowupsTool', () => {
   });
 });
 
-// ── summarize_realtor ──────────────────────────────────────────────────────
-describe('summarizeRealtorTool', () => {
+// ── summarize_rep ──────────────────────────────────────────────────────
+describe('summarizeRepTool', () => {
   it('is read-only', () => {
-    expect(summarizeRealtorTool.requiresApproval).toBe(false);
+    expect(summarizeRepTool.requiresApproval).toBe(false);
   });
 
-  it('refuses when caller has no broker membership', async () => {
+  it('refuses when caller has no manager membership', async () => {
     mockByTable = {
       User: { single: { id: 'u_caller' } },
-      BrokerageMembership: { rows: [] },
+      TeamMembership: { rows: [] },
     };
-    const result = await summarizeRealtorTool.handler(
-      { realtorUserId: 'u_realtor', windowDays: 7 },
+    const result = await summarizeRepTool.handler(
+      { repUserId: 'u_rep', windowDays: 7 },
       makeCtx(),
     );
     expect(result.display).toBe('error');
-    expect(result.summary).toMatch(/Broker access required/);
+    expect(result.summary).toMatch(/Manager access required/);
   });
 });
 
-// ── assign_lead_to_realtor ─────────────────────────────────────────────────
-describe('assignLeadToRealtorTool', () => {
+// ── assign_lead_to_rep ─────────────────────────────────────────────────
+describe('assignLeadToRepTool', () => {
   it('requires approval', () => {
-    expect(assignLeadToRealtorTool.requiresApproval).toBe(true);
+    expect(assignLeadToRepTool.requiresApproval).toBe(true);
   });
 
-  it('refuses when caller is not a broker', async () => {
+  it('refuses when caller is not a manager', async () => {
     mockByTable = {
       User: { single: { id: 'u_caller' } },
-      BrokerageMembership: { rows: [] },
+      TeamMembership: { rows: [] },
     };
-    const result = await assignLeadToRealtorTool.handler(
-      { personId: 'c_1', realtorUserId: 'u_2', why: 'they asked' },
+    const result = await assignLeadToRepTool.handler(
+      { personId: 'c_1', repUserId: 'u_2', why: 'they asked' },
       makeCtx(),
     );
     expect(result.display).toBe('error');
-    expect(result.summary).toMatch(/Broker access required/);
+    expect(result.summary).toMatch(/Manager access required/);
   });
 });
 

@@ -36,8 +36,8 @@ const DEDUPE_TTL_SECONDS = 24 * 60 * 60;
 
 // Per-(connection, slug) cap. A noisy Gmail account can fire 100s of
 // triggers an hour; each DRAFT dispatch is a real Modal run, which costs
-// real money. Above this cap we drop with a log. The realtor noticing
-// "Chippi went quiet" is a much better failure mode than a 4-figure
+// real money. Above this cap we drop with a log. The rep noticing
+// "Koala went quiet" is a much better failure mode than a 4-figure
 // Modal bill from a single connected account.
 const HOURLY_CAP_PER_TRIGGER = 60;
 const RATE_WINDOW_SECONDS = 60 * 60;

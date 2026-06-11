@@ -34,7 +34,7 @@ export async function GET(req: NextRequest) {
   // Backwards compatibility: if rentalFormConfig is null but old formConfig exists, use it
   let rentalFormConfig = settings?.rentalFormConfig ?? null;
   const buyerFormConfig = settings?.buyerFormConfig ?? null;
-  const formConfigSource: 'custom' | 'brokerage' | 'legacy' =
+  const formConfigSource: 'custom' | 'team' | 'legacy' =
     settings?.formConfigSource ?? 'legacy';
 
   if (!rentalFormConfig && settings?.formConfig) {

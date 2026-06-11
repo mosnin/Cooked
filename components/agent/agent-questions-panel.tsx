@@ -156,7 +156,7 @@ export function AgentQuestionsPanel() {
   }
 
   // Hide the section entirely when there's nothing to weigh in on — keeps the
-  // page calm. The chat surface still tells the user Chippi will check in
+  // page calm. The chat surface still tells the user Koala will check in
   // when stuck.
   if (!loading && questions.length === 0) return null;
 

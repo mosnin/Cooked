@@ -1,11 +1,11 @@
 -- ============================================================================
 -- Pricing V2 Phase 0 — per-account plan tiers (docs/PRICING_V2_PLAN.md §4.2).
 --
--- Adds the Space-level plan tier (free|solo|pro) and extends the Brokerage plan
+-- Adds the Space-level plan tier (free|solo|pro) and extends the Team plan
 -- enum with the new team tiers (team|team_plus) alongside the legacy values so
 -- existing rows stay valid. Backfills existing paying solo spaces to 'solo'.
 --
--- ✓ VALIDATED on PostgreSQL 16 (applies clean against Space/Brokerage; CHECK
+-- ✓ VALIDATED on PostgreSQL 16 (applies clean against Space/Team; CHECK
 --   swaps + backfill confirmed).
 -- ============================================================================
 
@@ -25,8 +25,8 @@ UPDATE "Space"
 ALTER TABLE "Space" DROP CONSTRAINT IF EXISTS "Space_plan_check";
 ALTER TABLE "Space" ADD CONSTRAINT "Space_plan_check" CHECK (plan IN ('free', 'solo', 'pro'));
 
--- ── Brokerage: extend plan enum with team|team_plus ─────────────────────────
--- Drop whatever CHECK currently constrains Brokerage.plan (name may vary), then
+-- ── Team: extend plan enum with team|team_plus ─────────────────────────
+-- Drop whatever CHECK currently constrains Team.plan (name may vary), then
 -- re-add a superset so legacy (starter|team|enterprise) AND the new team_plus
 -- are all valid. No data migration needed; mapping to the new tiers happens at
 -- checkout time.
@@ -35,15 +35,15 @@ DECLARE c text;
 BEGIN
   SELECT conname INTO c
     FROM pg_constraint
-   WHERE conrelid = '"Brokerage"'::regclass
+   WHERE conrelid = '"Team"'::regclass
      AND contype = 'c'
      AND pg_get_constraintdef(oid) ILIKE '%plan%';
   IF c IS NOT NULL THEN
-    EXECUTE format('ALTER TABLE "Brokerage" DROP CONSTRAINT %I', c);
+    EXECUTE format('ALTER TABLE "Team" DROP CONSTRAINT %I', c);
   END IF;
 END $$;
 
-ALTER TABLE "Brokerage" ADD COLUMN IF NOT EXISTS "planActivatedAt" timestamptz;
-ALTER TABLE "Brokerage"
-  ADD CONSTRAINT "Brokerage_plan_check"
+ALTER TABLE "Team" ADD COLUMN IF NOT EXISTS "planActivatedAt" timestamptz;
+ALTER TABLE "Team"
+  ADD CONSTRAINT "Team_plan_check"
   CHECK (plan IN ('starter', 'team', 'team_plus', 'enterprise'));

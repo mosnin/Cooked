@@ -6,7 +6,7 @@
 -- (lib/supabase.ts), which BYPASSES RLS entirely. The only non-service-role
 -- path in the system is the browser Realtime client (anon -> authenticated via
 -- the Clerk "supabase" JWT template), and it subscribes ONLY to
--- Contact/Deal/DealStage/Tour (policied in 20260607000011). None of the
+-- Contact/Deal/DealStage/Demo (policied in 20260607000011). None of the
 -- integration tables is read by the browser client.
 --
 -- So these policies are DEFENSE-IN-DEPTH, not load-bearing for today's request
@@ -51,21 +51,21 @@ CREATE POLICY "integration_trigger_authenticated_select" ON "IntegrationTrigger"
 REVOKE ALL ON "IntegrationTrigger" FROM anon, authenticated;
 GRANT SELECT ON "IntegrationTrigger" TO authenticated;
 
--- ── BrokerageIntegrationConnection — scope by broker-level membership ───────
--- BrokerageMembership.userId is the INTERNAL User.id (REFERENCES "User"(id)),
--- and roles are 'broker_owner' | 'broker_admin' | 'realtor_member'. Only
--- owners/admins manage brokerage integrations, so restrict to those two.
-DROP POLICY IF EXISTS "brokerage_integration_connection_authenticated_select" ON "BrokerageIntegrationConnection";
-CREATE POLICY "brokerage_integration_connection_authenticated_select"
-  ON "BrokerageIntegrationConnection"
+-- ── TeamIntegrationConnection — scope by manager-level membership ───────
+-- TeamMembership.userId is the INTERNAL User.id (REFERENCES "User"(id)),
+-- and roles are 'manager_owner' | 'manager_admin' | 'rep_member'. Only
+-- owners/admins manage team integrations, so restrict to those two.
+DROP POLICY IF EXISTS "team_integration_connection_authenticated_select" ON "TeamIntegrationConnection";
+CREATE POLICY "team_integration_connection_authenticated_select"
+  ON "TeamIntegrationConnection"
   FOR SELECT TO authenticated
   USING (
-    "brokerageId" IN (
-      SELECT m."brokerageId" FROM "BrokerageMembership" m
+    "teamId" IN (
+      SELECT m."teamId" FROM "TeamMembership" m
       JOIN "User" u ON u.id = m."userId"
       WHERE u."clerkId" = auth.jwt() ->> 'sub'
-        AND m."role" IN ('broker_owner', 'broker_admin')
+        AND m."role" IN ('manager_owner', 'manager_admin')
     )
   );
-REVOKE ALL ON "BrokerageIntegrationConnection" FROM anon, authenticated;
-GRANT SELECT ON "BrokerageIntegrationConnection" TO authenticated;
+REVOKE ALL ON "TeamIntegrationConnection" FROM anon, authenticated;
+GRANT SELECT ON "TeamIntegrationConnection" TO authenticated;

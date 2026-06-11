@@ -7,11 +7,11 @@
  * the old version hardcoded `gpt-5-mini` on the OpenAI **Responses API** with
  * a direct-OpenAI client, so every chat turn on an OpenRouter-only deploy
  * threw `MissingAgentKeyError` before a single token streamed — and even with
- * an OpenAI key, the realtor's chosen model (`x-ai/grok-4.3`) was ignored.
+ * an OpenAI key, the rep's chosen model (`x-ai/grok-4.3`) was ignored.
  *
  * Now:
  *   - One client, the app-wide `getLLMClient()` (OpenRouter or OpenAI).
- *   - The realtor's workspace model, resolved through `resolveChatModel()` so
+ *   - The rep's workspace model, resolved through `resolveChatModel()` so
  *     a provider/model mismatch is structurally impossible.
  *   - `OpenAIChatCompletionsModel` (chat completions), NOT the Responses API.
  *     Chat completions streams reliably across every OpenRouter provider
@@ -37,7 +37,7 @@ import { getLLMClient, resolveChatModel } from '@/lib/llm';
 const cache = new Map<string, Model>();
 
 /**
- * The SDK `Model` the agent runs on: the realtor's workspace model (resolved
+ * The SDK `Model` the agent runs on: the rep's workspace model (resolved
  * to something the active provider can actually serve) over the app-wide LLM
  * client, via chat completions.
  *

@@ -2,7 +2,7 @@
  * Route-level test for `PATCH /api/integrations/[id]`.
  *
  * Same privilege contract as DELETE: a user must not be able to flip
- * another realtor's trigger subscriptions via id-guess. Adds a body-
+ * another rep's trigger subscriptions via id-guess. Adds a body-
  * validation gate (rejects anything that isn't `{ paused: boolean }`).
  */
 

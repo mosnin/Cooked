@@ -92,7 +92,7 @@ beforeEach(() => {
     name: 'Jane',
     emoji: '',
     ownerId: 'u_1',
-    brokerageId: null,
+    teamId: null,
     createdAt: new Date('2026-04-01T00:00:00.000Z'),
     stripeCustomerId: null,
     stripeSubscriptionId: null,
@@ -137,7 +137,7 @@ describe('POST /api/integrations/connect/[toolkit] — coming-soon slugs', () =>
 
     const body = (await res.json()) as { error: string };
     // The error must name the human-readable app, not the slug — this is
-    // what the realtor sees in the UI when something slips through.
+    // what the rep sees in the UI when something slips through.
     expect(body.error).toContain(app!.name);
     expect(body.error.toLowerCase()).toContain('in progress');
   });
@@ -185,7 +185,7 @@ describe('POST /api/integrations/connect/[toolkit] — Composio failure', () => 
     const body = (await res.json()) as { error: string };
     expect(res.status).toBe(502);
     expect(body.error).toContain('Gmail');
-    // Vendor error must not bleed into the realtor-facing message.
+    // Vendor error must not bleed into the rep-facing message.
     expect(body.error).not.toContain('composio 5xx');
   });
 });
@@ -202,9 +202,9 @@ describe('POST /api/integrations/connect/[toolkit] — happy path + reconnect', 
       connectionId: 'composio_pending_1',
       toolkit: 'gmail',
     });
-    // entityId must be the realtor's Clerk userId — that's the Composio
+    // entityId must be the rep's Clerk userId — that's the Composio
     // identity boundary. Using the DB user id or space id would scramble
-    // who-owns-what across the brokerage.
+    // who-owns-what across the team.
     expect(initiateMock).toHaveBeenCalledTimes(1);
     expect(initiateMock).toHaveBeenCalledWith(
       expect.objectContaining({ entityId: 'user_clerk_123', toolkit: 'gmail' }),
@@ -213,7 +213,7 @@ describe('POST /api/integrations/connect/[toolkit] — happy path + reconnect', 
 
   it('reconnect: revokes the existing active row BEFORE calling initiate', async () => {
     // Order matters: the DB has a unique-active index per (space, user,
-    // toolkit). If initiate runs first and the realtor completes OAuth,
+    // toolkit). If initiate runs first and the rep completes OAuth,
     // the callback's insert collides with the existing active row.
     const existing = {
       id: 'old_conn',
@@ -258,13 +258,13 @@ describe('POST /api/integrations/connect/[toolkit] — happy path + reconnect', 
 
   it('passes the configured callback URL to Composio when NEXT_PUBLIC_APP_URL is set', async () => {
     const original = process.env.NEXT_PUBLIC_APP_URL;
-    process.env.NEXT_PUBLIC_APP_URL = 'https://app.chippi.test/';
+    process.env.NEXT_PUBLIC_APP_URL = 'https://app.koala.test/';
     try {
       const { req, params } = makeRequest('gmail');
       await POST(req, { params });
       expect(initiateMock).toHaveBeenCalledWith(
         expect.objectContaining({
-          callbackUrl: 'https://app.chippi.test/integrations/callback',
+          callbackUrl: 'https://app.koala.test/integrations/callback',
         }),
       );
     } finally {

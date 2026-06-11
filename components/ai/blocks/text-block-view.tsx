@@ -46,7 +46,7 @@ function renderInline(text: string, keyOffset = 0): React.ReactNode[] {
  * Detect a text block that is nothing but a raw JSON object / array — usually
  * a tool-call argument blob the model leaked into its assistant text instead
  * of emitting via the proper tool_call channel. The renderer drops these so
- * the realtor doesn't see raw SDK plumbing in the chat. We only strip when
+ * the rep doesn't see raw SDK plumbing in the chat. We only strip when
  * the ENTIRE message is JSON (with optional surrounding whitespace) — JSON
  * snippets inside prose still render verbatim.
  */
@@ -91,7 +91,7 @@ function renderMarkdown(content: string, streaming?: boolean): React.ReactNode[]
 
     // ── Image: ![alt](url) on its own line ───────────────────────────────
     // Studio + integration tool results surface generated assets as
-    // markdown image syntax; render them inline so the realtor sees the
+    // markdown image syntax; render them inline so the rep sees the
     // image instead of a URL. Image must be the whole line — inline
     // images mixed with text aren't worth supporting yet.
     //
@@ -285,7 +285,7 @@ function renderMarkdown(content: string, streaming?: boolean): React.ReactNode[]
             </Fragment>
           ))}
           {isLast && streaming && (
-            <span className="chippi-cursor" aria-hidden="true" />
+            <span className="koala-cursor" aria-hidden="true" />
           )}
         </p>,
       );
@@ -353,7 +353,7 @@ export function TextBlockView({
     >
       {nodes}
       {needsTrailingCursor && (
-        <span className="chippi-cursor" aria-hidden="true" />
+        <span className="koala-cursor" aria-hidden="true" />
       )}
     </div>
   );

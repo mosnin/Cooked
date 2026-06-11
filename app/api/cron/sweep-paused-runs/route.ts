@@ -3,7 +3,7 @@
  *
  * Daily sweeper for AgentPausedRun rows. Without this, every paused-then-
  * abandoned chat turn accumulates indefinitely. The resume route only
- * marks rows expired lazily on access — abandoned runs that the realtor
+ * marks rows expired lazily on access — abandoned runs that the rep
  * never returns to never expire.
  *
  * Behavior:

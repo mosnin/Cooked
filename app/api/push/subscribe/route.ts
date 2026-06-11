@@ -8,7 +8,7 @@
  * pushManager.subscribe() — { endpoint, keys: { p256dh, auth } }. We pull only
  * those fields and store them keyed by the space.
  *
- * Auth: requireSpaceOwner(slug) — same posture as the rest of the realtor API.
+ * Auth: requireSpaceOwner(slug) — same posture as the rest of the rep API.
  * endpoint is unique, so re-subscribing the same browser upserts in place.
  */
 

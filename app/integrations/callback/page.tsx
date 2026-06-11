@@ -1,20 +1,20 @@
 /**
- * /integrations/callback — where Composio redirects the realtor after a
+ * /integrations/callback — where Composio redirects the rep after a
  * successful OAuth flow.
  *
  * Composio's redirect URL accepts `connected_account_id` + (sometimes)
  * `status` + `app` query params. We:
  *   1. Look up the connected account on Composio's side
  *   2. Persist an IntegrationConnection row with toolkit + composio id
- *   3. Redirect the realtor back into the app — settings, ideally onto
+ *   3. Redirect the rep back into the app — settings, ideally onto
  *      the integrations panel — with a success/error flag in the URL.
  *
- * Server component so the persistence happens before the realtor ever
+ * Server component so the persistence happens before the rep ever
  * sees a UI flash.
  *
  * Every branch logs through `logger.info` / `logger.warn` / `logger.error`
  * with `[integrations.callback]` so production logs tell us exactly which
- * step failed when a realtor reports "I connected at the provider but the
+ * step failed when a rep reports "I connected at the provider but the
  * row didn't show up." The previous implementation logged only on the
  * SDK-fetch path; every other failure mode redirected silently and made
  * post-mortem impossible.
@@ -46,7 +46,7 @@ export default async function IntegrationsCallback({
   const { userId } = await auth();
   if (!userId) {
     logger.warn('[integrations.callback] no clerk session — redirecting to login');
-    redirect('/login/realtor');
+    redirect('/login/rep');
   }
 
   if (!connectedAccountId) {
@@ -54,7 +54,7 @@ export default async function IntegrationsCallback({
     return redirect(buildBackUrl({ ok: false, reason: 'missing_account' }));
   }
 
-  // Resolve the realtor's space — we won't ship without it.
+  // Resolve the rep's space — we won't ship without it.
   const dbUserId = await getDbUserId(userId);
   if (!dbUserId) {
     logger.error('[integrations.callback] db user not found for clerk id', { clerkId: userId });
@@ -142,7 +142,7 @@ export default async function IntegrationsCallback({
   // version trusted an optional ?status= query param (which Composio doesn't
   // reliably send) and force-activated everything, so abandoned OAuth flows
   // produced permanently-"active" rows whose tools 401'd in chat. If the
-  // account fetch itself failed, the realtor still landed back here via the
+  // account fetch itself failed, the rep still landed back here via the
   // provider redirect — strong signal OAuth completed — so we preserve the
   // old behavior and activate (the chat-time auth-error path self-corrects
   // a wrong guess by flipping the row to 'expired').
@@ -174,7 +174,7 @@ export default async function IntegrationsCallback({
 
   // Status gate — keyed on the FETCHED account status (authoritative), not
   // the optional ?status= query param. A non-ACTIVE account stays 'pending'
-  // (the upsert above already wrote that) and the realtor lands back on
+  // (the upsert above already wrote that) and the rep lands back on
   // settings with the failure reason; the reconcile sweep promotes the row
   // if Composio later reports ACTIVE.
   if (!confirmedActive) {
@@ -190,7 +190,7 @@ export default async function IntegrationsCallback({
 
   // Register curated triggers ONLY after the connection is confirmed
   // ACTIVE. Registering against an INITIALIZING / FAILED connection
-  // creates failed IntegrationTrigger rows the realtor would have to
+  // creates failed IntegrationTrigger rows the rep would have to
   // clean up on reconnect. Best-effort: a failure here logs but does
   // NOT fail the OAuth completion (the connection itself succeeded).
   try {
@@ -240,7 +240,7 @@ function buildBackUrl(args: CallbackResultArgs): string {
 }
 
 /**
- * Pull a realtor-friendly label from Composio's account payload — usually
+ * Pull a rep-friendly label from Composio's account payload — usually
  * the connected user's email. Falls back to whatever Composio surfaces
  * under common naming variants. If none exist, we leave it null and the
  * UI just shows "Connected".

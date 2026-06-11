@@ -12,7 +12,7 @@
  *     Upstash Redis at the key `agent:budget:{spaceId}:{YYYY-MM-DD}`.
  *
  * One shared helper so the Settings usage bar and the chat-budget
- * enforcement can't drift apart and disagree about whether the realtor
+ * enforcement can't drift apart and disagree about whether the rep
  * is over budget. Both callers route through this function.
  *
  * Redis failure is swallowed — chat tokens alone are still a useful

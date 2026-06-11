@@ -10,7 +10,7 @@ import { SubagentTaskBlockView } from './subagent-task-block-view';
 import { ReasoningBlockView } from './reasoning-block-view';
 import { PermissionBlockView } from './permission-block-view';
 import { PermissionPromptView, type PermissionPromptData } from './permission-prompt-view';
-import { ApprovalCelebration, type ApprovalKind } from '@/components/chippi/approval-celebration';
+import { ApprovalCelebration, type ApprovalKind } from '@/components/koala/approval-celebration';
 
 interface TranscriptProps {
   blocks: MessageBlock[];
@@ -42,7 +42,7 @@ interface TranscriptProps {
   };
   /**
    * When present, the surface the approval prompt occupied is replaced by
-   * one calm Chippi-voiced sentence for ~2.5s. The parent owns the dwell —
+   * one calm Koala-voiced sentence for ~2.5s. The parent owns the dwell —
    * the celebration calls `onDone` when its time is up so the parent can
    * clear this state and let the next streamed blocks (or whatever's next)
    * take the floor.
@@ -53,7 +53,7 @@ interface TranscriptProps {
     onDone: () => void;
   };
   /** Bubbled by interactive tool-result cards (currently the availability
-   *  picker). The workspace forwards the text as the realtor's next
+   *  picker). The workspace forwards the text as the rep's next
    *  message. Omit on read-only history surfaces. */
   onUserIntent?: (text: string) => void;
   className?: string;
@@ -89,7 +89,7 @@ export function Transcript({
   // Group consecutive non-subagent tool_call blocks so 2+ collapse into one
   // ToolGroup header (Claude / ChatGPT pattern). Single-tool runs keep the
   // existing per-block view — its inline rich-data cards (contacts / deals /
-  // tours / properties) read better solo than buried under a collapsed group.
+  // demos / properties) read better solo than buried under a collapsed group.
   //
   // Subagents (analyze_pipeline, research_person, planner) break the run and
   // get their own one-line "Completed Subagent · <task>" row. They're
@@ -204,7 +204,7 @@ export function Transcript({
       })}
 
       {/* Celebration takes precedence over the approval prompt — the moment
-          the realtor approves a celebrate-able tool, the parent flips
+          the rep approves a celebrate-able tool, the parent flips
           `approvalCelebration` and the prompt is swapped for the win line on
           the same surface. */}
       {approvalCelebration ? (

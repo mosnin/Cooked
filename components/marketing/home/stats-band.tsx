@@ -9,7 +9,7 @@
 import { Reveal, Stagger, StaggerItem, ArrowChip } from './home-kit';
 
 const STATS = [
-  { value: '24/7', label: 'Chippi works the inbox while you sleep.' },
+  { value: '24/7', label: 'Koala works the inbox while you sleep.' },
   { value: '0', label: 'leads left to go cold in a forgotten thread.' },
   { value: '< 1 min', label: 'median first-touch on a new inquiry.' },
 ];

@@ -1,5 +1,5 @@
 /**
- * Per-realtor snapshot for the chat system prompt. Two surfaces:
+ * Per-rep snapshot for the chat system prompt. Two surfaces:
  *   - `buildPersonalizedSnapshot` — fetches + caches the snapshot per
  *     (space, user). 5-min TTL.
  *   - `renderSnapshot` — turns the snapshot into the markdown the prompt
@@ -123,7 +123,7 @@ describe('renderSnapshot', () => {
       activeDealCount: 4,
       hotPersonCount: 2,
     });
-    expect(out).toContain('Realtor: Sam.');
+    expect(out).toContain('Rep: Sam.');
     expect(out).toContain('Snapshot: 4 active deals, 2 hot persons.');
     expect(out).not.toContain('Connected:');
   });

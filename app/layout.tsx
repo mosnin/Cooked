@@ -10,19 +10,19 @@ import { SentryUser } from '@/components/observability/sentry-user';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Chippi — Agentic OS for Real Estate Agents & Brokerages',
-  description: 'An AI agent that runs your realtor workspace — qualifies leads, drafts follow-ups, schedules tours, and keeps your pipeline current so you can focus on the deals that matter. Start your 7-day free trial.',
-  keywords: ['agentic OS', 'AI agent', 'real estate', 'realtors', 'brokerages', 'AI lead scoring', 'lead qualification', 'tour scheduling', 'deal pipeline', 'CRM'],
+  title: 'Koala — Agentic OS for Real Estate Agents & Teams',
+  description: 'An AI agent that runs your rep workspace — qualifies leads, drafts follow-ups, schedules demos, and keeps your pipeline current so you can focus on the deals that matter. Start your 7-day free trial.',
+  keywords: ['agentic OS', 'AI agent', 'real estate', 'reps', 'teams', 'AI lead scoring', 'lead qualification', 'demo scheduling', 'deal pipeline', 'CRM'],
   openGraph: {
-    title: 'Chippi — Agentic OS for Real Estate Agents & Brokerages',
-    description: 'An AI agent that runs your realtor workspace — qualifies leads, drafts follow-ups, schedules tours, and keeps your pipeline current.',
-    siteName: 'Chippi',
+    title: 'Koala — Agentic OS for Real Estate Agents & Teams',
+    description: 'An AI agent that runs your rep workspace — qualifies leads, drafts follow-ups, schedules demos, and keeps your pipeline current.',
+    siteName: 'Koala',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Chippi — Agentic OS for Real Estate Agents & Brokerages',
-    description: 'An AI agent that runs your realtor workspace — qualifies leads, drafts follow-ups, schedules tours, keeps your pipeline current.',
+    title: 'Koala — Agentic OS for Real Estate Agents & Teams',
+    description: 'An AI agent that runs your rep workspace — qualifies leads, drafts follow-ups, schedules demos, keeps your pipeline current.',
   },
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: '#ffffff' },
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default' as const,
-    title: 'Chippi',
+    title: 'Koala',
   },
   icons: {
     icon: '/chip-avatar.png',

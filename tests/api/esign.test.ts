@@ -3,7 +3,7 @@
  *
  * Two contracts:
  *
- *   1. lib/esign gates on the realtor's DocuSign CONNECTION (via Composio).
+ *   1. lib/esign gates on the rep's DocuSign CONNECTION (via Composio).
  *      When Composio isn't configured / DocuSign isn't connected,
  *      isDocusignConnected → false and sendForSignature → a structured
  *      { ok: false, reason: 'not_connected' } — never a throw, never a network

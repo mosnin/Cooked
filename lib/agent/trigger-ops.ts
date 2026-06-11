@@ -9,7 +9,7 @@ export function triggerOpsEnabled(): boolean {
 export function triggerOpsAuthorized(req: Request): boolean {
   const required = process.env.AGENT_TRIGGER_OPS_SECRET?.trim();
   // Operator-grade endpoints — read/clear the trigger log, replay events,
-  // edit trigger config. No realtor UI calls them. With no secret set we
+  // edit trigger config. No rep UI calls them. With no secret set we
   // fail CLOSED: an unset secret LOCKS these endpoints rather than leaving
   // a destructive surface (DELETE clear-log, replay) open to every signed-in
   // user. Configure AGENT_TRIGGER_OPS_SECRET to enable operator access.

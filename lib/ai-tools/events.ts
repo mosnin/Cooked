@@ -176,13 +176,13 @@ export interface SystemEvent extends BaseEvent {
 export interface ErrorEvent extends BaseEvent {
   type: 'error';
   /**
-   * Human-facing message. The server replaces this with a Chippi-voiced line
-   * (see lib/ai-tools/chippi-voice.ts) before shipping; the client renders
+   * Human-facing message. The server replaces this with a Koala-voiced line
+   * (see lib/ai-tools/koala-voice.ts) before shipping; the client renders
    * it inline as an assistant message rather than as a system warning.
    */
   message: string;
   /**
-   * Machine-readable code so the client can pick its own Chippi line if the
+   * Machine-readable code so the client can pick its own Koala line if the
    * server-supplied message gets through stale or empty.
    */
   code?:

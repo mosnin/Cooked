@@ -23,7 +23,7 @@ const TABS: ReadonlyArray<{ key: Tab; label: string }> = [
 
 /**
  * Two-tab strip with a motion.layoutId sliding underline. Same pattern
- * as the broker reviews page so the chrome reads as one product. Old
+ * as the manager reviews page so the chrome reads as one product. Old
  * `?tab=intelligence` and `?tab=deals` URLs map to Overview because the
  * server-side page collapsed those views into Overview's flow.
  */

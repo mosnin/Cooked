@@ -3,7 +3,7 @@
  *
  * One email message, fully loaded. Backs the full-page read at
  * /s/[slug]/email/[id] — subject, sender, recipients, body, time, star
- * state, plus the Gmail webLink so the realtor can punch out to Gmail
+ * state, plus the Gmail webLink so the rep can punch out to Gmail
  * itself.
  *
  * Uses GMAIL_FETCH_MESSAGE_BY_MESSAGE_ID with full payload — the per-

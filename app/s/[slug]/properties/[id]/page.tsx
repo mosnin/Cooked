@@ -26,7 +26,7 @@ export default async function PropertyDetailPage({
     .maybeSingle();
   if (!property) notFound();
 
-  const [{ data: deals }, { data: tours }] = await Promise.all([
+  const [{ data: deals }, { data: demos }] = await Promise.all([
     supabase
       .from('Deal')
       .select('id, title, status, value, closeDate')
@@ -34,7 +34,7 @@ export default async function PropertyDetailPage({
       .eq('spaceId', space.id)
       .order('updatedAt', { ascending: false }),
     supabase
-      .from('Tour')
+      .from('Demo')
       .select('id, guestName, startsAt, status')
       .eq('propertyId', id)
       .eq('spaceId', space.id)
@@ -67,7 +67,7 @@ export default async function PropertyDetailPage({
         slug={slug}
         initial={property as Property}
         linkedDeals={(deals ?? []) as { id: string; title: string; status: string; value: number | null; closeDate: string | null }[]}
-        linkedTours={(tours ?? []) as { id: string; guestName: string; startsAt: string; status: string }[]}
+        linkedDemos={(demos ?? []) as { id: string; guestName: string; startsAt: string; status: string }[]}
       />
     </div>
   );

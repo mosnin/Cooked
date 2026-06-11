@@ -3,7 +3,7 @@
  * EARNS its place in the product.
  *
  * Why this file exists. STYLESHEET.md says brand orange lives in
- * exactly five places: logo, Chippi avatar, agent badge, agent
+ * exactly five places: logo, Koala avatar, agent badge, agent
  * activity bar, lead-warm tier. Reviewers can't audit a Tailwind class
  * usage by eye across 90+ call sites. This file codifies the five
  * contexts as a single closed enum that's enforced by:
@@ -34,10 +34,10 @@ import { cn } from './utils';
  * constraint, not in a paragraph of prose.
  */
 export const BRAND_ORANGE_CONTEXTS = [
-  /** The literal Chippi logo / wordmark in nav, header, auth. */
+  /** The literal Koala logo / wordmark in nav, header, auth. */
   'LOGO',
-  /** The orange chip widget that represents Chippi in composer, header, toast. */
-  'CHIPPI_AVATAR',
+  /** The orange chip widget that represents Koala in composer, header, toast. */
+  'KOALA_AVATAR',
   /** Authorship pill stamped on AgentDraft rows, conversation messages, activity rows. */
   'AGENT_BADGE',
   /** Progress fill on the autonomous-run activity bar and similar in-flight indicators. */
@@ -55,7 +55,7 @@ export type BrandOrangeContext = (typeof BRAND_ORANGE_CONTEXTS)[number];
  * one of the five named moments."
  *
  * @example
- *   <span className={brandOrange('CHIPPI_AVATAR', 'text-orange-500 bg-orange-50/40')} />
+ *   <span className={brandOrange('KOALA_AVATAR', 'text-orange-500 bg-orange-50/40')} />
  *
  * The lint rule (tests/style/no-stray-orange.test.ts) checks that
  * every `text-orange-*` / `bg-orange-*` call site either lives inside

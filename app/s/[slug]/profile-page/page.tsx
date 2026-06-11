@@ -1,5 +1,5 @@
 /**
- * Editor for the realtor's public "link in bio" page.
+ * Editor for the rep's public "link in bio" page.
  *
  * Server shell only — resolves the space, then hands off to the client
  * <ProfileEditor/>, which reads and writes config through
@@ -20,7 +20,7 @@ export default async function ProfilePageEditor({
   const { slug } = await params;
 
   const { userId } = await auth();
-  if (!userId) redirect('/login/realtor');
+  if (!userId) redirect('/login/rep');
 
   const space = await getSpaceFromSlug(slug);
   if (!space) notFound();
@@ -33,7 +33,7 @@ export default async function ProfilePageEditor({
           Your public page
         </h1>
         <p className={BODY_MUTED}>
-          The one link you share — application, tours, listings, and more.
+          The one link you share — application, demos, listings, and more.
         </p>
       </header>
 

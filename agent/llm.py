@@ -82,7 +82,7 @@ def _patch_openai_event_schemas() -> None:
         pass
 
     for cls, field_defaults in event_classes_and_fields:
-        if getattr(cls, "_chippi_patched", False):
+        if getattr(cls, "_koala_patched", False):
             continue
 
         orig_init = cls.__init__
@@ -108,7 +108,7 @@ def _patch_openai_event_schemas() -> None:
 
         cls.__init__ = make_patched_init(orig_init, field_defaults)
         cls.model_validate = make_patched_validate(orig_model_validate, field_defaults)
-        cls._chippi_patched = True
+        cls._koala_patched = True
 
 
 _patch_openai_event_schemas()
@@ -117,7 +117,7 @@ _patch_openai_event_schemas()
 # The model a workspace gets when it hasn't picked one. OpenRouter slug.
 DEFAULT_CHAT_MODEL = "x-ai/grok-4.3"
 
-# Allowlist of realtor-selectable models — mirrors CHAT_MODELS in lib/llm.ts.
+# Allowlist of rep-selectable models — mirrors CHAT_MODELS in lib/llm.ts.
 CHAT_MODELS: tuple[str, ...] = (
     "openai/gpt-5.5",
     "anthropic/claude-opus-4.7",
@@ -214,7 +214,7 @@ _VALID_EFFORTS = ("low", "medium", "high")
 
 
 # Lowercased keyword signals that lift a turn from "low" to "medium". The
-# bar is intentionally narrow — these are phrases that imply the realtor
+# bar is intentionally narrow — these are phrases that imply the rep
 # wants the model to STRUCTURE its thinking, not just answer. Adding more
 # words here costs reasoning tokens on every turn that mentions them, so
 # new entries should buy demonstrable quality.
@@ -253,7 +253,7 @@ def decide_reasoning_effort(user_message: str | None = None) -> str:
     Escalates to "medium" when the message carries a planning / research
     signal (see _PLANNING_SIGNALS).
 
-    The env var CHIPPI_REASONING_EFFORT, when set to "low"/"medium"/"high",
+    The env var KOALA_REASONING_EFFORT, when set to "low"/"medium"/"high",
     overrides the heuristic. Useful to flip the floor per deploy without
     a code change (cost emergency → force "low"; investor demo → "medium").
     Invalid values fall through silently so a typo can't break every turn.
@@ -263,7 +263,7 @@ def decide_reasoning_effort(user_message: str | None = None) -> str:
     mode passes an empty string and gets "low" — sweeps are cheap and
     routine; they don't need to think harder than a chat turn.
     """
-    override = (os.environ.get("CHIPPI_REASONING_EFFORT") or "").strip().lower()
+    override = (os.environ.get("KOALA_REASONING_EFFORT") or "").strip().lower()
     if override in _VALID_EFFORTS:
         return override
 
@@ -344,7 +344,7 @@ def _build_cache_marker() -> dict[str, Any]:
 
     Two markers cover the static input surface:
       1. SYSTEM — placed on the system-message content. Caches the
-         CHIPPI_INSTRUCTIONS (~1.5K tokens after Phase 1) + workspace_info
+         KOALA_INSTRUCTIONS (~1.5K tokens after Phase 1) + workspace_info
          + ai_profile.
       2. TOOLS — placed on the LAST tool. The provider caches the entire
          tools array up through any tool carrying a marker, so one marker

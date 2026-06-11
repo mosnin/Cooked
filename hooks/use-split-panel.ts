@@ -10,7 +10,7 @@ interface SplitPanelState {
   leftWidthPercent: number; // 0-100, default 58
 }
 
-const STORAGE_KEY = 'chippi-split-panel-v1';
+const STORAGE_KEY = 'koala-split-panel-v1';
 const DEFAULTS: SplitPanelState = {
   isSplit: false,
   rightTab: 'people',
@@ -45,7 +45,7 @@ function persistState(next: SplitPanelState): void {
 }
 
 /**
- * Manages Chippi split-panel layout state, persisted in localStorage.
+ * Manages Koala split-panel layout state, persisted in localStorage.
  *
  * - `isSplit` — whether the panel is in split view
  * - `toggle` — toggles between split and single view

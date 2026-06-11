@@ -63,7 +63,7 @@ export function WizardStepDetails({
 }: WizardStepDetailsProps) {
   // Initial workspace check: are there any properties at all? A day-one
   // workspace doesn't need a picker that can't return anything — just drop
-  // the realtor into the address field.
+  // the rep into the address field.
   const [hasAnyProperties, setHasAnyProperties] = useState<boolean | null>(null);
   const [mode, setMode] = useState<PropertyMode>('pick');
   const [selected, setSelected] = useState<Property | null>(null);
@@ -93,7 +93,7 @@ export function WizardStepDetails({
         const any = Array.isArray(data) && data.length > 0;
         setHasAnyProperties(any);
         if (!any) setMode('new');
-        // Seed results so the realtor sees their workspace on landing.
+        // Seed results so the rep sees their workspace on landing.
         if (any) setResults(data.slice(0, 8));
       } catch {
         if (!cancelled) {
@@ -107,7 +107,7 @@ export function WizardStepDetails({
     };
   }, [slug]);
 
-  // Debounced search against /api/properties when the realtor types.
+  // Debounced search against /api/properties when the rep types.
   const search = useCallback(
     async (q: string) => {
       setSearching(true);
@@ -321,7 +321,7 @@ export function WizardStepDetails({
                   // Re-key on the query so every debounced search re-mounts
                   // the list and replays the row entrance. Without this the
                   // existing nodes would just swap content with no motion —
-                  // the realtor wouldn't feel that new results arrived.
+                  // the rep wouldn't feel that new results arrived.
                   <ul
                     key={`results-${query}`}
                     className="rounded-md border border-border divide-y divide-border max-h-72 overflow-y-auto"

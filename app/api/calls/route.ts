@@ -1,11 +1,11 @@
 /**
- * Calls — realtor-facing click-to-call + call log.
+ * Calls — rep-facing click-to-call + call log.
  *
  *   POST { slug, contactId?, toNumber }  → { call }   place a call, log it
  *   GET  ?slug=<slug>                    → { calls }  the space's calls, newest first
  *
  * Auth: requireSpaceOwner(slug) — the workspace owner (or a managing
- * broker_owner/broker_admin).
+ * manager_owner/manager_admin).
  *
  * Placing a call dials the AGENT first (their own number, resolved from the
  * Space's phoneNumber or TELNYX_AGENT_NUMBER), then bridges to the contact when

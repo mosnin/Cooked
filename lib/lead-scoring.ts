@@ -1,7 +1,7 @@
 /**
  * Lead Scoring — public API consumed by API routes and server actions.
  *
- * v2: Uses Chippi's proprietary deterministic scoring engine (lib/scoring/engine.ts)
+ * v2: Uses Koala's proprietary deterministic scoring engine (lib/scoring/engine.ts)
  * with optional AI enhancement for qualitative summaries (lib/scoring/enhance.ts).
  *
  * The score itself is now computed deterministically — no LLM dependency.
@@ -130,7 +130,7 @@ function deriveNextAction(result: ReturnType<typeof computeLeadScore>, leadType?
   }
 
   // Rental (default)
-  if (result.priorityTier === 'hot') return 'Schedule tour or call within 2 hours';
+  if (result.priorityTier === 'hot') return 'Schedule demo or call within 2 hours';
   if (result.priorityTier === 'warm') return 'Send follow-up within 24 hours';
   if (result.missingInformation.length >= 3) return 'Request additional application details';
   if (result.priorityTier === 'cold') return 'Add to weekly follow-up queue';

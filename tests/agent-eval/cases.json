@@ -1,7 +1,7 @@
 {
-  "$schema_note": "Each case is one realtor utterance + the routing assertions the model must satisfy. The model is run against the real prompt with real tool surface, but tool execution is stubbed — so what we score is *which* tool the model picked, not whether the side effects worked.",
+  "$schema_note": "Each case is one rep utterance + the routing assertions the model must satisfy. The model is run against the real prompt with real tool surface, but tool execution is stubbed — so what we score is *which* tool the model picked, not whether the side effects worked.",
   "_field_help": {
-    "prompt": "What the realtor types into chat.",
+    "prompt": "What the rep types into chat.",
     "context.connected_toolkits": "Toolkit slugs to inject into workspace_info as 'Connected integrations'. Empty list = native catalog only. Non-empty adds (a) the curated FunctionTools for each toolkit's top-N actions (per integrations_curated.CURATED_ACTIONS) and (b) find_integration_tool + call_integration_tool dispatcher fallback.",
     "expected.tool_calls_must_include": "Tool names that MUST appear in the run's tool-call sequence (order-agnostic).",
     "expected.tool_calls_must_not_include": "Tool names that MUST NOT appear in the run's tool-call sequence.",
@@ -41,7 +41,7 @@
         "must_pass_arg": {"draft_message": ["recipient_email", "subject"]},
         "max_tool_calls": 3
       },
-      "rationale": "Even with zero integrations connected, draft_message is the path — the realtor's approved inbox handles delivery. Email channel requires subject."
+      "rationale": "Even with zero integrations connected, draft_message is the path — the rep's approved inbox handles delivery. Email channel requires subject."
     },
     {
       "id": "outreach-raw-phone-sms",
@@ -99,11 +99,11 @@
       "context": {"connected_toolkits": ["gmail"]},
       "expected": {
         "tool_calls_must_include": ["find_contacts"],
-        "tool_calls_must_not_include": ["ask_realtor", "find_integration_tool"],
+        "tool_calls_must_not_include": ["ask_rep", "find_integration_tool"],
         "must_pass_arg": {"find_contacts": ["name_contains"]},
         "max_tool_calls": 3
       },
-      "rationale": "A CRM lookup answers this — don't bounce it back to the realtor and don't search Gmail for it."
+      "rationale": "A CRM lookup answers this — don't bounce it back to the rep and don't search Gmail for it."
     },
     {
       "id": "create-deal-native",
@@ -111,7 +111,7 @@
       "context": {"connected_toolkits": []},
       "expected": {
         "tool_calls_must_include": ["create_deal"],
-        "tool_calls_must_not_include": ["find_integration_tool", "ask_realtor"],
+        "tool_calls_must_not_include": ["find_integration_tool", "ask_rep"],
         "max_tool_calls": 4
       },
       "rationale": "Deal creation is core CRM — fire create_deal. find_contacts to link is acceptable; the dispatcher is not."
@@ -134,21 +134,21 @@
     },
     {
       "id": "sweep-followup",
-      "prompt": "Follow up with the buyers who toured this weekend",
+      "prompt": "Follow up with the buyers who demoed this weekend",
       "context": {"connected_toolkits": []},
       "expected": {
         "tool_calls_must_include": ["find_contacts"],
         "tool_calls_must_not_include": ["find_integration_tool"],
         "max_tool_calls": 12
       },
-      "rationale": "Multi-step: find the candidate contacts, draft outreach to each. find_contacts is the first move; draft_message is acceptable for the follow-ups. Drafts get batch-approved in the realtor's inbox — Chippi never sends."
+      "rationale": "Multi-step: find the candidate contacts, draft outreach to each. find_contacts is the first move; draft_message is acceptable for the follow-ups. Drafts get batch-approved in the rep's inbox — Koala never sends."
     },
     {
       "id": "ambiguous-the-team",
       "prompt": "Send the team an update",
       "context": {"connected_toolkits": ["slack", "gmail"]},
       "expected": {
-        "tool_calls_must_include": ["ask_realtor"],
+        "tool_calls_must_include": ["ask_rep"],
         "tool_calls_must_not_include": ["draft_message", "call_integration_tool"],
         "max_tool_calls": 2
       },
@@ -159,7 +159,7 @@
       "prompt": "Reach out to that buyer",
       "context": {"connected_toolkits": []},
       "expected": {
-        "tool_calls_must_include": ["ask_realtor"],
+        "tool_calls_must_include": ["ask_rep"],
         "tool_calls_must_not_include": ["draft_message", "create_contact"],
         "max_tool_calls": 2
       },
@@ -196,18 +196,18 @@
         "tool_calls_must_not_include": ["find_contacts"],
         "max_tool_calls": 5
       },
-      "rationale": "Realtor named HubSpot explicitly — read that system, not the native CRM. Curated: hubspot_list_contacts. Fallback: find_integration_tool."
+      "rationale": "Rep named HubSpot explicitly — read that system, not the native CRM. Curated: hubspot_list_contacts. Fallback: find_integration_tool."
     },
     {
       "id": "calendar-schedule",
-      "prompt": "Schedule a tour for Jane at 412 Elm Friday at 2pm",
+      "prompt": "Schedule a demo for Jane at 412 Elm Friday at 2pm",
       "context": {"connected_toolkits": []},
       "expected": {
-        "tool_calls_must_include": ["book_tour"],
+        "tool_calls_must_include": ["book_demo"],
         "tool_calls_must_not_include": ["find_integration_tool", "call_integration_tool"],
         "max_tool_calls": 5
       },
-      "rationale": "book_tour is the native lifecycle move — schedules the tour AND fires the calendar invite. Don't bypass it for Google Calendar."
+      "rationale": "book_demo is the native lifecycle move — schedules the demo AND fires the calendar invite. Don't bypass it for Google Calendar."
     },
     {
       "id": "advance-deal-stage",
@@ -279,7 +279,7 @@
         "must_pass_arg": {"draft_message": ["subject"]},
         "max_tool_calls": 5
       },
-      "rationale": "Email to a name → find_contacts to resolve, then draft_message. Curated gmail_send_email is forbidden because it would bypass the realtor's approval gate — the trust contract is non-negotiable."
+      "rationale": "Email to a name → find_contacts to resolve, then draft_message. Curated gmail_send_email is forbidden because it would bypass the rep's approval gate — the trust contract is non-negotiable."
     },
     {
       "id": "no-tool-greeting",

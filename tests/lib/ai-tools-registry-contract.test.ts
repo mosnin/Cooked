@@ -54,7 +54,7 @@ describe('ALL_TOOLS registry contract', () => {
         // Best-effort: invoke with an empty-object arg cast through unknown.
         // Most summariseCalls handle missing fields gracefully ("Email
         // unknown — subject Hi"). If a tool throws on minimal input, the
-        // realtor sees a broken approval prompt at runtime; we'd rather
+        // rep sees a broken approval prompt at runtime; we'd rather
         // catch it here.
         const summarise = tool.summariseCall!;
         let out = '';

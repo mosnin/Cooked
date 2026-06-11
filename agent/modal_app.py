@@ -1,4 +1,4 @@
-"""Modal entrypoint for Chippi.
+"""Modal entrypoint for Koala.
 
 No Modal-side scheduling — runs are kicked off from the Next.js side
 (the 4-hour cron in vercel.json, the "Run now" button, or an event
@@ -12,11 +12,11 @@ trigger) which calls these endpoints.
 Deployment:
   modal deploy agent/modal_app.py
 
-Secrets: a single Modal secret named "chippi-secrets" containing all env
+Secrets: a single Modal secret named "koala-secrets" containing all env
 vars listed in config.py.
 
 Sandbox economics — why we stay on Modal (audit, 2026-Q2):
-  Chippi uses @app.function + @modal.fastapi_endpoint — Modal's STANDARD
+  Koala uses @app.function + @modal.fastapi_endpoint — Modal's STANDARD
   tier ($0.047/vCPU-hr), not modal.Sandbox tier ($0.142/vCPU-hr). A
   prior audit conflated the two and recommended migration to Daytona
   ($0.0504/vCPU-hr) on a ~3x cost-savings basis that did not exist.
@@ -24,9 +24,9 @@ Sandbox economics — why we stay on Modal (audit, 2026-Q2):
   (fastapi_endpoint is built in; Daytona would need a fronting FastAPI
   server on Fly/Render plus separate sandbox dispatch), and image-layer
   caching is more mature. Re-evaluate only on: GPU adoption (Modal still
-  wins), Modal raising standard pricing >50%, or Chippi adding hostile-
+  wins), Modal raising standard pricing >50%, or Koala adding hostile-
   code execution (which would push us onto sandbox tier and change the
-  math). Detailed model + traffic shapes for 10/100/1000 realtor scales
+  math). Detailed model + traffic shapes for 10/100/1000 rep scales
   in commit message of this change.
 """
 
@@ -119,7 +119,7 @@ image = (
         "pypdf>=5.0.0,<6",
         "python-docx>=1.1.0,<2",
         "openpyxl>=3.1.0,<4",
-        # Composio integrations — load realtor's connected toolkits
+        # Composio integrations — load rep's connected toolkits
         # (Gmail, Slack, HubSpot, etc.) for chat AND autonomous runs.
         # Mirrors lib/integrations/composio.ts. Without these, the
         # Modal-side load_integration_tools() throws ImportError and
@@ -137,9 +137,9 @@ image = (
     .add_local_dir(_AGENT_DIR, remote_path="/app")
 )
 
-app = modal.App("chippi-agent", image=image)
+app = modal.App("koala-agent", image=image)
 
-secrets = [modal.Secret.from_name("chippi-secrets")]
+secrets = [modal.Secret.from_name("koala-secrets")]
 
 
 # ---------------------------------------------------------------------------
@@ -148,7 +148,7 @@ secrets = [modal.Secret.from_name("chippi-secrets")]
 
 @app.function(secrets=secrets, timeout=600)
 async def run_space(space_id: str) -> None:
-    """Run Chippi for one space. Useful for local testing / cron drains."""
+    """Run Koala for one space. Useful for local testing / cron drains."""
     import sys
     sys.path.insert(0, "/app")
 
@@ -192,7 +192,7 @@ async def run_space(space_id: str) -> None:
 @app.function(secrets=secrets, timeout=600)
 @modal.fastapi_endpoint(method="POST")
 async def run_now_webhook(item: dict) -> dict:
-    """HTTP webhook that runs Chippi autonomously for a space.
+    """HTTP webhook that runs Koala autonomously for a space.
 
     Set MODAL_WEBHOOK_URL in the Next.js env to the URL printed by
     `modal deploy`. Secured with AGENT_INTERNAL_SECRET.
@@ -277,7 +277,7 @@ async def run_now_webhook(item: dict) -> dict:
 
 @app.function(
     image=image,
-    secrets=[modal.Secret.from_name("chippi-secrets")],
+    secrets=[modal.Secret.from_name("koala-secrets")],
     timeout=600,  # 10 min max for swarm runs
     max_containers=10,
 )
@@ -310,7 +310,7 @@ async def run_swarm_endpoint(payload: dict) -> dict:
 # ---------------------------------------------------------------------------
 # Web endpoint — chat turn (called by /api/ai/task)
 # ---------------------------------------------------------------------------
-# Runs Chippi inline in this Modal function and streams SDK events back as
+# Runs Koala inline in this Modal function and streams SDK events back as
 # Server-Sent Events. The previous architecture spawned a fresh Sandbox per
 # call and piped JSONL through stdin/stdout — that bought no real isolation
 # (none of these tools shell out or write outside postgres) and cost 5–15s
@@ -319,7 +319,7 @@ async def run_swarm_endpoint(payload: dict) -> dict:
 @app.function(secrets=secrets, timeout=600)
 @modal.fastapi_endpoint(method="POST")
 async def chat_turn(item: dict):
-    """Run one chat turn for the realtor and stream SDK events as SSE."""
+    """Run one chat turn for the rep and stream SDK events as SSE."""
     import json
     import os
     import sys
@@ -344,7 +344,7 @@ async def chat_turn(item: dict):
         return JSONResponse({"error": "Unauthorized"}, status_code=401)
 
     space_id = (item.get("space_id") or "").strip()
-    # Clerk userId of the realtor sending this message. Required for
+    # Clerk userId of the rep sending this message. Required for
     # Composio integration loading — connections are scoped per entity
     # (Clerk userId) on Composio's side and per (spaceId, userId) in our
     # IntegrationConnection table. Tolerate missing for backward
@@ -358,27 +358,27 @@ async def chat_turn(item: dict):
     attachments = item.get("attachments") or []
     conversation_id = item.get("conversation_id") or ""
 
-    # ── Mode dispatch — realtor (default) vs. broker ────────────────────
-    # The Next.js layer sends `mode: 'realtor' | 'broker'` so this function
+    # ── Mode dispatch — rep (default) vs. manager ────────────────────
+    # The Next.js layer sends `mode: 'rep' | 'manager'` so this function
     # picks the right agent (different system prompt + different tool set)
-    # without forking the SSE plumbing. Realtor stays the historical
+    # without forking the SSE plumbing. Rep stays the historical
     # default — older Next.js deploys that don't send `mode` keep working.
     #
-    # Broker mode also carries `brokerage_id` + `broker_role` from the
-    # API-gate's `resolveBrokerContext()`. These flow into AgentContext
-    # so the per-tool guard (`tools/broker/_guards.py:require_broker_role`,
-    # defense layer 3) can refuse a call whose context isn't broker-shaped.
+    # Manager mode also carries `team_id` + `manager_role` from the
+    # API-gate's `resolveManagerContext()`. These flow into AgentContext
+    # so the per-tool guard (`tools/manager/_guards.py:require_manager_role`,
+    # defense layer 3) can refuse a call whose context isn't manager-shaped.
     raw_mode = item.get("mode")
-    mode = (raw_mode or "realtor").strip().lower() if isinstance(raw_mode, str) else "realtor"
-    if mode not in ("realtor", "broker"):
-        mode = "realtor"
-    brokerage_id = (item.get("brokerage_id") or "").strip() if isinstance(item.get("brokerage_id"), str) else ""
-    broker_role = (item.get("broker_role") or "").strip().lower() if isinstance(item.get("broker_role"), str) else ""
-    # Broker mode must arrive with both context fields. The Next.js API
+    mode = (raw_mode or "rep").strip().lower() if isinstance(raw_mode, str) else "rep"
+    if mode not in ("rep", "manager"):
+        mode = "rep"
+    team_id = (item.get("team_id") or "").strip() if isinstance(item.get("team_id"), str) else ""
+    manager_role = (item.get("manager_role") or "").strip().lower() if isinstance(item.get("manager_role"), str) else ""
+    # Manager mode must arrive with both context fields. The Next.js API
     # gate is the single point that should ever produce them; missing
     # either is a wiring bug, not a recoverable state.
-    if mode == "broker" and (not brokerage_id or broker_role not in ("broker_owner", "broker_admin")):
-        return {"error": "broker mode requires brokerage_id and a broker role"}
+    if mode == "manager" and (not team_id or manager_role not in ("manager_owner", "manager_admin")):
+        return {"error": "manager mode requires team_id and a manager role"}
 
     from db import supabase
     db = await supabase()
@@ -396,8 +396,8 @@ async def chat_turn(item: dict):
     from openai.types.shared import Reasoning
     from schemas import AgentSettings, Space
     from security.context import AgentContext
-    from chippi import make_chippi_agent
-    from chippi_broker import make_broker_agent
+    from koala import make_koala_agent
+    from koala_manager import make_manager_agent
     from config import settings
     from llm import (
         decide_reasoning_effort,
@@ -417,8 +417,8 @@ async def chat_turn(item: dict):
         run_id=conversation_id or f"chat-{uuid.uuid4()}",
         space_name=space.name,
         user_id=user_id,
-        brokerage_id=brokerage_id,
-        broker_role=broker_role,
+        team_id=team_id,
+        manager_role=manager_role,
     )
 
     # ── helpers ──────────────────────────────────────────────────────────────────────────
@@ -583,18 +583,18 @@ async def chat_turn(item: dict):
         model_settings=ModelSettings(reasoning=Reasoning(effort=reasoning_effort)),
     )
 
-    # Load this realtor's connected-toolkit tools (Gmail, Slack, HubSpot,
+    # Load this rep's connected-toolkit tools (Gmail, Slack, HubSpot,
     # etc.) before building the agent. Empty list when user_id is missing
     # (older Next.js deploy) or no integrations configured. Best-effort:
     # a Composio outage degrades to native-tool-only chat, doesn't 500.
     #
-    # Broker mode skips this entirely — the broker chat surface is the
-    # chief-of-staff agent and does not draft on a realtor's behalf from
-    # the broker's chat. Cross-realtor outreach is mediated by dedicated
-    # broker tools (Phase 3), not by Composio-loaded realtor connections.
+    # Manager mode skips this entirely — the manager chat surface is the
+    # chief-of-staff agent and does not draft on a rep's behalf from
+    # the manager's chat. Cross-rep outreach is mediated by dedicated
+    # manager tools (Phase 3), not by Composio-loaded rep connections.
     integration_tools: list = []
     connected_toolkits: list[str] = []
-    if mode == "realtor" and user_id:
+    if mode == "rep" and user_id:
         try:
             from integrations import active_toolkits, load_integration_tools
 
@@ -613,7 +613,7 @@ async def chat_turn(item: dict):
                 error=str(ie)[:200],
             )
 
-    # Workspace info — gives the model the realtor's intake URL up front
+    # Workspace info — gives the model the rep's intake URL up front
     # so any drafted outreach (Gmail/Resend/SMS) can include the link
     # without an extra tool call. app_url already includes scheme + host.
     _app_url = (settings.app_url or "").rstrip("/")
@@ -622,7 +622,7 @@ async def chat_turn(item: dict):
     if "localhost" in _app_url or "127.0.0.1" in _app_url:
         _app_url = ""
     intake_url = f"{_app_url}/apply/{space.slug}" if _app_url and space.slug else ""
-    # Tell the model which integrations the realtor actually has connected
+    # Tell the model which integrations the rep actually has connected
     # so it can route by name — "check my google calendar" maps to a
     # connected `googlecalendar` toolkit, "send a slack DM" maps to `slack`.
     # Without this, the model would have to first call find_integration_tool
@@ -643,36 +643,36 @@ async def chat_turn(item: dict):
         " applying. Use the full URL verbatim; no shortening."
     ) if intake_url else None
 
-    # Broker mode gets brokerage context, NOT the realtor block above — the
-    # broker agent was previously handed the OWNER's personal workspace info
+    # Manager mode gets team context, NOT the rep block above — the
+    # manager agent was previously handed the OWNER's personal workspace info
     # (their intake link + "include it in contact-facing drafts"), which is
-    # realtor-persona instruction injected into the brokerage chief-of-staff.
-    if mode == "broker":
+    # rep-persona instruction injected into the team chief-of-staff.
+    if mode == "manager":
         workspace_info = (
-            "# Brokerage context\n"
-            f"- Brokerage id: {brokerage_id}\n"
-            f"- Operator role: {broker_role}\n"
-            "- You are the brokerage chief-of-staff. Answer about the TEAM —"
-            " realtors, routing, performance, revenue — through the broker"
+            "# Team context\n"
+            f"- Team id: {team_id}\n"
+            f"- Operator role: {manager_role}\n"
+            "- You are the team chief-of-staff. Answer about the TEAM —"
+            " reps, routing, performance, revenue — through the manager"
             " tools. You do not have a personal intake link or personal"
             " integrations in this mode."
         )
 
     async def event_stream():
         try:
-            # ── Tool registry selection — Phase 2/3 plug into BROKER_TOOLS ──
-            # Phase 2 (read tools) and Phase 3 (write tools) for the broker
+            # ── Tool registry selection — Phase 2/3 plug into MANAGER_TOOLS ──
+            # Phase 2 (read tools) and Phase 3 (write tools) for the manager
             # variant only need to append entries to
-            # `agent/tools/broker.BROKER_TOOLS` — `make_broker_agent` reads
+            # `agent/tools/manager.MANAGER_TOOLS` — `make_manager_agent` reads
             # the list at agent-build time. No edit to this dispatch needed
             # when Phase 2 lands.
-            if mode == "broker":
-                chippi = make_broker_agent(
+            if mode == "manager":
+                koala = make_manager_agent(
                     workspace_info=workspace_info,
                     model=resolved_model,
                 )
             else:
-                chippi = make_chippi_agent(
+                koala = make_koala_agent(
                     extra_tools=integration_tools,
                     workspace_info=workspace_info,
                     model=resolved_model,
@@ -693,7 +693,7 @@ async def chat_turn(item: dict):
             # `model` is a string slug; wrap it in the SDK Model object so the
             # OpenRouter slug routes via our configured client instead of the
             # SDK's prefix dispatcher (which raises `Unknown prefix: x-ai`).
-            chippi.model = make_chat_model(model)
+            koala.model = make_chat_model(model)
             try:
                 # Explicit loop bound. The SDK re-sends the full system prompt
                 # + tool-schema block + every accumulated tool result on EACH
@@ -701,7 +701,7 @@ async def chat_turn(item: dict):
                 # of steps. Capping the loop is the hard ceiling on a runaway
                 # turn's token bill; a legit plan rarely needs more than this.
                 result = Runner.run_streamed(
-                    chippi,
+                    koala,
                     input=input_items,
                     context=ctx,
                     run_config=run_config,
@@ -726,7 +726,7 @@ async def chat_turn(item: dict):
                 # End-of-turn latency anchor for the curated-vs-dispatcher
                 # comparison (docs/integrations-perf-measurement.md). Logged
                 # after the `done` frame so a slow telemetry write doesn't
-                # delay the realtor's last token.
+                # delay the rep's last token.
                 logger.info(
                     "chat_turn_finished",
                     space_id=space_id,

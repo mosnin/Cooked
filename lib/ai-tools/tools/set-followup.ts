@@ -2,7 +2,7 @@
  * `set_followup` — schedule a follow-up date on a contact.
  *
  * Approval-gated: changing followUpAt moves the contact in the Today inbox
- * and morning story, so the realtor wants to see what's being scheduled.
+ * and morning story, so the rep wants to see what's being scheduled.
  *
  * Accepts ISO-8601 dates ("2026-05-08") OR natural relative phrases
  * ("today", "tomorrow", "Friday", "next Tuesday"). We resolve to a midnight-
@@ -127,7 +127,7 @@ export const setFollowupTool = defineTool<typeof parameters, SetFollowupResult>(
       .select('id, name')
       .eq('id', args.personId)
       .eq('spaceId', ctx.space.id)
-      .is('brokerageId', null)
+      .is('teamId', null)
       .maybeSingle();
     if (lookupErr) {
       return { summary: `Contact lookup failed: ${lookupErr.message}`, display: 'error' };

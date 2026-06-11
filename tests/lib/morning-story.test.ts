@@ -99,7 +99,7 @@ describe('composeMorningStory', () => {
   });
 
   // ── Queue tail: the sentence stays clean, no parenthetical ──────────────
-  // The realtor sees the rest of the queue on click-through. A trailing
+  // The rep sees the rest of the queue on click-through. A trailing
   // "(N more stuck.)" reads like programmer copy, not a thoughtful friend.
 
   it('does not append a queue-tail parenthetical for stuck deals', () => {
@@ -198,7 +198,7 @@ describe('composeMorningStory', () => {
   });
 
   // Hot beats new: hot is measured intent that's actively rotting; new is
-  // just an arrival with no signal yet. The realtor's first move should be
+  // just an arrival with no signal yet. The rep's first move should be
   // on the lead whose interest is cooling, not the freshest face.
   it('prefers a hot person over a new person', () => {
     const out = composeMorningStory({
@@ -395,7 +395,7 @@ describe('composeMorningStory', () => {
   });
 
   // ── Skip / cycle: the "Next" pill on the home ────────────────────────────
-  // With 47 hot leads the realtor sees the same face every morning until they
+  // With 47 hot leads the rep sees the same face every morning until they
   // touch it — the single decision becomes nagging. The home cycles through
   // named subjects in priority order. skip=0 is unchanged default behavior;
   // skip=1 picks the second candidate; skip>=N falls through to the count
@@ -507,7 +507,7 @@ describe('composeMorningStory', () => {
   });
 
   it('agent sentence override applies only at skip=0; cycling reverts to deterministic copy', () => {
-    // The agent composes a sentence for the *top* subject. When the realtor
+    // The agent composes a sentence for the *top* subject. When the rep
     // taps Next, the subject changes — the model's line for the original
     // subject would be wrong. Fall back to the deterministic copy.
     const summary: MorningSummary = {

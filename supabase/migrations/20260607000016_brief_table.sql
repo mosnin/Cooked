@@ -1,7 +1,7 @@
--- Brief — the daily 7am snapshot Chippi generates per realtor.
+-- Brief — the daily 7am snapshot Koala generates per rep.
 --
 -- One row per Space per UTC day. The cron at /api/cron/daily-briefing
--- compiles a Brief from the realtor's pipeline + leads + calendar
+-- compiles a Brief from the rep's pipeline + leads + calendar
 -- signal sources, picks the top 3-5 cards by (urgency, -confidence),
 -- and persists the rendered Brief here so the workspace can read it
 -- without recomputing.
@@ -26,7 +26,7 @@
 --
 -- `status` lifecycle:
 --   'pending'    — generated, not yet seen
---   'seen'       — realtor opened it; tracked for momentum-line analytics
+--   'seen'       — rep opened it; tracked for momentum-line analytics
 --   'acted'      — at least one card got a tap-through
 --   'failed'     — generation errored; the surface falls back to MorningSummary
 
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS "Brief" (
 );
 
 -- One Brief per Space per day. Re-running the cron is idempotent;
--- regenerating before the realtor sees it would UPSERT not INSERT.
+-- regenerating before the rep sees it would UPSERT not INSERT.
 CREATE UNIQUE INDEX IF NOT EXISTS idx_brief_space_date
   ON "Brief" ("spaceId", "forDate");
 

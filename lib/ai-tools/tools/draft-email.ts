@@ -6,7 +6,7 @@
  * with the /api/agent/quick-draft route) so we don't duplicate the OpenAI
  * prompt + voice-sample logic.
  *
- * Approval: NO. The realtor isn't sending anything; they're seeing a draft.
+ * Approval: NO. The rep isn't sending anything; they're seeing a draft.
  */
 
 import { z } from 'zod';

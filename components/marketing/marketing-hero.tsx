@@ -38,7 +38,7 @@ import { MARKETING_HERO_REVEAL } from '@/lib/marketing-motion';
 import { AsciiField } from '@/components/marketing/fortitudo/ascii-field';
 
 export interface MarketingHeroProps {
-  /** Small all-caps label above the headline (e.g. "FOR REALTORS"). Optional. */
+  /** Small all-caps label above the headline (e.g. "FOR REPS"). Optional. */
   eyebrow?: string;
   /** The page's one focal sentence. Serif Times, ~64–80px on desktop. */
   title: string;

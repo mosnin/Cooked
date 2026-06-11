@@ -2,11 +2,11 @@
  * `add_property` — insert a Property row.
  *
  * Approval-gated: a new listing shows up on the property index immediately.
- * The realtor confirms the address (and any optional details) before we
+ * The rep confirms the address (and any optional details) before we
  * create the row.
  *
  * Mirrors the Python `add_property` in `agent/tools/properties.py`. We keep
- * the field set narrow — the realtor can fill the rest in the property page
+ * the field set narrow — the rep can fill the rest in the property page
  * after creation. Validation matches the DB CHECK constraints from
  * migration 20260425000000_property.sql.
  */

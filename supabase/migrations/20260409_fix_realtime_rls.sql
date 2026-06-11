@@ -8,7 +8,7 @@
 DROP POLICY IF EXISTS "realtime: anon can read contacts by space" ON "Contact";
 DROP POLICY IF EXISTS "realtime: anon can read deals by space" ON "Deal";
 DROP POLICY IF EXISTS "realtime: anon can read deal_stages by space" ON "DealStage";
-DROP POLICY IF EXISTS "realtime: anon can read tours by space" ON "Tour";
+DROP POLICY IF EXISTS "realtime: anon can read demos by space" ON "Demo";
 
 -- Create restrictive policies that deny all access to anon role
 -- (Service role bypasses RLS, so server-side API routes still work)
@@ -21,5 +21,5 @@ CREATE POLICY "deny_anon_deal_select" ON "Deal"
 CREATE POLICY "deny_anon_dealstage_select" ON "DealStage"
   FOR SELECT TO anon USING (false);
 
-CREATE POLICY "deny_anon_tour_select" ON "Tour"
+CREATE POLICY "deny_anon_demo_select" ON "Demo"
   FOR SELECT TO anon USING (false);

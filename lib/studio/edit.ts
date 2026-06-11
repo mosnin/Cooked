@@ -1,6 +1,6 @@
 /**
- * Studio image editing — the shared core used by the realtor-facing route
- * (/api/studio/edit) and the internal route the Chippi agent calls. It takes
+ * Studio image editing — the shared core used by the rep-facing route
+ * (/api/studio/edit) and the internal route the Koala agent calls. It takes
  * a source File that already exists and produces a new edited File.
  */
 

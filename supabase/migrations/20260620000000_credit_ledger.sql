@@ -8,7 +8,7 @@
 --
 -- The spend/grant/refund run inside atomic functions with row locking so
 -- concurrent debits can't double-spend a lot (same pattern as
--- book_tour_atomic / reorder_deal). The TS mirror of the FIFO rule
+-- book_demo_atomic / reorder_deal). The TS mirror of the FIFO rule
 -- (lib/billing/credits.ts) is unit-tested so the algorithm stays in lockstep.
 --
 -- ✓ VALIDATED on PostgreSQL 16 (applies clean; grant/spend/refund exercised):
@@ -20,7 +20,7 @@
 
 CREATE TABLE IF NOT EXISTS "CreditLot" (
   id            text PRIMARY KEY DEFAULT gen_random_uuid()::text,
-  "accountType" text NOT NULL CHECK ("accountType" IN ('space', 'brokerage')),
+  "accountType" text NOT NULL CHECK ("accountType" IN ('space', 'team')),
   "accountId"   text NOT NULL,
   amount        integer NOT NULL CHECK (amount > 0),
   remaining     integer NOT NULL CHECK (remaining >= 0),
@@ -33,7 +33,7 @@ CREATE INDEX IF NOT EXISTS idx_creditlot_expiry ON "CreditLot" ("expiresAt");
 
 CREATE TABLE IF NOT EXISTS "CreditTxn" (
   id              text PRIMARY KEY DEFAULT gen_random_uuid()::text,
-  "accountType"   text NOT NULL CHECK ("accountType" IN ('space', 'brokerage')),
+  "accountType"   text NOT NULL CHECK ("accountType" IN ('space', 'team')),
   "accountId"     text NOT NULL,
   delta           integer NOT NULL,           -- negative = spend, positive = refund
   workflow        text NOT NULL,

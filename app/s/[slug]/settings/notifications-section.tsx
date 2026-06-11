@@ -20,7 +20,7 @@ interface NotificationsSectionProps {
 /**
  * One toggle. Email me when something happens, or don't. Cadence, channels,
  * and per-event filters were all the team failing to pick a default. The
- * default is: when a real lead/tour/deal lands, you want to know.
+ * default is: when a real lead/demo/deal lands, you want to know.
  */
 export function NotificationsSection({ slug }: NotificationsSectionProps) {
   const [notifications, setNotifications] = useState(true);
@@ -75,7 +75,7 @@ export function NotificationsSection({ slug }: NotificationsSectionProps) {
         <div className="min-w-0">
           <p className={`${BODY} font-medium`}>Email me when something happens</p>
           <p className={`${CAPTION} mt-0.5`}>
-            New leads, tour bookings, follow-ups due. Sent to{' '}
+            New leads, demo bookings, follow-ups due. Sent to{' '}
             <span className="text-foreground">{userEmail || 'your account email'}</span>.
           </p>
         </div>

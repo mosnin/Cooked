@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
 
 /**
  * POST /api/clients/info-request — client responds to a pending request. Sets
- * the response + status='fulfilled' and notifies the realtor.
+ * the response + status='fulfilled' and notifies the rep.
  */
 export async function POST(req: NextRequest) {
   const user = await getClientUser();
@@ -80,7 +80,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Failed to save.' }, { status: 500 });
   }
 
-  // Notify the realtor (best-effort).
+  // Notify the rep (best-effort).
   const { data: space } = await supabase
     .from('Space')
     .select('ownerId')

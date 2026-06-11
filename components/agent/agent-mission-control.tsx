@@ -8,7 +8,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { timeAgo } from '@/lib/formatting';
-import { ChippiAvatar } from './chippi-avatar';
+import { KoalaAvatar } from './koala-avatar';
 
 const ACTION_LABELS: Record<string, string> = {
   create_draft_message: 'Drafted message',
@@ -25,7 +25,7 @@ const ACTION_LABELS: Record<string, string> = {
   create_follow_up_reminder: 'Created reminder',
   send_sms: 'Sent SMS',
   send_email: 'Sent email',
-  tour_booked: 'Booked tour',
+  demo_booked: 'Booked demo',
   deal_stage_advanced: 'Moved deal forward',
   review_requested: 'Flagged deal for review',
   lead_routed_out: 'Routed contact out',
@@ -50,7 +50,7 @@ const AGENT_LABELS: Record<string, string> = {
   deal_sentinel: 'Deal Sentinel',
   long_term_nurture: 'Long-term Nurture',
   lead_scorer: 'Lead Scorer',
-  tour_followup: 'Tour Follow-up',
+  demo_followup: 'Demo Follow-up',
 };
 
 function formatAgent(t: string): string {
@@ -195,7 +195,7 @@ export function AgentMissionControl({ slug }: { slug: string }) {
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-y-1 px-5 py-3.5 border-b border-border">
         <div className="flex items-center gap-2 min-w-0">
-          <ChippiAvatar size="xs" className={enabled ? undefined : 'opacity-40'} pulse={!!enabled} />
+          <KoalaAvatar size="xs" className={enabled ? undefined : 'opacity-40'} pulse={!!enabled} />
           <h2 className="text-sm font-semibold flex-shrink-0">Agent</h2>
           <span className={cn(
             'inline-flex items-center gap-1.5 text-[11px] font-medium px-2 py-0.5 rounded-full flex-shrink-0',
@@ -213,7 +213,7 @@ export function AgentMissionControl({ slug }: { slug: string }) {
           )}
         </div>
         <Link
-          href={`/s/${slug}/chippi`}
+          href={`/s/${slug}/koala`}
           className="flex items-center gap-1 text-[11px] font-medium text-muted-foreground hover:text-foreground transition-colors flex-shrink-0 ml-3"
         >
           Agent hub <ArrowRight size={10} />
@@ -227,9 +227,9 @@ export function AgentMissionControl({ slug }: { slug: string }) {
             <Bot size={14} className="text-muted-foreground" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium">Bring Chippi on as your cowork</p>
+            <p className="text-sm font-medium">Bring Koala on as your cowork</p>
             <p className="text-xs text-muted-foreground mt-0.5">
-              Chippi watches your leads, drafts the follow-ups, and hands them to you for a quick read.
+              Koala watches your leads, drafts the follow-ups, and hands them to you for a quick read.
             </p>
           </div>
           <Link
@@ -244,7 +244,7 @@ export function AgentMissionControl({ slug }: { slug: string }) {
       {/* Pending drafts CTA */}
       {pendingDrafts > 0 && (
         <Link
-          href={`/s/${slug}/chippi`}
+          href={`/s/${slug}/koala`}
           className="flex items-center justify-between gap-3 px-5 py-3 bg-orange-500/5 border-b border-border hover:bg-orange-500/10 transition-colors"
         >
           <div className="flex items-center gap-2.5">
@@ -327,7 +327,7 @@ export function AgentMissionControl({ slug }: { slug: string }) {
           {/* "N more" overflow link */}
           {hiddenCount > 0 && (
             <Link
-              href={`/s/${slug}/chippi`}
+              href={`/s/${slug}/koala`}
               className="flex items-center gap-1 px-5 py-2.5 text-xs text-muted-foreground hover:text-foreground transition-colors border-b border-border"
             >
               +{hiddenCount} more action{hiddenCount !== 1 ? 's' : ''}
@@ -344,7 +344,7 @@ export function AgentMissionControl({ slug }: { slug: string }) {
             <Bot size={14} className="text-orange-500" />
           </div>
           <div>
-            <p className="text-sm font-medium">Chippi is settling in</p>
+            <p className="text-sm font-medium">Koala is settling in</p>
             <p className="text-xs text-muted-foreground mt-0.5">First sweep through your pipeline coming up &mdash; I&apos;ll post anything worth your attention here.</p>
           </div>
         </div>
@@ -363,7 +363,7 @@ export function AgentMissionControl({ slug }: { slug: string }) {
                   ? `/s/${slug}/contacts/${insight.entityId}?tab=intelligence`
                   : insight.entityType === 'deal'
                     ? `/s/${slug}/deals/${insight.entityId}?tab=overview`
-                    : `/s/${slug}/chippi`;
+                    : `/s/${slug}/koala`;
               return (
                 <Link
                   key={insight.id}

@@ -15,8 +15,8 @@ import { audit } from '@/lib/audit';
  * (getSpaceForUser → owner's single Space) and never read from the request.
  * Every table read is filtered on that one spaceId. A body-supplied id would
  * be a cross-tenant leak; there is no body. Owner-only by design — an export
- * is the full book of business, so we don't extend it to brokerage admins
- * here (they have their own brokerage tooling).
+ * is the full book of business, so we don't extend it to team admins
+ * here (they have their own team tooling).
  *
  * Heavy query — one read per table. Rate-limited to a handful per hour per
  * user so it can't be used to hammer the DB.
@@ -42,11 +42,11 @@ const SPACE_SCOPED_TABLES = [
   'Message',
   'Attachment',
   'Note',
-  'Tour',
-  'TourFeedback',
-  'TourWaitlist',
-  'TourPropertyProfile',
-  'TourAvailabilityOverride',
+  'Demo',
+  'DemoFeedback',
+  'DemoWaitlist',
+  'DemoPropertyProfile',
+  'DemoAvailabilityOverride',
   'CalendarEvent',
   'MessageTemplate',
   'FormDraft',
@@ -98,7 +98,7 @@ export async function GET(req: NextRequest) {
       name: space.name,
       emoji: space.emoji,
       createdAt: space.createdAt,
-      brokerageId: space.brokerageId,
+      teamId: space.teamId,
     },
     account: ownerRow ?? null,
   };
@@ -153,7 +153,7 @@ export async function GET(req: NextRequest) {
     metadata: { kind: 'data-export' },
   });
 
-  const filename = `chippi-export-${space.slug}-${new Date().toISOString().slice(0, 10)}.json`;
+  const filename = `koala-export-${space.slug}-${new Date().toISOString().slice(0, 10)}.json`;
   return new NextResponse(JSON.stringify(payload, null, 2), {
     status: 200,
     headers: {

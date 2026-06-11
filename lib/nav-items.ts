@@ -34,28 +34,28 @@ export interface NavItem {
   badgeKey?: string;
 }
 
-// ── Realtor sidebar nav ──────────────────────────────────────────────────────
+// ── Rep sidebar nav ──────────────────────────────────────────────────────
 //
-// Chippi is the home — the chat surface IS the OS. The Chippi entry expands
+// Koala is the home — the chat surface IS the OS. The Koala entry expands
 // into the agent's sub-surfaces (Full day, Drafts, Activity, Memory,
 // Integrations), so the chat root stays a clean chat-first hero and the
-// realtor reaches the dashboards via the dropdown rather than scrolling
-// past them every time they want to talk to Chippi.
+// rep reaches the dashboards via the dropdown rather than scrolling
+// past them every time they want to talk to Koala.
 //
-// Everything else in the sidebar is the realtor-facing substrate they still
+// Everything else in the sidebar is the rep-facing substrate they still
 // expect from a CRM: People, Deals, Calendar, Properties, Intake.
 
-export const realtorNavItems: NavItem[] = [
+export const repNavItems: NavItem[] = [
   {
-    href: '/chippi',
-    label: 'Chippi',
+    href: '/koala',
+    label: 'Koala',
     icon: MessageCircle,
     isAI: true,
     badgeKey: 'pendingDrafts',
     children: [
-      { href: '/chippi/brief', label: 'Brief' },
-      { href: '/chippi/inbox', label: 'Inbox' },
-      { href: '/chippi/history', label: 'History' },
+      { href: '/koala/brief', label: 'Brief' },
+      { href: '/koala/inbox', label: 'Inbox' },
+      { href: '/koala/history', label: 'History' },
     ],
   },
   {
@@ -133,19 +133,19 @@ export const realtorNavItems: NavItem[] = [
 
 /**
  * Secondary "More" section — intentionally empty. The sidebar checks
- * `realtorMoreNavItems.length > 0` and hides the section when it is.
+ * `repMoreNavItems.length > 0` and hides the section when it is.
  *
  * Routes that used to live here are reachable two ways:
  *   - Settings → Integrations (was: /integrations)
- *   - Settings → Chippi → Build your own agents (was: /agents)
+ *   - Settings → Koala → Build your own agents (was: /agents)
  *   - Per-surface stats tabs (was: /analytics)
  * Anything else is reachable by direct URL but doesn't earn nav weight.
  */
-export const realtorMoreNavItems: NavItem[] = [];
+export const repMoreNavItems: NavItem[] = [];
 
 // ── Header right-side menu ───────────────────────────────────────────────────
 //
-// Intentionally empty. Settings already lives in `realtorNavItems` as a
+// Intentionally empty. Settings already lives in `repNavItems` as a
 // primary nav row; surfacing it again in a separate "Account" section in
 // the mobile drawer was a duplicate. Kept as an extension point — add
 // Billing, Profile, or other account-level routes here when they earn it.
@@ -153,7 +153,7 @@ export const secondaryNavItems: { href: string; label: string; icon: LucideIcon 
 
 /** Primary items with shorter labels for the mobile bottom bar. */
 export const mobileNavItems = [
-  { href: '/chippi', label: 'Chippi', icon: MessageCircle },
+  { href: '/koala', label: 'Koala', icon: MessageCircle },
   { href: '/contacts', label: 'People', icon: Users },
   { href: '/deals', label: 'Deals', icon: Briefcase },
   { href: '/calendar', label: 'Calendar', icon: Calendar },

@@ -41,7 +41,7 @@ function escapeHtml(value: string): string {
 }
 
 function getFromAddress(): string {
-  const raw = process.env.RESEND_FROM_EMAIL ?? 'notifications@alerts.usechippi.com';
+  const raw = process.env.RESEND_FROM_EMAIL ?? 'notifications@alerts.usekoala.com';
   if (raw.includes('@')) return raw;
   return `notifications@${raw}`;
 }
@@ -55,14 +55,14 @@ function renderBroadcastHtml(subject: string, body: string): string {
     <tr><td align="center">
       <table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border-radius:12px;border:1px solid #e5e7eb;overflow:hidden">
         <tr><td style="background:#0f172a;padding:20px 28px">
-          <p style="margin:0;color:#ffffff;font-size:20px;font-weight:700">Chippi</p>
+          <p style="margin:0;color:#ffffff;font-size:20px;font-weight:700">Koala</p>
         </td></tr>
         <tr><td style="padding:28px;font-size:15px;color:#111827;line-height:1.6">
           <h1 style="margin:0 0 16px;font-size:20px;font-weight:700;color:#0f172a">${escapeHtml(subject)}</h1>
           <div>${body}</div>
         </td></tr>
         <tr><td style="padding:16px 28px;border-top:1px solid #f1f5f9">
-          <p style="margin:0;font-size:11px;color:#9ca3af">You're receiving this because you have a Chippi account.</p>
+          <p style="margin:0;font-size:11px;color:#9ca3af">You're receiving this because you have a Koala account.</p>
         </td></tr>
       </table>
     </td></tr>
@@ -200,7 +200,7 @@ export async function POST(req: NextRequest) {
 
   const { Resend } = await import('resend');
   const resend = new Resend(process.env.RESEND_API_KEY);
-  const FROM = `Chippi <${getFromAddress()}>`;
+  const FROM = `Koala <${getFromAddress()}>`;
   const safeSubject = subject.replace(/[\r\n\t]/g, ' ').slice(0, 200);
 
   let sentCount = 0;

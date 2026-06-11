@@ -1,10 +1,10 @@
 /**
- * POST /api/internal/integrations/search — internal endpoint the Chippi
+ * POST /api/internal/integrations/search — internal endpoint the Koala
  * agent's `find_integration_tool` calls when it needs to discover what
- * Composio actions are available for the realtor's connected toolkits.
+ * Composio actions are available for the rep's connected toolkits.
  * Authed by AGENT_INTERNAL_SECRET.
  *
- * Why a search endpoint instead of front-loading every tool: a realtor
+ * Why a search endpoint instead of front-loading every tool: a rep
  * with Gmail + HubSpot + Slack + Instagram connected can have 500+
  * actions across those toolkits. Front-loading them all blows xAI's
  * 200-tool ceiling and burns thousands of prompt tokens per turn even
@@ -124,7 +124,7 @@ export async function POST(req: NextRequest) {
   const composio = getComposio();
 
   // Fetch each toolkit's actions in parallel — by the time we're searching
-  // the realtor has already triggered the chat turn, so latency here is
+  // the rep has already triggered the chat turn, so latency here is
   // user-perceptible. Per-toolkit isolation means one dead connection
   // doesn't poison the batch.
   const perToolkit = await Promise.all(

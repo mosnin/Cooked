@@ -71,7 +71,7 @@ export const sendSmsTool = defineTool<typeof parameters, SendSMSResult>({
   name: 'send_sms',
   riskLevel: 'high',
   description:
-    'Send an SMS to a person (or free-form phone number). Always prompts for approval. Use for tour confirmations, quick check-ins.',
+    'Send an SMS to a person (or free-form phone number). Always prompts for approval. Use for demo confirmations, quick check-ins.',
   parameters,
   requiresApproval: true,
   // SMS is billed per-segment; 30/hour keeps bills sane without blocking
@@ -93,7 +93,7 @@ export const sendSmsTool = defineTool<typeof parameters, SendSMSResult>({
         .select('id, name, phone')
         .eq('id', args.contactId)
         .eq('spaceId', ctx.space.id)
-        .is('brokerageId', null)
+        .is('teamId', null)
         .maybeSingle();
       if (error) {
         return { summary: `Contact lookup failed: ${error.message}`, display: 'error' };
@@ -119,7 +119,7 @@ export const sendSmsTool = defineTool<typeof parameters, SendSMSResult>({
         .from('Contact')
         .select('id')
         .eq('spaceId', ctx.space.id)
-        .is('brokerageId', null)
+        .is('teamId', null)
         .eq('phone', args.toPhone)
         .maybeSingle();
       resolvedContactId = maybeContact?.id ?? null;

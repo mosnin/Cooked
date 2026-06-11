@@ -18,7 +18,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ArrowLeft, ExternalLink, Reply } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
-import { ShimmerText } from '@/components/chippi/shimmer-text';
+import { ShimmerText } from '@/components/koala/shimmer-text';
 import { cn } from '@/lib/utils';
 import { EASE_APPLE } from '@/lib/motion';
 import {
@@ -92,7 +92,7 @@ function buildQuotedReply(msg: EmailMessage): string {
   const sentLine = `On ${formatExact(msg.sentAt)}, ${msg.fromName || msg.fromAddress || 'they'} wrote:`;
   // Don't prefix every line with "> " — on long HTML-stripped automated
   // emails (webhooks, marketing) that produces a wall of `>` chars. Single
-  // em-dashed separator + raw body reads cleaner; realtor can trim or
+  // em-dashed separator + raw body reads cleaner; rep can trim or
   // delete what they don't want. Cap at 2000 chars so the composer doesn't
   // open with 50 screens of newsletter noise.
   const MAX = 2000;

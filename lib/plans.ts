@@ -10,8 +10,8 @@
 
 export type PlanId = 'free' | 'solo' | 'pro' | 'team' | 'team_plus';
 
-/** Where a plan's credit balance lives: solo/pro on the Space, team on the Brokerage. */
-export type AccountType = 'space' | 'brokerage';
+/** Where a plan's credit balance lives: solo/pro on the Space, team on the Team. */
+export type AccountType = 'space' | 'team';
 
 export interface PlanDef {
   id: PlanId;
@@ -72,7 +72,7 @@ export const PLANS: Record<PlanId, PlanDef> = {
     priceMonthly: 497,
     includedUsers: 5,
     monthlyCredits: 12000,
-    account: 'brokerage',
+    account: 'team',
     stripePriceMonthly: env('STRIPE_PRICE_TEAM'),
     stripePriceAnnual: env('STRIPE_PRICE_TEAM_ANNUAL'),
     addUser: { priceMonthly: 79, credits: 1500 },
@@ -83,7 +83,7 @@ export const PLANS: Record<PlanId, PlanDef> = {
     priceMonthly: 897,
     includedUsers: 10,
     monthlyCredits: 25000,
-    account: 'brokerage',
+    account: 'team',
     stripePriceMonthly: env('STRIPE_PRICE_TEAM_PLUS'),
     stripePriceAnnual: env('STRIPE_PRICE_TEAM_PLUS_ANNUAL'),
     addUser: { priceMonthly: 69, credits: 2000 },
@@ -114,11 +114,11 @@ export const WORKFLOW_CREDIT_COST = {
   pipeline_audit: 50,
   followup_sequence: 40,
   lead_qualification: 25,
-  tour_booking: 15,
+  demo_booking: 15,
   daily_briefing: 10,
   call_prep: 3,
   lead_score: 1,
-  // One Chippi chat/agent turn (the in-app assistant). Flat 1 credit — a turn's
+  // One Koala chat/agent turn (the in-app assistant). Flat 1 credit — a turn's
   // blended token COGS sits at or below a lead-score's, so it clears the spec's
   // "COGS ≤ 40% of credit retail" bar, and 1/turn leaves Solo ~1,500 turns/mo
   // (~50/day) — generous for normal use while still hard-capping runaway

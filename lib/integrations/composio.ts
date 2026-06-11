@@ -31,7 +31,7 @@ function makeProvider() {
 /**
  * Get the singleton Composio client. Throws if `COMPOSIO_API_KEY` is
  * missing — the caller should handle this gracefully (return 500 with
- * a realtor-friendly message, NOT show a stack trace).
+ * a rep-friendly message, NOT show a stack trace).
  */
 export function getComposio() {
   if (_client) return _client;
@@ -54,15 +54,15 @@ export function composioConfigured(): boolean {
  * URL Composio expects the user to visit to complete OAuth, plus the
  * pending connection id we'll persist on callback.
  *
- * `entityId` should be the realtor's Clerk userId — Composio scopes
- * connections per "entity" so a future broker dashboard can list a
- * realtor's connected accounts cleanly.
+ * `entityId` should be the rep's Clerk userId — Composio scopes
+ * connections per "entity" so a future manager dashboard can list a
+ * rep's connected accounts cleanly.
  *
  * Composio's v3 SDK signature is `initiate(userId, authConfigId, options)` —
  * NOT `(userId, toolkit, options)`. We were passing the toolkit slug where
  * an `ac_…` id is expected, which made every connect attempt 502 even when
- * the realtor's Auth Configs were correctly set up in the Composio dashboard.
- * Fix: look up the realtor's Auth Config for the toolkit, then pass its
+ * the rep's Auth Configs were correctly set up in the Composio dashboard.
+ * Fix: look up the rep's Auth Config for the toolkit, then pass its
  * actual id to `initiate`.
  */
 export async function initiateConnection(args: {
@@ -80,7 +80,7 @@ export async function initiateConnection(args: {
         `No Auth Config exists for "${args.toolkit}". Open the Composio dashboard → Authentication management → Create Auth Config for ${args.toolkit}, then try again.`,
       );
     }
-    // Take the first (or first composio-managed) auth config. Most realtors
+    // Take the first (or first composio-managed) auth config. Most reps
     // will only ever have one per toolkit. If we surface multiples in the
     // future, the catalog can let them pick.
     authConfigId = items[0].id;
@@ -129,9 +129,9 @@ export async function deleteConnection(connectedAccountId: string): Promise<void
 }
 
 /**
- * List the realtor's connected accounts on Composio's side. Used by the
+ * List the rep's connected accounts on Composio's side. Used by the
  * /settings reconcile pass to discover connections that Composio knows
- * about but our DB doesn't (e.g. realtors who completed OAuth before
+ * about but our DB doesn't (e.g. reps who completed OAuth before
  * the connect-time persistence fix landed).
  *
  * Composio's `list` returns items with `id`, `toolkit.slug`, `status`,
@@ -165,13 +165,13 @@ export async function loadToolsForEntity(args: {
   // defaults to 20 items per page and the SDK doesn't paginate. That cap
   // silently returns only the alphabetically-first 20 tools per toolkit,
   // which is why HubSpot looked like it only had archive/association
-  // actions even after the realtor enabled 100+ slugs on the dashboard.
+  // actions even after the rep enabled 100+ slugs on the dashboard.
   return composio.tools.get(args.entityId, { toolkits: args.toolkits, limit: 1000 });
 }
 
 /**
  * Execute a single Composio tool by slug for a given user. Used by the
- * post-tour execute path, which fires approved proposals imperatively
+ * post-demo execute path, which fires approved proposals imperatively
  * (no model loop). The SDK does the auth, params shaping, and call.
  *
  * Returns the raw `ToolExecuteResponse`. Caller maps `successful`/`error`
@@ -202,7 +202,7 @@ export async function executeToolForEntity(args: {
 
 // ─── Triggers ────────────────────────────────────────────────────────────────
 //
-// Triggers are how Composio tells US when something happens in the realtor's
+// Triggers are how Composio tells US when something happens in the rep's
 // connected app (new email, calendar accept, deal-stage change). Each trigger
 // is a subscription tied to ONE connectedAccountId; Composio POSTs a signed
 // delivery to our webhook receiver, which our SDK then verifies in-process.
@@ -215,9 +215,9 @@ export async function executeToolForEntity(args: {
 /**
  * Register a new trigger subscription for a connected account.
  *
- * `entityId` is the realtor's Clerk userId (Composio "user"). `slug` is the
+ * `entityId` is the rep's Clerk userId (Composio "user"). `slug` is the
  * trigger slug (e.g. 'GMAIL_NEW_GMAIL_MESSAGE'). `connectedAccountId` ties the
- * subscription to a specific connection — required when the realtor has more
+ * subscription to a specific connection — required when the rep has more
  * than one account for the same toolkit (multiple Gmails, etc.). `triggerConfig`
  * is an opaque shape per trigger type: Composio's `getType(slug)` lists what's
  * valid. We pass it through verbatim.

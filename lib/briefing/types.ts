@@ -1,8 +1,8 @@
 /**
- * Types for the daily brief — Chippi's 7am snapshot.
+ * Types for the daily brief — Koala's 7am snapshot.
  *
  * The composer is a ranker over a list of Signals. Each integration the
- * realtor connects registers a new signal source; the composer is agnostic.
+ * rep connects registers a new signal source; the composer is agnostic.
  * Phase A ships with three internal sources (pipeline, leads, calendar);
  * Phase B layers external integrations on top with no composer change.
  */
@@ -10,8 +10,8 @@
 import type { Conversation } from '@/lib/types';
 
 /**
- * What kind of action a signal asks the realtor to take. Each maps to a
- * single verb on the brief card; the realtor's morning brain reads the
+ * What kind of action a signal asks the rep to take. Each maps to a
+ * single verb on the brief card; the rep's morning brain reads the
  * tag once, knows what kind of decision is coming, then taps.
  */
 export type SignalKind =
@@ -19,7 +19,7 @@ export type SignalKind =
   | 'reply'
   /** Touch via phone — the contact prefers voice or has cooled to text. */
   | 'call'
-  /** Upcoming meeting / tour, briefed with relevant context. */
+  /** Upcoming meeting / demo, briefed with relevant context. */
   | 'prep'
   /** Deal review — a stage is slipping or a contingency is exposed. */
   | 'review'
@@ -27,7 +27,7 @@ export type SignalKind =
   | 'sign'
   /** Acknowledge a win — closing, commission, milestone. */
   | 'celebrate'
-  /** Earned tip — a specific gap or opportunity in the realtor's data.
+  /** Earned tip — a specific gap or opportunity in the rep's data.
    *  Phase C. Never generic ("5 ways to find leads"); always tied to
    *  a real signal. Renders in either the empty-state slot OR as one
    *  extra card below the rest of the brief. Never both, never two. */
@@ -41,16 +41,16 @@ export type SignalUrgency = 1 | 2 | 3;
 
 /**
  * Which side of the data wall this signal came from. Internal sources
- * read Chippi's own Supabase tables; external sources read connected
+ * read Koala's own Supabase tables; external sources read connected
  * integrations. Surfaced to the rendered Brief as a `sourcesUsed` array
- * so the realtor can see which integrations earned their slot.
+ * so the rep can see which integrations earned their slot.
  */
 export type SignalSource =
-  | 'pipeline'         // Chippi DB — Deal table, dealHealth signals
-  | 'leads'            // Chippi DB — Contact table, leadScore + follow-ups
-  | 'calendar'         // Chippi DB — Tour table
-  | 'drafts'           // Chippi DB — AgentDraft table (any origin)
-  | 'tips'             // Chippi DB — earned tips engine (Phase C)
+  | 'pipeline'         // Koala DB — Deal table, dealHealth signals
+  | 'leads'            // Koala DB — Contact table, leadScore + follow-ups
+  | 'calendar'         // Koala DB — Demo table
+  | 'drafts'           // Koala DB — AgentDraft table (any origin)
+  | 'tips'             // Koala DB — earned tips engine (Phase C)
   | 'gmail'            // Phase B — Composio Gmail trigger feed
   | 'calendar_google'  // Phase B — Composio Google Calendar
   | 'slack'            // Phase B — Composio Slack
@@ -64,7 +64,7 @@ export interface SignalSubject {
 }
 
 /**
- * A drafted action the realtor can approve with one tap. Carries the
+ * A drafted action the rep can approve with one tap. Carries the
  * pre-staged content so the brief surface can render it inline without
  * a second round-trip.
  */
@@ -85,7 +85,7 @@ export interface Signal {
   /** 0-1. Floor at 0.7 — below this, the signal doesn't compete. */
   confidence: number;
   subject: SignalSubject;
-  /** The receipt — one sentence the realtor can verify in their head. */
+  /** The receipt — one sentence the rep can verify in their head. */
   evidence: string;
   draftedAction?: DraftedAction;
   /** Tips-only — discriminator for cool-down tracking. The same subject
@@ -107,8 +107,8 @@ export interface BriefCard {
 
 /**
  * Per-card meta stamped at compose time and persisted server-side. NOT
- * sent to the surface — confidence and urgency are Chippi's reasoning,
- * not the realtor's affordance. The analytics module reads this column
+ * sent to the surface — confidence and urgency are Koala's reasoning,
+ * not the rep's affordance. The analytics module reads this column
  * to answer "are our confidence calibrations honest" (Phase B5).
  *
  * cardMeta[i] mirrors the order of Brief.cards[i].
@@ -124,7 +124,7 @@ export interface BriefCardMeta {
 /**
  * Per-tap event captured on the 'acted' PATCH. Append-only — duplicate
  * taps on the same (cardIndex, source, kind) are silently dropped at
- * the server so the realtor's accidental double-tap doesn't double-count.
+ * the server so the rep's accidental double-tap doesn't double-count.
  */
 export interface BriefCardTap {
   cardIndex: number;
@@ -153,7 +153,7 @@ export interface Brief {
   tomorrow: string | null;
   /**
    * Set ONLY when cards is empty AND momentum is empty. The right to say
-   * nothing — Chippi offers an invitation instead of filler.
+   * nothing — Koala offers an invitation instead of filler.
    */
   emptyState: { invitation: string } | null;
   sourcesUsed: SignalSource[];
@@ -162,7 +162,7 @@ export interface Brief {
 /** The signal source contract. Each integration ships one of these. */
 export interface SignalGatherer {
   source: SignalSource;
-  /** Pull the realtor's signals from this source. May return []. */
+  /** Pull the rep's signals from this source. May return []. */
   gather(spaceId: string): Promise<Signal[]>;
 }
 

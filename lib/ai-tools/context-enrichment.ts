@@ -2,7 +2,7 @@
  * Phase 13 — auto-include subject context in agent prompts.
  *
  * The agent already has tools to fetch a contact's score, a deal's stage,
- * and recent activity. But when the realtor opens the action sheet on a
+ * and recent activity. But when the rep opens the action sheet on a
  * specific deal or person, the subject is *known* — having the model spend
  * a turn calling `find_person` just to discover what it could have been
  * told is wasted latency and wasted tokens.

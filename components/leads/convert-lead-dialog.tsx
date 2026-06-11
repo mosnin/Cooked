@@ -91,7 +91,7 @@ export function ConvertLeadDialog({
             Move{' '}
             <span className="font-semibold text-foreground">{leadName}</span> to
             your Clients pipeline? They&apos;ll be removed from the Leads inbox and
-            you can track them through Qualifying → Tour → Applied.
+            you can track them through Qualifying → Demo → Applied.
           </p>
           <div className="flex gap-2 justify-end">
             <Button

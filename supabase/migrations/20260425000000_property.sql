@@ -1,6 +1,6 @@
 -- Phase 9 of the deals redesign: Property as a first-class entity.
 --
--- Motivation: Deal.address has always been a string, which means a realtor
+-- Motivation: Deal.address has always been a string, which means a rep
 -- re-types the same property across multiple deals (an original fell
 -- through, re-listed; co-listing with another agent; separate buyer +
 -- seller engagements on the same house). Having `Property` as a row unlocks:
@@ -10,7 +10,7 @@
 --
 -- Design decisions:
 --   * `address` stays on Deal as the display string so existing deals are
---     unaffected and realtors can quick-create a deal without going
+--     unaffected and reps can quick-create a deal without going
 --     through property creation first.
 --   * Deal.propertyId is nullable. A deal can live without a linked
 --     property, or get linked later.
@@ -59,7 +59,7 @@ CREATE INDEX IF NOT EXISTS idx_property_space_updated
 CREATE INDEX IF NOT EXISTS idx_property_space_address
   ON "Property" ("spaceId", lower(address));
 
--- Unique MLS number per space (soft — a realtor working multiple MLSes could
+-- Unique MLS number per space (soft — a rep working multiple MLSes could
 -- still hit collisions; in that case they'll see a 409 and can decide).
 CREATE UNIQUE INDEX IF NOT EXISTS idx_property_space_mls
   ON "Property" ("spaceId", "mlsNumber")
@@ -67,12 +67,12 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_property_space_mls
 
 ALTER TABLE "Property" ENABLE ROW LEVEL SECURITY;
 
--- Link Deal + Tour to Property. Nullable: the entity is optional.
+-- Link Deal + Demo to Property. Nullable: the entity is optional.
 ALTER TABLE "Deal"
   ADD COLUMN IF NOT EXISTS "propertyId" TEXT REFERENCES "Property"(id) ON DELETE SET NULL;
 
-ALTER TABLE "Tour"
+ALTER TABLE "Demo"
   ADD COLUMN IF NOT EXISTS "propertyId" TEXT REFERENCES "Property"(id) ON DELETE SET NULL;
 
 CREATE INDEX IF NOT EXISTS idx_deal_property ON "Deal" ("propertyId") WHERE "propertyId" IS NOT NULL;
-CREATE INDEX IF NOT EXISTS idx_tour_property ON "Tour" ("propertyId") WHERE "propertyId" IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_demo_property ON "Demo" ("propertyId") WHERE "propertyId" IS NOT NULL;

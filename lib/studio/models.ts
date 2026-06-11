@@ -4,7 +4,7 @@
  *
  * fal does not return cost in its API response, so `costUsd` here is the
  * list-price estimate we record on StudioGeneration.costUsd and sum into the
- * realtor's usage. Image models price per megapixel; a standard ~1MP
+ * rep's usage. Image models price per megapixel; a standard ~1MP
  * generation is close enough to a flat per-image figure for metering.
  */
 

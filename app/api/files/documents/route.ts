@@ -2,7 +2,7 @@
  * GET  /api/files/documents  — list the space's editor-authored documents.
  * POST /api/files/documents  — create one from { title, content }.
  *
- * A "document" is a file the realtor writes in-app rather than uploads. It
+ * A "document" is a file the rep writes in-app rather than uploads. It
  * lives in the same `File` table and the same Wasabi store as every other
  * file; the only thing that marks it as editable is `mimeType: text/markdown`.
  * No separate table — a document is just a file you authored here.

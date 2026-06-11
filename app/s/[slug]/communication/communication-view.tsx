@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * /s/[slug]/communication — the realtor's email, in here.
+ * /s/[slug]/communication — the rep's email, in here.
  *
  * TEMPORARY: Email-only while WhatsApp Composio config gets sorted.
  * The toggle + Messages tab + `messagesConnected` prop will return once

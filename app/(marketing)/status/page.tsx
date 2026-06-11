@@ -2,7 +2,7 @@
  * `/status` — system status. Honest, calm, no theatre.
  *
  * Apple-discipline: a silent serif hero, then a hairline-divided list of the
- * surfaces a realtor depends on, each carrying a single dot.
+ * surfaces a rep depends on, each carrying a single dot.
  *
  * This page tells the TRUTH at request time. It probes the subsystems we can
  * actually verify from the server — the database, the agent's LLM + Modal
@@ -20,7 +20,7 @@
  * stays a calm, honest fact about right now.
  *
  * Only the three subsystems we can verify without a logged-in user are listed.
- * The per-user, per-workspace health (a realtor's own Gmail/Calendar
+ * The per-user, per-workspace health (a rep's own Gmail/Calendar
  * connection) lives behind auth on the integrations page — it can't be shown
  * truthfully on a public marketing page, so it isn't faked here.
  *
@@ -32,7 +32,7 @@ import { supabase } from '@/lib/supabase';
 import { hasLLMKey } from '@/lib/llm';
 import { composioConfigured } from '@/lib/integrations/composio';
 
-export const metadata = { title: 'Status · Chippi' };
+export const metadata = { title: 'Status · Koala' };
 
 // Always evaluate at request time — a status page must never be cached into a
 // stale "operational" snapshot.
@@ -61,7 +61,7 @@ async function checkDatabase(): Promise<Health> {
 }
 
 /**
- * The agent (Chippi) needs two things to do real work: an LLM provider key
+ * The agent (Koala) needs two things to do real work: an LLM provider key
  * and a Modal runtime URL. We can only verify CONFIGURATION from here, not a
  * live round-trip (that path is authenticated and rate-shaped). Missing config
  * is reported as "unknown" rather than "operational" — we won't claim the
@@ -81,7 +81,7 @@ function checkAgent(): Health {
 /**
  * Integrations ride on Composio. Without the API key the whole layer is
  * inert, so config presence is the honest public signal. Per-connection
- * health (this realtor's Gmail token) is auth-gated and not shown here.
+ * health (this rep's Gmail token) is auth-gated and not shown here.
  */
 function checkIntegrations(): Health {
   try {
@@ -128,7 +128,7 @@ export default async function StatusPage() {
   ]);
 
   const subsystems: Subsystem[] = [
-    { label: 'Agent (Chippi)', health: agent },
+    { label: 'Agent (Koala)', health: agent },
     { label: 'Dashboard & database', health: database },
     { label: 'Integrations', health: integrations },
   ];
@@ -148,7 +148,7 @@ export default async function StatusPage() {
       <MarketingHero
         eyebrow="STATUS"
         title={title}
-        sub="Live status of Chippi’s agent, integrations, and dashboard."
+        sub="Live status of Koala’s agent, integrations, and dashboard."
       />
 
       <section className="relative pb-24 md:pb-32">
@@ -161,10 +161,10 @@ export default async function StatusPage() {
           <p className="mt-6 text-sm text-muted-foreground">
             Subscribe to status updates at{' '}
             <a
-              href="mailto:status@chippi.app"
+              href="mailto:status@koala.app"
               className="underline underline-offset-2 transition-colors hover:text-foreground"
             >
-              status@chippi.app
+              status@koala.app
             </a>
             .
           </p>

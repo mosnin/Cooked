@@ -4,7 +4,7 @@
  * AsciiBlob — an animated orange ASCII gradient that drifts around the
  * background. Two soft metaball centers wander on slow sine paths; each cell
  * samples the field and renders a monospace glyph from a light→dense ramp,
- * tinted Chippi orange with field-weighted alpha. A third "light" point glides
+ * tinted Koala orange with field-weighted alpha. A third "light" point glides
  * across on its own slow orbit, warming nearby glyphs toward pale amber — a
  * moving gradient sheen that follows the blob rather than a flat tint. Pure
  * canvas, cheap (only cells inside the blob draw), reduced-motion renders a

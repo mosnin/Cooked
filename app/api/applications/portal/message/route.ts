@@ -108,18 +108,18 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Failed to send message' }, { status: 500 });
   }
 
-  // Notify realtor via email (fire and forget)
-  notifyRealtorOfMessage(contact.spaceId, contact.name, sanitized).catch((err) =>
-    console.error('[portal/message] Realtor notification failed:', err),
+  // Notify rep via email (fire and forget)
+  notifyRepOfMessage(contact.spaceId, contact.name, sanitized).catch((err) =>
+    console.error('[portal/message] Rep notification failed:', err),
   );
 
   return NextResponse.json({ message }, { status: 201 });
 }
 
 /**
- * Send email notification to realtor about new applicant message.
+ * Send email notification to rep about new applicant message.
  */
-async function notifyRealtorOfMessage(
+async function notifyRepOfMessage(
   spaceId: string,
   applicantName: string,
   messageContent: string,
@@ -151,9 +151,9 @@ async function notifyRealtorOfMessage(
   const FROM =
     process.env.RESEND_FROM_EMAIL?.includes('@')
       ? process.env.RESEND_FROM_EMAIL
-      : `notifications@${process.env.RESEND_FROM_EMAIL ?? 'alerts.usechippi.com'}`;
+      : `notifications@${process.env.RESEND_FROM_EMAIL ?? 'alerts.usekoala.com'}`;
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://my.usechippi.com';
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://my.usekoala.com';
   const safeName = applicantName.replace(/[\r\n\t]/g, ' ').slice(0, 100);
   const safeContent = messageContent.replace(/</g, '&lt;').replace(/>/g, '&gt;').slice(0, 500);
 

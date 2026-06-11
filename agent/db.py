@@ -97,7 +97,7 @@ async def _get_pool() -> asyncpg.Pool:
             if _pool is None:
                 if not settings.database_url:
                     raise RuntimeError(
-                        "DATABASE_URL is not set. Configure the chippi-secrets "
+                        "DATABASE_URL is not set. Configure the koala-secrets "
                         "Modal secret with the direct-Postgres URL."
                     )
                 _pool = await asyncpg.create_pool(

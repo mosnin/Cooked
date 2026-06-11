@@ -5,7 +5,7 @@ import { ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 /**
- * BentoGrid / BentoCard — MagicUI bento, re-skinned to Chippi's system.
+ * BentoGrid / BentoCard — MagicUI bento, re-skinned to Koala's system.
  *
  * Changes from the upstream default: our tokens (foreground / muted-
  * foreground / card / border / brand) instead of hardcoded neutrals; the

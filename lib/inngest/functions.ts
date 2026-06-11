@@ -41,7 +41,7 @@ async function spaceIdForOwner(userId: unknown): Promise<string> {
 // total dollar floor. 100/day is conservative: a Modal autonomous run
 // is the costliest dispatch path and a single space accumulating 100 of
 // them in a day already implies something noisy worth investigating.
-// Above the cap → log + drop. The realtor noticing "Chippi got quiet"
+// Above the cap → log + drop. The rep noticing "Koala got quiet"
 // is a better failure mode than a runaway bill.
 const SPACE_DAILY_CAP = 100;
 const DAY_SECONDS = 24 * 60 * 60;
@@ -200,7 +200,7 @@ export const publishScheduledPost = inngest.createFunction(
  *
  *   1. Resolve the IntegrationConnection (by composioConnectionId) and
  *      IntegrationTrigger (by composioTriggerId) so we can act on the
- *      realtor's space/user. If either is missing or non-active, drop.
+ *      rep's space/user. If either is missing or non-active, drop.
  *   2. Hand off to `dispatchTrigger`, which routes the event to one of
  *      DRAFT (autonomous Modal run), NOTICE (activity card — Phase 4),
  *      DATA_SYNC (direct DB write — Phase 4).
@@ -210,7 +210,7 @@ export const publishScheduledPost = inngest.createFunction(
  * Inngest retries on a thrown error. The downstream paths (`fireRoutineRun`
  * etc.) are idempotent on (space, instruction) by design — a retry that
  * re-fires Modal would at worst produce a duplicate draft, which the
- * realtor can dismiss. We accept that risk over the alternative of
+ * rep can dismiss. We accept that risk over the alternative of
  * eating the error and losing the event.
  */
 export const handleComposioTrigger = inngest.createFunction(
@@ -302,7 +302,7 @@ export const handleComposioTrigger = inngest.createFunction(
 
     // 2. Resolve the trigger row. Missing = stale registration (Composio
     //    sent for a trigger we don't track) — drop silently. Paused =
-    //    realtor turned it off; the receiver doesn't know that, the
+    //    rep turned it off; the receiver doesn't know that, the
     //    handler does.
     const triggerRow = await step.run('resolve-trigger', async () => {
       return findByComposioTriggerId(data.composioTriggerId);
@@ -323,7 +323,7 @@ export const handleComposioTrigger = inngest.createFunction(
     }
 
     // 3. Per-space daily cap. The receiver's per-(connection, slug)
-    //    hourly cap is finer-grained but lets a realtor with five
+    //    hourly cap is finer-grained but lets a rep with five
     //    connected apps each at 60/hr accumulate 300+ Modal runs in a
     //    day. This is the absolute ceiling per space.
     const dayBucket = Math.floor(Date.now() / 1000 / DAY_SECONDS);

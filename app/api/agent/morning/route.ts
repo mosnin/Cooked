@@ -1,7 +1,7 @@
 /**
  * GET /api/agent/morning
  *
- * The composed morning story for the /chippi home. Returns counts AND named
+ * The composed morning story for the /koala home. Returns counts AND named
  * subjects so the brand voice can say "The Chen deal hasn't moved in 14
  * days" instead of just "1 deal is stuck." Specific over generic. Names
  * over counts. The home's job is to be the deepest surface, not the
@@ -12,8 +12,8 @@
  * picks). This one is a tight summary feed used by the home greeting only:
  * one fetch, one shape, one sentence.
  *
- * Realtor space only — brokerage-routed contacts (brokerageId !== null) are
- * excluded so the realtor's morning briefing reflects what's on _their_
+ * Rep space only — team-routed contacts (teamId !== null) are
+ * excluded so the rep's morning briefing reflects what's on _their_
  * desk, not what's been routed past them.
  */
 import { NextResponse } from 'next/server';
@@ -114,19 +114,19 @@ export async function GET() {
       .from('Contact')
       .select('id', { count: 'exact', head: true })
       .eq('spaceId', space.id)
-      .is('brokerageId', null)
+      .is('teamId', null)
       .contains('tags', ['new-lead']),
     supabase
       .from('Contact')
       .select('id', { count: 'exact', head: true })
       .eq('spaceId', space.id)
-      .is('brokerageId', null)
+      .is('teamId', null)
       .gte('leadScore', HOT_LEAD_THRESHOLD),
     supabase
       .from('Contact')
       .select('id', { count: 'exact', head: true })
       .eq('spaceId', space.id)
-      .is('brokerageId', null)
+      .is('teamId', null)
       .not('followUpAt', 'is', null)
       .lt('followUpAt', nowIso),
 
@@ -157,7 +157,7 @@ export async function GET() {
       .from('Contact')
       .select('id, name')
       .eq('spaceId', space.id)
-      .is('brokerageId', null)
+      .is('teamId', null)
       .contains('tags', ['new-lead'])
       .order('createdAt', { ascending: false })
       .limit(1)
@@ -167,7 +167,7 @@ export async function GET() {
       .from('Contact')
       .select('id, name')
       .eq('spaceId', space.id)
-      .is('brokerageId', null)
+      .is('teamId', null)
       .gte('leadScore', HOT_LEAD_THRESHOLD)
       .order('leadScore', { ascending: false })
       .limit(1)
@@ -177,7 +177,7 @@ export async function GET() {
       .from('Contact')
       .select('id, name, followUpAt')
       .eq('spaceId', space.id)
-      .is('brokerageId', null)
+      .is('teamId', null)
       .not('followUpAt', 'is', null)
       .lt('followUpAt', nowIso)
       .order('followUpAt', { ascending: true })

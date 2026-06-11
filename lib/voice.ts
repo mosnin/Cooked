@@ -12,11 +12,11 @@
  * never makes a network call, so a deploy without credentials is safe.
  *
  * Flow (agent-first click-to-call):
- *   1. We dial the AGENT's own phone (create call). Telnyx rings the realtor.
+ *   1. We dial the AGENT's own phone (create call). Telnyx rings the rep.
  *   2. When the agent answers (call.answered webhook), the webhook bridges that
  *      leg to the CONTACT's number with recording enabled.
  *   3. On call.recording.saved the webhook downloads the recording, transcribes
- *      it, and asks Chippi for a summary.
+ *      it, and asks Koala for a summary.
  */
 
 import { logger } from '@/lib/logger';
@@ -98,7 +98,7 @@ export type PlaceCallResult =
 export interface PlaceClickToCallParams {
   spaceId: string;
   contactId?: string | null;
-  /** The realtor's own phone — Telnyx dials this leg first. */
+  /** The rep's own phone — Telnyx dials this leg first. */
   agentNumber: string;
   /** The contact's phone — bridged in once the agent answers. */
   contactNumber: string;

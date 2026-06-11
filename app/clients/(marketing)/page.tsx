@@ -22,11 +22,11 @@ export default async function ClientPortalLanding() {
           className="text-3xl tracking-tight text-foreground sm:text-4xl"
           style={TITLE_FONT}
         >
-          Track your application. Book tours. Message your agent.
+          Track your application. Book demos. Message your agent.
         </h1>
         <p className="text-sm leading-relaxed text-muted-foreground">
-          One place for everything you have in motion with a realtor — wherever
-          you applied, whatever you&apos;re touring. Sign in with the email you
+          One place for everything you have in motion with a rep — wherever
+          you applied, whatever you&apos;re demoing. Sign in with the email you
           used and it&apos;s all here.
         </p>
         <div className="flex flex-wrap items-center gap-3 pt-2">

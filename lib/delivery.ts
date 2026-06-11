@@ -1,28 +1,28 @@
 /**
  * Draft delivery — routes approved agent drafts to the right channel.
  *
- * Email routing precedence (when the realtor has connected an inbox):
- *   1. Realtor's connected Gmail/Outlook via Composio (sends as the realtor —
+ * Email routing precedence (when the rep has connected an inbox):
+ *   1. Rep's connected Gmail/Outlook via Composio (sends as the rep —
  *      their address, their domain, their reply-to). Requires {spaceId, userId}
  *      in options + an active IntegrationConnection row for the toolkit.
  *   2. Resend with shared FROM_EMAIL (platform-branded sender — the fallback
- *      for realtors who haven't connected their own inbox yet).
+ *      for reps who haven't connected their own inbox yet).
  *
  * If a connected inbox is found but the Composio call fails, we return the
  * error — we do NOT silently fall back to the shared sender. Sending from
- * the wrong identity is worse than not sending; the realtor should see the
+ * the wrong identity is worse than not sending; the rep should see the
  * failure and reconnect/retry.
  *
  * SMS routing:
- *   1. Telnyx REST (only path for now; per-realtor SMS-as-themselves is
- *      a follow-up that requires per-realtor 10DLC approval).
+ *   1. Telnyx REST (only path for now; per-rep SMS-as-themselves is
+ *      a follow-up that requires per-rep 10DLC approval).
  *
  * Notes: no external delivery; treated as immediately "sent" (internal log).
  *
  * Returns a DeliveryResult so the caller can decide the final draft status:
  *   sent=true  → mark draft "sent"
  *   sent=false → mark draft "approved" (human reviewed; delivery failed or
- *                unconfigured); the realtor sees the error in the UI.
+ *                unconfigured); the rep sees the error in the UI.
  */
 
 import { Resend } from 'resend';
@@ -35,7 +35,7 @@ import { logger } from '@/lib/logger';
 
 export interface DeliveryResult {
   sent: boolean;
-  /** 'gmail' / 'outlook' = via realtor's inbox; 'email' = via shared Resend. */
+  /** 'gmail' / 'outlook' = via rep's inbox; 'email' = via shared Resend. */
   method: 'gmail' | 'outlook' | 'email' | 'sms' | 'note';
   error?: string;
 }
@@ -59,12 +59,12 @@ export interface ContactPayload {
 export interface SendDraftOptions {
   /** Space ID — scopes the IntegrationConnection lookup. */
   spaceId?: string;
-  /** Clerk userId of the realtor who approved the draft. Becomes the
+  /** Clerk userId of the rep who approved the draft. Becomes the
    *  Composio entity id for the OAuth lookup. */
   userId?: string;
 }
 
-// ─── Inbox-connect: send as the realtor via Composio ──────────────────────────
+// ─── Inbox-connect: send as the rep via Composio ──────────────────────────
 
 type InboxToolkit = 'gmail' | 'outlook';
 
@@ -76,8 +76,8 @@ const INBOX_SEND_SLUG: Record<InboxToolkit, string> = {
 
 /**
  * Returns the first active inbox toolkit connected for this (space, user),
- * or null. Gmail wins ties because it's the dominant realtor inbox; if a
- * realtor has both, the deliberate fallback to Outlook would need an
+ * or null. Gmail wins ties because it's the dominant rep inbox; if a
+ * rep has both, the deliberate fallback to Outlook would need an
  * explicit per-space preference (not built yet — configuration is failure
  * to decide).
  */
@@ -233,7 +233,7 @@ async function deliverSms(
  * @param contact  The recipient (name, email, phone)
  * @param fromName Display name to use as the email sender (e.g. space name)
  *                 — only used when falling back to the shared Resend path.
- * @param options  Per-realtor context that enables inbox-connect routing.
+ * @param options  Per-rep context that enables inbox-connect routing.
  *                 Both spaceId and userId required; if either is missing,
  *                 we skip the inbox lookup and use the shared sender.
  */
@@ -245,8 +245,8 @@ export async function sendDraft(
 ): Promise<DeliveryResult> {
   switch (draft.channel) {
     case 'email': {
-      // Try the realtor's connected inbox first. The point of inbox-connect
-      // is "every email looks like it came from the realtor, on their
+      // Try the rep's connected inbox first. The point of inbox-connect
+      // is "every email looks like it came from the rep, on their
       // domain, with their reply-to" — that semantic is preserved across
       // their whole book of business once they've connected once.
       if (options.spaceId && options.userId) {
@@ -257,7 +257,7 @@ export async function sendDraft(
           }
         } catch (err) {
           // Lookup failure must not block the send — fall back to Resend.
-          // We log but don't bail because the realtor still needs to be
+          // We log but don't bail because the rep still needs to be
           // able to send when the integration-connection table is unhappy.
           logger.warn('[delivery] inbox lookup failed; falling back to shared sender', {
             spaceId: options.spaceId,

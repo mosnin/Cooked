@@ -115,14 +115,14 @@ const VALID_STAGE_KINDS = ['lead', 'qualified', 'active', 'under_contract', 'clo
 /**
  * Best-effort guess of a stage's semantic kind from its name. Used when a
  * stage is created without an explicit `kind`. The check happens once at
- * creation; the realtor can override it later via PATCH.
+ * creation; the rep can override it later via PATCH.
  */
 function inferStageKind(name: string): (typeof VALID_STAGE_KINDS)[number] | null {
   const n = name.toLowerCase();
   if (/\b(closed|won|complete|done|funded)\b/.test(n)) return 'closed';
   if (/\b(closing|escrow|clear.*close)\b/.test(n)) return 'closing';
   if (/\b(under.?contract|pending|accepted|inspection|appraisal)\b/.test(n)) return 'under_contract';
-  if (/\b(qualified|pre.?approval|showing|touring|active)\b/.test(n)) return 'active';
+  if (/\b(qualified|pre.?approval|showing|demoing|active)\b/.test(n)) return 'active';
   if (/\b(qualif)\b/.test(n)) return 'qualified';
   if (/\b(lead|new|prospect|inquiry|intake)\b/.test(n)) return 'lead';
   return null;

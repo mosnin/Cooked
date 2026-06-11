@@ -2,14 +2,14 @@ import { protocol, rootDomain } from '@/lib/utils';
 
 /**
  * Single source of truth for slug handling.
- * Chippi uses path slugs (`/apply/:slug`) and never host-based tenant URLs.
+ * Koala uses path slugs (`/apply/:slug`) and never host-based tenant URLs.
  */
 export function normalizeSlug(raw: string) {
   return raw.trim().toLowerCase().replace(/[^a-z0-9-]/g, '');
 }
 
 const RESERVED_SLUGS = new Set([
-  'admin', 'api', 'www', 'apply', 'auth', 'billing', 'broker', 'book',
+  'admin', 'api', 'www', 'apply', 'auth', 'billing', 'manager', 'book',
   'setup', 'onboard', 'dashboard', 'public', 'static', 'media', 'app',
   'system', 'support', 'help', 'login', 'signup', 'register', 'invite',
   'settings', 'profile', 'account', 'legal', 'privacy', 'terms',

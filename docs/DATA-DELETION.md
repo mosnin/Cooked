@@ -36,7 +36,7 @@ single `DELETE` and no hand-written ordering:
    CASCADE` — delete the Space row and all of them go with it.
 
 So `DELETE FROM "User" WHERE id = ?` cascades: User → Space → Contact, Deal,
-Property, Conversation, Message, Note, Tour, DealStage, Pipeline, etc. Postgres
+Property, Conversation, Message, Note, Demo, DealStage, Pipeline, etc. Postgres
 enforces the order via the FK graph. We do not replicate that order in code.
 
 ---
@@ -66,11 +66,11 @@ removes them. Verified against `supabase/schema.sql` and `supabase/migrations/*`
 | `Conversation` | `spaceId → Space ON DELETE CASCADE` |
 | `Message` | `spaceId → Space ON DELETE CASCADE` |
 | `Note` | `spaceId → Space ON DELETE CASCADE` |
-| `Tour` | `spaceId → Space ON DELETE CASCADE` |
-| `TourFeedback` | `spaceId → Space ON DELETE CASCADE` |
-| `TourWaitlist` | `spaceId → Space ON DELETE CASCADE` |
-| `TourPropertyProfile` | `spaceId → Space ON DELETE CASCADE` |
-| `TourAvailabilityOverride` | `spaceId → Space ON DELETE CASCADE` |
+| `Demo` | `spaceId → Space ON DELETE CASCADE` |
+| `DemoFeedback` | `spaceId → Space ON DELETE CASCADE` |
+| `DemoWaitlist` | `spaceId → Space ON DELETE CASCADE` |
+| `DemoPropertyProfile` | `spaceId → Space ON DELETE CASCADE` |
+| `DemoAvailabilityOverride` | `spaceId → Space ON DELETE CASCADE` |
 | `CalendarEvent` | `spaceId → Space ON DELETE CASCADE` |
 | `GoogleCalendarToken` | `spaceId → Space ON DELETE CASCADE` |
 | `MessageTemplate` | `spaceId → Space ON DELETE CASCADE` |
@@ -117,10 +117,10 @@ the User row:
 | Table / record | Behavior | Reason |
 |---|---|---|
 | Stripe customer, invoices, charges | retained at Stripe | financial-records retention; we don't control Stripe's store. The `stripeCustomerId`/`stripeSubscriptionId` on the Space row are deleted with the Space, but the Stripe-side objects persist per their retention. |
-| `CommissionLedger` | retained | `brokerageId`/`agentUserId`/`dealId`-scoped financial record owned by the **brokerage**, not the space. Erasing one agent's account should not destroy the brokerage's commission books. `agentUserId → User ON DELETE CASCADE` would normally remove rows, so deleting a User that has ledger rows needs a decision — see open questions. |
+| `CommissionLedger` | retained | `teamId`/`agentUserId`/`dealId`-scoped financial record owned by the **team**, not the space. Erasing one agent's account should not destroy the team's commission books. `agentUserId → User ON DELETE CASCADE` would normally remove rows, so deleting a User that has ledger rows needs a decision — see open questions. |
 | `SupportTicket` | `spaceId` set to NULL (`ON DELETE SET NULL`) | support history is retained for dispute resolution; the link to the space is severed. |
-| `Property.assignedSpaceId` (brokerage pool) | set to NULL (`ON DELETE SET NULL`) | a brokerage-pool property returns to the pool rather than being destroyed. |
-| `Brokerage` (`ownerId → User ON DELETE RESTRICT`) | **blocks deletion** | a broker who owns a brokerage cannot delete their User row until the brokerage is transferred or removed. The route detects this (`checkDeletionBlockers`) and returns a clear 409 rather than letting Postgres throw. |
+| `Property.assignedSpaceId` (team pool) | set to NULL (`ON DELETE SET NULL`) | a team-pool property returns to the pool rather than being destroyed. |
+| `Team` (`ownerId → User ON DELETE RESTRICT`) | **blocks deletion** | a manager who owns a team cannot delete their User row until the team is transferred or removed. The route detects this (`checkDeletionBlockers`) and returns a clear 409 rather than letting Postgres throw. |
 
 ---
 
@@ -130,8 +130,8 @@ the User row:
   properties, conversations, documents-metadata, agent memory, settings) plus
   the Clerk identity, plus the two non-cascading tables (`Attachment`,
   `TelemetryEvent`).
-- **Anonymized / link-severed:** `SupportTicket`, brokerage-pool `Property`.
-- **Retained:** Stripe-side financial records, `CommissionLedger` (brokerage
+- **Anonymized / link-severed:** `SupportTicket`, team-pool `Property`.
+- **Retained:** Stripe-side financial records, `CommissionLedger` (team
   financial books), as legally appropriate.
 
 > Document **binary contents** (files in object storage referenced by
@@ -167,7 +167,7 @@ been exercised against a staging copy.
    honor erasure? Recommended yes; needs the storage-client wiring.
 3. **`CommissionLedger` on agent deletion.** `agentUserId → User ON DELETE
    CASCADE` means deleting the User row WILL delete that agent's ledger rows,
-   which conflicts with the "retain brokerage financial books" intent above.
+   which conflicts with the "retain team financial books" intent above.
    Decide: (a) reassign/anonymize `agentUserId` before delete, or (b) accept
    loss. Option (a) needs a migration to `ON DELETE SET NULL` + an
    `agentUserId` nullable column — **schema change, needs approval.**

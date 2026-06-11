@@ -1,7 +1,7 @@
 -- ============================================================================
 -- Deal close + stage-change metrics foundation.
 --
--- Adds the two timestamps the broker/realtor performance metrics depend on:
+-- Adds the two timestamps the manager/rep performance metrics depend on:
 --   - "closedAt"        when a Deal transitioned to a terminal status (won/lost)
 --   - "stageChangedAt"  when a Deal last moved to its current stage
 --

@@ -5,7 +5,7 @@
  * reads `feedback_action`, `edit_distance`, and `decision_ms`, those columns
  * are bytes accumulating. This file guards the contract: auth + space gate,
  * the single Supabase read, the count/median math, and the exact response
- * shape downstream callers (the agent itself, future broker dashboards) will
+ * shape downstream callers (the agent itself, future manager dashboards) will
  * bind to.
  *
  * Mocks: requireAuth, getSpaceForUser, supabase. Everything else (median,
@@ -78,7 +78,7 @@ const SPACE = {
   name: 'Test Space',
   emoji: null,
   ownerId: 'user_owner',
-  brokerageId: null,
+  teamId: null,
   createdAt: new Date().toISOString(),
   stripeSubscriptionStatus: null,
 } as unknown as NonNullable<Awaited<ReturnType<typeof getSpaceForUser>>>;
@@ -344,8 +344,8 @@ describe('GET /api/agent/draft-stats', () => {
 
 // ── Helper unit tests ────────────────────────────────────────────────────────
 // `aggregateDraftStats` is the pure-math contract both the route and the
-// broker dashboard's "Draft impact" card bind to. Test it directly so the
-// brokerage-wide consumer doesn't need the full request mock.
+// manager dashboard's "Draft impact" card bind to. Test it directly so the
+// team-wide consumer doesn't need the full request mock.
 
 import { aggregateDraftStats, type DraftStatsRow } from '@/lib/draft-stats';
 
@@ -368,9 +368,9 @@ describe('aggregateDraftStats (helper)', () => {
     });
   });
 
-  it('mixed input rolls up identically across realtor and brokerage scopes', () => {
-    // The card is brokerage-wide — it concatenates rows from every space in
-    // the brokerage and feeds them in. Same shape, same numbers.
+  it('mixed input rolls up identically across rep and team scopes', () => {
+    // The card is team-wide — it concatenates rows from every space in
+    // the team and feeds them in. Same shape, same numbers.
     const rows: DraftStatsRow[] = [
       { feedback_action: 'approved', edit_distance: 0, decision_ms: 5000, outcome_signal: 'deal_advanced' },
       { feedback_action: 'approved', edit_distance: 0, decision_ms: 7000, outcome_signal: 'none' },

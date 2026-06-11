@@ -1,5 +1,5 @@
 -- A SignatureRequest can be tied to a Person (Contact), not just a Deal —
--- the realtor can send a document to a specific person from their record.
+-- the rep can send a document to a specific person from their record.
 -- contactId is a soft link (nullable, no FK) so a request survives the
 -- contact being removed, mirroring the dealId/documentId posture on this table.
 

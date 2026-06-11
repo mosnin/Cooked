@@ -1,10 +1,10 @@
 /**
- * Support tickets (realtor-facing) — GET / POST
+ * Support tickets (rep-facing) — GET / POST
  *
  *   GET  ?slug=<slug>  → { tickets: [...] }   the caller's own tickets, newest first
  *   POST { slug, category, subject, message }  → { ticket }   create a ticket
  *
- * Auth: requireSpaceOwner(slug) — the workspace owner (or a broker_owner/admin
+ * Auth: requireSpaceOwner(slug) — the workspace owner (or a manager_owner/admin
  * managing that space). The submitter's email/name come from Clerk, not the
  * request body, so a caller can't spoof identity.
  */
@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
   if (auth instanceof NextResponse) return auth;
   const { userId, space } = auth;
 
-  // Rate limit — a realtor opening tickets in a tight loop is either a bug or
+  // Rate limit — a rep opening tickets in a tight loop is either a bug or
   // abuse. 10 per minute is generous for a human filling out a form.
   const { allowed } = await checkRateLimit(`support:create:${userId}`, 10, 60);
   if (!allowed) {

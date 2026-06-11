@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * Smart sync view — the realtor's outside CRM, mirrored in here.
+ * Smart sync view — the rep's outside CRM, mirrored in here.
  *
  * One idea: connect your CRM once and its contacts live here.
  *
@@ -61,7 +61,7 @@ interface CrmEntry {
  *  disabled pills — no fake connect path. */
 const CRM_ENTRIES: CrmEntry[] = [
   // Real-estate CRMs — Follow Up Boss connects natively via API key
-  { toolkit: 'follow_up_boss', name: 'Follow Up Boss', blurb: 'Paste your API key — Chippi mirrors your people.', native: true },
+  { toolkit: 'follow_up_boss', name: 'Follow Up Boss', blurb: 'Paste your API key — Koala mirrors your people.', native: true },
   { toolkit: 'compass', name: 'Compass', blurb: 'Mirror your Compass pipeline.', comingSoon: true },
   { toolkit: 'boomtown', name: 'BoomTown', blurb: 'Pull BoomTown leads here.', comingSoon: true },
   { toolkit: 'kvcore', name: 'kvCORE', blurb: 'Pull kvCORE leads and tasks.', comingSoon: true },
@@ -336,7 +336,7 @@ function FubConnectDialog({
         <DialogHeader>
           <DialogTitle style={TITLE_FONT}>Connect Follow Up Boss.</DialogTitle>
           <DialogDescription className={BODY_MUTED}>
-            Paste your API key and Chippi mirrors your people here. Find it in
+            Paste your API key and Koala mirrors your people here. Find it in
             Follow Up Boss → Admin → API.
           </DialogDescription>
         </DialogHeader>

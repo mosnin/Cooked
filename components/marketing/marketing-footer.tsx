@@ -35,8 +35,8 @@ const COLUMNS: FooterColumn[] = [
   {
     title: 'Product',
     items: [
-      { href: '/realtors', label: 'For realtors' },
-      { href: '/brokerages', label: 'For brokerages' },
+      { href: '/reps', label: 'For reps' },
+      { href: '/teams', label: 'For teams' },
       { href: '/integrations', label: 'Integrations' },
       { href: '/pricing', label: 'Pricing' },
     ],
@@ -46,7 +46,7 @@ const COLUMNS: FooterColumn[] = [
     items: [
       { href: '/company', label: 'Company' },
       { href: '/demo', label: 'Book a demo' },
-      { href: '/login/realtor', label: 'Log in' },
+      { href: '/login/rep', label: 'Log in' },
     ],
   },
   {
@@ -81,13 +81,13 @@ export function MarketingFooter() {
           <div className="col-span-2 md:col-span-1">
             <Link
               href="/"
-              aria-label="Chippi home"
+              aria-label="Koala home"
               className="inline-flex items-center"
             >
-              <BrandLogo className="h-5" alt="Chippi" />
+              <BrandLogo className="h-5" alt="Koala" />
             </Link>
             <p className="mt-4 text-[13px] leading-snug text-muted-foreground max-w-[14ch]">
-              The agentic OS for real-estate agents and brokerages.
+              The agentic OS for real-estate agents and teams.
             </p>
           </div>
 
@@ -132,7 +132,7 @@ export function MarketingFooter() {
 
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <p className="text-[12px] text-muted-foreground">
-              &copy; {year} Chippi. All rights reserved.
+              &copy; {year} Koala. All rights reserved.
             </p>
             <p className="text-[12px] text-muted-foreground">
               Built quietly. Shipped daily.

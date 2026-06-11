@@ -4,12 +4,12 @@
  * Returns the PIPELINE + OVERNIGHT shapes for the redesigned daily-brief
  * surface. These two sections aren't part of the composed Brief payload
  * — they're state-of-the-business roll-ups computed on every page load
- * (cheap reads against the realtor's own DB).
+ * (cheap reads against the rep's own DB).
  *
  * YOUR DAY (today's calendar events) is fetched by the client from the
  * existing /api/calendar/events route — that endpoint already has a 60s
  * memoization layer in front of the Composio call, so calling it twice
- * (once for /chippi/calendar, once for /chippi/brief) is cheap.
+ * (once for /koala/calendar, once for /koala/brief) is cheap.
  *
  * Returns `{ pipeline: PipelineSummary | null, overnight: OvernightSummary | null }`.
  * Either may be null — the surface omits the corresponding section silently.

@@ -1,7 +1,7 @@
 'use client';
 
-/** How it works: fortitudo's four-step spotlight grid, carrying Chippi's
- *  real flow: connect, let Chippi work, approve, stay current. */
+/** How it works: fortitudo's four-step spotlight grid, carrying Koala's
+ *  real flow: connect, let Koala work, approve, stay current. */
 
 import { motion } from 'motion/react';
 import { SpotlightCard } from '../spotlight-card';
@@ -10,10 +10,10 @@ const steps = [
   {
     title: 'Connect',
     description:
-      'Plug in Gmail or Outlook and your calendar. Two minutes, no migration. Chippi starts reading the inbox the moment you connect.',
+      'Plug in Gmail or Outlook and your calendar. Two minutes, no migration. Koala starts reading the inbox the moment you connect.',
   },
   {
-    title: 'Chippi works',
+    title: 'Koala works',
     description:
       'It drafts replies in your voice, scores each new lead against your deals, and surfaces the one to handle first.',
   },
@@ -25,7 +25,7 @@ const steps = [
   {
     title: 'Stay current',
     description:
-      'Tours land on the calendar, the pipeline updates itself, and every touch is logged. The board reflects reality, not last week.',
+      'Demos land on the calendar, the pipeline updates itself, and every touch is logged. The board reflects reality, not last week.',
   },
 ];
 

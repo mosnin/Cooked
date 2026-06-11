@@ -3,12 +3,12 @@
 /**
  * /s/[slug]/support — Get help.
  *
- * One intent: a realtor submits a support request. The form is the focal
- * element; the realtor's own past tickets sit below it with status badges.
+ * One intent: a rep submits a support request. The form is the focal
+ * element; the rep's own past tickets sit below it with status badges.
  *
  * Design: Jobs lens — paper-flat, one focal element (serif h1 + status
  * sentence), hairline-divided ticket list, calm copy. No configuration the
- * realtor has to operate — just say what's wrong and send it.
+ * rep has to operate — just say what's wrong and send it.
  */
 
 import { useCallback, useEffect, useState } from 'react';

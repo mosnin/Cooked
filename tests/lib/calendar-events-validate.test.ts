@@ -8,7 +8,7 @@
  *     (missing title, end-before-start, malformed email, etc.) and
  *     normalizes a correct payload to the exact shape `writeEventThrough`
  *     expects. If this drifts, the POST handler bleeds 500s into the
- *     realtor's UI from inside Composio.
+ *     rep's UI from inside Composio.
  *
  *   - The month-grid helper always returns 42 days (6 weeks × 7) so the
  *     calendar surface doesn't relayout when months have different
@@ -29,7 +29,7 @@ import {
 
 describe('validateCreatePayload', () => {
   const baseTimed = {
-    title: 'Tour @ 456 Oak',
+    title: 'Demo @ 456 Oak',
     startDate: '2026-06-10',
     startTime: '09:00',
     endDate: '2026-06-10',
@@ -40,7 +40,7 @@ describe('validateCreatePayload', () => {
     const res = validateCreatePayload(baseTimed);
     expect(res.ok).toBe(true);
     if (!res.ok) return;
-    expect(res.value.title).toBe('Tour @ 456 Oak');
+    expect(res.value.title).toBe('Demo @ 456 Oak');
     expect(res.value.allDay).toBe(false);
     expect(res.value.startsAt).toMatch(/^2026-06-10T09:00:00/);
     expect(res.value.endsAt).toMatch(/^2026-06-10T10:00:00/);

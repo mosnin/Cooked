@@ -1,6 +1,6 @@
 export const metadata = {
-  title: 'Acceptable Use Policy | Chippi',
-  description: 'Acceptable Use Policy for Chippi, a B2B SaaS agentic OS for real estate agents and brokerages.',
+  title: 'Acceptable Use Policy | Koala',
+  description: 'Acceptable Use Policy for Koala, a B2B SaaS agentic OS for real estate agents and teams.',
 };
 
 export default function AcceptableUsePolicyPage() {
@@ -13,8 +13,8 @@ export default function AcceptableUsePolicyPage() {
       </header>
 
       <p className="text-sm leading-6 text-muted-foreground">
-        This Acceptable Use Policy (&quot;AUP&quot;) governs the use of the Chippi platform available at usechippi.com and
-        my.usechippi.com (the &quot;Service&quot;) operated by Chippi Inc. (&quot;Chippi,&quot; &quot;we,&quot; &quot;us,&quot; or &quot;our&quot;). This AUP is
+        This Acceptable Use Policy (&quot;AUP&quot;) governs the use of the Koala platform available at usekoala.com and
+        my.usekoala.com (the &quot;Service&quot;) operated by Koala Inc. (&quot;Koala,&quot; &quot;we,&quot; &quot;us,&quot; or &quot;our&quot;). This AUP is
         incorporated into and forms part of our <a href="/legal/terms" className="underline hover:text-foreground">Terms of Service</a>.
         All Users of the Service must comply with this policy.
       </p>
@@ -28,12 +28,12 @@ export default function AcceptableUsePolicyPage() {
             <li><strong className="text-foreground">Spam and Unsolicited Communications.</strong> Sending unsolicited bulk messages, marketing communications, or other spam through the Service, including via email (Resend) or SMS (Telnyx) integrations. All communications sent through the Service must comply with applicable laws, including the CAN-SPAM Act, TCPA, and equivalent regulations.</li>
             <li><strong className="text-foreground">Discrimination.</strong> Using the Service to discriminate against any individual or group based on race, color, religion, sex, national origin, familial status, disability, sexual orientation, gender identity, age, or any other characteristic protected by applicable law.</li>
             <li><strong className="text-foreground">Scraping and Data Harvesting.</strong> Using automated tools, bots, crawlers, or scrapers to extract data from the Service or from other Users&apos; accounts without authorization.</li>
-            <li><strong className="text-foreground">Impersonation.</strong> Misrepresenting your identity, impersonating another person or entity, or falsely implying an affiliation with Chippi or any third party.</li>
+            <li><strong className="text-foreground">Impersonation.</strong> Misrepresenting your identity, impersonating another person or entity, or falsely implying an affiliation with Koala or any third party.</li>
             <li><strong className="text-foreground">Malicious Activity.</strong> Uploading or transmitting viruses, malware, or other harmful code. Attempting to gain unauthorized access to the Service, other accounts, or connected systems.</li>
             <li><strong className="text-foreground">Illegal Activity.</strong> Using the Service for any purpose that violates applicable local, state, national, or international law or regulation.</li>
             <li><strong className="text-foreground">Abuse of AI Features.</strong> Manipulating AI scoring inputs to produce false or misleading results, or using AI outputs as the sole basis for legal, financial, or housing decisions without human review.</li>
             <li><strong className="text-foreground">Interference.</strong> Disrupting, overloading, or impairing the Service or its infrastructure, including through denial-of-service attacks or excessive API usage.</li>
-            <li><strong className="text-foreground">Unauthorized Resale.</strong> Reselling, sublicensing, or redistributing access to the Service without Chippi&apos;s prior written consent.</li>
+            <li><strong className="text-foreground">Unauthorized Resale.</strong> Reselling, sublicensing, or redistributing access to the Service without Koala&apos;s prior written consent.</li>
           </ul>
         </div>
       </section>
@@ -91,7 +91,7 @@ export default function AcceptableUsePolicyPage() {
       <section>
         <h2 className="text-xl font-semibold">5. Enforcement and Consequences</h2>
         <div className="mt-3 text-sm text-muted-foreground space-y-3 leading-6">
-          <p>5.1. Chippi reserves the right to investigate any suspected violation of this AUP and to take appropriate action, which may include:</p>
+          <p>5.1. Koala reserves the right to investigate any suspected violation of this AUP and to take appropriate action, which may include:</p>
           <ul className="list-disc pl-5 space-y-1">
             <li>Issuing a warning to the violating User.</li>
             <li>Temporarily suspending access to the Service.</li>
@@ -113,9 +113,9 @@ export default function AcceptableUsePolicyPage() {
           <p>6.2. Reports should include as much detail as possible, including the nature of the violation, the account or User involved, and any supporting evidence.</p>
           <p>6.3. To report a violation, contact us:</p>
           <p>
-            Chippi Inc.<br />
-            Email: <a href="mailto:help@usechippi.com" className="underline hover:text-foreground">help@usechippi.com</a><br />
-            Website: <a href="https://usechippi.com" className="underline hover:text-foreground">usechippi.com</a>
+            Koala Inc.<br />
+            Email: <a href="mailto:help@usekoala.com" className="underline hover:text-foreground">help@usekoala.com</a><br />
+            Website: <a href="https://usekoala.com" className="underline hover:text-foreground">usekoala.com</a>
           </p>
         </div>
       </section>

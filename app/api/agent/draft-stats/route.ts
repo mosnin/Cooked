@@ -11,11 +11,11 @@ import {
 /**
  * GET /api/agent/draft-stats
  *
- * Tells the realtor (and the agent itself) how its drafts have actually been
+ * Tells the rep (and the agent itself) how its drafts have actually been
  * landing. Two layers of signal:
  *
  *   - Input quality (Phase 12): `feedback_action`, `edit_distance`, `decision_ms`
- *     — did the realtor approve / edit / reject the draft. Lives in the
+ *     — did the rep approve / edit / reject the draft. Lives in the
  *     `approved`/`editedAndApproved`/`rejected`/`held` counts and the rates
  *     derived from them.
  *   - Outcome attribution (Phase 13): `outcome_signal`, `outcome_checked_at`
@@ -29,7 +29,7 @@ import {
  *
  * Window: rolling 30 days, fixed.
  *
- * Math lives in `lib/draft-stats.ts` so the broker dashboard's "Draft impact"
+ * Math lives in `lib/draft-stats.ts` so the manager dashboard's "Draft impact"
  * card reports identical numbers from the same shape.
  *
  * Read-only. No DB writes. No outbound side effects.

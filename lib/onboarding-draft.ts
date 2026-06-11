@@ -1,29 +1,29 @@
 /**
- * The first-touch draft Chippi "writes" during the onboarding reveal.
+ * The first-touch draft Koala "writes" during the onboarding reveal.
  *
  * This is the payoff of the welcome promise ("by the end, I'll already
- * be working on it"). At the final onboarding stage Chippi types out a
- * real first-touch message - in the realtor's chosen voice, naming
- * their business, tuned to their primary lead source - so the realtor
+ * be working on it"). At the final onboarding stage Koala types out a
+ * real first-touch message - in the rep's chosen voice, naming
+ * their business, tuned to their primary lead source - so the rep
  * SEES the agent work before the dashboard ever loads.
  *
  * Why deterministic, not an LLM call. Onboarding is the single
  * highest-stakes first impression in the product. An LLM call here is
  * slow (seconds of dead air), costs money on every signup, and - worst
  * - can misfire on the one screen we cannot afford to get wrong. A
- * template keyed off the realtor's own inputs is instant, free, and
+ * template keyed off the rep's own inputs is instant, free, and
  * cannot produce a bad sentence. The MAGIC is the live typing
  * animation, not the generation. Keep it here, pure and tested.
  *
  * Everything in this file is a pure function of its inputs - no I/O,
  * no Date.now(), no randomness. That's what makes it unit-testable and
- * what makes the reveal identical every time the realtor sees it.
+ * what makes the reveal identical every time the rep sees it.
  */
 
 export type DraftTone = 'warm' | 'direct';
 
 export interface OnboardingDraftInput {
-  /** Realtor's full name; we use the first token. */
+  /** Rep's full name; we use the first token. */
   name: string;
   /** Business name shown to leads. */
   businessName: string;
@@ -70,7 +70,7 @@ const AUDIENCE_WARM_CLAUSE: Record<string, string> = {
   renters: " I'll line up places that fit before they hit the open market.",
 };
 
-/** Pick the realtor's first name, or a friendly fallback. */
+/** Pick the rep's first name, or a friendly fallback. */
 function firstNameOf(name: string): string {
   const t = name.trim().split(/\s+/)[0];
   return t || 'there';

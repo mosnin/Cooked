@@ -1,7 +1,7 @@
--- Composio trigger subscriptions per realtor connection.
+-- Composio trigger subscriptions per rep connection.
 --
 -- Each row tracks ONE registered Composio trigger for ONE
--- IntegrationConnection. When a realtor connects Gmail we register the
+-- IntegrationConnection. When a rep connects Gmail we register the
 -- curated triggers for the gmail toolkit (see lib/integrations/triggers.ts)
 -- and store the Composio-side trigger ids here. On disconnect we delete
 -- the subscriptions at Composio AND the rows here.
@@ -17,7 +17,7 @@
 --   active  — registered at Composio, webhook deliveries dispatch
 --   paused  — registered at Composio but receiver drops deliveries
 --   failed  — registration attempted but Composio rejected it; row
---             kept as a breadcrumb so the realtor isn't silently missing
+--             kept as a breadcrumb so the rep isn't silently missing
 --             functionality the catalog implies they get
 
 CREATE TABLE IF NOT EXISTS "IntegrationTrigger" (

@@ -40,11 +40,11 @@ describe('buildSystemPrompt', () => {
     const prompt = buildSystemPrompt(makeCtx());
     // Snapshot the exact bullet so any future softening surfaces in CI.
     expect(prompt).toContain(
-      `- Sending verbs ("send", "email", "schedule", "post") prefer the connected-app tool — it acts through the realtor's account. Drafting verbs ("draft", "compose", "write me") use the native draft tools. When the verb is ambiguous, draft.`,
+      `- Sending verbs ("send", "email", "schedule", "post") prefer the connected-app tool — it acts through the rep's account. Drafting verbs ("draft", "compose", "write me") use the native draft tools. When the verb is ambiguous, draft.`,
     );
   });
 
-  it('pins the reasoning-before-mutation contract so the realtor sees a why before tapping Approve', () => {
+  it('pins the reasoning-before-mutation contract so the rep sees a why before tapping Approve', () => {
     const prompt = buildSystemPrompt(makeCtx());
     expect(prompt).toMatch(/BEFORE calling a mutating tool/);
     expect(prompt).toMatch(/WHO you're acting on and WHY/);

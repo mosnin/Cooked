@@ -3,7 +3,7 @@
 -- Today the only signal we have on a draft is its terminal `status`
 -- (pending / approved / dismissed / sent). That tells us whether a draft
 -- moved, but not WHY:
---   - Did the realtor approve it as written, or rewrite half of it?
+--   - Did the rep approve it as written, or rewrite half of it?
 --   - How long did the decision take? (10 seconds = trust; 4 minutes = doubt.)
 --   - Was a "dismissed" draft a hold, or a flat reject?
 --

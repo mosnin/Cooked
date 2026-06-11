@@ -2,7 +2,7 @@
 
 /**
  * SuggestedActions — 2-4 chip row that follows the last assistant message.
- * Click a chip → it fires that exact text as the realtor's next message.
+ * Click a chip → it fires that exact text as the rep's next message.
  * Removes the typing step for the most-likely follow-up. Visible only when
  * the conversation is idle (not streaming) and the last turn was a
  * non-error assistant turn.

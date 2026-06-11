@@ -1,0 +1,8 @@
+{
+  "name": "koala-analytics",
+  "description": "Get CRM analytics and performance insights from your Koala data. Weekly reports, conversion rates, and revenue forecasts.",
+  "version": "1.0.0",
+  "author": { "name": "Koala", "url": "https://usekoala.com" },
+  "homepage": "https://usekoala.com",
+  "keywords": ["crm", "analytics", "reports", "real-estate", "koala"]
+}

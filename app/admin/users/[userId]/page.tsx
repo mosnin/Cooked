@@ -42,7 +42,7 @@ export async function generateMetadata({
     .maybeSingle();
   const user = rows as { name: string | null; email: string } | null;
   return {
-    title: `${user?.name || user?.email || 'User'} — Admin — Chippi`,
+    title: `${user?.name || user?.email || 'User'} — Admin — Koala`,
   };
 }
 
@@ -182,7 +182,7 @@ export default async function AdminUserDetailPage({
       supabase
         .from('SpaceSetting')
         .select(
-          'id, spaceId, phoneNumber, businessName, timezone, notifications, smsNotifications, notifyNewLeads, notifyTourBookings, notifyNewDeals, notifyFollowUps',
+          'id, spaceId, phoneNumber, businessName, timezone, notifications, smsNotifications, notifyNewLeads, notifyDemoBookings, notifyNewDeals, notifyFollowUps',
         )
         .eq('spaceId', spaceRow.id)
         .maybeSingle(),

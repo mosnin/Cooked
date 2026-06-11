@@ -12,11 +12,11 @@
  *   - Centered serif headline (--font-title) + one-sentence sub.
  *   - A FOREGROUND primary CTA (PRIMARY_PILL) — no orange, per the brand rule.
  *   - The live product surface floating below in an app-window frame: a real
- *     animated Chippi diagram inside a hairline-bordered window with a soft
+ *     animated Koala diagram inside a hairline-bordered window with a soft
  *     shadow and a gradient floor settling it into the page.
  *
  * No photo. No foreign theme tokens. Brand orange stays scarce — it appears
- * only where Chippi authors something inside the product surface, never on the
+ * only where Koala authors something inside the product surface, never on the
  * chrome. The backdrop is a single neutral radial so the product reads as lit,
  * not decorated.
  *
@@ -138,7 +138,7 @@ export function MarketingHeroHome({
           </motion.div>
         </motion.div>
 
-        {/* Product surface — the hero's real subject. A live Chippi diagram
+        {/* Product surface — the hero's real subject. A live Koala diagram
             framed in an app window that floats above a gradient floor. */}
         <motion.div
           variants={frameRise}
@@ -187,7 +187,7 @@ function ProductWindow({ children }: { children: React.ReactNode }) {
           <span className="h-2.5 w-2.5 rounded-full bg-foreground/15" />
         </span>
         <span className="mx-auto select-none rounded-md bg-foreground/[0.04] px-3 py-1 text-[11px] text-muted-foreground/80">
-          app.chippi.ai
+          app.koala.ai
         </span>
         {/* Balances the traffic lights so the address sits dead-center. */}
         <span aria-hidden className="w-[42px]" />

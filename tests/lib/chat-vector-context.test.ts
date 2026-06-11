@@ -91,7 +91,7 @@ describe('retrieveContext — happy path', () => {
   it('embeds the message and queries match_agent_memory', async () => {
     rpcResp.data = [
       { content: 'Preston wants a 3-bed under $500k', similarity: 0.82 },
-      { content: 'Sarah\'s tour was canceled', similarity: 0.71 },
+      { content: 'Sarah\'s demo was canceled', similarity: 0.71 },
     ];
     const r = await retrieveContext({
       spaceId: 'sp1',

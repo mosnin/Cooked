@@ -1,6 +1,6 @@
 # DECISIONS.md
 
-Decision log for product and technical choices in the Chippi repository.
+Decision log for product and technical choices in the Koala repository.
 
 Use this to record meaningful decisions and avoid re-litigating context. When a decision is made (by a human or during AI-assisted work), log it here with full context so future contributors understand why.
 
@@ -41,7 +41,7 @@ Use this to record meaningful decisions and avoid re-litigating context. When a 
 
 - **Status**: [CONFIRMED] — product context and codebase both support this
 - **Decision**: Prioritize renter/leasing qualification speed and clarity over broad CRM feature expansion.
-- **Context**: Chippi's initial user is a new solo realtor handling renter leads. The codebase is built around intake → scoring → CRM triage. Expanding to generic CRM breadth would dilute the activation value and increase setup friction.
+- **Context**: Koala's initial user is a new solo rep handling renter leads. The codebase is built around intake → scoring → CRM triage. Expanding to generic CRM breadth would dilute the activation value and increase setup friction.
 - **Options considered**:
   1. Expand to generic CRM breadth now — serve more use cases, risk losing focus
   2. Maintain focused wedge — serve the specific user well, expand later
@@ -56,13 +56,13 @@ Use this to record meaningful decisions and avoid re-litigating context. When a 
 
 - **Status**: [CONFIRMED] — implemented in `lib/lead-scoring.ts`
 - **Decision**: Lead scoring must produce an explainable contract: numeric score (0-100), label (hot/warm/cold/unscored), and plain-language summary (max 300 chars).
-- **Context**: Realtors need to quickly triage leads. An opaque score number is not actionable. The summary explains *why* a lead scored the way it did.
+- **Context**: Reps need to quickly triage leads. An opaque score number is not actionable. The summary explains *why* a lead scored the way it did.
 - **Options considered**:
   1. Opaque numeric score only
   2. Score + label (no summary)
   3. Score + label + explainable summary (chosen)
 - **Chosen option**: 3 — Full explainable contract. The summary drives trust and actionability.
-- **Expected impact**: Realtors can make faster follow-up decisions with confidence. Scoring feels practical, not magical.
+- **Expected impact**: Reps can make faster follow-up decisions with confidence. Scoring feels practical, not magical.
 - **Risks**: Prompt/schema drift could break the contract. Summary quality depends on model output.
 - **Follow-up review date**: [TBD — revisit if scoring accuracy feedback emerges]
 

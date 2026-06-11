@@ -1,5 +1,5 @@
 /**
- * Editorial voice tests — Chippi's brand voice as hard rules.
+ * Editorial voice tests — Koala's brand voice as hard rules.
  *
  * Structural tests verify that copy *appears*. They do not verify that copy
  * is *good*. "Maya's looking hot" passed every structural test until a human
@@ -55,7 +55,7 @@ function readAudited(): Array<{ path: string; text: string }> {
 }
 
 // ── Forbidden phrases ───────────────────────────────────────────────────────
-// The tells of corporate-email autopilot. None of these belong in Chippi's
+// The tells of corporate-email autopilot. None of these belong in Koala's
 // mouth — they signal "I'm a template" instead of "I'm a person who knows
 // you." Case-insensitive match; if it appears verbatim, it fails.
 //
@@ -98,7 +98,7 @@ describe('editorial voice — forbidden phrases', () => {
 });
 
 // ── Home story sentence length ──────────────────────────────────────────────
-// The /chippi home renders one sentence as an h1 in a serif title face. Past
+// The /koala home renders one sentence as an h1 in a serif title face. Past
 // ~80 characters it wraps to two lines and the silhouette stops feeling like
 // a thought; it feels like a paragraph. The deterministic ladder must stay
 // under that bar even on the longest legitimate inputs (long person names,
@@ -187,7 +187,7 @@ describe('editorial voice — morning sentence length', () => {
 });
 
 // ── Canonical CTA verbs ─────────────────────────────────────────────────────
-// Chippi's button copy is verb-led and specific. Generic words ("Submit",
+// Koala's button copy is verb-led and specific. Generic words ("Submit",
 // "Click", "OK") don't ship — they tell the user nothing about what's about
 // to happen. The list below is the canonical inventory; if any of these go
 // missing, something rebranded a screen and broke the voice.
@@ -200,18 +200,18 @@ describe('editorial voice — canonical CTA verbs', () => {
   const allText = audited.map((f) => f.text).join('\n');
 
   // Each entry is a verb-led CTA we ship. Listed as it appears in source.
-  // "Save event" / "Save note" were on the Chippi-owned calendar surface
-  // that was deleted when calendars went external-only — Chippi mirrors
-  // the realtor's Google Calendar now and doesn't have its own add-event
+  // "Save event" / "Save note" were on the Koala-owned calendar surface
+  // that was deleted when calendars went external-only — Koala mirrors
+  // the rep's Google Calendar now and doesn't have its own add-event
   // verb. Removed from the canonical list.
   const CANONICAL_CTAS = [
-    'Tell Chippi →',
+    'Tell Koala →',
     'Send',
     'Edit',
     'Cancel',
     'Try again',
     'Open chat',
-    'Schedule tour',
+    'Schedule demo',
   ];
 
   for (const cta of CANONICAL_CTAS) {
@@ -237,14 +237,14 @@ describe('editorial voice — canonical CTA verbs', () => {
     expect(
       offenders,
       `"Submit" appears as button copy in: ${offenders.join(', ')}. ` +
-        `Use a verb that names what's about to happen ("Send", "Schedule tour", etc.).`,
+        `Use a verb that names what's about to happen ("Send", "Schedule demo", etc.).`,
     ).toEqual([]);
   });
 });
 
 // ── No emoji except the curly arrow ────────────────────────────────────────
 // The brand uses one decorative glyph: the rightward curly arrow `→`
-// (U+2192) on the primary "Tell Chippi →" pill. Anything else — sparkles,
+// (U+2192) on the primary "Tell Koala →" pill. Anything else — sparkles,
 // rockets, party poppers — is consumer-app theater, not the calm,
 // confident voice we want. Em-dash (—), en-dash (–), ellipsis (…), curly
 // quotes are typography, not emoji; they are allowed.
@@ -279,7 +279,7 @@ describe('editorial voice — emoji policy', () => {
 // ── No "click here" / "tap here" ───────────────────────────────────────────
 // Anti-pattern. Link copy should describe the destination, not point at
 // itself. "Share your intake link" beats "Click here to share." This rule
-// holds even inside marketing-style empty states — Chippi doesn't write
+// holds even inside marketing-style empty states — Koala doesn't write
 // marketing copy.
 describe('editorial voice — no "click here" / "tap here"', () => {
   const audited = readAudited();
@@ -303,7 +303,7 @@ describe('editorial voice — no "click here" / "tap here"', () => {
 // Toasts are quiet, calm acknowledgements — sentence-cased, not Title-Cased.
 // "Contact deleted." beats "Contact Deleted." The detection is hard to do
 // cleanly without a full parser (the second word can legitimately be a
-// proper noun: Sonner, Chippi, Telnyx). We try a best-effort scan and
+// proper noun: Sonner, Koala, Telnyx). We try a best-effort scan and
 // allow a small allowlist; if a future toast breaks the rule but the
 // detection is too noisy, prefer to refactor the toast.
 describe('editorial voice — toast sentence-case', () => {
@@ -312,7 +312,7 @@ describe('editorial voice — toast sentence-case', () => {
   // brand names, channels we capitalize). Add only when the toast is
   // genuinely correct.
   const PROPER_NOUNS = new Set([
-    'Chippi',
+    'Koala',
     'Sonner',
     'Telnyx',
     'OpenAI',

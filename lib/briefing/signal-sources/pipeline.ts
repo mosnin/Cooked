@@ -1,5 +1,5 @@
 /**
- * Pipeline signal source — reads the realtor's active Deal rows and
+ * Pipeline signal source — reads the rep's active Deal rows and
  * surfaces stuck deals, at-risk deals, and deals closing this week.
  *
  * Confidence calibration:
@@ -9,7 +9,7 @@
  *   - Other at-risk (15-29 days in stage): 0.72 — just above the floor
  *
  * The floor is 0.7. Below that signals don't compete for slots; this
- * matters when a realtor with a quiet pipeline shouldn't get a brief
+ * matters when a rep with a quiet pipeline shouldn't get a brief
  * padded with "this deal has been sitting 16 days" filler.
  */
 

@@ -10,7 +10,7 @@
  *
  * No backup table: sent messages live in the provider's history and
  * inbox reads are fetched on-demand. Calendar earned a local mirror
- * because Chippi creates tour events autonomously; here the realtor is
+ * because Koala creates demo events autonomously; here the rep is
  * in the loop on every send and read.
  */
 
@@ -101,7 +101,7 @@ export const WHATSAPP_SLUGS = {
 export interface MailConnection {
   /** IntegrationConnection row id. */
   id: string;
-  /** Composio entityId — the realtor's Clerk userId. */
+  /** Composio entityId — the rep's Clerk userId. */
   userId: string;
   /** Provider slug. */
   toolkit: MailProvider;
@@ -110,15 +110,15 @@ export interface MailConnection {
 export interface WhatsAppConnection {
   /** IntegrationConnection row id. */
   id: string;
-  /** Composio entityId — the realtor's Clerk userId. */
+  /** Composio entityId — the rep's Clerk userId. */
   userId: string;
   toolkit: WhatsAppToolkit;
 }
 
 /**
- * Find the realtor's active email connection for this space. Returns the
+ * Find the rep's active email connection for this space. Returns the
  * first match across the mail toolkits — Gmail wins over Outlook if both
- * are connected (Gmail is the dominant realtor inbox; same precedence as
+ * are connected (Gmail is the dominant rep inbox; same precedence as
  * `lib/delivery.ts`).
  *
  * Returns null when nothing's connected — callers should render the
@@ -159,7 +159,7 @@ export async function findEmailConnection(
 }
 
 /**
- * Find the realtor's active WhatsApp Business connection for this space.
+ * Find the rep's active WhatsApp Business connection for this space.
  *
  * One row per space at most; WhatsApp Business numbers are 1:1 with a
  * phone number identity, and we don't try to juggle multiples. Returns
@@ -216,12 +216,12 @@ export interface SendResult {
 }
 
 /**
- * Send an email through the realtor's provider. Mirror of
+ * Send an email through the rep's provider. Mirror of
  * `writeEventThrough` for calendar — no DB writes for v1 because the
  * provider's Sent folder is the truth.
  *
  * Outlook send path is wired but only Gmail is enabled at the call site
- * (see app/api/email/send/route.ts). If the realtor only has Outlook
+ * (see app/api/email/send/route.ts). If the rep only has Outlook
  * connected, we surface a clear "Outlook send isn't supported yet"
  * error rather than trying a slug that may or may not match Composio's
  * current Outlook send shape.
@@ -299,7 +299,7 @@ export interface SetStarInput {
 }
 
 /**
- * Star / unstar an email in the realtor's provider.
+ * Star / unstar an email in the rep's provider.
  *
  * Gmail: toggles the system `STARRED` label via add/remove tool slugs.
  * Outlook: not supported in v1 — surfaces a clean error so the UI can
@@ -364,11 +364,11 @@ export interface SendWhatsAppInput {
 }
 
 /**
- * Send a WhatsApp message through the realtor's Business account.
+ * Send a WhatsApp message through the rep's Business account.
  *
  * Composio's WhatsApp toolkit standardises on `WHATSAPP_SEND_MESSAGE`.
  * If that slug is rejected at runtime (returned 404 / unknown tool), we
- * surface the error verbatim — the surface tells the realtor honestly
+ * surface the error verbatim — the surface tells the rep honestly
  * that WhatsApp send isn't reachable, rather than swallowing it.
  */
 export async function sendWhatsAppThrough(

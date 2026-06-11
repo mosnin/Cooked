@@ -1,7 +1,7 @@
 /**
  * Client-portal data — aggregates everything tied to a verified client email
- * across ALL spaces: applications (Contact rows) and tours (Tour rows). This is
- * the "one page by email" surface. Read-only against realtor data; the client's
+ * across ALL spaces: applications (Contact rows) and demos (Demo rows). This is
+ * the "one page by email" surface. Read-only against rep data; the client's
  * verified email is the authorization boundary (only rows matching their email).
  */
 import 'server-only';
@@ -14,25 +14,25 @@ export interface PortalApplication {
   statusNote: string | null;
   applicationRef: string | null;
   spaceId: string;
-  realtorName: string | null;
-  realtorSlug: string | null;
+  repName: string | null;
+  repSlug: string | null;
   createdAt: string;
 }
 
-export interface PortalTour {
+export interface PortalDemo {
   id: string;
   propertyAddress: string | null;
   startsAt: string | null;
   status: string | null;
   spaceId: string;
   contactId: string | null;
-  realtorName: string | null;
-  realtorSlug: string | null;
+  repName: string | null;
+  repSlug: string | null;
 }
 
 export interface ClientPortalData {
   applications: PortalApplication[];
-  tours: PortalTour[];
+  demos: PortalDemo[];
   /** Contact ids this client owns (by verified email) — the scope for
    *  messaging, documents, and info-requests. */
   contactIds: string[];
@@ -41,7 +41,7 @@ export interface ClientPortalData {
 type SpaceRel = { name?: string | null; slug?: string | null } | null;
 
 /**
- * Pull the client's applications + tours by email. `email` MUST be the verified
+ * Pull the client's applications + demos by email. `email` MUST be the verified
  * session email — it is the only authorization check, so never pass an
  * unverified or caller-supplied address here.
  */
@@ -56,7 +56,7 @@ function escapeLike(value: string): string {
 export async function getClientPortalData(email: string): Promise<ClientPortalData> {
   const lower = email.trim().toLowerCase();
 
-  const [{ data: contacts }, { data: tours }] = await Promise.all([
+  const [{ data: contacts }, { data: demos }] = await Promise.all([
     supabase
       .from('Contact')
       .select(
@@ -65,7 +65,7 @@ export async function getClientPortalData(email: string): Promise<ClientPortalDa
       .ilike('email', escapeLike(lower))
       .order('createdAt', { ascending: false }),
     supabase
-      .from('Tour')
+      .from('Demo')
       .select('id, propertyAddress, startsAt, status, spaceId, contactId, guestEmail, Space(name, slug)')
       .ilike('guestEmail', lower)
       .order('startsAt', { ascending: false }),
@@ -80,13 +80,13 @@ export async function getClientPortalData(email: string): Promise<ClientPortalDa
       statusNote: (c.applicationStatusNote as string | null) ?? null,
       applicationRef: (c.applicationRef as string | null) ?? null,
       spaceId: c.spaceId as string,
-      realtorName: space?.name ?? null,
-      realtorSlug: space?.slug ?? null,
+      repName: space?.name ?? null,
+      repSlug: space?.slug ?? null,
       createdAt: c.createdAt as string,
     };
   });
 
-  const portalTours: PortalTour[] = (tours ?? []).map((t) => {
+  const portalDemos: PortalDemo[] = (demos ?? []).map((t) => {
     const space = t.Space as SpaceRel;
     return {
       id: t.id as string,
@@ -95,19 +95,19 @@ export async function getClientPortalData(email: string): Promise<ClientPortalDa
       status: (t.status as string | null) ?? null,
       spaceId: t.spaceId as string,
       contactId: (t.contactId as string | null) ?? null,
-      realtorName: space?.name ?? null,
-      realtorSlug: space?.slug ?? null,
+      repName: space?.name ?? null,
+      repSlug: space?.slug ?? null,
     };
   });
 
   const contactIds = Array.from(
     new Set([
       ...applications.map((a) => a.contactId),
-      ...portalTours.map((t) => t.contactId).filter((id): id is string => Boolean(id)),
+      ...portalDemos.map((t) => t.contactId).filter((id): id is string => Boolean(id)),
     ]),
   );
 
-  return { applications, tours: portalTours, contactIds };
+  return { applications, demos: portalDemos, contactIds };
 }
 
 /** Guard: does this verified email own this contact? Used by messaging / docs

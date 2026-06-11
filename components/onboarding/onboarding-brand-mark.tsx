@@ -3,8 +3,8 @@
 /**
  * The brand mark on the onboarding hero. Previously a custom rounded-diamond
  * SVG, which the user (correctly) flagged as a "weird shape" that didn't
- * belong on the front door of the product. Now renders the actual Chippi
- * logo so the moment the realtor lands on setup, they see the same identity
+ * belong on the front door of the product. Now renders the actual Koala
+ * logo so the moment the rep lands on setup, they see the same identity
  * that lives in the sidebar, the public profile, and every other surface.
  */
 import { BrandLogo } from '@/components/brand-logo';
@@ -24,5 +24,5 @@ export function OnboardingBrandMark({ size = 48 }: { size?: number }) {
             : size === 64
               ? 'h-16'
               : 'h-12';
-  return <BrandLogo className={heightClass} alt="Chippi" />;
+  return <BrandLogo className={heightClass} alt="Koala" />;
 }

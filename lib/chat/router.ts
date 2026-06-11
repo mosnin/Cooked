@@ -5,7 +5,7 @@
  * (`lib/chat/direct-llm.ts`) or the full Modal agent path (`/api/ai/task`'s
  * existing Modal proxy). Direct serves generic Q&A, multimodal summaries,
  * help; agent serves anything that needs to MUTATE state (create contact,
- * send email, schedule tour, etc.) or call a connected integration.
+ * send email, schedule demo, etc.) or call a connected integration.
  *
  * Heuristic: regex on imperative action verbs. If the message looks like
  * "add Preston as a contact" or "send the follow-up", we route 'agent'
@@ -22,7 +22,7 @@
  */
 
 /**
- * Imperative action verbs that signal the realtor wants Chippi to DO
+ * Imperative action verbs that signal the rep wants Koala to DO
  * something (mutation, send, schedule) — not just answer. Case insensitive,
  * matched as standalone words. Order doesn't matter; the alternation is
  * treated as a flat set.
@@ -42,25 +42,25 @@ const ACTION_VERBS_RE =
   /\b(add|create|set|update|change|edit|archive|mark|log|save|delete|remove|send|text|sms|email|reply|forward|draft|write|ping|dm|reach|contact|follow|followup|nudge|call|schedule|book|cancel|reschedule|move|assign|reassign|unassign|route|qualify|advance|close|win|lose|remind|notify|fire|ship|invite|approve|reject|connect|disconnect|link|integrate|sync)\b/i;
 
 /**
- * Workspace-DATA queries that READ the realtor's book of business. These are
+ * Workspace-DATA queries that READ the rep's book of business. These are
  * not mutations, but they still REQUIRE tools (find_person, find_property,
  * pipeline_summary, find_quiet_hot_persons, …) — the toolless direct path
  * cannot answer "show my pipeline" or "find my hottest leads", it can only
- * deflect. So any message that references the realtor's data (a read verb
+ * deflect. So any message that references the rep's data (a read verb
  * paired with, or just a mention of, a workspace noun) routes to the agent.
  *
- * This is the fix for the "Chippi has no access to anything" failure: read
+ * This is the fix for the "Koala has no access to anything" failure: read
  * phrasings like "show today's pipeline", "find hot leads", "who's overdue",
  * "plan my day" must reach the tools, not the generic LLM.
  */
 const WORKSPACE_QUERY_RE =
-  /\b(show|find|search|look\s?up|lookup|list|see|view|pull|display|surface|who(?:'?s| is| are)?|which|whose|overdue|hottest|hot|warm|cold|stuck|stalled|quiet|pipeline|deals?|leads?|contacts?|people|person|clients?|prospects?|buyers?|sellers?|listings?|propert(?:y|ies)|tours?|showings?|follow[\s-]?ups?|calendar|agenda|schedule|today|tomorrow|this week|inbox|drafts?|offers?|commissions?|stages?|scores?|plan my|my day|my week|my pipeline|my leads|my deals|my contacts|my schedule|my calendar)\b/i;
+  /\b(show|find|search|look\s?up|lookup|list|see|view|pull|display|surface|who(?:'?s| is| are)?|which|whose|overdue|hottest|hot|warm|cold|stuck|stalled|quiet|pipeline|deals?|leads?|contacts?|people|person|clients?|prospects?|buyers?|sellers?|listings?|propert(?:y|ies)|demos?|showings?|follow[\s-]?ups?|calendar|agenda|schedule|today|tomorrow|this week|inbox|drafts?|offers?|commissions?|stages?|scores?|plan my|my day|my week|my pipeline|my leads|my deals|my contacts|my schedule|my calendar)\b/i;
 
 /**
  * Integration-shaped messages. Reading email / checking a connected app needs
  * the agent's integration tools — there is no native read-email tool, so the
  * toolless direct path can only deflect ("I don't have access to your email"),
- * which realtors with Gmail connected experience as Chippi losing their
+ * which reps with Gmail connected experience as Koala losing their
  * integrations. Nouns cover the connected-app surface (gmail, outlook, slack,
  * hubspot, calendar/email/messages) and meta-questions about connections
  * ("is my gmail connected?", "what integrations do I have?").
@@ -71,17 +71,17 @@ const INTEGRATION_QUERY_RE =
 export type RouteDecision = 'direct' | 'agent';
 
 /**
- * Broker-domain reads. The shared WORKSPACE_QUERY_RE was curated from realtor
- * traffic; broker questions ("team health", "at-risk agents", "audit response
- * times", "who's unassigned") matched nothing and fell through to the broker
+ * Manager-domain reads. The shared WORKSPACE_QUERY_RE was curated from rep
+ * traffic; manager questions ("team health", "at-risk agents", "audit response
+ * times", "who's unassigned") matched nothing and fell through to the manager
  * direct path — whose snapshot prompt is INSTRUCTED to say it doesn't have
- * the answer. The "Chippi says it has no tools" complaint on the broker
- * surface was manufactured by that fallthrough. These nouns cover the broker
+ * the answer. The "Koala says it has no tools" complaint on the manager
+ * surface was manufactured by that fallthrough. These nouns cover the manager
  * tool catalog's natural-language surface (team/roster/performance/revenue/
  * routing/reviews/briefing).
  */
-const BROKER_QUERY_RE =
-  /\b(team|roster|members?|realtors?|agents?|brokerage|floor|unassigned|reassignments?|routing|response times?|at[\s-]?risk|flight[\s-]?risk|performance|production|leaderboard|rankings?|revenue|volume|gci|splits?|review queue|reviews?|briefing|brief|health|coverage|sla)\b/i;
+const MANAGER_QUERY_RE =
+  /\b(team|roster|members?|reps?|agents?|team|floor|unassigned|reassignments?|routing|response times?|at[\s-]?risk|flight[\s-]?risk|performance|production|leaderboard|rankings?|revenue|volume|gci|splits?|review queue|reviews?|briefing|brief|health|coverage|sla)\b/i;
 
 export interface RouteAttachment {
   id?: string;
@@ -117,7 +117,7 @@ export function decideRoute(
     if (attachments.length > 0) {
       return 'direct';
     }
-    // Text reads of the realtor's own data still need tools — route them to
+    // Text reads of the rep's own data still need tools — route them to
     // the agent so "show my pipeline" / "find hot leads" / "who's overdue"
     // reach the read tools instead of the toolless direct path (which can
     // only deflect). The file's own philosophy: better to over-route to the
@@ -140,12 +140,12 @@ export function decideRoute(
 }
 
 /**
- * Broker-surface routing: everything decideRoute knows, plus the broker
- * noun set. The broker direct path serves only a 5-field aggregate snapshot
- * — any question about specific realtors, routing, performance, or reviews
- * needs the broker tool catalog on the agent path.
+ * Manager-surface routing: everything decideRoute knows, plus the manager
+ * noun set. The manager direct path serves only a 5-field aggregate snapshot
+ * — any question about specific reps, routing, performance, or reviews
+ * needs the manager tool catalog on the agent path.
  */
-export function decideBrokerRoute(
+export function decideManagerRoute(
   userMessage: string,
   attachments: RouteAttachment[] = [],
 ): RouteDecision {
@@ -153,7 +153,7 @@ export function decideBrokerRoute(
     const base = decideRoute(userMessage, attachments);
     if (base === 'agent') return 'agent';
     const text = (userMessage ?? '').trim();
-    if (text && attachments.length === 0 && BROKER_QUERY_RE.test(text)) {
+    if (text && attachments.length === 0 && MANAGER_QUERY_RE.test(text)) {
       return 'agent';
     }
     return base;
@@ -177,7 +177,7 @@ const ESCALATION_PHRASES = [
   /\bi'll need to (?:actually )?(?:create|add|send|run|schedule|book|update|reach|contact|email|text|call|draft)\b/i,
   /\blet me (?:actually )?(?:create|add|send|run|schedule|book|update|reach|contact|email|text|draft) (?:that|this|it|him|her|them)\b/i,
   // Hand-off language
-  /\blet me (?:hand|pass) (?:this|that) (?:to|over to) (?:chippi'?s? tools|the agent|chippi)\b/i,
+  /\blet me (?:hand|pass) (?:this|that) (?:to|over to) (?:koala'?s? tools|the agent|koala)\b/i,
   /\bi(?:'ll| will) hand (?:this|that) (?:to|over to)\b/i,
   // Plain refusals tied to action
   /\bi can'?t (?:actually )?(?:run|send|fire|execute|trigger|invoke)\b/i,

@@ -1,13 +1,13 @@
 'use client';
 
 /**
- * IntakeChatShell — the realtor's storefront wrapped around the intake chat.
+ * IntakeChatShell — the rep's storefront wrapped around the intake chat.
  *
  * What the applicant sees in the first second:
  *   1. (optional) a soft, dimmed cover-photo band — same image the public
  *      profile uses, just narrower and pulled back so it never competes
  *      with the question.
- *   2. The realtor's face (or a brand-orange-tinted monogram fallback —
+ *   2. The rep's face (or a brand-orange-tinted monogram fallback —
  *      never a generic figure on a purple gradient).
  *   3. The business name in serif Times — the brand's focal flourish.
  *      Verified blue-check rides the baseline when isVerified is true.
@@ -36,26 +36,26 @@ import { safeHref, cn } from '@/lib/utils';
 import { TITLE_FONT } from '@/lib/typography';
 
 export interface IntakeChatShellProps {
-  /** The realtor's brand-facing name — businessName from SpaceSetting, or
+  /** The rep's brand-facing name — businessName from SpaceSetting, or
    *  the Space.name fallback. This is the focal serif moment. */
   businessName: string;
   /** The actual person's name. Rendered as a secondary line only when it
    *  differs from `businessName` (avoids "Jane Doe / Jane Doe"). */
   agentName: string;
-  /** Realtor face. Already signed-and-resolved upstream; null if the
-   *  realtor hasn't uploaded one (we fall back to a serif monogram). */
+  /** Rep face. Already signed-and-resolved upstream; null if the
+   *  rep hasn't uploaded one (we fall back to a serif monogram). */
   agentPhoto?: string | null;
   /** Optional cover photo (same field /p/[slug] uses). When present, it
    *  becomes a softened brand band behind the avatar. */
   coverPhotoUrl?: string | null;
-  /** When the realtor has uploaded a wordmark, it substitutes for the
+  /** When the rep has uploaded a wordmark, it substitutes for the
    *  typed business name. Quiet, single-line — no doubled identity. */
   logoUrl?: string | null;
   /** Drives the blue-check next to the business name. */
   isVerified?: boolean;
-  /** When set, the realtor identity in the header becomes a Link to this
+  /** When set, the rep identity in the header becomes a Link to this
    *  href — typically the public profile at /p/[slug]. Lets applicants
-   *  step over to learn more about the realtor without abandoning the
+   *  step over to learn more about the rep without abandoning the
    *  intake flow. Null/undefined → identity renders non-interactive. */
   profileHref?: string | null;
   accentColor?: string;
@@ -63,7 +63,7 @@ export interface IntakeChatShellProps {
   termsUrl?: string | null;
   hidePoweredBy?: boolean;
   footerLinks?: { label: string; url: string }[];
-  /** Realtor/brokerage-supplied trust signals. Chippi never injects
+  /** Rep/team-supplied trust signals. Koala never injects
    *  legal copy — the slots are optional and the block disappears
    *  entirely when none are provided. */
   licenseNumber?: string | null;
@@ -108,7 +108,7 @@ function deriveInitials(name: string): string {
 }
 
 /**
- * Realtor identity hero — cover band + avatar + name.
+ * Rep identity hero — cover band + avatar + name.
  *
  * Sweat the details: the cover (if any) gets a soft top-to-bottom gradient
  * dimmer so the avatar reads against it without looking pasted on. The
@@ -117,15 +117,15 @@ function deriveInitials(name: string): string {
  *
  * Fallback rules (no agentPhoto):
  *   - Use a `bg-brand-subtle` (washed orange tint, defined in globals.css)
- *     monogram circle with the realtor's initials in serif Times, brand-
- *     orange text. This is the ONLY place outside Chippi proper where
- *     brand-orange appears in the intake — and it's the realtor's
+ *     monogram circle with the rep's initials in serif Times, brand-
+ *     orange text. This is the ONLY place outside Koala proper where
+ *     brand-orange appears in the intake — and it's the rep's
  *     identity slot, not a button or chrome — so it reads as warmth, not
  *     as a brand violation.
  *   - In dark mode the brand-subtle token already swaps to the right
  *     warm-brown tint, so the monogram stays legible.
  */
-function RealtorIdentity({
+function RepIdentity({
   businessName,
   agentName,
   agentPhoto,
@@ -141,7 +141,7 @@ function RealtorIdentity({
   logoUrl?: string | null;
   isVerified?: boolean;
   /** When provided, the business name / logo becomes a quiet Link to the
-   *  realtor's public page. Gives applicants a way to learn more about
+   *  rep's public page. Gives applicants a way to learn more about
    *  who they're applying with without abandoning the chat. */
   profileHref?: string | null;
 }) {
@@ -151,7 +151,7 @@ function RealtorIdentity({
 
   return (
     <div className="text-center">
-      {/* Cover band — only when the realtor has uploaded a cover. The 16:9
+      {/* Cover band — only when the rep has uploaded a cover. The 16:9
           aspect ratio matches /p/[slug] but the height is constrained so
           the band reads as a quiet brand frame, not a hero takeover. The
           bottom-gradient mask blends into the page so the avatar appears
@@ -217,7 +217,7 @@ function RealtorIdentity({
           substitutes for the typed name (single source of identity).
           The whole identity block wraps in a Link to /p/[slug] when a
           profileHref is provided so applicants can step over to the
-          realtor's public page without breaking the intake flow. */}
+          rep's public page without breaking the intake flow. */}
       <div className="mt-3 sm:mt-4">
         {(() => {
           const identityNode = logoUrl ? (
@@ -287,7 +287,7 @@ export function IntakeChatShell({
   showEqualHousingMark,
   children,
 }: IntakeChatShellProps) {
-  // The trust block is entirely optional. If the realtor hasn't supplied
+  // The trust block is entirely optional. If the rep hasn't supplied
   // any of these three, render nothing — no hairline, no empty space.
   const trustedLicense = licenseNumber?.trim() || '';
   const trustedNotice = fairHousingNotice?.trim() || '';
@@ -341,7 +341,7 @@ export function IntakeChatShell({
         }}
       />
 
-      {/* ── Sticky header — realtor identity hero pinned at the top ──── */}
+      {/* ── Sticky header — rep identity hero pinned at the top ──── */}
       <motion.header
         initial={{ opacity: 0, y: -4 }}
         animate={{ opacity: 1, y: 0 }}
@@ -349,7 +349,7 @@ export function IntakeChatShell({
         className="flex-shrink-0 w-full bg-background/80 backdrop-blur-xl border-b border-border/40"
       >
         <div className="max-w-2xl mx-auto px-5 sm:px-8 pt-5 sm:pt-6 pb-4 sm:pb-5">
-          <RealtorIdentity
+          <RepIdentity
             businessName={businessName}
             agentName={agentName}
             agentPhoto={agentPhoto}
@@ -386,7 +386,7 @@ export function IntakeChatShell({
       {/* ── Sticky footer — small print pinned at the bottom ────────── */}
       <footer className="flex-shrink-0 w-full bg-background/70 backdrop-blur-xl border-t border-border/40">
         <div className="max-w-2xl mx-auto px-5 sm:px-8 py-3 sm:py-4">
-          {/* Trust signals — only renders when the realtor supplies content.
+          {/* Trust signals — only renders when the rep supplies content.
               Sits above the Terms/Privacy/PoweredBy row, separated by a
               hairline. Paper-flat: text + rule, no chrome. */}
           {hasTrustBlock && (

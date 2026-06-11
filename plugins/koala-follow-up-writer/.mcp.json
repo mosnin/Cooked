@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "koala": {
+      "type": "url",
+      "url": "https://my.usekoala.com/api/mcp",
+      "note": "After installing, go to Koala Settings → Integrations to generate an API key"
+    }
+  }
+}

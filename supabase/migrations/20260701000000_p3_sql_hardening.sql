@@ -25,7 +25,7 @@
 --    allowed (Deal.commissionRate is optional). CommissionSplit.percentOfGci
 --    already had this guard — this brings the rest in line.
 --
--- 3. Partial UNIQUE index on stripeSubscriptionId (Space + Brokerage). A Stripe
+-- 3. Partial UNIQUE index on stripeSubscriptionId (Space + Team). A Stripe
 --    subscription must map to exactly one billing entity; two rows sharing one
 --    subscription id would mean a webhook updates the wrong account. The index
 --    is partial (WHERE NOT NULL) so the many rows without a subscription don't
@@ -57,21 +57,21 @@ ALTER FUNCTION current_user_internal_id()
 -- 2. ── commission-rate range guards (percent, 0..100; NULL allowed) ──────────
 DO $$
 BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'Brokerage_defaultAgentRate_range') THEN
-    ALTER TABLE "Brokerage" ADD CONSTRAINT "Brokerage_defaultAgentRate_range"
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'Team_defaultAgentRate_range') THEN
+    ALTER TABLE "Team" ADD CONSTRAINT "Team_defaultAgentRate_range"
       CHECK ("defaultAgentRate" IS NULL OR ("defaultAgentRate" >= 0 AND "defaultAgentRate" <= 100));
   END IF;
-  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'Brokerage_defaultBrokerRate_range') THEN
-    ALTER TABLE "Brokerage" ADD CONSTRAINT "Brokerage_defaultBrokerRate_range"
-      CHECK ("defaultBrokerRate" IS NULL OR ("defaultBrokerRate" >= 0 AND "defaultBrokerRate" <= 100));
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'Team_defaultManagerRate_range') THEN
+    ALTER TABLE "Team" ADD CONSTRAINT "Team_defaultManagerRate_range"
+      CHECK ("defaultManagerRate" IS NULL OR ("defaultManagerRate" >= 0 AND "defaultManagerRate" <= 100));
   END IF;
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'CommissionLedger_agentRate_range') THEN
     ALTER TABLE "CommissionLedger" ADD CONSTRAINT "CommissionLedger_agentRate_range"
       CHECK ("agentRate" IS NULL OR ("agentRate" >= 0 AND "agentRate" <= 100));
   END IF;
-  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'CommissionLedger_brokerRate_range') THEN
-    ALTER TABLE "CommissionLedger" ADD CONSTRAINT "CommissionLedger_brokerRate_range"
-      CHECK ("brokerRate" IS NULL OR ("brokerRate" >= 0 AND "brokerRate" <= 100));
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'CommissionLedger_managerRate_range') THEN
+    ALTER TABLE "CommissionLedger" ADD CONSTRAINT "CommissionLedger_managerRate_range"
+      CHECK ("managerRate" IS NULL OR ("managerRate" >= 0 AND "managerRate" <= 100));
   END IF;
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'CommissionLedger_referralRate_range') THEN
     ALTER TABLE "CommissionLedger" ADD CONSTRAINT "CommissionLedger_referralRate_range"
@@ -88,6 +88,6 @@ DROP INDEX IF EXISTS idx_space_stripe_subscription;
 CREATE UNIQUE INDEX IF NOT EXISTS uq_space_stripe_subscription
   ON "Space" ("stripeSubscriptionId")
   WHERE "stripeSubscriptionId" IS NOT NULL;
-CREATE UNIQUE INDEX IF NOT EXISTS uq_brokerage_stripe_subscription
-  ON "Brokerage" ("stripeSubscriptionId")
+CREATE UNIQUE INDEX IF NOT EXISTS uq_team_stripe_subscription
+  ON "Team" ("stripeSubscriptionId")
   WHERE "stripeSubscriptionId" IS NOT NULL;

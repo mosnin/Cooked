@@ -6,4 +6,4 @@
 
 import { Inngest } from 'inngest';
 
-export const inngest = new Inngest({ id: 'chippi' });
+export const inngest = new Inngest({ id: 'koala' });

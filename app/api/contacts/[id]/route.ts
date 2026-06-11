@@ -185,9 +185,9 @@ export async function PATCH(
     }
 
     if (body.type !== undefined) {
-      const VALID_CONTACT_TYPES = ['QUALIFICATION', 'TOUR', 'APPLICATION'];
+      const VALID_CONTACT_TYPES = ['QUALIFICATION', 'DEMO', 'APPLICATION'];
       if (!VALID_CONTACT_TYPES.includes(body.type)) {
-        return NextResponse.json({ error: 'Invalid type. Must be QUALIFICATION, TOUR, or APPLICATION' }, { status: 400 });
+        return NextResponse.json({ error: 'Invalid type. Must be QUALIFICATION, DEMO, or APPLICATION' }, { status: 400 });
       }
       updates.type = body.type;
       if (body.type !== existing.type) {

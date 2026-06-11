@@ -28,24 +28,24 @@ async function notifySubscriptionChange(subscriptionId: string, newStatus: strin
     if (!process.env.RESEND_API_KEY) return;
     const { Resend } = await import('resend');
     const resend = new Resend(process.env.RESEND_API_KEY);
-    const rawFrom = process.env.RESEND_FROM_EMAIL ?? 'notifications@alerts.usechippi.com';
+    const rawFrom = process.env.RESEND_FROM_EMAIL ?? 'notifications@alerts.usekoala.com';
     const FROM = rawFrom.includes('@') ? rawFrom : `notifications@${rawFrom}`;
 
     const statusMessages: Record<string, { subject: string; body: string }> = {
       active: {
-        subject: `Your Chippi subscription is now active`,
+        subject: `Your Koala subscription is now active`,
         body: `Great news! Your subscription for <strong>${space.name}</strong> is active. You have full access to all features.`,
       },
       past_due: {
-        subject: `Payment issue with your Chippi subscription`,
+        subject: `Payment issue with your Koala subscription`,
         body: `We had trouble processing your payment for <strong>${space.name}</strong>. Please update your payment method to keep your access.`,
       },
       canceled: {
-        subject: `Your Chippi subscription has been canceled`,
+        subject: `Your Koala subscription has been canceled`,
         body: `Your subscription for <strong>${space.name}</strong> has been canceled. You can resubscribe anytime from your billing page.`,
       },
       trial_ending: {
-        subject: `Your Chippi trial ends in 3 days`,
+        subject: `Your Koala trial ends in 3 days`,
         body: `Your free trial for <strong>${space.name}</strong> ends in 3 days. Add a payment method to keep your access without interruption.`,
       },
     };
@@ -53,10 +53,10 @@ async function notifySubscriptionChange(subscriptionId: string, newStatus: strin
     const msg = statusMessages[newStatus];
     if (!msg) return;
 
-    const domain = process.env.NEXT_PUBLIC_ROOT_DOMAIN ?? 'my.usechippi.com';
+    const domain = process.env.NEXT_PUBLIC_ROOT_DOMAIN ?? 'my.usekoala.com';
 
     const result = await resend.emails.send({
-      from: `Chippi <${FROM}>`,
+      from: `Koala <${FROM}>`,
       to: owner.email,
       subject: msg.subject,
       html: `
@@ -64,7 +64,7 @@ async function notifySubscriptionChange(subscriptionId: string, newStatus: strin
   <p style="font-size:14px;color:#374151;line-height:1.6;margin:0 0 16px">Hi ${owner.name || 'there'},</p>
   <p style="font-size:14px;color:#374151;line-height:1.6;margin:0 0 20px">${msg.body}</p>
   <a href="https://${domain}/s/${space.slug}/billing" style="display:inline-block;background:#ff964f;color:#fff;font-weight:600;font-size:14px;text-decoration:none;padding:10px 24px;border-radius:8px">View billing</a>
-  <p style="font-size:12px;color:#9ca3af;margin-top:20px">— The Chippi team</p>
+  <p style="font-size:12px;color:#9ca3af;margin-top:20px">— The Koala team</p>
 </div>`,
     });
     if (result.error) {
@@ -109,7 +109,7 @@ function customerIdOf(
 }
 
 /**
- * Map a brokerage plan → seat limit, from the single source of truth in
+ * Map a team plan → seat limit, from the single source of truth in
  * lib/plans.ts (team = 5, team_plus = 10). Unknown plans → null (no cap set).
  */
 function seatLimitForPlan(plan: string | undefined | null): number | null {
@@ -135,43 +135,43 @@ function extractInvoiceSubscriptionId(invoice: Stripe.Invoice): string | undefin
 }
 
 /**
- * Apply a subscription state update to the matching Brokerage row.
- * Caller must have already determined that subscription.metadata.brokerageId is set.
- * Returns true if a brokerage was updated (and thus Space path should be skipped),
- * false if the brokerage row no longer exists (idempotency: orphaned subscription).
+ * Apply a subscription state update to the matching Team row.
+ * Caller must have already determined that subscription.metadata.teamId is set.
+ * Returns true if a team was updated (and thus Space path should be skipped),
+ * false if the team row no longer exists (idempotency: orphaned subscription).
  */
 /**
- * Guard against metadata poisoning. A subscription's `metadata.brokerageId`
- * is untrusted — whoever created the sub could point it at any brokerage.
- * Before we write to a Brokerage row based on a webhook, confirm the
- * subscription's Stripe customer matches the brokerage's stored customer
- * (or that the brokerage has no customer yet, which is the legitimate
+ * Guard against metadata poisoning. A subscription's `metadata.teamId`
+ * is untrusted — whoever created the sub could point it at any team.
+ * Before we write to a Team row based on a webhook, confirm the
+ * subscription's Stripe customer matches the team's stored customer
+ * (or that the team has no customer yet, which is the legitimate
  * first-subscribe case).
  *
  * Returns one of:
- *   'ok'       — safe to write (either customers match, or brokerage has none)
- *   'missing'  — brokerage row doesn't exist (orphaned subscription)
+ *   'ok'       — safe to write (either customers match, or team has none)
+ *   'missing'  — team row doesn't exist (orphaned subscription)
  *   'mismatch' — customer IDs don't match; treat as handled but DO NOT write
  *
- * Every handler that writes to Brokerage based on subscription.metadata
+ * Every handler that writes to Team based on subscription.metadata
  * MUST call this first. Duplicating the logic inline is how the
  * customer.subscription.deleted and invoice.payment_failed paths shipped
  * without the check; centralising it closes that door.
  */
-async function verifyBrokerageOwnsSubscription(
-  brokerageId: string,
+async function verifyTeamOwnsSubscription(
+  teamId: string,
   subscription: Stripe.Subscription,
   customerOverride?: string | null,
 ): Promise<{ status: 'ok' | 'missing' | 'mismatch'; existing: { id: string; stripeCustomerId: string | null } | null }> {
   const { data: existing } = await supabase
-    .from('Brokerage')
+    .from('Team')
     .select('id, stripeCustomerId')
-    .eq('id', brokerageId)
+    .eq('id', teamId)
     .maybeSingle();
 
   if (!existing) {
-    logger.warn('[stripe-webhook] subscription references missing brokerage — ignoring', {
-      brokerageId,
+    logger.warn('[stripe-webhook] subscription references missing team — ignoring', {
+      teamId,
       subscriptionId: subscription.id,
     });
     return { status: 'missing', existing: null };
@@ -189,10 +189,10 @@ async function verifyBrokerageOwnsSubscription(
     existing.stripeCustomerId !== webhookCustomer
   ) {
     logger.error(
-      '[stripe-webhook] brokerageId metadata mismatch — brokerage belongs to different customer',
+      '[stripe-webhook] teamId metadata mismatch — team belongs to different customer',
       {
-        brokerageId,
-        brokerageCustomer: existing.stripeCustomerId,
+        teamId,
+        teamCustomer: existing.stripeCustomerId,
         webhookCustomer,
         subscriptionId: subscription.id,
       },
@@ -206,13 +206,13 @@ async function verifyBrokerageOwnsSubscription(
   };
 }
 
-async function updateBrokerageFromSubscription(
-  brokerageId: string,
+async function updateTeamFromSubscription(
+  teamId: string,
   subscription: Stripe.Subscription,
   opts: { customerId?: string | null; includePlanFromMetadata?: boolean } = {},
 ): Promise<boolean> {
-  const guard = await verifyBrokerageOwnsSubscription(
-    brokerageId,
+  const guard = await verifyTeamOwnsSubscription(
+    teamId,
     subscription,
     opts.customerId,
   );
@@ -246,13 +246,13 @@ async function updateBrokerageFromSubscription(
   }
 
   const { error } = await supabase
-    .from('Brokerage')
+    .from('Team')
     .update(updateData)
-    .eq('id', brokerageId);
+    .eq('id', teamId);
 
   if (error) {
-    logger.error('[stripe-webhook] failed to update Brokerage', {
-      brokerageId,
+    logger.error('[stripe-webhook] failed to update Team', {
+      teamId,
       subscriptionId: subscription.id,
       dbError: error.message,
     });
@@ -311,12 +311,12 @@ async function POSTHandler(req: NextRequest) {
         if (topupId && topupId in TOPUPS) {
           const acctType = session.metadata?.accountType;
           const acctId = session.metadata?.accountId;
-          if (acctId && (acctType === 'space' || acctType === 'brokerage')) {
+          if (acctId && (acctType === 'space' || acctType === 'team')) {
             // Anti-poisoning (mirrors the subscription paths): if the target
             // account already has a Stripe customer, it must match the payer.
             // A brand-new account with no customer yet is allowed — the metadata
             // was server-set from a verified owned space at checkout.
-            const acctTable = acctType === 'space' ? 'Space' : 'Brokerage';
+            const acctTable = acctType === 'space' ? 'Space' : 'Team';
             const { data: acct } = await supabase
               .from(acctTable)
               .select('stripeCustomerId')
@@ -342,11 +342,11 @@ async function POSTHandler(req: NextRequest) {
           session.subscription as string,
         );
 
-        // Brokerage path: metadata.brokerageId may live on the session or the subscription
-        const brokerageId =
-          session.metadata?.brokerageId ?? subscription.metadata?.brokerageId;
-        if (brokerageId) {
-          await updateBrokerageFromSubscription(brokerageId, subscription, {
+        // Team path: metadata.teamId may live on the session or the subscription
+        const teamId =
+          session.metadata?.teamId ?? subscription.metadata?.teamId;
+        if (teamId) {
+          await updateTeamFromSubscription(teamId, subscription, {
             customerId: session.customer as string,
             includePlanFromMetadata: true,
           });
@@ -408,10 +408,10 @@ async function POSTHandler(req: NextRequest) {
         const subscription = event.data.object as Stripe.Subscription;
         const newStatus = mapStatus(subscription.status);
 
-        // Brokerage path
-        const brokerageId = subscription.metadata?.brokerageId;
-        if (brokerageId) {
-          await updateBrokerageFromSubscription(brokerageId, subscription, {
+        // Team path
+        const teamId = subscription.metadata?.teamId;
+        if (teamId) {
+          await updateTeamFromSubscription(teamId, subscription, {
             includePlanFromMetadata: true,
           });
           break;
@@ -463,25 +463,25 @@ async function POSTHandler(req: NextRequest) {
       case 'customer.subscription.deleted': {
         const subscription = event.data.object as Stripe.Subscription;
 
-        // Brokerage path: mark canceled but preserve subscription id + seatLimit
+        // Team path: mark canceled but preserve subscription id + seatLimit
         // so the owner has audit context and can resubscribe without losing config.
         // The ownership guard is critical here — without it, an attacker who
-        // can set metadata.brokerageId on their OWN subscription could cancel
-        // a victim brokerage simply by deleting their sub. (Audit-driven fix.)
-        const brokerageId = subscription.metadata?.brokerageId;
-        if (brokerageId) {
-          const guard = await verifyBrokerageOwnsSubscription(brokerageId, subscription);
+        // can set metadata.teamId on their OWN subscription could cancel
+        // a victim team simply by deleting their sub. (Audit-driven fix.)
+        const teamId = subscription.metadata?.teamId;
+        if (teamId) {
+          const guard = await verifyTeamOwnsSubscription(teamId, subscription);
           if (guard.status !== 'ok') break; // missing or customer mismatch — swallow
           const { error } = await supabase
-            .from('Brokerage')
+            .from('Team')
             .update({
               stripeSubscriptionStatus: 'canceled',
               stripePeriodEnd: getPeriodEnd(subscription),
             })
-            .eq('id', brokerageId);
+            .eq('id', teamId);
           if (error) {
-            logger.error('[stripe-webhook] failed to mark brokerage canceled', {
-              brokerageId,
+            logger.error('[stripe-webhook] failed to mark team canceled', {
+              teamId,
               subscriptionId: subscription.id,
               dbError: error.message,
             });
@@ -523,19 +523,19 @@ async function POSTHandler(req: NextRequest) {
           invoice.billing_reason === 'subscription_create' ||
           invoice.billing_reason === 'subscription_cycle';
 
-        // Brokerage path
-        const brokerageId = paidSub.metadata?.brokerageId;
-        if (brokerageId) {
-          await updateBrokerageFromSubscription(brokerageId, paidSub, {
+        // Team path
+        const teamId = paidSub.metadata?.teamId;
+        if (teamId) {
+          await updateTeamFromSubscription(teamId, paidSub, {
             includePlanFromMetadata: true,
           });
           // Monthly credit grant (best-effort — must never break payment
           // processing). Idempotent-per-invoice via the event-ID dedupe above.
           if (grantableInvoice) {
             try {
-              await grantPlanMonthly({ type: 'brokerage', id: brokerageId }, livePlan ?? paidSub.metadata?.plan ?? '', invoice.id);
+              await grantPlanMonthly({ type: 'team', id: teamId }, livePlan ?? paidSub.metadata?.plan ?? '', invoice.id);
             } catch (e) {
-              logger.error('[stripe-webhook] brokerage monthly grant failed', { brokerageId }, e);
+              logger.error('[stripe-webhook] team monthly grant failed', { teamId }, e);
             }
           }
           break;
@@ -603,9 +603,9 @@ async function POSTHandler(req: NextRequest) {
 
       case 'customer.subscription.trial_will_end': {
         const trialSub = event.data.object as Stripe.Subscription;
-        // Brokerage subscriptions don't email via the Space-owner notifier;
-        // skip notification for brokerage-scoped trials (owners see dashboard state).
-        if (trialSub.metadata?.brokerageId) break;
+        // Team subscriptions don't email via the Space-owner notifier;
+        // skip notification for team-scoped trials (owners see dashboard state).
+        if (trialSub.metadata?.teamId) break;
         try { await notifySubscriptionChange(trialSub.id, 'trial_ending'); } catch (e) { logger.error('[stripe-webhook] trial_will_end notification failed', undefined, e); }
         break;
       }
@@ -620,20 +620,20 @@ async function POSTHandler(req: NextRequest) {
           break;
         }
 
-        // Fetch live subscription to branch on metadata.brokerageId
+        // Fetch live subscription to branch on metadata.teamId
         const failedSub = await stripe.subscriptions.retrieve(subId);
-        const brokerageId = failedSub.metadata?.brokerageId;
-        if (brokerageId) {
+        const teamId = failedSub.metadata?.teamId;
+        if (teamId) {
           // Same metadata-poisoning guard as subscription.deleted.
-          const guard = await verifyBrokerageOwnsSubscription(brokerageId, failedSub);
+          const guard = await verifyTeamOwnsSubscription(teamId, failedSub);
           if (guard.status !== 'ok') break;
           const { error } = await supabase
-            .from('Brokerage')
+            .from('Team')
             .update({ stripeSubscriptionStatus: 'past_due' })
-            .eq('id', brokerageId);
+            .eq('id', teamId);
           if (error) {
-            logger.error('[stripe-webhook] failed to mark brokerage past_due', {
-              brokerageId,
+            logger.error('[stripe-webhook] failed to mark team past_due', {
+              teamId,
               subscriptionId: subId,
               dbError: error.message,
             });

@@ -4,7 +4,7 @@
  *
  * The bar:
  *   - Auth required (401 without).
- *   - 404 when CHIPPI_CHAT_RUNTIME=modal (paused runs only originate in the
+ *   - 404 when KOALA_CHAT_RUNTIME=modal (paused runs only originate in the
  *     in-process TS runtime, so the resume endpoint is meaningless there).
  *   - 404 when no row.
  *   - 403 when the row belongs to another user.
@@ -75,11 +75,11 @@ import { requireAuth } from '@/lib/api-auth';
 
 const mockedAuth = vi.mocked(requireAuth);
 
-const ORIGINAL_RUNTIME = process.env.CHIPPI_CHAT_RUNTIME;
+const ORIGINAL_RUNTIME = process.env.KOALA_CHAT_RUNTIME;
 
 beforeEach(() => {
   vi.clearAllMocks();
-  process.env.CHIPPI_CHAT_RUNTIME = 'ts';
+  process.env.KOALA_CHAT_RUNTIME = 'ts';
   mockedAuth.mockResolvedValue({ userId: 'user_clerk_123' });
   for (const k of Object.keys(tableQueue)) delete tableQueue[k];
   // Default: the User lookup (clerkId -> internal id) resolves to the space
@@ -90,8 +90,8 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  if (ORIGINAL_RUNTIME === undefined) delete process.env.CHIPPI_CHAT_RUNTIME;
-  else process.env.CHIPPI_CHAT_RUNTIME = ORIGINAL_RUNTIME;
+  if (ORIGINAL_RUNTIME === undefined) delete process.env.KOALA_CHAT_RUNTIME;
+  else process.env.KOALA_CHAT_RUNTIME = ORIGINAL_RUNTIME;
 });
 
 function makeReq(body: Record<string, unknown>) {
@@ -136,8 +136,8 @@ function queueSpace(space: typeof SPACE | null) {
 }
 
 describe('POST /api/ai/task/resume/[pausedRunId] — flag gate', () => {
-  it('returns 404 when CHIPPI_CHAT_RUNTIME != "ts"', async () => {
-    process.env.CHIPPI_CHAT_RUNTIME = 'modal';
+  it('returns 404 when KOALA_CHAT_RUNTIME != "ts"', async () => {
+    process.env.KOALA_CHAT_RUNTIME = 'modal';
     const res = await POST(makeReq({ approved: true }), params('run_1'));
     expect(res.status).toBe(404);
   });

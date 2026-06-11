@@ -15,7 +15,7 @@
  *
  * The empty-state vs. bottom-of-brief decision is the COMPOSER's, not
  * this module's. This module just answers "what's the best earned tip
- * for this realtor right now, or null?"
+ * for this rep right now, or null?"
  */
 
 import { canFireTip, recordTipFired } from './cool-down';
@@ -23,14 +23,14 @@ import { ALL_TIP_CATEGORIES } from './tip-categories';
 import type { Signal } from '../types';
 
 /**
- * Whole-realtor trends — their subject string IS the category name (no
+ * Whole-rep trends — their subject string IS the category name (no
  * per-segment breakdown). Cool-down keys off (category, null) so the
  * trend fires at most once per cool-down window across the whole space.
  */
 const ANONYMOUS_TREND_CATEGORIES = new Set([
   'overdue_pileup',
   'reply_rate_decline',
-  'tour_conversion_drop',
+  'demo_conversion_drop',
 ]);
 
 /**
@@ -70,7 +70,7 @@ function isNamedSubject(sig: Signal): boolean {
 
 export async function pickBestTip(spaceId: string): Promise<Signal | null> {
   // Run every category in parallel — each is one Supabase call (some are
-  // a few). The brief's per-realtor budget is generous.
+  // a few). The brief's per-rep budget is generous.
   const results = await Promise.allSettled(ALL_TIP_CATEGORIES.map((fn) => fn(spaceId)));
 
   const candidates: Signal[] = [];

@@ -7,11 +7,11 @@ import { toast } from 'sonner';
 import { CHAT_MODELS, DEFAULT_CHAT_MODEL } from '@/lib/chat-models';
 
 /**
- * Settings control — the realtor's "primary model" for Chippi.
+ * Settings control — the rep's "primary model" for Koala.
  *
  * Reads + writes AgentSettings.chatModel via /api/agent/settings. A
  * workspace that has never touched this sits on DEFAULT_CHAT_MODEL — the
- * picker is invisible weight for the realtor who doesn't care.
+ * picker is invisible weight for the rep who doesn't care.
  */
 export function ChatModelPicker() {
   const [model, setModel] = useState<string | null>(null);

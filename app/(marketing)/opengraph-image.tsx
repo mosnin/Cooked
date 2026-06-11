@@ -8,7 +8,7 @@
  * own `opengraph-image.tsx` in their directory.
  *
  * Design: Apple-paper-flat. White background, serif title centered, the
- * Chippi wordmark top-left, the domain bottom-left. No gradient, no
+ * Koala wordmark top-left, the domain bottom-left. No gradient, no
  * shadow, no decoration. The OG image carries the same brand discipline
  * as the page it represents.
  *
@@ -20,7 +20,7 @@
 import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
-export const alt = 'Chippi · Agentic OS for real estate';
+export const alt = 'Koala · Agentic OS for real estate';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -53,7 +53,7 @@ export default async function Image() {
           justifyContent: 'space-between',
         }}
       >
-        {/* Top row: Chippi wordmark in serif. Tiny — the visual is the title. */}
+        {/* Top row: Koala wordmark in serif. Tiny — the visual is the title. */}
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <span
             style={{
@@ -63,7 +63,7 @@ export default async function Image() {
               letterSpacing: '-0.01em',
             }}
           >
-            Chippi.
+            Koala.
           </span>
         </div>
 
@@ -89,7 +89,7 @@ export default async function Image() {
               letterSpacing: '-0.02em',
             }}
           >
-            Chippi runs your workspace.
+            Koala runs your workspace.
           </span>
           <span
             style={{
@@ -100,7 +100,7 @@ export default async function Image() {
               maxWidth: 900,
             }}
           >
-            An AI agent that qualifies leads, drafts follow-ups, schedules tours,
+            An AI agent that qualifies leads, drafts follow-ups, schedules demos,
             and keeps your pipeline current.
           </span>
         </div>
@@ -122,7 +122,7 @@ export default async function Image() {
               letterSpacing: '0.18em',
             }}
           >
-            chippi.app
+            koala.app
           </span>
           <span
             style={{

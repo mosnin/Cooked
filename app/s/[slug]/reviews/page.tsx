@@ -11,12 +11,12 @@ interface PageProps {
 
 // Server component: fetch the caller's own reviews via supabase directly
 // (server components bypass the HTTP layer — same pattern as
-// app/broker/reviews/page.tsx). Types mirror the GET list API response.
-export default async function RealtorReviewsPage({ params }: PageProps) {
+// app/manager/reviews/page.tsx). Types mirror the GET list API response.
+export default async function RepReviewsPage({ params }: PageProps) {
   const { slug } = await params;
 
   const { userId: clerkId } = await auth();
-  if (!clerkId) redirect('/login/realtor');
+  if (!clerkId) redirect('/login/rep');
 
   const space = await getSpaceFromSlug(slug);
   if (!space) {
@@ -38,9 +38,9 @@ export default async function RealtorReviewsPage({ params }: PageProps) {
   if ((dbUser as { status?: string }).status === 'offboarded') redirect('/offboarded');
   const userId = (dbUser as { id: string }).id;
 
-  // Non-brokerage space: there are no reviews possible. Render an empty list
+  // Non-team space: there are no reviews possible. Render an empty list
   // rather than 404 — the user might visit this link from stale nav.
-  if (!space.brokerageId) {
+  if (!space.teamId) {
     return (
       <div className="space-y-6 max-w-4xl mx-auto pb-12">
         <header className="space-y-1.5">
@@ -48,7 +48,7 @@ export default async function RealtorReviewsPage({ params }: PageProps) {
           <h1 className={H1} style={TITLE_FONT}>
             My reviews
           </h1>
-          <p className="text-sm text-muted-foreground">No brokerage connected yet.</p>
+          <p className="text-sm text-muted-foreground">No team connected yet.</p>
         </header>
         <ReviewsClient slug={slug} initialReviews={[]} />
       </div>
@@ -71,7 +71,7 @@ export default async function RealtorReviewsPage({ params }: PageProps) {
     .from('DealReviewRequest')
     .select('id, dealId, status, reason, createdAt, resolvedAt, resolvedNote')
     .eq('requestingUserId', userId)
-    .eq('brokerageId', space.brokerageId)
+    .eq('teamId', space.teamId)
     .order('createdAt', { ascending: false })
     .limit(200);
 
@@ -80,7 +80,7 @@ export default async function RealtorReviewsPage({ params }: PageProps) {
   const reviewIds = reviews.map((r) => r.id);
   const dealIds = Array.from(new Set(reviews.map((r) => r.dealId).filter(Boolean)));
 
-  // 2. Parallel joins: deals + comment counts. Mirror the broker page shape.
+  // 2. Parallel joins: deals + comment counts. Mirror the manager page shape.
   type DealRow = { id: string; title: string | null; value: number | null };
   type CommentRow = { reviewRequestId: string };
 

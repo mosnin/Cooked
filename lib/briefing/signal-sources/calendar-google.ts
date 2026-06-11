@@ -1,10 +1,10 @@
 /**
- * Google Calendar signal source — reads what the realtor scheduled
- * OUTSIDE Chippi (listing presentations, lender meetings, coffee with
- * referral sources). The internal `calendar` source covers Chippi-native
- * Tour rows; this one covers everything else.
+ * Google Calendar signal source — reads what the rep scheduled
+ * OUTSIDE Koala (listing presentations, lender meetings, coffee with
+ * referral sources). The internal `calendar` source covers Koala-native
+ * Demo rows; this one covers everything else.
  *
- * The brief's rule: only name people the realtor recognizes. We drop
+ * The brief's rule: only name people the rep recognizes. We drop
  * any event whose attendees don't cross-walk to a Contact by email.
  * No matched contact, no card — the calendar exists for the full list.
  *
@@ -88,8 +88,8 @@ function startOfLocalDay(d: Date): Date {
  * (case-insensitive). Returns null when no attendee matches — the brief
  * drops the signal in that case.
  *
- * `self`-flagged attendees (the realtor's own account) are skipped: the
- * realtor isn't the subject of their own brief card.
+ * `self`-flagged attendees (the rep's own account) are skipped: the
+ * rep isn't the subject of their own brief card.
  */
 export function matchAttendeeToContact(
   attendees: CalendarEventAttendee[] | null | undefined,
@@ -174,7 +174,7 @@ async function listEventsWithTimeout(
   return [];
 }
 
-/** Did the realtor's attendee-response trigger fire within the last 24h? */
+/** Did the rep's attendee-response trigger fire within the last 24h? */
 async function attendeeTriggerFiredRecently(connectionId: string): Promise<boolean> {
   const cutoff = new Date(Date.now() - 24 * MS_PER_HOUR).toISOString();
   const { data } = await supabase
@@ -206,7 +206,7 @@ export const calendarGoogleSource: SignalGatherer = {
       | undefined;
     if (!connection) return [];
 
-    // 2. Pull events (Composio) and the realtor's contacts (Supabase) in
+    // 2. Pull events (Composio) and the rep's contacts (Supabase) in
     //    parallel — both are independent and the brief budget is tight.
     const now = new Date();
     const [events, contactRows] = await Promise.all([
@@ -313,7 +313,7 @@ export const calendarGoogleSource: SignalGatherer = {
       }
       // 'today-later' (>4h out, same day) without a decline produces no
       // signal — by design. The within-4h window is the actionable one;
-      // anything later today the realtor will see in their calendar.
+      // anything later today the rep will see in their calendar.
     }
 
     return signals;

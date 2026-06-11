@@ -1,5 +1,5 @@
 -- ═══════════════════════════════════════════════════════════════════════════
--- ProfilePage.videos — YouTube links the realtor features on their public
+-- ProfilePage.videos — YouTube links the rep features on their public
 -- /p/[slug] page. Stored as [{ id, url, title }]; the public page derives
 -- the thumbnail from the URL at render time.
 -- ═══════════════════════════════════════════════════════════════════════════

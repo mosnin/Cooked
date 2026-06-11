@@ -29,7 +29,7 @@ const ALLOWED_TYPES = [
  * Two auth paths:
  * - uploadedBy === 'guest': restricted to public-intake contacts
  *   created in the last 5 minutes (applicant uploading during apply flow).
- * - otherwise: requireContactAccess (authenticated realtor).
+ * - otherwise: requireContactAccess (authenticated rep).
  */
 export async function POST(req: NextRequest) {
   const formData = await req.formData();

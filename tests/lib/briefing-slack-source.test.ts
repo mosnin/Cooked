@@ -7,7 +7,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { extractMentions, mentionsRealtor, isTeammate } from '@/lib/briefing/signal-sources/slack';
+import { extractMentions, mentionsRep, isTeammate } from '@/lib/briefing/signal-sources/slack';
 
 describe('slack signal source — pure helpers', () => {
   describe('extractMentions', () => {
@@ -30,22 +30,22 @@ describe('slack signal source — pure helpers', () => {
     });
   });
 
-  describe('mentionsRealtor', () => {
-    it('returns true when the realtor id appears in the text', () => {
-      expect(mentionsRealtor('hey <@U0ME>, this one', 'U0ME')).toBe(true);
+  describe('mentionsRep', () => {
+    it('returns true when the rep id appears in the text', () => {
+      expect(mentionsRep('hey <@U0ME>, this one', 'U0ME')).toBe(true);
     });
 
     it('returns false when a different teammate is mentioned', () => {
-      expect(mentionsRealtor('<@U0JESS> can you check this?', 'U0ME')).toBe(false);
+      expect(mentionsRep('<@U0JESS> can you check this?', 'U0ME')).toBe(false);
     });
 
-    it('returns false when the realtor id is null (unknown self)', () => {
-      expect(mentionsRealtor('<@U0ME> ping', null)).toBe(false);
+    it('returns false when the rep id is null (unknown self)', () => {
+      expect(mentionsRep('<@U0ME> ping', null)).toBe(false);
     });
 
     it('returns false on null/empty text', () => {
-      expect(mentionsRealtor(null, 'U0ME')).toBe(false);
-      expect(mentionsRealtor('', 'U0ME')).toBe(false);
+      expect(mentionsRep(null, 'U0ME')).toBe(false);
+      expect(mentionsRep('', 'U0ME')).toBe(false);
     });
   });
 

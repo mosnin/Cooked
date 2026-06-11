@@ -1,5 +1,5 @@
 /**
- * Shared helpers for the public realtor page (/p/[slug]) and its editor.
+ * Shared helpers for the public rep page (/p/[slug]) and its editor.
  *
  * Pure functions only — imported by both the server-rendered page and the
  * client editor, so nothing here may touch the DOM or server-only APIs.

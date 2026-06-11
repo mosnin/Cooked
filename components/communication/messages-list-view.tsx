@@ -4,7 +4,7 @@
  * Messages list view — the Messages tab of the Communication surface.
  *
  * Underlying channel is WhatsApp Business via Composio; "Messages" is the
- * realtor-facing label. Rows: contact name (bold) · phone (muted) · last
+ * rep-facing label. Rows: contact name (bold) · phone (muted) · last
  * message snippet · relative time. Tap → full thread page at
  * /whatsapp/[id]. No filters, no tabs in v1.
  *
@@ -22,7 +22,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { MessageSquare, Plug } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
-import { ShimmerText } from '@/components/chippi/shimmer-text';
+import { ShimmerText } from '@/components/koala/shimmer-text';
 import { cn } from '@/lib/utils';
 import {
   BODY,

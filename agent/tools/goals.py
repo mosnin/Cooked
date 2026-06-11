@@ -20,7 +20,7 @@ from tools.streaming import publish_event
 
 VALID_GOAL_TYPES = {
     "follow_up_sequence",
-    "tour_booking",
+    "demo_booking",
     "offer_progress",
     "deal_close",
     "reengagement",
@@ -50,7 +50,7 @@ async def manage_goal(
 ) -> dict[str, Any]:
     """Manage persistent agent goals across runs (list / create / update_status)."""
     # list: up to 20 active, filter by contact_id or deal_id.
-    # create: needs goal_type + description. Types: follow_up_sequence|tour_booking|offer_progress|deal_close|reengagement|custom.
+    # create: needs goal_type + description. Types: follow_up_sequence|demo_booking|offer_progress|deal_close|reengagement|custom.
     # update_status: needs goal_id + status (active|completed|cancelled|paused).
     if action not in VALID_ACTIONS:
         return {"error": f"action must be one of {VALID_ACTIONS}"}

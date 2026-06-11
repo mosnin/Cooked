@@ -22,7 +22,7 @@ interface Props {
 
 /**
  * Shared property create/edit form. Field set is intentionally small — a
- * realtor adding a property in the middle of their day shouldn't have to
+ * rep adding a property in the middle of their day shouldn't have to
  * fill twenty boxes. Everything except address is optional.
  *
  * All inputs are the canonical <Input> / <Textarea> primitives so the form
@@ -33,7 +33,7 @@ interface Props {
  *
  * Photos live at the top — a property is what it looks like, not what its
  * MLS number is. The featured photo is `photos[0]` (convention reused from
- * the list + detail pages); the editor lets the realtor tap any tile to
+ * the list + detail pages); the editor lets the rep tap any tile to
  * promote it. The first uploaded photo is featured by default.
  */
 export function PropertyForm({ initial = {}, onCancel, onSubmit, submitting, submitLabel = 'Save' }: Props) {
@@ -84,7 +84,7 @@ export function PropertyForm({ initial = {}, onCancel, onSubmit, submitting, sub
 
   return (
     <form onSubmit={submit} className="space-y-4">
-      {/* Photos first — the realtor is showing a house, not filing an MLS
+      {/* Photos first — the rep is showing a house, not filing an MLS
           form. The featured tile sets what the list, the deal card, and
           the listing detail show. */}
       <Field label="Photos">

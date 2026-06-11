@@ -74,7 +74,7 @@ export function AuthorizeClient({
   const permissions = [
     { icon: Users, label: 'View your contacts and leads' },
     { icon: Database, label: 'View your deals and pipeline' },
-    { icon: CalendarDays, label: 'View your tours and calendar' },
+    { icon: CalendarDays, label: 'View your demos and calendar' },
     { icon: FileText, label: 'View your notes' },
   ];
 
@@ -83,7 +83,7 @@ export function AuthorizeClient({
       <div className="min-h-screen bg-muted flex items-center justify-center px-4 py-10">
         <div className="w-full max-w-sm space-y-6">
           <div className="flex justify-center">
-            <BrandLogo className="h-8" alt="Chippi" />
+            <BrandLogo className="h-8" alt="Koala" />
           </div>
           <div className="rounded-2xl bg-card border border-border shadow-lg p-6 text-center space-y-4">
             <div className="w-14 h-14 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mx-auto">
@@ -107,7 +107,7 @@ export function AuthorizeClient({
       <div className="w-full max-w-sm space-y-6">
         {/* Logo */}
         <div className="flex justify-center">
-          <BrandLogo className="h-8" alt="Chippi" />
+          <BrandLogo className="h-8" alt="Koala" />
         </div>
 
         {/* Card */}

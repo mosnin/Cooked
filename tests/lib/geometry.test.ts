@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
-  CHIPPI_BAR_MAX,
-  CHIPPI_BAR_WIDTH_PX,
+  KOALA_BAR_MAX,
+  KOALA_BAR_WIDTH_PX,
   CONTENT_COLUMN_PX,
   FOCUS_CARD_MAX,
   FOCUS_CARD_WIDTH_PX,
@@ -35,8 +35,8 @@ describe('geometry — the Vitruvian macro frame', () => {
       expect(SIDEBAR_WIDTH_PX).toBe(RHYTHM_U * 5);
     });
 
-    it('chippi bar = RHYTHM_U × 16', () => {
-      expect(CHIPPI_BAR_WIDTH_PX).toBe(RHYTHM_U * 16);
+    it('koala bar = RHYTHM_U × 16', () => {
+      expect(KOALA_BAR_WIDTH_PX).toBe(RHYTHM_U * 16);
     });
 
     it('page padding (lg) = RHYTHM_U × 1', () => {
@@ -87,12 +87,12 @@ describe('geometry — the Vitruvian macro frame', () => {
       expect(FOCUS_CARD_MAX).toBe(`max-w-[${FOCUS_CARD_WIDTH_PX}px]`);
     });
 
-    it('ChippiBar uses Tailwind`s max-w-3xl which equals 768px = CHIPPI_BAR_WIDTH_PX', () => {
+    it('KoalaBar uses Tailwind`s max-w-3xl which equals 768px = KOALA_BAR_WIDTH_PX', () => {
       // Tailwind's `max-w-3xl` = 48rem = 768px at the default 16px root.
       // Kept as a class-string alias rather than `max-w-[768px]` for
       // semantic readability at the call site.
-      expect(CHIPPI_BAR_MAX).toBe('max-w-3xl');
-      expect(CHIPPI_BAR_WIDTH_PX).toBe(768);
+      expect(KOALA_BAR_MAX).toBe('max-w-3xl');
+      expect(KOALA_BAR_WIDTH_PX).toBe(768);
     });
   });
 });

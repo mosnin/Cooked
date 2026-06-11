@@ -44,7 +44,7 @@ const SPACE = {
   name: 'Jane Realty',
   emoji: null,
   ownerId: 'user_db_1',
-  brokerageId: null,
+  teamId: null,
   createdAt: '2026-04-01T00:00:00.000Z',
   stripeSubscriptionStatus: 'active',
 } as unknown as NonNullable<Awaited<ReturnType<typeof getSpaceForUser>>>;
