@@ -195,7 +195,7 @@ svg.append(f'<text x="{PAD+2}" y="{PAD+52}" font-family="{FONT}" font-size="13.5
 svg.extend(c.parts)
 svg.append('</svg>')
 
-out = "/home/user/realestatecrm/docs/architecture-diagram.svg"
+out = "docs/architecture-diagram.svg"
 with open(out, "w") as f:
     f.write("\n".join(svg))
 print("wrote", out, "h=", total_h)

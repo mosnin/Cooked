@@ -146,7 +146,7 @@ export const DEFAULT_RENTAL_FORM_CONFIG: IntakeFormConfig = {
           id: '10000000-0000-4000-b000-000000000004',
           type: 'number',
           label: 'Roughly what do you take home each month?',
-          description: 'A ballpark is fine — landlords usually want to see ~3x the rent.',
+          description: 'A ballpark is fine — it helps right-size the proposal.',
           placeholder: 'e.g., 5000',
           required: true,
           position: 0,

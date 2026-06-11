@@ -61,12 +61,11 @@ const SOURCE_PHRASE: Record<string, string> = {
  * First matching audience wins; absence is fine (clause omitted).
  */
 const AUDIENCE_WARM_CLAUSE: Record<string, string> = {
-  first_time_buyers: " I'll walk you through every step. First homes are my favorite.",
-  move_up_families: " Whether you're upsizing or relocating, I'll make the move smooth.",
-  luxury: ' I give every client white-glove attention from first call to keys.',
-  investors: " I'll get you the numbers that matter: cap rate, comps, cash flow.",
-  sellers: " I'll show you exactly what your home can command in today's market.",
-  renters: " I'll line up places that fit before they hit the open market.",
+  smb: " Fast cycles, no procurement maze — I'll keep it simple.",
+  mid_market: " I'll map your stakeholders and keep the eval on rails.",
+  enterprise: " Security review, legal, procurement — I'll run that gauntlet with you.",
+  existing_customers: " I'll find the expansion wins already hiding in your account.",
+  inbound_leads: " You reached out at the right time — I'll move as fast as you do.",
 };
 
 /** Pick the rep's first name, or a friendly fallback. */
@@ -104,8 +103,8 @@ export function composeOnboardingDraft(input: OnboardingDraftInput): OnboardingD
     // Direct: respect their time, lead with the ask, one clear next step.
     const body =
       `Hi ${DEMO_LEAD_NAME}, ${firstName} here with ${business}. ` +
-      `Got your inquiry${via}. To get you moving fast: what's your target area, ` +
-      `price range, and timeline? Reply here and I'll send matching listings today. ${firstName}`;
+      `Got your inquiry${via}. To get you moving fast: what problem are you solving, ` +
+      `what's your timeline, and who else weighs in? Reply here and I'll send a tailored overview today. ${firstName}`;
     return { frame, body };
   }
 
@@ -114,8 +113,8 @@ export function composeOnboardingDraft(input: OnboardingDraftInput): OnboardingD
     input.clientTypes.map((c) => AUDIENCE_WARM_CLAUSE[c]).find(Boolean) ?? '';
   const body =
     `Hi ${DEMO_LEAD_NAME}, thanks for reaching out${via}! ` +
-    `I'd love to help you find the right place.${audienceClause} ` +
-    `To point you at the best fits, what are you looking for? Area, timing, must-haves? ` +
+    `I'd love to help you find the right fit.${audienceClause} ` +
+    `To point you at the best fits, what are you looking for? Use case, timing, must-haves? ` +
     `No rush, and no pressure. ${firstName}, ${business}`;
   return { frame, body };
 }

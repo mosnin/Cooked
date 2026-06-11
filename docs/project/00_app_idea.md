@@ -6,27 +6,27 @@ Koala
 
 ## One Sentence Product Definition
 
-Koala is a sales CRM for solo reps that turns a single intake link into qualified, AI-scored renter leads with a clean pipeline for follow-up, demos, and deals.
+Koala is a sales CRM for solo reps that turns a single intake link into qualified, AI-scored prospect leads with a clean pipeline for follow-up, demos, and deals.
 
 ## Core User
 
-New solo reps in the U.S. handling renter and leasing leads — early in their career or building a solo practice, needing a fast lightweight way to capture and qualify renter leads without enterprise CRM complexity.
+New solo reps in the U.S. handling prospect and leasing leads — early in their career or building a solo practice, needing a fast lightweight way to capture and qualify prospect leads without enterprise CRM complexity.
 
 ## Core Problem
 
-Solo reps waste time switching between spreadsheets, email, social DMs, and generic CRMs to capture and qualify renter leads. This leads to missed follow-ups, no lead prioritization, and poor pipeline visibility.
+Solo reps waste time switching between spreadsheets, email, social DMs, and generic CRMs to capture and qualify prospect leads. This leads to missed follow-ups, no lead prioritization, and poor pipeline visibility.
 
 ## Core Outcome
 
-Reps go from sign-up to a live shareable intake link in under 5 minutes. Renter applications flow in, get AI-scored with explainable context (hot/warm/cold + summary), and appear in a clean CRM where the rep can triage, follow up, schedule demos, and track deals — all from one place.
+Reps go from sign-up to a live shareable intake link in under 5 minutes. Prospect applications flow in, get AI-scored with explainable context (hot/warm/cold + summary), and appear in a clean CRM where the rep can triage, follow up, schedule demos, and track deals — all from one place.
 
 ## First Value Event
 
-Rep generates their intake link and shares it. The first renter application arrives, is AI-scored, and appears in the leads view with a priority tier and plain-language summary.
+Rep generates their intake link and shares it. The first prospect application arrives, is AI-scored, and appears in the leads view with a priority tier and plain-language summary.
 
 ## Main Product Workflow
 
-Sign up → Create workspace → Generate intake link → Share link → Renter submits application → AI scores and triages lead → Rep reviews in leads view → Promotes to contact → Schedules demo → Creates deal → Tracks through pipeline stages.
+Sign up → Create workspace → Generate intake link → Share link → Prospect submits application → AI scores and triages lead → Rep reviews in leads view → Promotes to contact → Schedules demo → Creates deal → Tracks through pipeline stages.
 
 ## Dashboard Definition
 
@@ -46,7 +46,7 @@ Multi-step inline onboarding flow triggered on first sign-in at `/`. Steps inclu
 
 ## Product Specific Features
 
-- Shareable public intake form (`/apply/[slug]`) with 9-step structured renter application
+- Shareable public intake form (`/apply/[slug]`) with 9-step structured prospect application
 - AI lead scoring using OpenAI gpt-4o-mini with explainable priority tiers (hot/warm/cold/unqualified) and plain-language summaries
 - Leads view with score badges, new-lead indicators, and filtering
 - Contact CRM with lifecycle types (QUALIFICATION, DEMO, APPLICATION), activity logs, follow-up scheduling
@@ -111,7 +111,7 @@ Auth (Clerk), multi-step onboarding, public intake form, AI lead scoring with ex
 - CRM integration
 - Document signing / transaction management
 - Email/SMS campaign automation
-- Property listing management
+- Property offering management
 - Multi-user workspaces (one space per user currently)
 - White-label branding
 - Public API

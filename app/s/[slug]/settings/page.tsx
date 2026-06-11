@@ -37,7 +37,7 @@ import {
  *   Connections  OAuth apps + message templates (everywhere Koala acts through)
  *   Memory       what Koala has learned about this workspace
  *   Routines     the rep's standing instructions for Koala
- *   Privacy      notifications + legal + compliance + fair-housing notice
+ *   Privacy      notifications + legal + compliance + compliance notice
  *   Developer    MCP + API keys + usage (per-tool cost breakdown)
  *
  * Memory and Routines moved here from the Koala dropdown — they describe
@@ -366,7 +366,7 @@ export default async function SettingsPage({
         </div>
       )}
 
-      {/* Privacy — notifications, legal URL, license, fair-housing notice.
+      {/* Privacy — notifications, legal URL, license, compliance notice.
           Everything compliance-flavored and everything that determines what
           reaches the rep. */}
       {activeTab === 'privacy' && (
@@ -398,14 +398,14 @@ export default async function SettingsPage({
           >
             <p className={SECTION_LABEL}>Compliance &amp; trust signals</p>
             <p className={BODY_MUTED}>
-              Optional. License number, Fair Housing notice, and Equal Housing
+              Optional. License number, Compliance notice, and compliance
               mark — shown in your intake-form footer.
             </p>
             <IntakeTrustSignalsForm
               slug={space.slug}
               licenseNumber={settings?.intakeLicenseNumber ?? ''}
-              fairHousingNotice={settings?.intakeFairHousingNotice ?? ''}
-              showEqualHousingMark={settings?.intakeShowEqualHousingMark ?? false}
+              complianceNotice={settings?.intakeComplianceNotice ?? ''}
+              showComplianceMark={settings?.intakeShowComplianceMark ?? false}
             />
           </section>
           <section

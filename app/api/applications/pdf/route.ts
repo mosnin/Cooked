@@ -117,7 +117,7 @@ ${contact.leadScore != null ? `
 <table>
   <tr><td>Adults</td><td>${fmt(app.adultsOnApplication)}</td></tr>
   <tr><td>Children/Dependents</td><td>${fmt(app.childrenOrDependents)}</td></tr>
-  <tr><td>Co-Renters</td><td>${fmt(app.coRenters)}</td></tr>
+  <tr><td>Stakeholders</td><td>${fmt(app.stakeholders)}</td></tr>
   <tr><td>Emergency Contact</td><td>${fmt(app.emergencyContactName)}${app.emergencyContactPhone ? ` — ${app.emergencyContactPhone}` : ''}</td></tr>
 </table>
 
@@ -132,8 +132,8 @@ ${contact.leadScore != null ? `
 
 <h2>Rental History</h2>
 <table>
-  <tr><td>Current Landlord</td><td>${fmt(app.currentLandlordName)}${app.currentLandlordPhone ? ` — ${app.currentLandlordPhone}` : ''}</td></tr>
-  <tr><td>Previous Landlord</td><td>${fmt(app.previousLandlordName)}${app.previousLandlordPhone ? ` — ${app.previousLandlordPhone}` : ''}</td></tr>
+  <tr><td>Current Provider</td><td>${fmt(app.currentProviderName)}${app.currentProviderPhone ? ` — ${app.currentProviderPhone}` : ''}</td></tr>
+  <tr><td>Previous Provider</td><td>${fmt(app.previousProviderName)}${app.previousProviderPhone ? ` — ${app.previousProviderPhone}` : ''}</td></tr>
   <tr><td>Current Rent Paid</td><td>${fmtMoney(app.currentRentPaid)}</td></tr>
   <tr><td>Late Payments</td><td${app.latePayments ? ' class="flag"' : ''}>${fmtBool(app.latePayments)}</td></tr>
   <tr><td>Lease Violations</td><td${app.leaseViolations ? ' class="flag"' : ''}>${fmtBool(app.leaseViolations)}</td></tr>

@@ -16,7 +16,7 @@ export const metadata: Metadata = { title: 'General settings — Teams' };
 
 /**
  * Manager settings — general workspace identity (name, logo, website, privacy
- * policy) and the intake-form trust signals (license, fair-housing notice).
+ * policy) and the intake-form trust signals (license, compliance notice).
  *
  * The manager dashboard ships its own settings sub-nav (MCP, Auto-Assignment,
  * Routing rules, Billing) via `managerSettingsNavSections` in the sidebar, so
@@ -60,13 +60,13 @@ export default async function ManagerSettingsPage() {
       <section className="space-y-5 pt-10 border-t border-border/60">
         <p className={SECTION_LABEL}>Compliance &amp; trust signals</p>
         <p className={BODY_MUTED}>
-          License number, Fair Housing notice, and Equal Housing mark — shown
+          License number, Compliance notice, and compliance mark — shown
           in the team intake-form footer for every rep on your team.
         </p>
         <TeamIntakeTrustSignalsForm
           licenseNumber={team.teamLicenseNumber ?? ''}
-          fairHousingNotice={team.teamFairHousingNotice ?? ''}
-          showEqualHousingMark={team.teamShowEqualHousingMark ?? false}
+          complianceNotice={team.teamComplianceNotice ?? ''}
+          showComplianceMark={team.teamShowComplianceMark ?? false}
           isOwner={canEdit}
         />
       </section>

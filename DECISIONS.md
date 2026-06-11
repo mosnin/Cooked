@@ -40,8 +40,8 @@ Use this to record meaningful decisions and avoid re-litigating context. When a 
 ## [CONFIRMED] Protect launch wedge over generic CRM expansion
 
 - **Status**: [CONFIRMED] — product context and codebase both support this
-- **Decision**: Prioritize renter/leasing qualification speed and clarity over broad CRM feature expansion.
-- **Context**: Koala's initial user is a new solo rep handling renter leads. The codebase is built around intake → scoring → CRM triage. Expanding to generic CRM breadth would dilute the activation value and increase setup friction.
+- **Decision**: Prioritize inbound lead qualification speed and clarity over broad CRM feature expansion.
+- **Context**: Koala's initial user is a new solo rep handling inbound leads. The codebase is built around intake → scoring → CRM triage. Expanding to generic CRM breadth would dilute the activation value and increase setup friction.
 - **Options considered**:
   1. Expand to generic CRM breadth now — serve more use cases, risk losing focus
   2. Maintain focused wedge — serve the specific user well, expand later

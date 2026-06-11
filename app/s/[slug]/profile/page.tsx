@@ -109,7 +109,7 @@ export default function ProfilePage() {
             </Button>
           </div>
           <p className="text-xs text-muted-foreground">
-            Share this link so new renter applications flow directly into your Leads view.
+            Share this link so new lead submissions flow directly into your Leads view.
           </p>
         </div>
       </div>

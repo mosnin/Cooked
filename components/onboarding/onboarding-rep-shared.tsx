@@ -38,12 +38,11 @@ export const TENURE_TO_YEARS: Record<Tenure, number> = {
 };
 
 export const CLIENT_TYPE_OPTIONS: { value: string; label: string }[] = [
-  { value: 'first_time_buyers', label: 'First-time buyers' },
-  { value: 'move_up_families', label: 'Move-up families' },
-  { value: 'luxury', label: 'Luxury' },
-  { value: 'investors', label: 'Investors' },
-  { value: 'sellers', label: 'Sellers / listings' },
-  { value: 'renters', label: 'Renters' },
+  { value: 'smb', label: 'SMB & startups' },
+  { value: 'mid_market', label: 'Mid-market' },
+  { value: 'enterprise', label: 'Enterprise' },
+  { value: 'existing_customers', label: 'Existing customers / expansion' },
+  { value: 'inbound_leads', label: 'Inbound leads' },
 ];
 
 export const LEAD_SOURCE_OPTIONS: { value: string; label: string; icon?: string }[] = [

@@ -153,11 +153,11 @@ export async function PATCH(req: NextRequest) {
   const intakeDisclaimerText    = typeof body.intakeDisclaimerText    === 'string' ? body.intakeDisclaimerText.slice(0, 2000)   : (body.intakeDisclaimerText === null ? null : undefined);
   const intakeFooterLinks       = Array.isArray(body.intakeFooterLinks) ? body.intakeFooterLinks : undefined;
   // Trust signals — three optional compliance slots rendered in the intake footer.
-  // License number: short identifier; cap conservatively. Fair housing notice:
+  // License number: short identifier; cap conservatively. Compliance notice:
   // multi-line text; cap at 2KB. Mark: boolean.
   const intakeLicenseNumber         = typeof body.intakeLicenseNumber === 'string' ? body.intakeLicenseNumber.trim().slice(0, 200) : (body.intakeLicenseNumber === null ? null : undefined);
-  const intakeFairHousingNotice     = typeof body.intakeFairHousingNotice === 'string' ? body.intakeFairHousingNotice.slice(0, 2000) : (body.intakeFairHousingNotice === null ? null : undefined);
-  const intakeShowEqualHousingMark  = typeof body.intakeShowEqualHousingMark === 'boolean' ? body.intakeShowEqualHousingMark : undefined;
+  const intakeComplianceNotice     = typeof body.intakeComplianceNotice === 'string' ? body.intakeComplianceNotice.slice(0, 2000) : (body.intakeComplianceNotice === null ? null : undefined);
+  const intakeShowComplianceMark  = typeof body.intakeShowComplianceMark === 'boolean' ? body.intakeShowComplianceMark : undefined;
 
   // Legal & compliance fields
   const rawPrivacyPolicyUrl = typeof body.privacyPolicyUrl === 'string' ? body.privacyPolicyUrl.trim().slice(0, 500) : undefined;
@@ -304,8 +304,8 @@ export async function PATCH(req: NextRequest) {
   if (intakeFooterLinks !== undefined) settingsPayload.intakeFooterLinks = intakeFooterLinks;
   // Trust signals
   if (intakeLicenseNumber !== undefined) settingsPayload.intakeLicenseNumber = intakeLicenseNumber || null;
-  if (intakeFairHousingNotice !== undefined) settingsPayload.intakeFairHousingNotice = intakeFairHousingNotice || null;
-  if (intakeShowEqualHousingMark !== undefined) settingsPayload.intakeShowEqualHousingMark = intakeShowEqualHousingMark;
+  if (intakeComplianceNotice !== undefined) settingsPayload.intakeComplianceNotice = intakeComplianceNotice || null;
+  if (intakeShowComplianceMark !== undefined) settingsPayload.intakeShowComplianceMark = intakeShowComplianceMark;
 
   // Demo availability settings
   if (typeof body.demoDuration === 'number' && [15, 30, 45, 60, 90, 120].includes(body.demoDuration)) {

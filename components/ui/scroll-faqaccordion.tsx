@@ -27,13 +27,13 @@ export default function ScrollFAQAccordion({
       id: 1,
       question: "What is Koala?",
       answer:
-        "Koala is a lightweight leasing lead workflow that helps solo agents capture applications, qualify renters, and follow up faster from one clear command center."
+        "Koala is an agentic sales OS that helps reps and sales teams capture leads, qualify prospects, and follow up faster from one clear command center."
     },
     {
       id: 2,
       question: "How quickly can I get started?",
       answer:
-        "Most agents can publish their intake link in minutes and start receiving structured renter applications the same day."
+        "Most reps can publish their intake link in minutes and start receiving qualified leads the same day."
     },
     {
       id: 3,

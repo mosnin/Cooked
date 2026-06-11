@@ -2,7 +2,7 @@
  * POST /api/public/intake-chat
  *
  * Public, unauthenticated endpoint that powers the AI chatbot intake form.
- * The AI interviews a prospective renter or buyer conversationally, collecting
+ * The AI interviews a prospect conversationally, collecting
  * the required lead fields one at a time. When all required fields are gathered
  * the stream ends with a special `__FIELDS__:{...}` line the client uses to
  * pre-populate and auto-submit the intake form.

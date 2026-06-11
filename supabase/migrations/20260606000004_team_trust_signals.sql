@@ -5,10 +5,10 @@
 -- copy for legal text.
 --
 --   teamLicenseNumber       — team-level sales license #
---   teamFairHousingNotice   — multi-line Fair Housing statement
---   teamShowEqualHousingMark — render the Equal Housing Opportunity logo
+--   teamComplianceNotice   — multi-line compliance statement
+--   teamShowComplianceMark — render the compliance badge
 
 ALTER TABLE "Team"
   ADD COLUMN IF NOT EXISTS "teamLicenseNumber" text,
-  ADD COLUMN IF NOT EXISTS "teamFairHousingNotice" text,
-  ADD COLUMN IF NOT EXISTS "teamShowEqualHousingMark" boolean NOT NULL DEFAULT false;
+  ADD COLUMN IF NOT EXISTS "teamComplianceNotice" text,
+  ADD COLUMN IF NOT EXISTS "teamShowComplianceMark" boolean NOT NULL DEFAULT false;

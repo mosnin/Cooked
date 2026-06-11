@@ -97,7 +97,7 @@ export default async function PublicApplyPage({
         'intakeDisclaimerText, intakeThankYouTitle, intakeThankYouMessage, ' +
         'intakeFooterLinks, intakeDisabledSteps, intakeCustomQuestions, ' +
         'intakeFaviconUrl, bio, socialLinks, privacyPolicyUrl, consentCheckboxLabel, ' +
-        'intakeLicenseNumber, intakeFairHousingNotice, intakeShowEqualHousingMark, ' +
+        'intakeLicenseNumber, intakeComplianceNotice, intakeShowComplianceMark, ' +
         'formConfig, formConfigSource, rentalFormConfig, buyerFormConfig, trackingPixels'
       )
       .eq('spaceId', space.id)
@@ -141,8 +141,8 @@ export default async function PublicApplyPage({
     privacyPolicyUrl: string | null;
     consentCheckboxLabel: string | null;
     intakeLicenseNumber: string | null;
-    intakeFairHousingNotice: string | null;
-    intakeShowEqualHousingMark: boolean | null;
+    intakeComplianceNotice: string | null;
+    intakeShowComplianceMark: boolean | null;
     formConfig: import('@/lib/types').IntakeFormConfig | null;
     formConfigSource: string | null;
     rentalFormConfig: import('@/lib/types').IntakeFormConfig | null;
@@ -292,8 +292,8 @@ export default async function PublicApplyPage({
         hidePoweredBy={hidePoweredBy}
         footerLinks={customization.footerLinks}
         licenseNumber={settings?.intakeLicenseNumber ?? null}
-        fairHousingNotice={settings?.intakeFairHousingNotice ?? null}
-        showEqualHousingMark={settings?.intakeShowEqualHousingMark ?? false}
+        complianceNotice={settings?.intakeComplianceNotice ?? null}
+        showComplianceMark={settings?.intakeShowComplianceMark ?? false}
       >
         <IntakeChat
           slug={slug}

@@ -51,7 +51,7 @@ export default function DataProcessingAgreementPage() {
             <li>Deal pipeline information and demo scheduling data.</li>
             <li>Communications sent through the Service (email and SMS).</li>
           </ul>
-          <p>2.3. The categories of Data Subjects include Applicants, prospective buyers, prospective renters, and other individuals whose data the Controller collects through the Service.</p>
+          <p>2.3. The categories of Data Subjects include Applicants, prospects, customers, and other individuals whose data the Controller collects through the Service.</p>
           <p>2.4. Processing activities include storage, retrieval, organization, AI scoring analysis, notification delivery (email and SMS), and deletion of Personal Data as necessary to provide the Service.</p>
         </div>
       </section>

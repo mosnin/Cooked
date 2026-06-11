@@ -358,7 +358,7 @@ export function ConfigureAccountForm({ initialData, slug }: ConfigureAccountForm
           <SectionHeader
             icon={Link2}
             title="Intake link"
-            description="The link renters fill out. Share it anywhere — leads flow straight into your CRM."
+            description="The link prospects fill out. Share it anywhere — leads flow straight into your CRM."
           />
           <div className="space-y-4">
             <div className="space-y-1.5">

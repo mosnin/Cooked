@@ -67,19 +67,19 @@ export interface IntakeChatShellProps {
    *  legal copy — the slots are optional and the block disappears
    *  entirely when none are provided. */
   licenseNumber?: string | null;
-  fairHousingNotice?: string | null;
-  showEqualHousingMark?: boolean;
+  complianceNotice?: string | null;
+  showComplianceMark?: boolean;
   children: ReactNode;
 }
 
-/** Standard Equal Housing Opportunity mark — house silhouette with an
- *  equals sign. Rendered as inline SVG so it inherits text color and
- *  scales cleanly at ~14px. Pure presentation, no remote assets. */
-function EqualHousingMark({ className }: { className?: string }) {
+/** Compliance badge — shield with a check. Rendered as inline SVG so it
+ *  inherits text color and scales cleanly at ~14px. Pure presentation,
+ *  no remote assets. */
+function ComplianceMark({ className }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"
-      aria-label="Equal Housing Opportunity"
+      aria-label="Compliance verified"
       role="img"
       className={className}
       fill="none"
@@ -88,11 +88,10 @@ function EqualHousingMark({ className }: { className?: string }) {
       strokeLinecap="round"
       strokeLinejoin="round"
     >
-      {/* House silhouette */}
-      <path d="M3 11 L12 3 L21 11 V21 H3 Z" />
-      {/* Equals sign inside */}
-      <line x1="8" y1="13.5" x2="16" y2="13.5" />
-      <line x1="8" y1="16.5" x2="16" y2="16.5" />
+      {/* Shield */}
+      <path d="M12 3 L20 6 V12 C20 16.5 16.5 20 12 21 C7.5 20 4 16.5 4 12 V6 Z" />
+      {/* Check */}
+      <path d="M8.5 12.5 L11 15 L15.5 9.5" />
     </svg>
   );
 }
@@ -283,16 +282,16 @@ export function IntakeChatShell({
   hidePoweredBy,
   footerLinks,
   licenseNumber,
-  fairHousingNotice,
-  showEqualHousingMark,
+  complianceNotice,
+  showComplianceMark,
   children,
 }: IntakeChatShellProps) {
   // The trust block is entirely optional. If the rep hasn't supplied
   // any of these three, render nothing — no hairline, no empty space.
   const trustedLicense = licenseNumber?.trim() || '';
-  const trustedNotice = fairHousingNotice?.trim() || '';
+  const trustedNotice = complianceNotice?.trim() || '';
   const hasTrustBlock = Boolean(
-    trustedLicense || trustedNotice || showEqualHousingMark,
+    trustedLicense || trustedNotice || showComplianceMark,
   );
 
   return (
@@ -391,9 +390,9 @@ export function IntakeChatShell({
               hairline. Paper-flat: text + rule, no chrome. */}
           {hasTrustBlock && (
             <div className="mb-3 pb-3 border-b border-border/40 text-[11px] text-muted-foreground/80 space-y-1.5">
-              {showEqualHousingMark && (
+              {showComplianceMark && (
                 <div>
-                  <EqualHousingMark className="h-3.5 w-3.5 text-muted-foreground/70" />
+                  <ComplianceMark className="h-3.5 w-3.5 text-muted-foreground/70" />
                 </div>
               )}
               {trustedLicense && <div>{trustedLicense}</div>}

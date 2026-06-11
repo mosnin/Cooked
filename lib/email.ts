@@ -652,7 +652,7 @@ export async function sendWelcomeEmail(params: {
       <tr>
         <td style="padding:8px 0;font-size:14px;color:#374151;line-height:1.5">
           <strong style="color:#111827">1. Share your intake link</strong><br/>
-          Send it to renters so their inquiries flow straight into your pipeline.
+          Send it to prospects so their inquiries flow straight into your pipeline.
         </td>
       </tr>
       <tr>

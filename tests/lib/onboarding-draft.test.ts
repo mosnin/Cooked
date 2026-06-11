@@ -13,7 +13,7 @@ const base = {
   name: 'Sarah Chen',
   businessName: 'Coastal Sales',
   tone: 'warm' as const,
-  clientTypes: ['first_time_buyers'],
+  clientTypes: ['mid_market'],
   leadSources: ['linkedin'],
 };
 
@@ -28,16 +28,16 @@ describe('composeOnboardingDraft', () => {
   });
 
   it('warm tone includes an audience-aware clause when one matches', () => {
-    const { body } = composeOnboardingDraft({ ...base, clientTypes: ['investors'] });
-    expect(body.toLowerCase()).toContain('cap rate');
+    const { body } = composeOnboardingDraft({ ...base, clientTypes: ['enterprise'] });
+    expect(body.toLowerCase()).toContain('procurement');
   });
 
   it('direct tone is terse, leads with the ask, omits the audience clause', () => {
     const { body } = composeOnboardingDraft({ ...base, tone: 'direct' });
-    expect(body).toContain('target area');
+    expect(body).toContain('problem');
     expect(body).toContain('timeline');
     // The warm audience clauses must not leak into the direct template.
-    expect(body.toLowerCase()).not.toContain('cap rate');
+    expect(body.toLowerCase()).not.toContain('procurement');
     expect(body.toLowerCase()).not.toContain('no pressure');
   });
 
@@ -69,7 +69,7 @@ describe('composeOnboardingDraft', () => {
   it('never produces double spaces regardless of input combination', () => {
     const tones = ['warm', 'direct'] as const;
     const sources = [[], ['linkedin'], ['sphere'], ['company_website']];
-    const audiences = [[], ['luxury'], ['renters'], ['sellers']];
+    const audiences = [[], ['enterprise'], ['inbound_leads'], ['smb']];
     for (const tone of tones) {
       for (const leadSources of sources) {
         for (const clientTypes of audiences) {

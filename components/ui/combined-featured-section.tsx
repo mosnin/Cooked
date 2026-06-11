@@ -27,7 +27,7 @@ export default function CombinedFeaturedSection() {
           <h3 className="text-xl font-normal text-foreground">
             Visualize where demand is coming from.{' '}
             <span className="text-muted-foreground">
-              Use location trends to prioritize renter lead handling.
+              Use engagement trends to prioritize inbound lead handling.
             </span>
           </h3>
 

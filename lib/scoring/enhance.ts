@@ -189,7 +189,7 @@ function buildRentalContext(app: ApplicationData | null): string {
   if (app.additionalIncome) lines.push(`Additional income: $${app.additionalIncome}/mo`);
   if (app.creditScore) lines.push(`Credit score: ${app.creditScore}`);
   if (app.currentHousingStatus) lines.push(`Current housing: ${app.currentHousingStatus}`);
-  if (app.currentLandlordName) lines.push(`Current landlord: ${app.currentLandlordName}`);
+  if (app.currentProviderName) lines.push(`Current provider: ${app.currentProviderName}`);
   if (app.latePayments != null) lines.push(`Late payments: ${app.latePayments ? 'yes' : 'no'}`);
   if (app.leaseViolations != null) lines.push(`Lease violations: ${app.leaseViolations ? 'yes' : 'no'}`);
   if (app.priorEvictions != null) lines.push(`Prior evictions: ${app.priorEvictions ? 'yes' : 'no'}`);

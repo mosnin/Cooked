@@ -32,7 +32,7 @@ Branch: If user already has a space → redirect directly to `/s/[slug]` via `/d
 1. Rep lands on workspace dashboard `/s/[slug]`
 2. Dashboard shows intake link card with "Live" badge
 3. Rep copies intake link and shares it (bio, DMs, ads, email)
-4. Renter visits `/apply/[slug]` and completes 9-step application
+4. Prospect visits `/apply/[slug]` and completes 9-step application
 5. Application creates Contact with tags=['application-link', 'new-lead']
 6. AI lead scoring runs asynchronously → score, tier, summary generated
 7. Rep sees new application in leads view with "New" badge and score

@@ -38,7 +38,7 @@ export function generatePrivacyPolicy(
   <li><strong>Contact Information:</strong> Name, email address, phone number, mailing address</li>
   <li><strong>Financial Information:</strong> Budget, income, employment status, credit information (if voluntarily provided)</li>
   <li><strong>Housing Preferences:</strong> Desired property type, location, move-in timeline, bedroom/bathroom requirements</li>
-  <li><strong>Rental/Application Data:</strong> Current living situation, rental history, landlord references, background check consent</li>
+  <li><strong>Qualification Data:</strong> Company and role, budget and timeline, current provider references, consent records</li>
   <li><strong>Identification Information:</strong> Date of birth, emergency contacts, co-applicant details</li>
   <li><strong>Communication Records:</strong> Emails, text messages, notes from phone calls or meetings</li>
   <li><strong>Technical Data:</strong> IP address and timestamp at the time of form submission (for consent verification)</li>
@@ -76,7 +76,7 @@ export function generatePrivacyPolicy(
 <p>We do not sell your personal information. We may share your data only in the following circumstances:</p>
 <ul>
   <li>With service providers who assist us in operating our business (as described above)</li>
-  <li>With property owners or landlords in connection with rental or purchase applications you submit</li>
+  <li>With the sales team you are engaging in connection with inquiries you submit</li>
   <li>When required by law, regulation, or legal process</li>
   <li>To protect our rights, safety, or property, or that of others</li>
   <li>With your explicit consent</li>
@@ -87,7 +87,7 @@ export function generatePrivacyPolicy(
 <ul>
   <li><strong>Active client data:</strong> Retained for the duration of our business relationship and for a reasonable period thereafter</li>
   <li><strong>Lead and inquiry data:</strong> Retained for up to 24 months from your last interaction with us, unless you request earlier deletion</li>
-  <li><strong>Application data:</strong> Retained in accordance with applicable sales and fair housing record-keeping requirements</li>
+  <li><strong>Application data:</strong> Retained in accordance with applicable record-keeping requirements</li>
   <li><strong>Consent records:</strong> Retained for as long as needed to demonstrate compliance with applicable laws</li>
 </ul>
 

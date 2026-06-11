@@ -1,8 +1,8 @@
 # 02 Feature Spec
 
 ## Feature: Public Intake Form
-Purpose: Allow reps to share a single link that captures structured renter applications.
-User action: Rep shares their `/apply/[slug]` link. Renter fills out a 9-step application (property selection, applicant basics, current living, household, income, rental history, screening, notes, consents).
+Purpose: Allow reps to share a single link that captures structured prospect applications.
+User action: Rep shares their `/apply/[slug]` link. Prospect fills out a 9-step application (property selection, applicant basics, current living, household, income, rental history, screening, notes, consents).
 System output: Application is saved as a Contact record with type=APPLICATION, applicationData JSON, and tags=['application-link', 'new-lead']. AI lead scoring is triggered asynchronously. Contact appears in leads view.
 Required in v1: Yes
 Dependencies: Space must exist with intake page settings configured.

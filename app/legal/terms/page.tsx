@@ -64,15 +64,15 @@ export default function TermsPage() {
           <p>4.1. You agree to use the Service only for lawful purposes and in compliance with all applicable laws and regulations. Your use is further governed by our <a href="/legal/acceptable-use" className="underline hover:text-foreground">Acceptable Use Policy</a>.</p>
           <p>4.2. You shall not:</p>
           <ul className="list-disc pl-5 space-y-1">
-            <li>Send unsolicited communications or spam through the Service, including via SMS (Telnyx) or email (Resend) integrations.</li>
-            <li>Use the Service in any manner that violates fair housing laws, the Fair Housing Act, or any anti-discrimination statutes.</li>
+            <li>Send unsolicited communications or spam through the Service, including via SMS and calling (Twilio) or email (Resend) integrations.</li>
+            <li>Use the Service in any manner that violates telemarketing laws (including the TCPA), call-recording consent laws, or any anti-discrimination statutes.</li>
             <li>Attempt to gain unauthorized access to any part of the Service or its underlying infrastructure.</li>
             <li>Interfere with or disrupt the integrity or performance of the Service.</li>
             <li>Use the Service to collect, store, or process data in violation of any applicable privacy or data protection laws.</li>
             <li>Reverse engineer, decompile, or disassemble any part of the Service.</li>
             <li>Use AI scoring outputs to make automated legal decisions regarding Applicants without human review.</li>
           </ul>
-          <p>4.3. <strong className="text-foreground">Fair Housing Compliance.</strong> Subscribers who are licensed sales professionals must comply with all applicable fair housing laws. The Service must not be used to discriminate against any person based on race, color, religion, sex, national origin, familial status, disability, or any other protected class.</p>
+          <p>4.3. <strong className="text-foreground">Communications Compliance.</strong> Subscribers must comply with all applicable telemarketing, call-recording, and anti-discrimination laws. The Service must not be used to contact any person without required consent, nor to discriminate against any person based on race, color, religion, sex, national origin, familial status, disability, or any other protected class.</p>
         </div>
       </section>
 
@@ -157,9 +157,9 @@ export default function TermsPage() {
           <ul className="list-disc pl-5 space-y-1">
             <li>Your use of the Service or violation of these Terms.</li>
             <li>Your collection, processing, or use of Applicant data or other personal data through the Service.</li>
-            <li>Your violation of any applicable law, regulation, or third-party right, including fair housing laws and data protection regulations.</li>
+            <li>Your violation of any applicable law, regulation, or third-party right, including telemarketing, communications, and data protection regulations.</li>
             <li>Any dispute between you and an Applicant or other third party.</li>
-            <li>Your use of AI scoring outputs or other AI features in making business or housing decisions.</li>
+            <li>Your use of AI scoring outputs or other AI features in making business decisions.</li>
           </ul>
           <p>11.2. Subscribers, as Data Controllers, are solely responsible for their data practices and indemnify Koala for any claims arising from the Subscriber&apos;s handling of personal data.</p>
         </div>

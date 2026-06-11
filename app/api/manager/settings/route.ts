@@ -37,8 +37,8 @@ type SettingsResponse = {
   slaFirstResponseMinutes: number;
   slaEscalateMinutes: number;
   teamLicenseNumber: string | null;
-  teamFairHousingNotice: string | null;
-  teamShowEqualHousingMark: boolean;
+  teamComplianceNotice: string | null;
+  teamShowComplianceMark: boolean;
 };
 
 /**
@@ -163,8 +163,8 @@ export async function GET() {
     slaFirstResponseMinutes: auto.slaFirstResponseMinutes,
     slaEscalateMinutes: auto.slaEscalateMinutes,
     teamLicenseNumber: ctx.team.teamLicenseNumber ?? null,
-    teamFairHousingNotice: ctx.team.teamFairHousingNotice ?? null,
-    teamShowEqualHousingMark: ctx.team.teamShowEqualHousingMark ?? false,
+    teamComplianceNotice: ctx.team.teamComplianceNotice ?? null,
+    teamShowComplianceMark: ctx.team.teamShowComplianceMark ?? false,
   };
 
   return NextResponse.json(response);
@@ -258,18 +258,18 @@ export async function PATCH(req: Request) {
       updates.teamLicenseNumber = body.teamLicenseNumber.trim().slice(0, 200) || null;
     }
   }
-  if (body.teamFairHousingNotice !== undefined) {
-    if (body.teamFairHousingNotice === null || body.teamFairHousingNotice === '') {
-      updates.teamFairHousingNotice = null;
-    } else if (typeof body.teamFairHousingNotice === 'string') {
-      updates.teamFairHousingNotice = body.teamFairHousingNotice.slice(0, 2000) || null;
+  if (body.teamComplianceNotice !== undefined) {
+    if (body.teamComplianceNotice === null || body.teamComplianceNotice === '') {
+      updates.teamComplianceNotice = null;
+    } else if (typeof body.teamComplianceNotice === 'string') {
+      updates.teamComplianceNotice = body.teamComplianceNotice.slice(0, 2000) || null;
     }
   }
-  if (body.teamShowEqualHousingMark !== undefined) {
-    if (typeof body.teamShowEqualHousingMark !== 'boolean') {
-      return NextResponse.json({ error: 'teamShowEqualHousingMark must be a boolean' }, { status: 400 });
+  if (body.teamShowComplianceMark !== undefined) {
+    if (typeof body.teamShowComplianceMark !== 'boolean') {
+      return NextResponse.json({ error: 'teamShowComplianceMark must be a boolean' }, { status: 400 });
     }
-    updates.teamShowEqualHousingMark = body.teamShowEqualHousingMark;
+    updates.teamShowComplianceMark = body.teamShowComplianceMark;
   }
 
   if (body.assignmentMethod !== undefined) {
@@ -357,7 +357,7 @@ export async function PATCH(req: Request) {
     .from('Team')
     .select(
       'id, name, websiteUrl, logoUrl, status, privacyPolicyHtml, ' +
-      'teamLicenseNumber, teamFairHousingNotice, teamShowEqualHousingMark'
+      'teamLicenseNumber, teamComplianceNotice, teamShowComplianceMark'
     )
     .eq('id', ctx.team.id)
     .maybeSingle<{
@@ -368,8 +368,8 @@ export async function PATCH(req: Request) {
       status: 'active' | 'suspended';
       privacyPolicyHtml: string | null;
       teamLicenseNumber: string | null;
-      teamFairHousingNotice: string | null;
-      teamShowEqualHousingMark: boolean | null;
+      teamComplianceNotice: string | null;
+      teamShowComplianceMark: boolean | null;
     }>();
 
   const response: SettingsResponse = {
@@ -388,8 +388,8 @@ export async function PATCH(req: Request) {
     slaFirstResponseMinutes: auto.slaFirstResponseMinutes,
     slaEscalateMinutes: auto.slaEscalateMinutes,
     teamLicenseNumber: team?.teamLicenseNumber ?? ctx.team.teamLicenseNumber ?? null,
-    teamFairHousingNotice: team?.teamFairHousingNotice ?? ctx.team.teamFairHousingNotice ?? null,
-    teamShowEqualHousingMark: team?.teamShowEqualHousingMark ?? ctx.team.teamShowEqualHousingMark ?? false,
+    teamComplianceNotice: team?.teamComplianceNotice ?? ctx.team.teamComplianceNotice ?? null,
+    teamShowComplianceMark: team?.teamShowComplianceMark ?? ctx.team.teamShowComplianceMark ?? false,
   };
 
   return NextResponse.json(response);

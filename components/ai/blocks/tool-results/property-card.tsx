@@ -334,7 +334,7 @@ export function PropertyCard({ property, slug, animDelay = 0 }: PropertyCardProp
   );
 }
 
-/** Hero photo or quiet empty-state. Real estate is visual; lead with
+/** Hero photo or quiet empty-state. Products are visual; lead with
  *  imagery the moment the rep opens a property card. */
 function PropertyHero({ photos, address }: { photos: string[]; address: string }) {
   const [errored, setErrored] = useState(false);

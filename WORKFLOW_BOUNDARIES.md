@@ -195,7 +195,7 @@ They must **never** share generic completion logic.
 | Concept | Scope | Source of truth | What it means |
 |---|---|---|---|
 | Onboarding completion | User/workspace activation | `User.onboardingCompletedAt` | The rep has set up their workspace and is ready to use the CRM |
-| Application submission | Prospect/lead ingestion | `Contact` record with intake tags | A prospective renter has submitted their information |
+| Application submission | Prospect/lead ingestion | `Contact` record with intake tags | A prospect has submitted their information |
 
 These two events:
 - Happen to different actors (rep vs prospect)

@@ -52,8 +52,8 @@ export type Team = {
   // /apply/b/[teamId]. Per-space SpaceSetting values take a back seat
   // when the intake is served via the team variant.
   teamLicenseNumber: string | null;
-  teamFairHousingNotice: string | null;
-  teamShowEqualHousingMark: boolean;
+  teamComplianceNotice: string | null;
+  teamShowComplianceMark: boolean;
   // Speed-to-lead SLA policy (added in 20260612000000_lead_sla.sql)
   slaEnabled: boolean;
   slaFirstResponseMinutes: number;
@@ -159,8 +159,8 @@ export type SpaceSetting = {
   // rendered in the public intake footer. Koala provides the slot;
   // the rep fills the actual legal text.
   intakeLicenseNumber: string | null;
-  intakeFairHousingNotice: string | null;
-  intakeShowEqualHousingMark: boolean;
+  intakeComplianceNotice: string | null;
+  intakeShowComplianceMark: boolean;
   // Dynamic form builder
   formConfig: IntakeFormConfig | null;
   formConfigSource: FormConfigSource;
@@ -249,7 +249,7 @@ export type ApplicationData = {
   // Step 4: Household
   adultsOnApplication?: number;
   childrenOrDependents?: number;
-  coRenters?: string;
+  stakeholders?: string;
   emergencyContactName?: string;
   emergencyContactPhone?: string;
   // Step 5: Income
@@ -258,10 +258,10 @@ export type ApplicationData = {
   monthlyGrossIncome?: number | string;
   additionalIncome?: number;
   // Step 6: Rental History
-  currentLandlordName?: string;
-  currentLandlordPhone?: string;
-  previousLandlordName?: string;
-  previousLandlordPhone?: string;
+  currentProviderName?: string;
+  currentProviderPhone?: string;
+  previousProviderName?: string;
+  previousProviderPhone?: string;
   currentRentPaid?: number;
   latePayments?: boolean;
   leaseViolations?: boolean;

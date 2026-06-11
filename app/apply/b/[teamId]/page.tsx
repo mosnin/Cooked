@@ -37,7 +37,7 @@ export default async function TeamApplyPage({
     .from('Team')
     .select(
       'id, name, status, logoUrl, ' +
-      'teamLicenseNumber, teamFairHousingNotice, teamShowEqualHousingMark'
+      'teamLicenseNumber, teamComplianceNotice, teamShowComplianceMark'
     )
     .eq('id', teamId)
     .maybeSingle<{
@@ -46,8 +46,8 @@ export default async function TeamApplyPage({
       status: 'active' | 'suspended';
       logoUrl: string | null;
       teamLicenseNumber: string | null;
-      teamFairHousingNotice: string | null;
-      teamShowEqualHousingMark: boolean | null;
+      teamComplianceNotice: string | null;
+      teamShowComplianceMark: boolean | null;
     }>();
 
   if (!team || team.status === 'suspended') notFound();
@@ -128,7 +128,7 @@ export default async function TeamApplyPage({
         'intakeDisclaimerText, intakeThankYouTitle, intakeThankYouMessage, ' +
         'intakeFooterLinks, intakeDisabledSteps, intakeCustomQuestions, ' +
         'intakeFaviconUrl, bio, socialLinks, privacyPolicyUrl, consentCheckboxLabel, ' +
-        'intakeLicenseNumber, intakeFairHousingNotice, intakeShowEqualHousingMark'
+        'intakeLicenseNumber, intakeComplianceNotice, intakeShowComplianceMark'
       )
       .eq('spaceId', space.id)
       .maybeSingle()
@@ -166,8 +166,8 @@ export default async function TeamApplyPage({
     privacyPolicyUrl: string | null;
     consentCheckboxLabel: string | null;
     intakeLicenseNumber: string | null;
-    intakeFairHousingNotice: string | null;
-    intakeShowEqualHousingMark: boolean | null;
+    intakeComplianceNotice: string | null;
+    intakeShowComplianceMark: boolean | null;
   } | null;
 
   // Use team name for title, fall back to space settings
@@ -224,8 +224,8 @@ export default async function TeamApplyPage({
       hidePoweredBy={hidePoweredBy}
       footerLinks={customization.footerLinks}
       licenseNumber={team.teamLicenseNumber ?? settings?.intakeLicenseNumber ?? null}
-      fairHousingNotice={team.teamFairHousingNotice ?? settings?.intakeFairHousingNotice ?? null}
-      showEqualHousingMark={team.teamShowEqualHousingMark ?? settings?.intakeShowEqualHousingMark ?? false}
+      complianceNotice={team.teamComplianceNotice ?? settings?.intakeComplianceNotice ?? null}
+      showComplianceMark={team.teamShowComplianceMark ?? settings?.intakeShowComplianceMark ?? false}
     >
       <IntakeChat
         slug={space.slug}

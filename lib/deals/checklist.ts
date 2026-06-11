@@ -63,7 +63,7 @@ export const BUYER_RESIDENTIAL_TEMPLATE: TemplateItem[] = [
 ];
 
 /**
- * Rental flow. Shorter + landlord-centric. `closing` here means move-in /
+ * Lightweight flow. Shorter + provider-centric. `closing` here means move-in /
  * lease start. Custom items cover application processing, screening, lease
  * signing — things that don't fit the buyer kinds cleanly.
  */

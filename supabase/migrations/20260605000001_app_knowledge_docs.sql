@@ -61,7 +61,7 @@ $$;
 INSERT INTO "AppKnowledgeDoc" ("category", "title", "content") VALUES
 
 ('contacts', 'How contacts and leads work',
-'Contacts (also called People or Leads) are the core of the CRM. Every buyer, renter, or seller you work with lives here.
+'Contacts (also called People or Leads) are the core of the CRM. Every prospect, buyer, or customer you work with lives here.
 Each contact has a lead type: buyer (purchasing a property), rental (looking to lease), or seller (listing a property for sale).
 Contacts have a lead score (0-100) with labels hot, warm, or cold calculated by AI from their activity.
 You can set a follow-up date on any contact to be reminded when to reach out.

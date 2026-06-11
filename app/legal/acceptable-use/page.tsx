@@ -38,19 +38,19 @@ export default function AcceptableUsePolicyPage() {
         </div>
       </section>
 
-      {/* 2. Fair Housing Compliance */}
+      {/* 2. Communications Compliance */}
       <section>
-        <h2 className="text-xl font-semibold">2. Fair Housing Compliance</h2>
+        <h2 className="text-xl font-semibold">2. Communications Compliance</h2>
         <div className="mt-3 text-sm text-muted-foreground space-y-3 leading-6">
-          <p>2.1. Subscribers who are licensed sales professionals must comply with all applicable fair housing laws, including but not limited to the Fair Housing Act (42 U.S.C. 3601 et seq.) and state and local fair housing statutes.</p>
+          <p>2.1. Subscribers must comply with all applicable telemarketing and communications laws, including but not limited to the Telephone Consumer Protection Act (TCPA, 47 U.S.C. 227), the CAN-SPAM Act, and state and local communications statutes.</p>
           <p>2.2. The Service must not be used to:</p>
           <ul className="list-disc pl-5 space-y-1">
-            <li>Refuse to sell, rent, or negotiate housing based on protected characteristics.</li>
-            <li>Discriminate in the terms, conditions, or privileges of a sales transaction.</li>
-            <li>Make, print, or publish any statement indicating a preference, limitation, or discrimination based on a protected class.</li>
-            <li>Steer prospective buyers or renters toward or away from particular neighborhoods based on protected characteristics.</li>
+            <li>Place calls or send texts to any person without the consent required by applicable law.</li>
+            <li>Record calls without the notice or consent required in the relevant jurisdictions.</li>
+            <li>Ignore opt-out requests, do-not-call registries, or quiet-hour restrictions.</li>
+            <li>Discriminate against any person based on protected characteristics in any sales interaction.</li>
           </ul>
-          <p>2.3. AI lead scoring is provided as an advisory tool only and must not be used as the sole basis for any housing decision. Subscribers are solely responsible for ensuring that their use of AI features complies with fair housing requirements.</p>
+          <p>2.3. AI lead scoring is provided as an advisory tool only and must not be used as the sole basis for any consequential decision about a person. Subscribers are solely responsible for ensuring that their use of AI features complies with applicable law.</p>
         </div>
       </section>
 

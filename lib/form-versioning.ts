@@ -278,11 +278,11 @@ function getLegacyDisplay(app: ApplicationData): DisplayField[] {
   // Household
   add('Adults on application', app.adultsOnApplication, 'Household');
   add('Children/dependents', app.childrenOrDependents, 'Household');
-  add('Co-renters', app.coRenters, 'Household');
+  add('Stakeholders', app.stakeholders, 'Buying group');
 
   // Rental history
-  add('Current landlord', app.currentLandlordName, 'Rental history');
-  add('Previous landlord', app.previousLandlordName, 'Rental history');
+  add('Current provider', app.currentProviderName, 'Provider history');
+  add('Previous provider', app.previousProviderName, 'Provider history');
 
   // Buyer-specific
   add('Pre-approval status', app.preApprovalStatus, 'Buyer');

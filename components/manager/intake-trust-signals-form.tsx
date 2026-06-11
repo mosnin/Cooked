@@ -16,13 +16,13 @@ import {
 
 interface IntakeTrustSignalsFormProps {
   licenseNumber: string;
-  fairHousingNotice: string;
-  showEqualHousingMark: boolean;
+  complianceNotice: string;
+  showComplianceMark: boolean;
   isOwner: boolean;
 }
 
-const FAIR_HOUSING_PLACEHOLDER =
-  'Equal Housing Opportunity. We do not discriminate on the basis of race, color, religion, national origin, sex, familial status, or disability.';
+const COMPLIANCE_PLACEHOLDER =
+  'All calls and texts are consent-based and TCPA-compliant. Reply STOP any time to opt out — opt-outs are honored immediately.';
 
 /**
  * Team-level intake trust signals — set once by the team admin
@@ -32,13 +32,13 @@ const FAIR_HOUSING_PLACEHOLDER =
  */
 export function TeamIntakeTrustSignalsForm({
   licenseNumber: initialLicense,
-  fairHousingNotice: initialNotice,
-  showEqualHousingMark: initialShow,
+  complianceNotice: initialNotice,
+  showComplianceMark: initialShow,
   isOwner,
 }: IntakeTrustSignalsFormProps) {
   const [licenseNumber, setLicenseNumber] = useState(initialLicense);
-  const [fairHousingNotice, setFairHousingNotice] = useState(initialNotice);
-  const [showEqualHousingMark, setShowEqualHousingMark] = useState(initialShow);
+  const [complianceNotice, setComplianceNotice] = useState(initialNotice);
+  const [showComplianceMark, setShowComplianceMark] = useState(initialShow);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
@@ -54,8 +54,8 @@ export function TeamIntakeTrustSignalsForm({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           teamLicenseNumber: licenseNumber.trim() || null,
-          teamFairHousingNotice: fairHousingNotice || null,
-          teamShowEqualHousingMark: showEqualHousingMark,
+          teamComplianceNotice: complianceNotice || null,
+          teamShowComplianceMark: showComplianceMark,
         }),
       });
       const data = await res.json();
@@ -89,12 +89,12 @@ export function TeamIntakeTrustSignalsForm({
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="teamFairHousingNotice">Fair Housing notice</Label>
+        <Label htmlFor="teamComplianceNotice">Compliance notice</Label>
         <Textarea
-          id="teamFairHousingNotice"
-          value={fairHousingNotice}
-          onChange={(e) => setFairHousingNotice(e.target.value)}
-          placeholder={FAIR_HOUSING_PLACEHOLDER}
+          id="teamComplianceNotice"
+          value={complianceNotice}
+          onChange={(e) => setComplianceNotice(e.target.value)}
+          placeholder={COMPLIANCE_PLACEHOLDER}
           rows={4}
           maxLength={2000}
           disabled={!isOwner}
@@ -104,19 +104,19 @@ export function TeamIntakeTrustSignalsForm({
 
       <div className="flex items-start gap-3 pt-1">
         <Switch
-          id="teamShowEqualHousingMark"
-          checked={showEqualHousingMark}
-          onCheckedChange={setShowEqualHousingMark}
+          id="teamShowComplianceMark"
+          checked={showComplianceMark}
+          onCheckedChange={setShowComplianceMark}
           disabled={!isOwner}
         />
         <div className="space-y-0.5">
           <Label
-            htmlFor="teamShowEqualHousingMark"
+            htmlFor="teamShowComplianceMark"
             className="cursor-pointer"
           >
-            Show Equal Housing mark
+            Show compliance mark
           </Label>
-          <p className={CAPTION}>Displays the standard Equal Housing Opportunity logo.</p>
+          <p className={CAPTION}>Displays a compliance badge next to the notice.</p>
         </div>
       </div>
 

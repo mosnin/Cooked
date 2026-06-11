@@ -47,7 +47,7 @@ Expected system behavior: Contact is created successfully with scoringStatus='pe
 Relevant page or module: /s/[slug]/leads, API route
 
 ### Edge Case: Duplicate application submission
-Scenario: Renter submits the same application form twice (double-click, refresh).
+Scenario: Prospect submits the same application form twice (double-click, refresh).
 Expected system behavior: Rate limiting prevents rapid duplicate submissions. If same email exists in space, system should handle gracefully — either update existing contact or create new with dedup note.
 Relevant page or module: /apply/[slug], API route
 
@@ -86,7 +86,7 @@ Expected system behavior: Deals page shows empty state with prompt to create fir
 Relevant page or module: /s/[slug]/deals
 
 ### Edge Case: Very long application data
-Scenario: Renter fills in extremely long text in notes or address fields.
+Scenario: Prospect fills in extremely long text in notes or address fields.
 Expected system behavior: Input fields have reasonable maxLength. Data truncated at DB level if needed. UI handles long text with truncation and expand/collapse.
 Relevant page or module: /apply/[slug], contact detail
 

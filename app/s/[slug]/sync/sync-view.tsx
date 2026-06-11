@@ -219,7 +219,7 @@ function ConnectPanel({ slug, onConnected }: { slug: string; onConnected: () => 
   }
 
   // Sales CRMs (native FUB + coming-soon) lead; general OAuth CRMs follow.
-  const realEstate = CRM_ENTRIES.filter((e) => e.native || e.comingSoon);
+  const crmTools = CRM_ENTRIES.filter((e) => e.native || e.comingSoon);
   const live = CRM_ENTRIES.filter((e) => !e.native && !e.comingSoon);
 
   return (
@@ -232,7 +232,7 @@ function ConnectPanel({ slug, onConnected }: { slug: string; onConnected: () => 
       <section className="space-y-3">
         <p className={SECTION_LABEL}>Sales CRMs</p>
         <ul className="divide-y divide-border/60">
-          {realEstate.map((entry) => (
+          {crmTools.map((entry) => (
             <CrmConnectRow
               key={entry.toolkit}
               entry={entry}

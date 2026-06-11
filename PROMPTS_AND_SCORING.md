@@ -75,7 +75,7 @@ The `scoreLeadApplication` function accepts:
 
 The scoring prompt is constructed by `toPrompt()`:
 
-- **Role**: "You are scoring a U.S. renter leasing lead for follow-up priority."
+- **Role**: "You are scoring an inbound sales lead for follow-up priority."
 - **Output instruction**: "Return strict JSON only."
 - **Score range**: 0-100 (higher = higher follow-up priority)
 - **Label rules**: hot (75-100), warm (45-74), cold (0-44), unscored only if insufficient data
