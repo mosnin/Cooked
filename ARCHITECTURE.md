@@ -41,7 +41,7 @@ System map for Koala.
 ## 2. Directory map
 
 ```
-realestatecrm/
+koala/
 ├── app/                        # Next.js App Router pages, layouts, API routes
 │   ├── (auth)/                 # Sign-in / sign-up (Clerk hosted components)
 │   ├── admin/                  # Admin dashboard (legacy Redis-based)
@@ -50,17 +50,17 @@ realestatecrm/
 │   │   ├── contacts/           # Contact CRUD + [id] routes
 │   │   ├── deals/              # Deal CRUD + [id] + reorder routes
 │   │   ├── onboarding/         # Onboarding wizard API (multi-action POST)
-│   │   ├── public/apply/       # Public intake form submission (unauthenticated)
+│   │   ├── public/apply/       # Public lead qualification form submission (unauthenticated)
 │   │   ├── spaces/             # Workspace CRUD
 │   │   ├── stages/             # Deal stage CRUD + [id] routes
 │   │   └── vectorize/sync/     # Vector sync trigger
-│   ├── apply/[slug]/      # Public intake page (prospect-facing)
+│   ├── apply/[slug]/      # Public lead qualification page (prospect-facing)
 │   ├── dashboard/              # Routing gate → redirects to workspace or onboarding
 │   ├── header/                 # Landing page header
 │   ├── legal/                  # Terms, privacy, cookies
 │   ├── onboarding/             # 7-step onboarding wizard
 │   ├── s/[slug]/          # Authenticated workspace (CRM)
-│   │   ├── ai/                 # AI assistant page
+│   │   ├── ai/                 # AI assistant page (Axil)
 │   │   ├── contacts/           # Contacts list + [id] detail
 │   │   ├── deals/              # Deals kanban board
 │   │   ├── leads/              # Intake leads list
@@ -103,12 +103,12 @@ realestatecrm/
 | System | Primary files | Description |
 |---|---|---|
 | Auth + route protection | `middleware.ts`, `app/(auth)/*` | Clerk middleware protects `/dashboard`, `/s/*`, `/onboarding` |
-| Onboarding UI | `app/onboarding/page.tsx`, `wizard-client.tsx` | 7-step wizard: welcome → profile → intake link → app flow → notifications → CRM preview → go live |
+| Onboarding UI | `app/onboarding/page.tsx`, `wizard-client.tsx` | 7-step wizard: welcome → profile → intake link → qualification flow → notifications → CRM preview → go live |
 | Onboarding API | `app/api/onboarding/route.ts` | Multi-action POST: `start`, `save_step`, `save_profile`, `create_space`, `save_notifications`, `complete`, `check_slug` |
-| Public intake form | `app/apply/[slug]/page.tsx`, `application-form.tsx` | Prospect-facing form: name (req), phone (req), email, budget, timeline, areas, notes |
+| Public lead qualification form | `app/apply/[slug]/page.tsx`, `application-form.tsx` | Prospect-facing form: name (req), phone (req), email, budget, timeline, interest areas, notes |
 | Intake ingestion | `app/api/public/apply/route.ts` | Creates Contact, deduplicates within 2min window, triggers scoring |
 | Lead scoring | `lib/lead-scoring.ts` | OpenAI gpt-4o-mini (scoring only — not the agent) |
-| CRM workspace | `app/s/[slug]/*` | Leads list, contacts CRUD, deals kanban, AI assistant, settings, profile |
+| CRM workspace | `app/s/[slug]/*` | Leads list, contacts CRUD, deals kanban, AI assistant (Axil), settings, profile |
 | Contacts API | `app/api/contacts/route.ts`, `[id]/route.ts` | CRUD with search/filter, async vector sync on create |
 | Deals API | `app/api/deals/route.ts`, `[id]/route.ts`, `reorder/route.ts` | CRUD with stage association, position ordering, async vector sync |
 | Stages API | `app/api/stages/route.ts`, `[id]/route.ts` | Deal stage CRUD |
@@ -142,7 +142,7 @@ realestatecrm/
    → Leads page: reads contacts with 'application-link' tag
    → Contacts page: full CRUD with type filter
    → Deals page: kanban with stages and drag/reorder
-6. AI assistant:
+6. AI assistant (Axil):
    → Streams response via OpenAI
    → Enriches with vector context from Supabase pgvector (scoped to caller's spaceId)
    → Persists messages to Message table
@@ -168,8 +168,8 @@ realestatecrm/
 |---|---|---|
 | 1 | Welcome | Intro screen, no data saved |
 | 2 | Profile basics | Saves name, phone, business name to User + SpaceSetting |
-| 3 | Public intake link | Creates Space with slug, SpaceSetting, default DealStages (New, Reviewing, Showing, Applied, Approved, Declined) |
-| 4 | Application flow | Informational — shows what the intake form collects |
+| 3 | Public intake link | Creates Space with slug, SpaceSetting, default DealStages (New, Qualifying, Demo, Proposal, Won, Lost) |
+| 4 | Qualification flow | Informational — shows what the intake form collects |
 | 5 | Notifications | Saves email notification preference and default submission status |
 | 6 | CRM preview | Informational — shows mock lead card |
 | 7 | Go live | Shows intake link, copy button, test submit. Marks `onboardingCompletedAt`. |
@@ -181,7 +181,7 @@ Completion sets `onboardingCurrentStep = 7` and `onboardingCompletedAt = now()`.
 ## 7. Application submission flow
 
 1. Public page at `/apply/[slug]` resolves Space by slug.
-2. Form collects: name (required), phone (required), email, budget, timeline, preferred areas, notes.
+2. Form collects: name (required), phone (required), email, budget, timeline, interest areas, notes.
 3. POST to `/api/public/apply` with JSON payload.
 4. API validates required fields (`slug`, `name`, `phone`).
 5. Deduplication: checks for same name + normalized phone + `application-link` tag within last 2 minutes.
@@ -214,7 +214,7 @@ Completion sets `onboardingCurrentStep = 7` and `onboardingCompletedAt = now()`.
 - **Contacts page** (`app/s/[slug]/contacts/page.tsx`): Full CRUD. Lifecycle types: `QUALIFICATION`, `DEMO`, `APPLICATION`. Search by name/email/phone/preferences.
 - **Deals page** (`app/s/[slug]/deals/page.tsx`): Kanban board with DealStages. Drag-and-drop via @dnd-kit. Position-based ordering.
 - **Contact detail** (`app/s/[slug]/contacts/[id]/page.tsx`): Individual contact view.
-- **AI assistant** (`app/s/[slug]/ai/page.tsx`): Chat interface with streaming responses and message history.
+- **AI assistant — Axil** (`app/s/[slug]/ai/page.tsx`): Chat interface with streaming responses and message history.
 
 ---
 
@@ -231,7 +231,7 @@ Completion sets `onboardingCurrentStep = 7` and `onboardingCompletedAt = now()`.
 - **Build command**: `next build`
 - **`next.config.ts`**: ignores TypeScript and ESLint build errors (`ignoreBuildErrors: true`, `ignoreDuringBuilds: true`)
 - **Vercel packages**: `@vercel/analytics`, `@vercel/speed-insights` present
-- **Domain handling**: `NEXT_PUBLIC_ROOT_DOMAIN` env var, falls back to `workflowrouting.com` (prod) or `localhost:3000` (dev). Protocol derived from `NODE_ENV`.
+- **Domain handling**: `NEXT_PUBLIC_ROOT_DOMAIN` env var, falls back to `my.usekoala.com` (prod) or `localhost:3000` (dev). Protocol derived from `NODE_ENV`.
 
 ---
 

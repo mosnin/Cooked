@@ -1,14 +1,15 @@
-"""Koala — the single agent.
+"""Axil — the single agent.
 
-One agent, all the tools. No coordinator, no specialists, no handoffs.
-Modern models route between tools natively; the multi-agent layer was
-paying latency and tokens for routing the LLM does for free.
+Axil is the AI agent persona inside Koala (the sales-team product). One
+agent, all the tools. No coordinator, no specialists, no handoffs. Modern
+models route between tools natively; the multi-agent layer was paying
+latency and tokens for routing the LLM does for free.
 
 This agent serves both surfaces:
-  - chat (the rep talks to Koala via /api/ai/task → Modal chat_turn)
+  - chat (the rep talks to Axil via /api/ai/task → Modal chat_turn)
   - autonomous (event triggers fire run_agent_for_space → same agent)
 
-The opening message tells Koala which mode it's in.
+The opening message tells Axil which mode it's in.
 
 Tool surface (36 tools):
   - create_contact / find_contacts / get_contact_activity / update_contact
@@ -16,7 +17,7 @@ Tool surface (36 tools):
   - recall_docs
   - book_demo
   - route_lead
-  - add_property / send_property_packet
+  - add_property / send_property_packet (product + product packet — see note below)
   - recall_memory / store_memory
   - manage_goal
   - draft_message / send_email_now / send_sms_now
@@ -30,6 +31,15 @@ Tool surface (36 tools):
   - get_intake_form / add_intake_question / remove_intake_question
     / update_intake_question / save_intake_form
   - generate_studio_image / edit_studio_image
+
+Contract note: `add_property` / `send_property_packet` are the registered
+tool names (and the DB tables stay `Property` / `PropertyPacket`). These
+are a cross-runtime contract shared with the TS tool bridge, the chat UI's
+tool-call renderer, telemetry allowlists, and the agent-eval harness, so
+the identifiers are held stable. In the sales product these tools manage
+the team's PRODUCT and the PRODUCT PACKET (a sales one-pager / collateral
+the rep shares with a prospect); all model-facing copy below frames them
+that way.
 """
 
 from __future__ import annotations

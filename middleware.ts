@@ -56,10 +56,10 @@ const isFullyPublicRoute = createRouteMatcher([
   '/apply/(.*)',
   '/apply/b/(.*)',
   '/book/(.*)',
-  '/p/(.*)',                 // rep public "link in bio" pages
+  '/p/(.*)',                 // rep public profile / "link in bio" pages
   '/status/(.*)',
-  '/cma/(.*)',               // tokenised CMA share pages (seller-facing report)
-  '/packet/(.*)',            // tokenised listing-packet share pages (Phase 11)
+  '/cma/(.*)',               // tokenised competitive-pricing-analysis share pages (prospect-facing report)
+  '/packet/(.*)',            // tokenised sales-packet share pages (Phase 11)
   '/api/packet/(.*)',        // token-scoped signed-URL endpoint for packet docs
   '/api/public/(.*)',
   '/api/webhooks/(.*)',

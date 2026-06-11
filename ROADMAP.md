@@ -45,7 +45,7 @@ Beyond this, forward priorities are owner-set. Don't infer a roadmap from this f
 
 Real candidates, not forbidden — but **do not build speculatively.** Each needs explicit product sign-off before any code (per `AGENTS.md` §3 and §8).
 
-- MLS integration
+- CRM data source integrations / lead enrichment
 - Document e-signature
 - Native mobile app (a PWA manifest exists; a native app does not)
 
