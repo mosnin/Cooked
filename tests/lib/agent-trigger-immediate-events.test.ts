@@ -10,18 +10,18 @@ describe('parseImmediateEvents', () => {
     expect([...parseImmediateEvents(undefined)].sort()).toEqual([
       'application_submitted',
       'deal_stage_changed',
+      'demo_completed',
       'goal_completed',
       'inbound_message',
       'new_lead',
-      'demo_completed',
     ]);
     expect([...parseImmediateEvents('all')].sort()).toEqual([
       'application_submitted',
       'deal_stage_changed',
+      'demo_completed',
       'goal_completed',
       'inbound_message',
       'new_lead',
-      'demo_completed',
     ]);
   });
 
@@ -37,10 +37,10 @@ describe('parseImmediateEvents', () => {
     expect([...parseImmediateEvents('demo_completed,nope')].sort()).toEqual([
       'application_submitted',
       'deal_stage_changed',
+      'demo_completed',
       'goal_completed',
       'inbound_message',
       'new_lead',
-      'demo_completed',
     ]);
     expect(warn).toHaveBeenCalled();
   });

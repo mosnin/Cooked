@@ -15,6 +15,9 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { NextRequest, NextResponse } from 'next/server';
 import { createHmac } from 'node:crypto';
 
+// server-only is a no-op import in tests but must be stubbed so lib/twilio loads.
+vi.mock('server-only', () => ({}));
+
 // ── lib/twilio gating ───────────────────────────────────────────────────────
 
 describe('lib/twilio gating', () => {

@@ -47,7 +47,7 @@ describe('GET /api/agent/trigger/config', () => {
 
     expect(res.status).toBe(200);
     expect(body.spaceId).toBe('space_1');
-    expect(body.config.immediateEvents).toEqual(['new_lead', 'demo_completed']);
+    expect(body.config.immediateEvents).toEqual(['demo_completed', 'new_lead']);
     expect(body.config.dedupeWindowSeconds).toBe(180);
     expect(body.config.hasModalWebhook).toBe(true);
     expect(body.config.hasRedis).toBe(true);
