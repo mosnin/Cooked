@@ -110,9 +110,9 @@ def make_manager_agent(
     workspace_info: str | None = None,
     model: str | None = None,
 ) -> Agent:
-    """Build the manager-variant Koala agent.
+    """Build the manager-variant Axil agent.
 
-    Mirrors `koala.py:make_koala_agent` in shape so the chat_turn dispatch
+    Mirrors `axil.py:make_axil_agent` in shape so the chat_turn dispatch
     is a flat branch. Distinct from the rep factory in three ways:
 
       1. Loads `MANAGER_TOOLS` (the full manager catalog — TEAM, PIPELINE,
@@ -146,7 +146,7 @@ def make_manager_agent(
     instructions = "\n\n".join(parts)
 
     return Agent[None](
-        name="Koala (manager)",
+        name="Axil (manager)",
         model=make_chat_model(resolve_chat_model(model)),
         instructions=instructions,
         # MANAGER_TOOLS carries the full 13-tool chief-of-staff catalog

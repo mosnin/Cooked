@@ -43,7 +43,7 @@
 -- 1. Default rate columns on Team
 -----------------------------------------------------------------------
 -- Units are percent. 2.5 means 2.5% of deal value goes to the agent,
--- 0.5% to the house. Existing teams pick up the defaults harmlessly;
+-- 0.5% to the team. Existing teams pick up the defaults harmlessly;
 -- the UI exposes overrides in team settings.
 ALTER TABLE "Team"
   ADD COLUMN IF NOT EXISTS "defaultAgentRate"  numeric(5,2) NOT NULL DEFAULT 2.5,
