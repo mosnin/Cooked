@@ -59,9 +59,9 @@ export function PropertyDetailClient({ slug, initial, linkedDeals, linkedDemos }
   }
 
   async function remove() {
-    if (!confirm('Delete this property? Linked deals and demos stay intact.')) return;
+    if (!confirm('Delete this product? Linked deals and demos stay intact.')) return;
     const res = await fetch(`/api/properties/${property.id}`, { method: 'DELETE' });
-    if (!res.ok) { toast.error("Couldn't delete that property."); return; }
+    if (!res.ok) { toast.error("Couldn't delete that product."); return; }
     toast.success('Deleted.');
     router.push(`/s/${slug}/properties`);
   }
@@ -73,7 +73,7 @@ export function PropertyDetailClient({ slug, initial, linkedDeals, linkedDemos }
   if (editing) {
     return (
       <div className="rounded-xl border border-border/70 bg-card p-5">
-        <h1 className="text-lg font-semibold mb-4">Edit property</h1>
+        <h1 className="text-lg font-semibold mb-4">Edit product</h1>
         <PropertyForm
           initial={property}
           onCancel={() => setEditing(false)}
@@ -88,8 +88,8 @@ export function PropertyDetailClient({ slug, initial, linkedDeals, linkedDemos }
   return (
     <div className="space-y-8">
       {/* ── Hero ────────────────────────────────────────────────────────
-          Full-width 16:9 photo. Real estate leads with the photo — the
-          old 360px sidebar treatment hid it behind chrome. When no photo
+          Full-width 16:9 photo. The product catalog leads with the photo —
+          the old 360px sidebar treatment hid it behind chrome. When no photo
           is on file: same aspect ratio, hairline border, calm muted copy
           (not a coloured block). */}
       <div className="overflow-hidden rounded-xl border border-border/70 bg-muted/20">
@@ -146,7 +146,7 @@ export function PropertyDetailClient({ slug, initial, linkedDeals, linkedDemos }
           <dl className="grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-3">
             {property.yearBuilt != null && <Fact label="Year built" value={String(property.yearBuilt)} />}
             {property.lotSizeSqft != null && <Fact label="Lot" value={`${property.lotSizeSqft.toLocaleString()} sqft`} />}
-            {property.mlsNumber && <Fact label="MLS" value={property.mlsNumber} />}
+            {property.mlsNumber && <Fact label="CRM" value={property.mlsNumber} />}
           </dl>
         )}
 

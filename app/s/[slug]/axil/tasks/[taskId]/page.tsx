@@ -5,7 +5,7 @@ import { ArrowLeft, Wrench, MessageCircle } from 'lucide-react';
 import { getSpaceFromSlug } from '@/lib/space';
 import { supabase } from '@/lib/supabase';
 import { cn } from '@/lib/utils';
-import { KoalaPageShell } from '@/components/koala/koala-page-shell';
+import { AxilPageShell } from '@/components/axil/axil-page-shell';
 import { SECTION_LABEL } from '@/lib/typography';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -209,7 +209,7 @@ export default async function AgentTaskDetailPage({
           <h1 className="text-xl font-semibold">Something went wrong</h1>
           <p className="text-sm text-muted-foreground">We couldn&apos;t load this task. This is usually temporary.</p>
           <a
-            href={`/s/${slug}/koala/tasks`}
+            href={`/s/${slug}/axil/tasks`}
             className="inline-block px-4 py-2 text-sm font-medium rounded-md bg-primary text-primary-foreground hover:bg-primary/90"
           >
             All tasks
@@ -239,14 +239,14 @@ export default async function AgentTaskDetailPage({
   const goalText = task.goalDescription ?? task.title;
 
   return (
-    <KoalaPageShell
+    <AxilPageShell
       greeting="Task."
       title={goalText}
       subtitle={statusSentence(task, steps)}
     >
       {/* Back-link + chrome row sit inside children so the shell header stays pure. */}
       <Link
-        href={`/s/${slug}/koala/tasks`}
+        href={`/s/${slug}/axil/tasks`}
         className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
       >
         <ArrowLeft size={12} /> All Tasks
@@ -368,6 +368,6 @@ export default async function AgentTaskDetailPage({
           </div>
         </section>
       )}
-    </KoalaPageShell>
+    </AxilPageShell>
   );
 }

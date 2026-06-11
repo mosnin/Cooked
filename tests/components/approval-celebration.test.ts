@@ -17,7 +17,7 @@ import {
   approvalSubjectFromArgs,
   getApprovalSentence,
   type ApprovalKind,
-} from '@/components/koala/approval-celebration';
+} from '@/components/axil/approval-celebration';
 
 describe('getApprovalSentence', () => {
   it('renders the email line', () => {

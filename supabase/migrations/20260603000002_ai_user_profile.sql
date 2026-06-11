@@ -3,7 +3,7 @@
 --
 -- Fields:
 --   displayName              — how the rep refers to themselves in Koala context
---   businessFocus            — array of focus areas (e.g. 'luxury', 'first-time buyers')
+--   businessFocus            — array of focus areas (e.g. 'enterprise', 'SMB', 'outbound')
 --   yearsExperience          — used to calibrate depth of Koala's explanations
 --   workingStyle             — free-text self-description of work habits
 --   communicationTone        — preferred tone Koala should adopt in outputs

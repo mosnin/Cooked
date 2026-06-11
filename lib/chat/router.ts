@@ -13,7 +13,7 @@
  * "what's a CMA?" — goes direct.
  *
  * Attachments + no action verb → direct. Multimodal Q&A ("summarize this
- * listing", "what's wrong with this MLS sheet?") is exactly what the direct
+ * listing", "what's wrong with this CRM sheet?") is exactly what the direct
  * path is for; routing it through the full agent would add latency for no
  * benefit.
  *

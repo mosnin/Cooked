@@ -285,7 +285,7 @@ function renderMarkdown(content: string, streaming?: boolean): React.ReactNode[]
             </Fragment>
           ))}
           {isLast && streaming && (
-            <span className="koala-cursor" aria-hidden="true" />
+            <span className="axil-cursor" aria-hidden="true" />
           )}
         </p>,
       );
@@ -353,7 +353,7 @@ export function TextBlockView({
     >
       {nodes}
       {needsTrailingCursor && (
-        <span className="koala-cursor" aria-hidden="true" />
+        <span className="axil-cursor" aria-hidden="true" />
       )}
     </div>
   );

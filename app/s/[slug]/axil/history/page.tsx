@@ -2,12 +2,12 @@ import { notFound, redirect } from 'next/navigation';
 import { auth } from '@clerk/nextjs/server';
 import { getSpaceFromSlug } from '@/lib/space';
 import { supabase } from '@/lib/supabase';
-import { ActivityFeed } from '@/components/koala/activity-feed';
-import { KoalaPageShell } from '@/components/koala/koala-page-shell';
+import { ActivityFeed } from '@/components/axil/activity-feed';
+import { AxilPageShell } from '@/components/axil/axil-page-shell';
 
 export const metadata = { title: 'History — Koala' };
 
-export default async function KoalaHistoryPage({
+export default async function AxilHistoryPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
@@ -29,11 +29,11 @@ export default async function KoalaHistoryPage({
   if (!spaceOwner) notFound();
 
   return (
-    <KoalaPageShell
+    <AxilPageShell
       greeting="Log."
       title="Here's what I did."
     >
       <ActivityFeed slug={slug} />
-    </KoalaPageShell>
+    </AxilPageShell>
   );
 }

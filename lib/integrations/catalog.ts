@@ -1,7 +1,7 @@
 /**
  * The catalog of third-party apps Koala can connect to. One entry per app
  * the rep sees in the integrations panel. Composio's catalog has 100+
- * toolkits — we curate the subset that matters for a real-estate workflow
+ * toolkits — we curate the subset that matters for a sales workflow
  * and surface those by name. The rest are reachable but not promoted.
  *
  * Curation principles (Jobs lens):
@@ -24,7 +24,7 @@ export type IntegrationCategory =
   | 'calendar'
   | 'docs'
   | 'crm'
-  | 'real-estate'
+  | 'sales'
   | 'social'
   | 'ads'
   | 'payments'
@@ -102,7 +102,7 @@ export const INTEGRATIONS: IntegrationApp[] = [
   // Twilio + WhatsApp are the rep's phone — SMS for US clients, WhatsApp
   // for international and under-40 segment. Slack/Discord/Teams are internal
   // team comms; the SMS-class tools are client comms.
-  { toolkit: 'twilio', name: 'Twilio', blurb: 'Connect your SMS and voice records so Koala can read them into the right deal.', category: 'messaging', promoted: true, iconUrl: '/integrations/twilio.svg' },
+  { toolkit: 'twilio', name: 'Twilio', blurb: 'Powers click-to-call — Koala places, records, and transcribes your sales calls, then Axil summarizes them.', category: 'messaging', promoted: true, iconUrl: '/integrations/twilio.svg' },
   { toolkit: 'whatsapp', name: 'WhatsApp', blurb: 'Bring buyer and agent threads into Koala so the history lives on the deal.', category: 'messaging', promoted: true, iconUrl: '/integrations/whatsapp.svg' },
   { toolkit: 'slack', name: 'Slack', blurb: 'Post to your team channel. Koala drafts replies to your DMs.', category: 'messaging', promoted: true, iconUrl: '/integrations/slack.svg' },
   { toolkit: 'discord', name: 'Discord', blurb: 'Same, for Discord servers.', category: 'messaging', iconUrl: '/integrations/discord.svg' },
@@ -146,13 +146,13 @@ export const INTEGRATIONS: IntegrationApp[] = [
   { toolkit: 'pipedrive', name: 'Pipedrive', blurb: 'Push pipeline stages into Pipedrive.', category: 'crm' },
   { toolkit: 'zoho', name: 'Zoho CRM', blurb: 'Two-way sync with Zoho.', category: 'crm', iconUrl: '/integrations/zoho.svg' },
 
-  // ── Real estate ──────────────────────────────────────────────────────
+  // ── Sales ──────────────────────────────────────────────────────
   // Slugs are snake_case to match Composio's catalog convention.
-  { toolkit: 'follow_up_boss', name: 'Follow-up Boss', blurb: 'Sync your Follow-up Boss pipeline.', category: 'real-estate', promoted: true, comingSoon: true },
-  { toolkit: 'compass', name: 'Compass', blurb: 'Sync your Compass pipeline.', category: 'real-estate', promoted: true, comingSoon: true },
-  { toolkit: 'boomtown', name: 'BoomTown', blurb: 'Pull BoomTown leads into Koala.', category: 'real-estate', promoted: true, comingSoon: true },
-  { toolkit: 'kvcore', name: 'kvCORE', blurb: 'Pull kvCORE leads and tasks into Koala.', category: 'real-estate', promoted: true, comingSoon: true },
-  { toolkit: 'real_geeks', name: 'Real Geeks', blurb: 'Pull Real Geeks leads into Koala.', category: 'real-estate', comingSoon: true },
+  { toolkit: 'follow_up_boss', name: 'Follow-up Boss', blurb: 'Sync your Follow-up Boss pipeline.', category: 'sales', promoted: true, comingSoon: true },
+  { toolkit: 'compass', name: 'Compass', blurb: 'Sync your Compass pipeline.', category: 'sales', promoted: true, comingSoon: true },
+  { toolkit: 'boomtown', name: 'BoomTown', blurb: 'Pull BoomTown leads into Koala.', category: 'sales', promoted: true, comingSoon: true },
+  { toolkit: 'kvcore', name: 'kvCORE', blurb: 'Pull kvCORE leads and tasks into Koala.', category: 'sales', promoted: true, comingSoon: true },
+  { toolkit: 'real_geeks', name: 'Real Geeks', blurb: 'Pull Real Geeks leads into Koala.', category: 'sales', comingSoon: true },
 
   // ── Documents + signing ──────────────────────────────────────────────
   { toolkit: 'docusign', name: 'DocuSign', blurb: 'Send contracts and disclosures for signature.', category: 'docs-sign', promoted: true, iconUrl: '/integrations/docusign.svg' },

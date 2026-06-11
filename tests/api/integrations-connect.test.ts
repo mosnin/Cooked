@@ -115,7 +115,7 @@ function makeRequest(toolkit: string) {
 }
 
 describe('POST /api/integrations/connect/[toolkit] — coming-soon slugs', () => {
-  // Real-estate-niche apps without a working Composio toolkit yet. Follow-up
+  // Sales-niche apps without a working Composio toolkit yet. Follow-up
   // Boss is gated here defensively — Composio lists the toolkit but the
   // endpoints aren't wired through, so a routine using FUB would error
   // silently. Keep it on the list until the FUB path is end-to-end live.

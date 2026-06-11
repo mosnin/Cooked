@@ -929,7 +929,7 @@ export function ContactTable({ slug }: ContactTableProps) {
               <p className="text-base text-foreground">No relationships yet.</p>
               <p className={cn(BODY_MUTED, 'mt-1.5')}>
                 <Link
-                  href={`/s/${slug}/koala?prefill=${encodeURIComponent(
+                  href={`/s/${slug}/axil?prefill=${encodeURIComponent(
                     "I'm adding a new person — ",
                   )}`}
                   className="text-foreground underline underline-offset-2 hover:no-underline"
@@ -1317,7 +1317,7 @@ function ContactRow({
           <>
             <div className="hidden lg:flex gap-0.5 opacity-0 group-hover/row:opacity-100 transition-opacity">
               <Link
-                href={`/s/${slug}/koala/log?personId=${contact.id}`}
+                href={`/s/${slug}/axil/log?personId=${contact.id}`}
                 aria-label={`Log a note for ${contact.name}`}
                 title="Log a note"
                 onClick={(e) => e.stopPropagation()}

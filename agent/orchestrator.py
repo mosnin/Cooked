@@ -37,7 +37,7 @@ from memory.store import format_memories_for_prompt, load_memories, prune_expire
 from schemas import AgentSettings, Space
 from security.budget import acquire_run_lock, check_budget, record_usage, release_run_lock
 from security.context import AgentContext
-from koala import load_ai_profile, make_koala_agent
+from axil import load_ai_profile, make_axil_agent
 from llm import (
     decide_reasoning_effort,
     extract_usage_with_cache,
@@ -147,7 +147,7 @@ async def _run_with_fallback(
     # fallback would replay the whole run and re-fire them. Past that point
     # an error must surface, not retry.
     tools_ran = False
-    # Try the workspace's picked model first (whatever make_koala_agent
+    # Try the workspace's picked model first (whatever make_axil_agent
     # built the agent with), then the OpenRouter fallback chain. The agent
     # was built with an OpenAIChatCompletionsModel object whose `.model`
     # attribute holds the original slug — fall back to the agent itself if
@@ -561,7 +561,7 @@ async def _run_locked(
         " applying. Use the full URL verbatim; no shortening."
     ) if intake_url else None
 
-    koala = make_koala_agent(
+    axil = make_axil_agent(
         ai_profile_text=ai_profile,
         extra_tools=integration_tools,
         workspace_info=workspace_info,
@@ -638,7 +638,7 @@ async def _run_locked(
         # Run with automatic fallback through cheaper models on a 429.
         # Streaming mode so on_event fires per tool call / result.
         result = await _run_with_fallback(
-            koala,
+            axil,
             prompt,
             run_config,
             ctx,
@@ -653,11 +653,11 @@ async def _run_locked(
         if isinstance(final_output, str):
             final_summary = final_output[:280]
 
-        # `koala.model` is an OpenAIChatCompletionsModel object (per the
+        # `axil.model` is an OpenAIChatCompletionsModel object (per the
         # x-ai/ prefix fix). Pull the slug back out for logging + trajectory
         # writes — asyncpg can't encode the SDK object into a TEXT column,
         # so every record_trajectory call silently failed before this fix.
-        model_slug = getattr(koala.model, "model", str(koala.model))
+        model_slug = getattr(axil.model, "model", str(axil.model))
         # Lazy import to keep llm's detect_provider in one place (and to
         # avoid pulling it at module import where the test stubs don't reach).
         from llm import detect_provider

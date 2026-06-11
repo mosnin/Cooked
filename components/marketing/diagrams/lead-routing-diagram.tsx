@@ -187,7 +187,7 @@ function LeadCard({ vertical }: { vertical: boolean }) {
           Sandra Liu
         </p>
         <p className="text-[11px] text-muted-foreground mt-0.5 truncate">
-          Zillow intake · Brooklyn
+          LinkedIn intake · Brooklyn
         </p>
         <div className="mt-2 inline-flex items-center gap-1.5 rounded-full px-1.5 py-0.5 text-[10px] font-medium text-blue-700 bg-blue-50 dark:text-blue-400 dark:bg-blue-500/15">
           <span className="w-1.5 h-1.5 rounded-full bg-lead-cold flex-shrink-0" />

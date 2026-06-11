@@ -464,7 +464,7 @@ export type DealContactRole =
   | 'co_agent'
   | 'lender'
   | 'title'
-  | 'escrow'
+  | 'legal'
   | 'inspector'
   | 'appraiser'
   | 'attorney'

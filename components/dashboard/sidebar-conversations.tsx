@@ -18,7 +18,7 @@ import type { Conversation } from '@/lib/types';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // SidebarConversations — slim conversation list rendered inside the rep
-// sidebar's contextual section when on `/koala`. Owns its own data fetch and
+// sidebar's contextual section when on `/axil`. Owns its own data fetch and
 // list mutations so it can be dropped into any sidebar slot.
 //
 // The component renders the CHAT HISTORY section label by default so it self-
@@ -96,7 +96,7 @@ export function SidebarConversations({
     }
   }, [slug]);
 
-  // Refetch on mount and whenever the user navigates back into /koala so the
+  // Refetch on mount and whenever the user navigates back into /axil so the
   // list reflects any conversations created from inside the workspace.
   useEffect(() => {
     void fetchConversations();
@@ -111,7 +111,7 @@ export function SidebarConversations({
     if (!res.ok) return;
     const conv = (await res.json()) as Conversation;
     setConversations((prev) => (prev ? [conv, ...prev] : [conv]));
-    router.push(`/s/${slug}/koala?conversationId=${conv.id}`);
+    router.push(`/s/${slug}/axil?conversationId=${conv.id}`);
     onSelect?.();
   }, [router, slug, onSelect]);
 
@@ -120,7 +120,7 @@ export function SidebarConversations({
       const res = await fetch(`/api/ai/conversations/${id}`, { method: 'DELETE' });
       if (!res.ok) return;
       setConversations((prev) => (prev ? prev.filter((c) => c.id !== id) : prev));
-      if (activeId === id) router.push(`/s/${slug}/koala`);
+      if (activeId === id) router.push(`/s/${slug}/axil`);
     },
     [activeId, router, slug],
   );
@@ -239,7 +239,7 @@ export function SidebarConversations({
                       )}
                     >
                       <Link
-                        href={`/s/${slug}/koala?conversationId=${conv.id}`}
+                        href={`/s/${slug}/axil?conversationId=${conv.id}`}
                         onClick={() => onSelect?.()}
                         className="flex-1 min-w-0 pl-2.5 pr-1 py-1.5"
                       >
@@ -304,7 +304,7 @@ export function SidebarConversations({
 
         {hasMore && (
           <Link
-            href={`/s/${slug}/koala?view=history`}
+            href={`/s/${slug}/axil?view=history`}
             onClick={() => onSelect?.()}
             className="mt-1 flex items-center justify-between gap-1 px-2.5 h-8 rounded-md text-[12px] text-muted-foreground hover:text-foreground hover:bg-foreground/[0.04] transition-colors duration-150"
           >

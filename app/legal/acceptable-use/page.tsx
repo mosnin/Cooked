@@ -1,6 +1,6 @@
 export const metadata = {
   title: 'Acceptable Use Policy | Koala',
-  description: 'Acceptable Use Policy for Koala, a B2B SaaS agentic OS for real estate agents and teams.',
+  description: 'Acceptable Use Policy for Koala, a B2B SaaS agentic OS for sales agents and teams.',
 };
 
 export default function AcceptableUsePolicyPage() {
@@ -42,11 +42,11 @@ export default function AcceptableUsePolicyPage() {
       <section>
         <h2 className="text-xl font-semibold">2. Fair Housing Compliance</h2>
         <div className="mt-3 text-sm text-muted-foreground space-y-3 leading-6">
-          <p>2.1. Subscribers who are licensed real estate professionals must comply with all applicable fair housing laws, including but not limited to the Fair Housing Act (42 U.S.C. 3601 et seq.) and state and local fair housing statutes.</p>
+          <p>2.1. Subscribers who are licensed sales professionals must comply with all applicable fair housing laws, including but not limited to the Fair Housing Act (42 U.S.C. 3601 et seq.) and state and local fair housing statutes.</p>
           <p>2.2. The Service must not be used to:</p>
           <ul className="list-disc pl-5 space-y-1">
             <li>Refuse to sell, rent, or negotiate housing based on protected characteristics.</li>
-            <li>Discriminate in the terms, conditions, or privileges of a real estate transaction.</li>
+            <li>Discriminate in the terms, conditions, or privileges of a sales transaction.</li>
             <li>Make, print, or publish any statement indicating a preference, limitation, or discrimination based on a protected class.</li>
             <li>Steer prospective buyers or renters toward or away from particular neighborhoods based on protected characteristics.</li>
           </ul>
@@ -66,7 +66,7 @@ export default function AcceptableUsePolicyPage() {
             <li>Responding to data subject access requests from their Applicants in a timely manner.</li>
             <li>Maintaining their own privacy policy that Applicants can access.</li>
           </ul>
-          <p>3.2. Subscribers must not collect sensitive personal data through the Service unless it is necessary for the real estate transaction and they have obtained explicit consent from the data subject.</p>
+          <p>3.2. Subscribers must not collect sensitive personal data through the Service unless it is necessary for the sales transaction and they have obtained explicit consent from the data subject.</p>
           <p>3.3. Subscribers must implement reasonable security practices within their own organizations to protect the data they access through the Service.</p>
         </div>
       </section>

@@ -800,7 +800,7 @@ function UserFooter({
 // on the manager Koala page (/manager). Mirrors the rep SidebarConversations
 // structure (CHAT HISTORY label + New button + recent list + active rail) but
 // calls the manager-scoped conversations API and links into /manager?conversationId=…
-// instead of /s/[slug]/koala. Bounded to 6 rows + "See all →" link.
+// instead of /s/[slug]/axil. Bounded to 6 rows + "See all →" link.
 // ═══════════════════════════════════════════════════════════════════════════════
 
 function ManagerSidebarConversations() {
@@ -976,7 +976,7 @@ const SETUP_HREFS = new Set<string>([
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Notification slot — reserved space that sits between the scroll area
-// (RepNav, including conversation history on /koala) and the pinned
+// (RepNav, including conversation history on /axil) and the pinned
 // user footer. The inspiration the rep shared shows a small
 // "Update available →" card here; we don't have a real notification feed
 // yet, so the slot renders nothing today. Shipping a fake "update card"
@@ -1121,9 +1121,9 @@ function RepNav({
   );
 
   // Route IS the signal for which nav mode this sidebar is in. On
-  // /koala/* the main links cross-fade out and the conversation history
+  // /axil/* the main links cross-fade out and the conversation history
   // slides in their place; off Koala, the reverse.
-  const onKoala = pathname.startsWith(`/s/${slug}/koala`);
+  const onKoala = pathname.startsWith(`/s/${slug}/axil`);
 
   // Badge vocabulary, two tiers:
   //   • Calm count (leads, properties) — muted pill, rounded-md, small.
@@ -1212,7 +1212,7 @@ function RepNav({
         collapsed ? 'px-1' : 'px-3',
       )}
     >
-      {/* Two-mode sidebar: on /koala the conversation history slides in
+      {/* Two-mode sidebar: on /axil the conversation history slides in
           below the main nav. The main destinations (People, Deals,
           Calendar…) stay visible the whole time — the rep must always
           have a door out of Koala, not just a door in. The Koala nav
@@ -1269,7 +1269,7 @@ function RepNav({
       </div>
 
       {/* Context-aware second section. Route IS the signal:
-            - On /koala/* → CHAT HISTORY label + recent conversation list
+            - On /axil/* → CHAT HISTORY label + recent conversation list
               (expanded) or History icon link (collapsed rail). Bounded to
               6 conversations + "See all →" link into the existing in-chat
               history drawer. Animates in/out with the app's standard
@@ -1291,7 +1291,7 @@ function RepNav({
                 <div className="my-2 mx-2 h-px bg-border/60" aria-hidden />
                 <CollapsedTooltip enabled label="Conversations">
                   <Link
-                    href={`/s/${slug}/koala?view=history`}
+                    href={`/s/${slug}/axil?view=history`}
                     aria-label="Conversation history"
                     className="group relative flex items-center justify-center w-10 h-10 mx-auto rounded-md text-foreground/65 hover:bg-foreground/[0.025] hover:text-foreground transition-colors duration-150"
                   >

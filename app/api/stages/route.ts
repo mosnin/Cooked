@@ -120,7 +120,7 @@ const VALID_STAGE_KINDS = ['lead', 'qualified', 'active', 'under_contract', 'clo
 function inferStageKind(name: string): (typeof VALID_STAGE_KINDS)[number] | null {
   const n = name.toLowerCase();
   if (/\b(closed|won|complete|done|funded)\b/.test(n)) return 'closed';
-  if (/\b(closing|escrow|clear.*close)\b/.test(n)) return 'closing';
+  if (/\b(closing|legal|clear.*close)\b/.test(n)) return 'closing';
   if (/\b(under.?contract|pending|accepted|inspection|appraisal)\b/.test(n)) return 'under_contract';
   if (/\b(qualified|pre.?approval|showing|demoing|active)\b/.test(n)) return 'active';
   if (/\b(qualif)\b/.test(n)) return 'qualified';

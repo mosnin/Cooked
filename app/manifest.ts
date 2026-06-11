@@ -22,7 +22,7 @@ import type { MetadataRoute } from 'next';
  */
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Koala — Agentic OS for Real Estate Agents & Teams',
+    name: 'Koala — Agentic OS for Sales Agents & Teams',
     short_name: 'Koala',
     description:
       'An AI agent that runs your rep workspace — qualifies leads, drafts follow-ups, schedules demos, and keeps your pipeline current.',

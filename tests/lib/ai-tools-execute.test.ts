@@ -27,7 +27,7 @@ import { executeTool, executionToModelMessage } from '@/lib/ai-tools/execute';
 function makeCtx(overrides: Partial<ToolContext> = {}): ToolContext {
   return {
     userId: 'user_123',
-    space: { id: 'space_abc', slug: 'jane', name: 'Jane Realty', ownerId: 'u1' },
+    space: { id: 'space_abc', slug: 'jane', name: 'Jane Sales', ownerId: 'u1' },
     signal: new AbortController().signal,
     ...overrides,
   };

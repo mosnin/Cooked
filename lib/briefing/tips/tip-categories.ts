@@ -471,7 +471,7 @@ export async function tipReplyRateDecline(spaceId: string): Promise<Signal[]> {
       subject: {
         id: 'reply_rate_decline',
         name: 'Reply rate dropped',
-        href: '/koala/activity?filter=sent_no_reply',
+        href: '/axil/activity?filter=sent_no_reply',
       },
       evidence: `Your reply rate dropped from ${priorPct}% to ${currentPct}% this week. Sample is ${current.length} sends.`,
       tipCategory: 'reply_rate_decline',

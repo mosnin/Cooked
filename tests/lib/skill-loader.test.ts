@@ -15,7 +15,7 @@ import {
   loadUserInvocableSkills,
   __resetSkillCacheForTests,
 } from '@/lib/ai-tools/skills/loader';
-import { expandSkillPrompt } from '@/components/ui/koala-prompt-box';
+import { expandSkillPrompt } from '@/components/ui/axil-prompt-box';
 
 beforeEach(() => {
   __resetSkillCacheForTests();

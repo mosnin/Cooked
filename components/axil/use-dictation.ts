@@ -47,7 +47,7 @@ export interface UseDictationResult {
 /**
  * Hold-to-dictate hook backed by the browser's Web Speech API. Returns the
  * transcript live (so callers can show a "listening…" preview) and notifies
- * via `onFinal` when the recognizer commits a result. Used by the koala-bar
+ * via `onFinal` when the recognizer commits a result. Used by the axil-bar
  * mic button: pointerdown → start, pointerup → stop, transfer transcript
  * into the input.
  *

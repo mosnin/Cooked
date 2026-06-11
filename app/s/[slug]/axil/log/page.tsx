@@ -1,5 +1,5 @@
 /**
- * /s/[slug]/koala/log — the post-demo recorder.
+ * /s/[slug]/axil/log — the post-demo recorder.
  *
  * The rep finishes a demo, walks to the car, hits record, dictates a
  * 30-second debrief. Koala transcribes, proposes 2-5 actions, the rep
@@ -12,7 +12,7 @@ import { notFound, redirect } from 'next/navigation';
 import { auth } from '@clerk/nextjs/server';
 import { getSpaceFromSlug } from '@/lib/space';
 import { supabase } from '@/lib/supabase';
-import { PostDemoRecorder } from '@/components/koala/post-demo-recorder';
+import { PostDemoRecorder } from '@/components/axil/post-demo-recorder';
 
 export const metadata = { title: 'Log a demo — Koala' };
 

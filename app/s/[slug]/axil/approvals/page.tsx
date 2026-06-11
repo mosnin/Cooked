@@ -1,7 +1,7 @@
 /**
- * /koala/approvals — kept alive as a redirect to /koala/inbox so live
+ * /axil/approvals — kept alive as a redirect to /axil/inbox so live
  * bookmarks and link shares don't 404. Drafts and Approvals merged
- * into the unified Inbox surface. See app/s/[slug]/koala/inbox/page.tsx.
+ * into the unified Inbox surface. See app/s/[slug]/axil/inbox/page.tsx.
  *
  * approval-actions.tsx stays put — the new inbox imports it directly.
  *
@@ -22,5 +22,5 @@ export default async function ApprovalsPage({
   const { userId } = await auth();
   if (!userId) redirect('/login/rep');
 
-  redirect(`/s/${slug}/koala/inbox`);
+  redirect(`/s/${slug}/axil/inbox`);
 }

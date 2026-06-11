@@ -37,7 +37,7 @@ async def plan_swarm(goal: str, custom_agents: list[dict], client: AsyncOpenAI) 
         for i, a in enumerate(custom_agents)
     ) if custom_agents else "No custom agents specified — use general-purpose sub-agents."
 
-    prompt = f"""You are a planning AI for a real estate agent's swarm system.
+    prompt = f"""You are a planning AI for a sales rep's swarm system.
 
 Goal: {goal}
 
@@ -115,7 +115,7 @@ async def run_member(db, swarm_run_id: str, member: dict, space_id: str) -> None
 
     try:
         system_prompt = member.get("systemPrompt") or (
-            f"You are {member['name']}, a real estate AI assistant. {member.get('role', '')}. "
+            f"You are {member['name']}, a sales AI assistant. {member.get('role', '')}. "
             "Be concise, accurate, and helpful. Focus on the specific task assigned."
         )
 

@@ -1,5 +1,5 @@
 /**
- * Pure composition logic for the /koala home story.
+ * Pure composition logic for the /axil home story.
  *
  * Lives separately from <MorningStory /> so the brand voice can be
  * snapshot-tested without spinning up React. The home is the deepest

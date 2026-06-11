@@ -10,18 +10,18 @@ import { SentryUser } from '@/components/observability/sentry-user';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Koala — Agentic OS for Real Estate Agents & Teams',
+  title: 'Koala — Agentic OS for Sales Agents & Teams',
   description: 'An AI agent that runs your rep workspace — qualifies leads, drafts follow-ups, schedules demos, and keeps your pipeline current so you can focus on the deals that matter. Start your 7-day free trial.',
-  keywords: ['agentic OS', 'AI agent', 'real estate', 'reps', 'teams', 'AI lead scoring', 'lead qualification', 'demo scheduling', 'deal pipeline', 'CRM'],
+  keywords: ['agentic OS', 'AI agent', 'sales', 'reps', 'teams', 'AI lead scoring', 'lead qualification', 'demo scheduling', 'deal pipeline', 'CRM'],
   openGraph: {
-    title: 'Koala — Agentic OS for Real Estate Agents & Teams',
+    title: 'Koala — Agentic OS for Sales Agents & Teams',
     description: 'An AI agent that runs your rep workspace — qualifies leads, drafts follow-ups, schedules demos, and keeps your pipeline current.',
     siteName: 'Koala',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Koala — Agentic OS for Real Estate Agents & Teams',
+    title: 'Koala — Agentic OS for Sales Agents & Teams',
     description: 'An AI agent that runs your rep workspace — qualifies leads, drafts follow-ups, schedules demos, keeps your pipeline current.',
   },
   themeColor: [

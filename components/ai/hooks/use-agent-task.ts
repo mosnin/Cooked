@@ -241,10 +241,10 @@ export function useAgentTask(options: UseAgentTaskOptions): UseAgentTaskResult {
   const clearError = useCallback(() => setError(null), []);
 
   /**
-   * Land a Koala-voiced error line as an assistant message in the transcript.
+   * Land a Axil-voiced error line as an assistant message in the transcript.
    * If we already have an open assistant bubble (the streaming target), we
    * drop its empty content and replace it with the error text so the error
-   * looks like Koala talking, not like a system warning under a phantom
+   * looks like Axil talking, not like a system warning under a phantom
    * empty bubble.
    *
    * Also writes the same string into the `error` state so any banner-style
@@ -499,7 +499,7 @@ export function useAgentTask(options: UseAgentTaskOptions): UseAgentTaskResult {
       }
 
       case 'error': {
-        // Server hands us a Koala-voiced line in `message`; if it didn't
+        // Server hands us a Axil-voiced line in `message`; if it didn't
         // (older server, raw fallback), pick one from the code.
         const text =
           event.message && event.message.length < 400
@@ -541,7 +541,7 @@ export function useAgentTask(options: UseAgentTaskOptions): UseAgentTaskResult {
               setRateLimitSeconds(retryAfter);
             }
           }
-          // Server already speaks Koala for this route; if not, classify
+          // Server already speaks Axil for this route; if not, classify
           // by HTTP status as a fallback so the user never sees raw text.
           let message: string | undefined;
           try {

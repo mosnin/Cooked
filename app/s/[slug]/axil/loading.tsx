@@ -1,7 +1,7 @@
 /**
- * /s/[slug]/koala/loading.tsx — Suspense fallback for the Koala chat home.
+ * /s/[slug]/axil/loading.tsx — Suspense fallback for the Koala chat home.
  *
- * Mirrors the empty-state hero in koala-workspace.tsx so the rep sees
+ * Mirrors the empty-state hero in axil-workspace.tsx so the rep sees
  * the real surface fading in, not a separate broken page. Two shapes only:
  *
  *   - a centered serif-h1-sized placeholder where the greeting will land
@@ -11,7 +11,7 @@
  * dashboard skeleton (KPI grid + tile cards) that has nothing to do with
  * the chat surface and reads as "a different page glitching in" on mobile.
  */
-export default function KoalaLoading() {
+export default function AxilLoading() {
   return (
     <div className="relative flex flex-col h-full min-h-0">
       {/* Centered hero — placeholder for the greeting ("Good morning, …").

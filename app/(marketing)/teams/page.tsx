@@ -1,5 +1,5 @@
 /**
- * `/teams` — how Koala empowers a real estate team and its floor.
+ * `/teams` — how Koala empowers a sales team and its floor.
  *
  * Replaces the old `/teams/*` tree and absorbs its content into one rich,
  * scrolling page that belongs to the rebuilt homepage family (home-kit:

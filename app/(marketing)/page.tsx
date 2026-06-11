@@ -2,7 +2,7 @@
  * `/` (home): Koala homepage, rebuilt on the fortitudo "studio ASCII" design system.
  *
  * One scrolling experience in fortitudo's section vocabulary, carrying Koala's
- * real-estate-CRM substance: meet the agent (ASCII hero with the rotating job
+ * sales-CRM substance: meet the agent (ASCII hero with the rotating job
  * word) → the honest number strip (stats) → the work it handles (gradient
  * cards) → the flow (how it works) → why it exists (about) → the ask (ASCII
  * CTA). Testimonials return when real customer quotes exist — placeholder

@@ -13,7 +13,7 @@ export const DEAL_CONTACT_ROLES: { value: DealContactRole; label: string; group:
   { value: 'co_agent',       label: 'Co-agent',        group: 'agent' },
   { value: 'lender',         label: 'Lender',          group: 'service' },
   { value: 'title',          label: 'Title company',   group: 'service' },
-  { value: 'escrow',         label: 'Escrow officer',  group: 'service' },
+  { value: 'legal',         label: 'Legal officer',  group: 'service' },
   { value: 'inspector',      label: 'Inspector',       group: 'service' },
   { value: 'appraiser',      label: 'Appraiser',       group: 'service' },
   { value: 'attorney',       label: 'Attorney',        group: 'service' },

@@ -81,7 +81,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 
   if (error) {
     if ((error as { code?: string }).code === '23505') {
-      return NextResponse.json({ error: 'A property with that MLS number already exists' }, { status: 409 });
+      return NextResponse.json({ error: 'A property with that CRM number already exists' }, { status: 409 });
     }
     logger.error('[properties/PATCH] update failed', { propertyId: id }, error);
     return NextResponse.json({ error: 'Failed to update property' }, { status: 500 });

@@ -83,7 +83,7 @@ export function ContactLifecycleFields({ contactId, initialReferralSource, initi
           onChange={(e) => setSource(e.target.value)}
           onBlur={saveSource}
           onKeyDown={(e) => { if (e.key === 'Enter') (e.target as HTMLInputElement).blur(); }}
-          placeholder="e.g. Jane Doe, Zillow, open house"
+          placeholder="e.g. Jane Doe, LinkedIn, open house"
           maxLength={200}
           className="w-full text-sm bg-transparent outline-none border-b border-border focus:border-foreground py-1"
         />

@@ -16,7 +16,7 @@ import { CollapsedTooltip } from '@/components/dashboard/sidebar-collapse';
 //
 // Behaviour contract:
 //   - Parents WITH children: the row's label + icon link to the parent
-//     route (Koala → /koala, Properties → /properties); a separate
+//     route (Koala → /axil, Properties → /properties); a separate
 //     chevron button at the right edge toggles expansion. Tap the label
 //     to navigate (auto-expands on first navigate). Tap the chevron to
 //     collapse without leaving the page.

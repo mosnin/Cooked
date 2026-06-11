@@ -3,15 +3,15 @@
 import { useEffect, useState } from 'react';
 import { X, MessageCircle } from 'lucide-react';
 
-const STORAGE_KEY = 'koala.tip.howItWorks.dismissedAt';
+const STORAGE_KEY = 'axil.tip.howItWorks.dismissedAt';
 
 /**
  * One-time explainer that surfaces the agent's autonomous loop, since the UI
- * alone doesn't make it obvious that Koala runs in the background. Shown on
+ * alone doesn't make it obvious that Axil runs in the background. Shown on
  * first load of the today view; dismissed forever once acknowledged via
  * localStorage. Skipped during SSR to avoid hydration mismatch.
  */
-export function HowKoalaWorksTip() {
+export function AxilalaWorksTip() {
   const [hidden, setHidden] = useState(true);
 
   useEffect(() => {
@@ -40,9 +40,9 @@ export function HowKoalaWorksTip() {
       <div className="flex items-start gap-2.5">
         <MessageCircle size={14} className="text-orange-500 flex-shrink-0 mt-0.5" />
         <div className="space-y-0.5 leading-relaxed">
-          <p className="font-medium">How Koala works</p>
+          <p className="font-medium">How Axil works</p>
           <p className="text-[13px] text-muted-foreground">
-            Koala sweeps your pipeline every 15 minutes and leaves drafts and
+            Axil sweeps your pipeline every 15 minutes and leaves drafts and
             questions here for your review. Ask anything below — chat replies in
             real time, the inbox fills in the background.
           </p>

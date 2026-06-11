@@ -65,7 +65,7 @@ export function expandSkillPrompt(prompt: string): {
   return { text: prompt, selStart: prompt.length, selEnd: prompt.length };
 }
 
-/** Per-skill menu icons, keyed by slug. Falls back to the Koala mark. */
+/** Per-skill menu icons, keyed by slug. Falls back to the Axil mark. */
 const SKILL_ICONS: Record<string, LucideIcon> = {
   'my-day': Sunrise,
   'new-lead': UserPlus,
@@ -80,13 +80,13 @@ type Mode = 'draft' | null;
  * Chat vs Agent — the per-message runtime the rep picks in the composer.
  *   - 'chat'  → fast, cheap answer. One model call + read-only search over
  *               their data. Finds and explains; never acts.
- *   - 'agent' → Koala can act: create, send, schedule, run integrations.
+ *   - 'agent' → Axil can act: create, send, schedule, run integrations.
  * Defaults to 'chat' and resets to 'chat' after every send — agent is a
  * deliberate, per-message choice, not a sticky mode you forget you're in.
  */
 export type ChatMode = 'chat' | 'agent';
 
-interface KoalaPromptBoxProps {
+interface AxilPromptBoxProps {
   placeholder?: string;
   onSend?: (
     message: string,
@@ -109,7 +109,7 @@ interface KoalaPromptBoxProps {
   /**
    * External prefill — when `nonce` changes, the composer adopts `text` as
    * its current value and focuses the textarea (cursor at end). Used by the
-   * day-one welcome to seed "Hi Koala, my most recent lead is …" without
+   * day-one welcome to seed "Hi Axil, my most recent lead is …" without
    * having to lift composer state into the parent.
    */
   prefill?: { text: string; nonce: number };
@@ -188,10 +188,10 @@ function formatTime(seconds: number) {
   return `${m}:${s}`;
 }
 
-export const KoalaPromptBox = React.forwardRef<HTMLTextAreaElement, KoalaPromptBoxProps>(
-  function KoalaPromptBox(
+export const AxilPromptBox = React.forwardRef<HTMLTextAreaElement, AxilPromptBoxProps>(
+  function AxilPromptBox(
     {
-      placeholder = 'Message Koala…',
+      placeholder = 'Message Axil…',
       onSend,
       onMentionSearch,
       onAttach,
@@ -278,7 +278,7 @@ export const KoalaPromptBox = React.forwardRef<HTMLTextAreaElement, KoalaPromptB
         : mode
           ? MODE_META[mode].placeholder
           : chatMode === 'agent'
-            ? 'Tell Koala what to do…'
+            ? 'Tell Axil what to do…'
             : placeholder;
 
     // Auto-resize
@@ -1337,7 +1337,7 @@ export const KoalaPromptBox = React.forwardRef<HTMLTextAreaElement, KoalaPromptB
                       <TooltipContent side="top" sideOffset={6}>
                         {m === 'chat'
                           ? 'Fast answers, reads your data'
-                          : 'Koala can act — create, send, schedule'}
+                          : 'Axil can act — create, send, schedule'}
                       </TooltipContent>
                     </Tooltip>
                   );

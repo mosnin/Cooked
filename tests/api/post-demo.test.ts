@@ -1,5 +1,5 @@
 /**
- * Route-level test for POST /api/koala/post-demo.
+ * Route-level test for POST /api/axil/post-demo.
  *
  * Covers: auth-fail (401), no-space (403), empty transcript (400),
  * happy-path returns proposals (OpenAI mocked).
@@ -28,9 +28,9 @@ const {
   attachHumanSummariesMock: vi.fn(),
   loadPostDemoIntegrationToolsMock: vi.fn(),
 }));
-vi.mock('@/lib/koala/post-demo', async () => {
+vi.mock('@/lib/axil/post-demo', async () => {
   const actual =
-    await vi.importActual<typeof import('@/lib/koala/post-demo')>('@/lib/koala/post-demo');
+    await vi.importActual<typeof import('@/lib/axil/post-demo')>('@/lib/axil/post-demo');
   return {
     ...actual,
     proposeActions: proposeActionsMock,
@@ -54,7 +54,7 @@ vi.mock('@/lib/logger', () => ({
   logger: { error: vi.fn(), warn: vi.fn(), info: vi.fn() },
 }));
 
-import { POST } from '@/app/api/koala/post-demo/route';
+import { POST } from '@/app/api/axil/post-demo/route';
 import { requireAuth } from '@/lib/api-auth';
 import { getSpaceForUser } from '@/lib/space';
 
@@ -62,14 +62,14 @@ const mockRequireAuth = vi.mocked(requireAuth);
 const mockGetSpaceForUser = vi.mocked(getSpaceForUser);
 
 function makeReq(body: unknown): NextRequest {
-  return new NextRequest('http://localhost/api/koala/post-demo', {
+  return new NextRequest('http://localhost/api/axil/post-demo', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   });
 }
 
-describe('POST /api/koala/post-demo', () => {
+describe('POST /api/axil/post-demo', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     process.env.OPENAI_API_KEY = 'sk-test';

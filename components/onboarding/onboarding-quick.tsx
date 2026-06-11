@@ -140,7 +140,7 @@ export function OnboardingQuick({ defaultName }: Props) {
         if (!completeRes.ok) throw new Error('complete');
 
         toast.success("You're in. Here's your workspace.");
-        router.push(`/s/${slug}/koala`);
+        router.push(`/s/${slug}/axil`);
       } catch {
         setSubmitError("Couldn't finish setup - usually temporary.");
         setSubmitting(false);

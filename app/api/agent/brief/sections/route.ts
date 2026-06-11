@@ -9,7 +9,7 @@
  * YOUR DAY (today's calendar events) is fetched by the client from the
  * existing /api/calendar/events route — that endpoint already has a 60s
  * memoization layer in front of the Composio call, so calling it twice
- * (once for /koala/calendar, once for /koala/brief) is cheap.
+ * (once for /axil/calendar, once for /axil/brief) is cheap.
  *
  * Returns `{ pipeline: PipelineSummary | null, overnight: OvernightSummary | null }`.
  * Either may be null — the surface omits the corresponding section silently.

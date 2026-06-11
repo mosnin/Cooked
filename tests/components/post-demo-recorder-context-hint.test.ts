@@ -1,7 +1,7 @@
 /**
  * `buildContextHint` is the pure helper the recorder uses to translate the
  * URL-driven `?personId=…` / `?dealId=…` params into the wire payload sent
- * to /api/koala/post-demo. The recorder is otherwise a render-heavy client
+ * to /api/axil/post-demo. The recorder is otherwise a render-heavy client
  * component; this test pins the only piece of logic that affects what the
  * orchestrator sees.
  *
@@ -9,7 +9,7 @@
  * for one helper. The recorder itself is exercised in product.
  */
 import { describe, it, expect } from 'vitest';
-import { buildContextHint } from '@/components/koala/post-demo-recorder';
+import { buildContextHint } from '@/components/axil/post-demo-recorder';
 
 describe('buildContextHint', () => {
   it('returns undefined when no ids are present', () => {

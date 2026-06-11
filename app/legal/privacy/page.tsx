@@ -1,6 +1,6 @@
 export const metadata = {
   title: 'Privacy Policy | Koala',
-  description: 'Privacy Policy for Koala, a B2B SaaS agentic OS for real estate agents and teams.',
+  description: 'Privacy Policy for Koala, a B2B SaaS agentic OS for sales agents and teams.',
 };
 
 export default function PrivacyPolicyPage() {
@@ -22,7 +22,7 @@ export default function PrivacyPolicyPage() {
       <section>
         <h2 className="text-xl font-semibold">1. Who We Are</h2>
         <div className="mt-3 text-sm text-muted-foreground space-y-3 leading-6">
-          <p>1.1. Koala Inc. operates a B2B SaaS agentic OS for real estate agents and teams. The platform combines an autonomous AI agent with intake forms, AI lead scoring, deal pipelines, demo scheduling, voice AI, MCP server integration, and team team management.</p>
+          <p>1.1. Koala Inc. operates a B2B SaaS agentic OS for sales agents and teams. The platform combines an autonomous AI agent with intake forms, AI lead scoring, deal pipelines, demo scheduling, voice AI, MCP server integration, and team team management.</p>
           <p>1.2. With respect to Subscriber Data (including Applicant data), Koala acts as a <strong className="text-foreground">Data Processor</strong>. We process data on behalf of our Subscribers (reps and teams), who are the <strong className="text-foreground">Data Controllers</strong>.</p>
           <p>1.3. For data we collect directly about Subscribers for account and billing purposes, Koala acts as the Data Controller.</p>
         </div>

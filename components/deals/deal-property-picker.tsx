@@ -135,7 +135,7 @@ export function DealPropertyPicker({ dealId, slug, initial }: Props) {
               autoFocus
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search address, city, MLS#"
+              placeholder="Search address, city, CRM#"
               className="w-full pl-7 pr-2 py-1.5 text-xs rounded border border-border bg-transparent"
             />
           </div>

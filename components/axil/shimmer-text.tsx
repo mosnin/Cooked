@@ -1,19 +1,19 @@
 'use client';
 
 /**
- * ShimmerText — Koala's first-person loading voice with the calm gradient
+ * ShimmerText — Axil's first-person loading voice with the calm gradient
  * shimmer already used in the chat transcript ("Thinking…").
  *
  * Pass a single message for a static line, or an array to rotate every
- * `intervalMs` (default 2.5s) so the surface reads as alive — Koala is
+ * `intervalMs` (default 2.5s) so the surface reads as alive — Axil is
  * actually doing something, not just waiting. Reuses the existing
- * `.koala-thinking-shimmer` keyframes in app/globals.css so the visual
+ * `.axil-thinking-shimmer` keyframes in app/globals.css so the visual
  * vocabulary across loading surfaces stays one thing.
  *
  * Voice rules (Jobs):
  *   - First-person, present-tense.
  *   - One concrete verb. Period at the end.
- *   - No "Koala is...". The product speaks; it doesn't narrate itself.
+ *   - No "Axil is...". The product speaks; it doesn't narrate itself.
  *   - No corny adverbs ("just a sec…", "hold tight!"). Calm or silent.
  */
 
@@ -46,7 +46,7 @@ export function ShimmerText({
   }, [list.length, intervalMs]);
 
   return (
-    <span className={cn('koala-thinking-shimmer', className)}>
+    <span className={cn('axil-thinking-shimmer', className)}>
       {list[idx]}
     </span>
   );

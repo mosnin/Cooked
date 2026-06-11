@@ -1,7 +1,7 @@
 /**
  * `/company` — Koala's founding story. Replaces the old `/about`.
  *
- * One idea: the world moved to AI; real estate didn't — so two people who'd
+ * One idea: the world moved to AI; sales didn't — so two people who'd
  * lived the gap built Koala to close it. The page leads with the mission,
  * makes the problem feel inevitable, lets the founders stand as proof it's
  * built by people who know the work, folds the brand beliefs in as conviction,
@@ -54,7 +54,7 @@ export default async function CompanyPage() {
           </Reveal>
           <Reveal delay={0.06}>
             <h1 className="font-brand mx-auto mt-7 max-w-4xl text-[clamp(2.25rem,6vw,4.5rem)] leading-[1.05] tracking-tight text-foreground">
-              Real estate deserves to work the way the rest of the world already does.
+              Sales deserves to work the way the rest of the world already does.
             </h1>
           </Reveal>
           <Reveal delay={0.12}>
@@ -86,7 +86,7 @@ export default async function CompanyPage() {
             </p>
             <p>
               Everywhere else, that other ninety percent has started to run
-              itself. In real estate it still doesn’t. The tools are stuck a
+              itself. In sales it still doesn’t. The tools are stuck a
               generation behind what’s now possible. Agents and teams are
               nowhere near the productivity the moment allows. That distance,
               between what could happen and what actually does, is the whole

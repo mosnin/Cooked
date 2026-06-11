@@ -10,7 +10,7 @@ happening on the team?" from three zoom levels:
                                   conversion percentage, response speed, last
                                   activity. Cross-team drill is refused.
   read_rep_morning_story(id) — mirror what the rep sees on their own
-                                  /koala home, scoped to that rep's space.
+                                  /axil home, scoped to that rep's space.
                                   PII-safe: the manager sees the rep's
                                   surface, not their private notes/threads.
 

@@ -1,14 +1,14 @@
 'use client';
 
 /**
- * ApprovalsPill — small status chip in the Koala header that shows the
+ * ApprovalsPill — small status chip in the Axil header that shows the
  * count of paused AgentTask rows awaiting human approval. Click → a Sheet
  * slides in from the right with the full list and inline approve/reject
  * actions. Empty state renders nothing so the header chrome stays calm.
  *
  * This is the agent-OS primitive surfaced where it has weight: the
  * blocking-work count lives next to the chat composer, not on a separate
- * page. The `/s/[slug]/koala/approvals` route still works as a deep link,
+ * page. The `/s/[slug]/axil/approvals` route still works as a deep link,
  * but the rep never has to navigate there.
  */
 
@@ -66,7 +66,7 @@ export function ApprovalsPill() {
   const fetchApprovals = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/koala/approvals');
+      const res = await fetch('/api/axil/approvals');
       if (!res.ok) return;
       const data = (await res.json()) as { count: number; tasks: ApprovalTask[] };
       setCount(data.count);
@@ -101,13 +101,13 @@ export function ApprovalsPill() {
           toast.error(msg);
           return;
         }
-        toast.success(action === 'approve' ? 'Approved. Koala will continue.' : 'Rejected. Action cancelled.');
+        toast.success(action === 'approve' ? 'Approved. Axil will continue.' : 'Rejected. Action cancelled.');
         // Optimistic update + refetch to confirm.
         setTasks((prev) => prev.filter((t) => t.id !== taskId));
         setCount((c) => Math.max(0, c - 1));
         void fetchApprovals();
       } catch {
-        toast.error("Couldn't reach Koala. Try again.");
+        toast.error("Couldn't reach Axil. Try again.");
       } finally {
         setPendingTaskId(null);
       }
@@ -141,7 +141,7 @@ export function ApprovalsPill() {
             <SheetTitle className="text-lg">Waiting on you</SheetTitle>
             <SheetDescription>
               {count === 0
-                ? 'Nothing waiting. Koala will ask before any risky action.'
+                ? 'Nothing waiting. Axil will ask before any risky action.'
                 : count === 1
                   ? '1 action paused for your decision.'
                   : `${count} actions paused for your decision.`}

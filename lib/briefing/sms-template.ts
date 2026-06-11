@@ -30,7 +30,7 @@ export interface BriefSmsParams {
  */
 export function buildBriefSms(params: BriefSmsParams): { body: string; truncated: boolean } {
   const { headline, spaceSlug, briefDate, appOrigin } = params;
-  const deepLink = `${appOrigin}/s/${spaceSlug}/koala?brief=${briefDate}`;
+  const deepLink = `${appOrigin}/s/${spaceSlug}/axil?brief=${briefDate}`;
 
   // Sanitize headline: strip newlines / tabs, normalize whitespace
   const cleanHeadline = headline.replace(/\s+/g, ' ').trim();

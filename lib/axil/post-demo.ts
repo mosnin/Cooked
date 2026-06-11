@@ -57,7 +57,7 @@ export type PostDemoToolName = (typeof POST_DEMO_TOOL_ALLOWLIST)[number];
  * system prompt teaches it to use are the "send/schedule" verbs below.
  *
  * Enforced at execute time so a hand-crafted POST to
- * `/api/koala/post-demo/execute` with `tool: "GMAIL_TRASH_EMAIL"` (or any
+ * `/api/axil/post-demo/execute` with `tool: "GMAIL_TRASH_EMAIL"` (or any
  * other Composio Gmail/Calendar slug) is rejected — the endpoint is a
  * post-demo orchestrator, not a generic Composio passthrough. Tightening
  * here also limits blast radius if the model drifts.
@@ -104,7 +104,7 @@ export interface ProposedAction {
   args: Record<string, unknown>;
   /** Human-readable line — the row label in the approval stack. */
   summary: string;
-  /** Koala-voice line that uses the resolved Contact/Deal name instead of
+  /** Axil-voice line that uses the resolved Contact/Deal name instead of
    *  an ID slug. Set server-side after a batched lookup. The UI prefers
    *  this over `summary` whenever it's present. Absent only on the rare
    *  miss (id outside the workspace, or model returned no id). */
@@ -411,7 +411,7 @@ function inferToolkitFromSlug(slug: string, authorized: ReadonlySet<string>): st
 
 /**
  * Walk proposals, batch-read the Contacts and Deals they reference, and
- * write a Koala-voice `humanSummary` onto each one. Names replace ID
+ * write a Axil-voice `humanSummary` onto each one. Names replace ID
  * slugs. At most ONE Contact query and ONE Deal query per request — the
  * orchestrator stack is capped at 5 actions, the lookups are tiny.
  *

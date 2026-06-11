@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { getManagerMemberContext } from '@/lib/permissions';
-import { KoalaWorkspace } from '@/components/koala/koala-workspace';
+import { AxilWorkspace } from '@/components/axil/axil-workspace';
 import { MemberDashboard } from './member-dashboard';
 import type { Conversation } from '@/lib/types';
 import type { MessageBlock } from '@/lib/ai-tools/blocks';
@@ -9,9 +9,9 @@ import type { MessageBlock } from '@/lib/ai-tools/blocks';
 /**
  * /manager — the team home.
  *
- * Mirrors the rep home (`/s/[slug]/koala`): the home IS the Koala chat.
+ * Mirrors the rep home (`/s/[slug]/axil`): the home IS the Koala chat.
  * Owners and admins land on the team chief-of-staff chat
- * (`KoalaWorkspace variant="manager"`, backed by /api/ai/manager-task), scoped
+ * (`AxilWorkspace variant="manager"`, backed by /api/ai/manager-task), scoped
  * to the whole team. The team-overview dashboard moved to `/manager/brief`.
  *
  * `rep_member`s are unchanged — they get their own work surface
@@ -91,7 +91,7 @@ export default async function ManagerHomePage({
 
   return (
     <div className="flex flex-1 min-h-0 flex-col">
-      <KoalaWorkspace
+      <AxilWorkspace
         slug=""
         variant="manager"
         initialMessages={initialMessages}

@@ -1,7 +1,7 @@
 /**
- * /koala/drafts — kept alive as a redirect to /koala/inbox so live
+ * /axil/drafts — kept alive as a redirect to /axil/inbox so live
  * bookmarks and link shares don't 404. Drafts and Approvals merged
- * into the unified Inbox surface. See app/s/[slug]/koala/inbox/page.tsx.
+ * into the unified Inbox surface. See app/s/[slug]/axil/inbox/page.tsx.
  *
  * Auth still runs so an unauthed hit can't bounce off as an open redirect.
  */
@@ -11,7 +11,7 @@ import { auth } from '@clerk/nextjs/server';
 
 export const dynamic = 'force-dynamic';
 
-export default async function KoalaDraftsPage({
+export default async function AxilDraftsPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
@@ -20,5 +20,5 @@ export default async function KoalaDraftsPage({
   const { userId } = await auth();
   if (!userId) redirect('/login/rep');
 
-  redirect(`/s/${slug}/koala/inbox`);
+  redirect(`/s/${slug}/axil/inbox`);
 }

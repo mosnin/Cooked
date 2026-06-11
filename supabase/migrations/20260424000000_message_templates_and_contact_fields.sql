@@ -9,7 +9,7 @@
 --    inbox" anxiety without deleting real data.
 --
 -- 3. Contact.referralSource: who sent this lead? Free-form string because
---    sources vary wildly (Jane Doe, Zillow, open house, prior client). Later
+--    sources vary wildly (Jane Doe, LinkedIn, webinar, prior client). Later
 --    phases can use this for commission-referral tracking.
 
 CREATE TABLE IF NOT EXISTS "MessageTemplate" (

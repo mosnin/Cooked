@@ -1,15 +1,15 @@
--- Phase 11 of the deals redesign: property listing-packet share links.
+-- Phase 11 of the deals redesign: product one-pager share links.
 --
--- Reps constantly send buyers a bundle: "here's the property + HOA docs
--- + inspection report + disclosures". Today that's a chain of email
--- attachments. A packet is a tokenised public URL that renders the property
--- and a curated set of documents — viewable without login.
+-- Reps constantly send prospects a bundle: "here's the product + spec sheet
+-- + pricing + terms". Today that's a chain of email attachments. A packet
+-- is a tokenised public URL that renders the product and a curated set of
+-- documents — viewable without login.
 --
 -- Design:
---   * Packet is scoped to a Property (one property per packet).
+--   * Packet is scoped to a Property/product (one product per packet).
 --   * It carries an explicit `includeDocumentIds` array of DealDocument ids
 --     so the rep curates what's shared — no accidental leak of a draft
---     offer on the same property.
+--     offer on the same product.
 --   * `expiresAt` is optional but a soft default is set on insert by the
 --     API (7 days). Past-expiry tokens return 410.
 --   * `viewCount` increments server-side when the public page is viewed so

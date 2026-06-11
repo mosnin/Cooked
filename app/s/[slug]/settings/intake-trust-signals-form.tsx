@@ -92,7 +92,7 @@ export function IntakeTrustSignalsForm({
             placeholder="TX-RE-12345"
             maxLength={120}
           />
-          <p className={CAPTION}>Your real-estate license number, shown verbatim in the footer.</p>
+          <p className={CAPTION}>Your sales license number, shown verbatim in the footer.</p>
         </div>
 
         <div className="space-y-1.5">

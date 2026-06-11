@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * PostDemoRecorder — the one client component on /koala/log.
+ * PostDemoRecorder — the one client component on /axil/log.
  *
  * State machine:
  *   idle → recording → transcribing → processing → awaiting_approval
@@ -42,7 +42,7 @@ interface Proposal {
   tool: string;
   args: Record<string, unknown>;
   summary: string;
-  /** Server-resolved Koala-voice line that uses real names instead of IDs.
+  /** Server-resolved Axil-voice line that uses real names instead of IDs.
    *  Preferred over `summary` whenever present. Absent only on rare misses. */
   humanSummary?: string;
   mutates: boolean;
@@ -182,7 +182,7 @@ export function PostDemoRecorder({ slug, personId, dealId }: Props) {
     try {
       const fd = new FormData();
       fd.append('audio', blob, 'demo.webm');
-      const res = await fetch('/api/koala/transcribe', { method: 'POST', body: fd });
+      const res = await fetch('/api/axil/transcribe', { method: 'POST', body: fd });
       if (!res.ok) throw new Error(await res.text());
       const json = (await res.json()) as { transcript?: string };
       transcript = (json.transcript ?? '').trim();
@@ -200,7 +200,7 @@ export function PostDemoRecorder({ slug, personId, dealId }: Props) {
     // Phase 2 — propose actions.
     setState('processing');
     try {
-      const res = await fetch('/api/koala/post-demo', {
+      const res = await fetch('/api/axil/post-demo', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -234,7 +234,7 @@ export function PostDemoRecorder({ slug, personId, dealId }: Props) {
     if (checked.length === 0) return;
     setState('approving');
     try {
-      const res = await fetch('/api/koala/post-demo/execute', {
+      const res = await fetch('/api/axil/post-demo/execute', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -277,11 +277,11 @@ export function PostDemoRecorder({ slug, personId, dealId }: Props) {
       {/* Back link — single muted breadcrumb. Doesn't compete with the focal element. */}
       <div className="mb-10">
         <Link
-          href={`/s/${slug}/koala`}
+          href={`/s/${slug}/axil`}
           className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft size={12} />
-          Back to Koala
+          Back to Axil
         </Link>
       </div>
 
@@ -390,14 +390,14 @@ export function PostDemoRecorder({ slug, personId, dealId }: Props) {
                 Log another
               </button>
               <Link
-                href={`/s/${slug}/koala`}
+                href={`/s/${slug}/axil`}
                 className={cn(
                   'inline-flex items-center gap-1.5 rounded-full px-4 h-9 text-sm font-medium',
                   'text-muted-foreground hover:text-foreground hover:bg-foreground/[0.04]',
                   'transition-colors duration-150',
                 )}
               >
-                Back to Koala
+                Back to Axil
               </Link>
             </div>
           </motion.div>

@@ -1,6 +1,6 @@
 export const metadata = {
   title: 'Data Processing Agreement | Koala',
-  description: 'Data Processing Agreement for Koala, a B2B SaaS agentic OS for real estate agents and teams.',
+  description: 'Data Processing Agreement for Koala, a B2B SaaS agentic OS for sales agents and teams.',
 };
 
 export default function DataProcessingAgreementPage() {

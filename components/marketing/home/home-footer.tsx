@@ -69,7 +69,7 @@ export function HomeFooter() {
               <BrandLogo className="h-6" alt="Koala" />
             </Link>
             <p className="mt-4 max-w-[16rem] text-[14px] leading-relaxed text-foreground/50">
-              The agentic OS for real estate. You close; Koala does the rest.
+              The agentic OS for sales. You close; Koala does the rest.
             </p>
           </div>
           {COLUMNS.map((col) => (

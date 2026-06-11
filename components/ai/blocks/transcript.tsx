@@ -10,7 +10,7 @@ import { SubagentTaskBlockView } from './subagent-task-block-view';
 import { ReasoningBlockView } from './reasoning-block-view';
 import { PermissionBlockView } from './permission-block-view';
 import { PermissionPromptView, type PermissionPromptData } from './permission-prompt-view';
-import { ApprovalCelebration, type ApprovalKind } from '@/components/koala/approval-celebration';
+import { ApprovalCelebration, type ApprovalKind } from '@/components/axil/approval-celebration';
 
 interface TranscriptProps {
   blocks: MessageBlock[];
@@ -42,7 +42,7 @@ interface TranscriptProps {
   };
   /**
    * When present, the surface the approval prompt occupied is replaced by
-   * one calm Koala-voiced sentence for ~2.5s. The parent owns the dwell —
+   * one calm Axil-voiced sentence for ~2.5s. The parent owns the dwell —
    * the celebration calls `onDone` when its time is up so the parent can
    * clear this state and let the next streamed blocks (or whatever's next)
    * take the floor.

@@ -165,7 +165,7 @@ Do NOT ask rent-vs-buy. Go directly to the rental questions below.`
       : `**Lead type is always "buyer" for this agent.**
 Do NOT ask rent-vs-buy. Go directly to the buyer questions below.`;
 
-  return `You are a friendly intake assistant for ${businessName}. Your job is to conduct a warm, professional intake interview with a prospective real estate client.
+  return `You are a friendly intake assistant for ${businessName}. Your job is to conduct a warm, professional intake interview with a prospective sales client.
 
 ## Core rules
 - Ask ONE question at a time. Never stack multiple questions in a single message.

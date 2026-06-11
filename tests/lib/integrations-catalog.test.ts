@@ -23,7 +23,7 @@ const VALID_CATEGORIES: ReadonlySet<IntegrationCategory> = new Set<IntegrationCa
   'calendar',
   'docs',
   'crm',
-  'real-estate',
+  'sales',
   'social',
   'ads',
   'payments',

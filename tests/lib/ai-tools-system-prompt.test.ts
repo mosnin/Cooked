@@ -5,7 +5,7 @@ import type { ToolContext } from '@/lib/ai-tools/types';
 function makeCtx(): ToolContext {
   return {
     userId: 'user_123',
-    space: { id: 'space_abc', slug: 'jane-realty', name: 'Jane Realty', ownerId: 'u1' },
+    space: { id: 'space_abc', slug: 'jane-sales', name: 'Jane Sales', ownerId: 'u1' },
     signal: new AbortController().signal,
   };
 }
@@ -13,7 +13,7 @@ function makeCtx(): ToolContext {
 describe('buildSystemPrompt', () => {
   it('bakes in the workspace name', () => {
     const prompt = buildSystemPrompt(makeCtx());
-    expect(prompt).toContain('Jane Realty');
+    expect(prompt).toContain('Jane Sales');
   });
 
   it('bakes in a deterministic date when `now` is provided', () => {

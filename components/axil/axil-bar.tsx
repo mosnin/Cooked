@@ -19,23 +19,23 @@ const STORAGE_KEY = (slug: string) => `koala.bar.${slug}.convId`;
 const MAX_PANEL_MESSAGES = 6;
 
 /**
- * KoalaBar — the persistent agent presence on every workspace page.
+ * AxilBar — the persistent agent presence on every workspace page.
  *
  * Slim by default: a single input pinned to the bottom of the viewport,
  * one keystroke (⌘/) or one tap from anywhere. Click into it (or send a
  * message) and a floating thread slides up above the bar showing the live
  * exchange. Esc collapses back to slim. The conversation persists across
- * pages via sessionStorage; navigating to /koala opens the same thread
+ * pages via sessionStorage; navigating to /axil opens the same thread
  * in the long-form surface.
  *
- * Hidden on /koala (that page already IS the chat).
+ * Hidden on /axil (that page already IS the chat).
  */
-export function KoalaBar({ slug }: Props) {
+export function AxilBar({ slug }: Props) {
   const pathname = usePathname() ?? '';
-  const onKoalaPage = pathname.endsWith(`/s/${slug}/koala`) || pathname.startsWith(`/s/${slug}/koala/`);
+  const onAxilPage = pathname.endsWith(`/s/${slug}/axil`) || pathname.startsWith(`/s/${slug}/axil/`);
 
   // ── First-load flash fix ────────────────────────────────────────────────
-  // Soft-navigating from any workspace page to /koala runs the route
+  // Soft-navigating from any workspace page to /axil runs the route
   // change inside Next.js' `router.push`, which is wrapped in
   // `startTransition` (see node_modules/next/dist/client/components/
   // app-router-instance.js:302-307). That defers the `usePathname()`
@@ -47,13 +47,13 @@ export function KoalaBar({ slug }: Props) {
   // commit; this catches the layout-chrome window *before* commit.
   //
   // A capture-phase document click listener notices clicks on `<a>` tags
-  // pointing at /s/<slug>/koala and flips `hidingForKoalaNav` to true
+  // pointing at /s/<slug>/axil and flips `hidingForAxilNav` to true
   // synchronously, outside any transition. React processes that sync
   // state update ahead of the route transition, so the bar is gone from
   // the DOM by the time the navigation lands. Reset the flag once
   // pathname catches up — or after a short safety timeout in case the
   // click was prevented downstream.
-  const [hidingForKoalaNav, setHidingForKoalaNav] = useState(false);
+  const [hidingForAxilNav, setHidingForKoalaNav] = useState(false);
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
@@ -70,32 +70,32 @@ export function KoalaBar({ slug }: Props) {
       if (link.target === '_blank' || link.hasAttribute('download')) return;
 
       const href = link.getAttribute('href') || '';
-      const koalaBase = `/s/${slug}/koala`;
-      const isKoalaLink =
-        href === koalaBase ||
-        href.startsWith(`${koalaBase}/`) ||
-        href.startsWith(`${koalaBase}?`);
-      if (isKoalaLink) setHidingForKoalaNav(true);
+      const axilBase = `/s/${slug}/axil`;
+      const isAxilLink =
+        href === axilBase ||
+        href.startsWith(`${axilBase}/`) ||
+        href.startsWith(`${axilBase}?`);
+      if (isAxilLink) setHidingForKoalaNav(true);
     }
     document.addEventListener('click', handleClick, true);
     return () => document.removeEventListener('click', handleClick, true);
   }, [slug]);
 
-  // Clear the pre-hide flag once usePathname catches up to /koala — at
-  // that point onKoalaPage handles the hide on its own. Safety net for
+  // Clear the pre-hide flag once usePathname catches up to /axil — at
+  // that point onAxilPage handles the hide on its own. Safety net for
   // the rare case where the click was cancelled by a downstream handler
   // after our capture-phase listener saw it (without this, the bar would
   // stay hidden forever on the current page). 500ms is well past any
   // real navigation commit but tight enough that a stuck bar is brief.
   useEffect(() => {
-    if (!hidingForKoalaNav) return;
-    if (onKoalaPage) {
+    if (!hidingForAxilNav) return;
+    if (onAxilPage) {
       setHidingForKoalaNav(false);
       return;
     }
     const timer = setTimeout(() => setHidingForKoalaNav(false), 500);
     return () => clearTimeout(timer);
-  }, [hidingForKoalaNav, onKoalaPage]);
+  }, [hidingForAxilNav, onAxilPage]);
 
   const contextPlaceholder = useMemo(() => {
     if (pathname.includes('/contacts') || pathname.includes('/people')) {
@@ -120,9 +120,9 @@ export function KoalaBar({ slug }: Props) {
       return 'Ask about your connected tools…';
     }
     if (pathname.includes('/settings') || pathname.includes('/configure')) {
-      return 'Ask Koala anything about your setup…';
+      return 'Ask Axil anything about your setup…';
     }
-    return 'Ask Koala or just talk…';
+    return 'Ask Axil or just talk…';
   }, [pathname]);
 
   const [convId, setConvId] = useState<string | null>(null);
@@ -240,16 +240,16 @@ export function KoalaBar({ slug }: Props) {
   const showThinking =
     isStreaming && tailMessage?.role === 'assistant' && tailMessage.blocks.length === 0;
 
-  // Only render the bar inside a workspace, and not on /koala itself.
-  // `hidingForKoalaNav` covers the pre-commit window during a soft nav
-  // to /koala — see the long comment up top.
-  if (onKoalaPage || hidingForKoalaNav) return null;
+  // Only render the bar inside a workspace, and not on /axil itself.
+  // `hidingForAxilNav` covers the pre-commit window during a soft nav
+  // to /axil — see the long comment up top.
+  if (onAxilPage || hidingForAxilNav) return null;
 
   // The most recent few messages — keep the panel light. Full thread lives
-  // in /koala.
+  // in /axil.
   const visibleMessages = messages.slice(-MAX_PANEL_MESSAGES);
   const hiddenCount = Math.max(0, messages.length - visibleMessages.length);
-  const koalaHref = `/s/${slug}/koala`;
+  const axilHref = `/s/${slug}/axil`;
 
   return (
     <div
@@ -266,7 +266,7 @@ export function KoalaBar({ slug }: Props) {
         'px-3 sm:px-6 pb-3 md:pb-5',
       )}
       role="region"
-      aria-label="Koala"
+      aria-label="Axil"
     >
       {/* Floating panel above the bar, shown when expanded */}
       {expanded && hasContent && (
@@ -277,11 +277,11 @@ export function KoalaBar({ slug }: Props) {
           <div className="flex items-center justify-between px-4 py-2 border-b border-border/60">
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500" />
-              Koala
+              Axil
             </div>
             <div className="flex items-center gap-1">
               <Link
-                href={koalaHref}
+                href={axilHref}
                 className="inline-flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground transition-colors px-2 py-1 rounded-md hover:bg-muted/60"
                 title="Open in full chat"
               >
@@ -303,7 +303,7 @@ export function KoalaBar({ slug }: Props) {
             <div className="px-4 py-4 space-y-5">
               {hiddenCount > 0 && (
                 <Link
-                  href={koalaHref}
+                  href={axilHref}
                   className="block text-[11px] text-muted-foreground hover:text-foreground transition-colors"
                 >
                   + {hiddenCount} earlier message{hiddenCount === 1 ? '' : 's'} — see all
@@ -410,7 +410,7 @@ export function KoalaBar({ slug }: Props) {
           onFocus={() => setExpanded(true)}
           placeholder={dictation.listening ? 'Listening…' : contextPlaceholder}
           disabled={!!pendingApproval}
-          aria-label="Message Koala"
+          aria-label="Message Axil"
           className="flex-1 min-w-0 bg-transparent border-0 outline-none text-sm placeholder:text-muted-foreground/70 disabled:opacity-50"
         />
         {dictation.supported && !isStreaming && (

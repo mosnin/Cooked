@@ -7,10 +7,10 @@
  * Auth: requireSpaceOwner(slug) — the workspace owner (or a managing
  * manager_owner/manager_admin).
  *
- * Placing a call dials the AGENT first (their own number, resolved from the
- * Space's phoneNumber or TELNYX_AGENT_NUMBER), then bridges to the contact when
- * they answer. The CallLog row is inserted as 'initiated' before we dial so the
- * webhook can fill it in; if the voice layer isn't configured we still insert
+ * Placing a call dials the REP first (their own number, resolved from the
+ * Space's phoneNumber or TWILIO_AGENT_NUMBER), then bridges to the contact when
+ * they answer via Twilio. The CallLog row is inserted as 'initiated' before we
+ * dial so the webhook can fill it in; if Twilio isn't configured we still insert
  * the row (status 'failed') and tell the client cleanly — never a 500.
  */
 
@@ -19,12 +19,12 @@ import { requireSpaceOwner } from '@/lib/api-auth';
 import { supabase } from '@/lib/supabase';
 import { checkRateLimit } from '@/lib/rate-limit';
 import { logger } from '@/lib/logger';
-import { placeClickToCall, toE164, getVoiceConfig } from '@/lib/voice';
+import { placeClickToCall, toE164, getTwilioConfig } from '@/lib/twilio';
 
 export const runtime = 'nodejs';
 
 const CALL_COLUMNS =
-  'id, spaceId, contactId, direction, fromNumber, toNumber, telnyxCallId, status, recordingUrl, transcript, summary, durationSec, createdAt, updatedAt';
+  'id, spaceId, contactId, direction, fromNumber, toNumber, twilioCallSid, status, recordingUrl, recordingSid, transcript, transcriptStatus, summary, durationSec, createdAt, updatedAt';
 
 // ── GET — the space's calls, newest first ───────────────────────────────────
 
@@ -101,11 +101,11 @@ export async function POST(req: NextRequest) {
     contactId = contact.id;
   }
 
-  // The agent's own number — what Telnyx rings first. It lives on
+  // The rep's own number — what Twilio rings first. It lives on
   // SpaceSetting.phoneNumber (the same place notify.ts reads it), NOT on the
   // Space row — getSpaceFromSlug never selects it, so the old `space.phoneNumber`
   // cast was always undefined and every call silently fell through to the env
-  // fallback. TELNYX_AGENT_NUMBER stays as a deploy-wide fallback.
+  // fallback. TWILIO_AGENT_NUMBER stays as a deploy-wide fallback.
   const { data: settingRow } = await supabase
     .from('SpaceSetting')
     .select('phoneNumber')
@@ -113,9 +113,9 @@ export async function POST(req: NextRequest) {
     .maybeSingle();
   const agentNumber = toE164(
     (settingRow as { phoneNumber?: string | null } | null)?.phoneNumber ??
-      process.env.TELNYX_AGENT_NUMBER,
+      process.env.TWILIO_AGENT_NUMBER,
   );
-  const fromNumber = process.env.TELNYX_FROM_NUMBER ?? '';
+  const fromNumber = process.env.TWILIO_PHONE_NUMBER ?? '';
 
   // Insert the row first so the webhook has a target, and so the call shows up
   // in the log immediately even if dialing fails.
@@ -140,8 +140,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Could not start the call. Try again.' }, { status: 500 });
   }
 
-  // Gate: no voice config or no agent number → mark failed, return cleanly.
-  if (!getVoiceConfig() || !agentNumber) {
+  // Gate: no Twilio config or no rep number → mark failed, return cleanly.
+  if (!getTwilioConfig() || !agentNumber) {
     await supabase
       .from('CallLog')
       .update({ status: 'failed', updatedAt: new Date().toISOString() })
@@ -150,7 +150,7 @@ export async function POST(req: NextRequest) {
       {
         call: { ...row, status: 'failed' },
         configured: false,
-        message: getVoiceConfig()
+        message: getTwilioConfig()
           ? 'Add your phone number in settings to place calls.'
           : 'Calling is not configured for this workspace yet.',
       },
@@ -176,13 +176,16 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Stamp the Telnyx leg id so webhooks correlate back to this row.
+  // Stamp the Twilio Call SID so webhooks correlate back to this row.
   const { data: updated } = await supabase
     .from('CallLog')
-    .update({ telnyxCallId: result.telnyxCallId, updatedAt: new Date().toISOString() })
+    .update({ twilioCallSid: result.twilioCallSid, updatedAt: new Date().toISOString() })
     .eq('id', row.id)
     .select(CALL_COLUMNS)
     .single();
 
-  return NextResponse.json({ call: updated ?? { ...row, telnyxCallId: result.telnyxCallId }, configured: true });
+  return NextResponse.json({
+    call: updated ?? { ...row, twilioCallSid: result.twilioCallSid },
+    configured: true,
+  });
 }

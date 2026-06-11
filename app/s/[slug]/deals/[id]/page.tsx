@@ -288,7 +288,7 @@ export default async function DealDetailPage({
             peer chip on a primary surface. */}
         <div className="flex flex-wrap items-center gap-2">
           <Link
-            href={`/s/${slug}/koala/log?dealId=${id}`}
+            href={`/s/${slug}/axil/log?dealId=${id}`}
             className={cn(
               'inline-flex items-center gap-1.5 h-9 rounded-full px-4 text-sm transition-colors',
               'border border-border/70 bg-background text-foreground hover:bg-muted/40',

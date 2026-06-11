@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ConversationSidebar } from '@/components/ai/conversation-sidebar';
-import { KoalaPromptBox, type MentionItem, type SkillItem } from '@/components/ui/koala-prompt-box';
+import { AxilPromptBox, type MentionItem, type SkillItem } from '@/components/ui/axil-prompt-box';
 import { Button } from '@/components/ui/button';
 import { History, X, AlertCircle, Settings, ArrowLeft, Play, Loader2, NotebookText, RotateCcw, MoreHorizontal, SquarePen, BookOpen, Inbox, Flag } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -28,12 +28,12 @@ import { useUser } from '@clerk/nextjs';
 import { AgentSettingsPanel } from '@/components/agent/agent-settings-panel';
 import { toast } from 'sonner';
 import { approvalKindForTool, approvalSubjectFromArgs, type ApprovalKind } from './approval-celebration';
-import { PlanCard } from '@/components/koala/plan-card';
+import { PlanCard } from '@/components/axil/plan-card';
 import { useSplitPanel } from '@/hooks/use-split-panel';
-import { SplitPanelToggle } from '@/components/koala/split-panel-toggle';
-import { RightPanel } from '@/components/koala/right-panel';
-import { PanelResizeHandle } from '@/components/koala/panel-resize-handle';
-import { ApprovalsPill } from '@/components/koala/approvals-pill';
+import { SplitPanelToggle } from '@/components/axil/split-panel-toggle';
+import { RightPanel } from '@/components/axil/right-panel';
+import { PanelResizeHandle } from '@/components/axil/panel-resize-handle';
+import { ApprovalsPill } from '@/components/axil/approvals-pill';
 
 /**
  * Legacy on-the-wire message shape from /api/ai/messages. The DB now also
@@ -46,7 +46,7 @@ interface LegacyMessage {
   blocks?: MessageBlock[] | null;
 }
 
-interface KoalaWorkspaceProps {
+interface AxilWorkspaceProps {
   slug: string;
   /** When 'settings', renders the agent settings panel instead of the workspace. */
   view?: 'workspace' | 'settings';
@@ -56,7 +56,7 @@ interface KoalaWorkspaceProps {
   /** Pre-send this message on mount (used when arriving from the command palette). */
   initialInput?: string;
   /** Pre-populate the composer on mount but do NOT auto-send — the rep
-   *  finishes the sentence themselves. Used by "or just tell Koala →"
+   *  finishes the sentence themselves. Used by "or just tell Axil →"
    *  shortcuts on /contacts and /deals, and by morning-actions. Distinct
    *  from `initialInput` which auto-sends. */
   initialPrefill?: string;
@@ -68,9 +68,9 @@ interface KoalaWorkspaceProps {
   /** Skills offered in the chat's `/` menu. From loadUserInvocableSkills(). */
   skills?: SkillItem[];
   /**
-   * Which Koala variant this surface is rendering.
+   * Which Axil variant this surface is rendering.
    *
-   * - `rep` (default) — solo / team-member chat at /s/<slug>/koala.
+   * - `rep` (default) — solo / team-member chat at /s/<slug>/axil.
    *   Backed by `/api/ai/task` and the native rep tool catalog.
    * - `manager` — chief-of-staff chat at /manager/koala. Backed by the
    *   manager-gated `/api/ai/manager-task` (defense layer 2) and the
@@ -94,7 +94,7 @@ const MESSAGE_LIMIT = 50;
  *   2. `prefers-reduced-motion` — same surface the rest of the chat
  *      animation system respects. Sound is motion adjacent; calm-by-
  *      default means quiet-by-default for that audience.
- *   3. localStorage flag `koala:sound:enabled === '1'`. Default OFF —
+ *   3. localStorage flag `axil:sound:enabled === '1'`. Default OFF —
  *      sound is a delight the rep chooses to turn on, never one we
  *      surprise them with on first send. No UI for the toggle in this
  *      pass; the key is documented for the inevitable settings cluster.
@@ -107,7 +107,7 @@ function softTap(): void {
   if (typeof window === 'undefined') return;
   try {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    if (window.localStorage?.getItem('koala:sound:enabled') !== '1') return;
+    if (window.localStorage?.getItem('axil:sound:enabled') !== '1') return;
     type WebkitAudioWindow = Window & { webkitAudioContext?: typeof AudioContext };
     const w = window as WebkitAudioWindow;
     const Ctor = window.AudioContext ?? w.webkitAudioContext;
@@ -160,7 +160,7 @@ function legacyToUi(messages: LegacyMessage[]): UiMessage[] {
   }));
 }
 
-export function KoalaWorkspace({
+export function AxilWorkspace({
   slug,
   view = 'workspace',
   initialMessages,
@@ -171,7 +171,7 @@ export function KoalaWorkspace({
   showConnectBanner = false,
   skills = [],
   variant = 'rep',
-}: KoalaWorkspaceProps) {
+}: AxilWorkspaceProps) {
   const isManager = variant === 'manager';
   const { user } = useUser();
   const router = useRouter();
@@ -268,8 +268,8 @@ export function KoalaWorkspace({
       // Reflect the new conversation in the URL so a refresh (or share)
       // lands on the same transcript. `replace` so the history doesn't
       // grow a step for every new chat. The base path differs per variant
-      // — rep sits at /s/<slug>/koala, manager at /manager/koala.
-      const newConvBase = isManager ? '/manager' : `/s/${slug}/koala`;
+      // — rep sits at /s/<slug>/axil, manager at /manager/koala.
+      const newConvBase = isManager ? '/manager' : `/s/${slug}/axil`;
       router.replace(`${newConvBase}?conversationId=${id}`, { scroll: false });
     },
   });
@@ -376,7 +376,7 @@ export function KoalaWorkspace({
       const next = new URLSearchParams(searchParams.toString());
       next.delete('view');
       const qs = next.toString();
-      const baseUrl = isManager ? '/manager' : `/s/${slug}/koala`;
+      const baseUrl = isManager ? '/manager' : `/s/${slug}/axil`;
       router.replace(`${baseUrl}${qs ? `?${qs}` : ''}`, { scroll: false });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -459,14 +459,14 @@ export function KoalaWorkspace({
   }, [messages, pendingApproval, isStreaming]);
 
   // Resolve the route base once. Same URL shape both variants — manager
-  // sits at /manager/koala, rep at /s/<slug>/koala.
-  const koalaBaseUrl = isManager ? '/manager' : `/s/${slug}/koala`;
+  // sits at /manager/koala, rep at /s/<slug>/axil.
+  const axilBaseUrl = isManager ? '/manager' : `/s/${slug}/axil`;
 
   function handleSelectConversation(conv: Conversation) {
     setDrawerOpen(false);
     if (conv.id === activeConversationId) return;
     startConversationTransition(() => {
-      router.push(`${koalaBaseUrl}?conversationId=${conv.id}`, { scroll: false });
+      router.push(`${axilBaseUrl}?conversationId=${conv.id}`, { scroll: false });
     });
   }
 
@@ -489,7 +489,7 @@ export function KoalaWorkspace({
       setConversations((prev) => [conv, ...prev]);
       setDrawerOpen(false);
       startConversationTransition(() => {
-        router.push(`${koalaBaseUrl}?conversationId=${conv.id}`, { scroll: false });
+        router.push(`${axilBaseUrl}?conversationId=${conv.id}`, { scroll: false });
       });
     } catch (err) {
       console.error('[Chat] new conversation failed', err);
@@ -536,7 +536,7 @@ export function KoalaWorkspace({
     setConversations((prev) => prev.filter((c) => c.id !== id));
     if (wasActive) {
       startConversationTransition(() => {
-        router.push(koalaBaseUrl, { scroll: false });
+        router.push(axilBaseUrl, { scroll: false });
       });
     }
 
@@ -591,7 +591,7 @@ export function KoalaWorkspace({
           });
           if (wasActive) {
             startConversationTransition(() => {
-              router.push(`${koalaBaseUrl}?conversationId=${id}`, { scroll: false });
+              router.push(`${axilBaseUrl}?conversationId=${id}`, { scroll: false });
             });
           }
         },
@@ -752,7 +752,7 @@ export function KoalaWorkspace({
 
   // Composer prefill — bumped by the day-one welcome's "Tell me about a lead"
   // action, and seeded on mount when arriving from `?prefill=` (the
-  // "or just tell Koala →" shortcuts on /contacts and /deals, and
+  // "or just tell Axil →" shortcuts on /contacts and /deals, and
   // morning-actions). Nonce so identical text twice in a row still re-applies.
   const [prefill, setPrefill] = useState<{ text: string; nonce: number } | null>(
     initialPrefill ? { text: initialPrefill, nonce: Date.now() } : null,
@@ -1005,7 +1005,7 @@ export function KoalaWorkspace({
     }
     // Streaming, no tool call active, no tokens yet → still warming up the
     // container / fetching tools / waiting on first model token. Fill the
-    // dead air with a single calm status so the rep knows Koala is on
+    // dead air with a single calm status so the rep knows Axil is on
     // it, not stuck.
     const hasText = tailMessage.blocks.some(
       (b) => b.type === 'text' && b.content.trim().length > 0,
@@ -1032,11 +1032,11 @@ export function KoalaWorkspace({
 
   // Reusable input — shared between the empty hero and the docked footer
   // so the focal point lives wherever it should. The `/` skills menu lives
-  // inside KoalaPromptBox itself.
+  // inside AxilPromptBox itself.
   const renderInput = () => (
     <div>
-      <KoalaPromptBox
-        placeholder="Message Koala, or press / for skills…"
+      <AxilPromptBox
+        placeholder="Message Axil, or press / for skills…"
         onSend={handleSend}
         onMentionSearch={handleMentionSearch}
         onAbort={abort}
@@ -1064,11 +1064,11 @@ export function KoalaWorkspace({
           <div className="flex items-center justify-between">
             <div className="space-y-1.5">
               <Link
-                href={`/s/${slug}/koala`}
+                href={`/s/${slug}/axil`}
                 className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
               >
                 <ArrowLeft size={12} />
-                Back to Koala
+                Back to Axil
               </Link>
               <h1
                 className="text-3xl tracking-tight text-foreground"
@@ -1077,7 +1077,7 @@ export function KoalaWorkspace({
                 Settings
               </h1>
               <p className="text-sm text-muted-foreground">
-                Tune what Koala does on its own and what it brings to you.
+                Tune what Axil does on its own and what it brings to you.
               </p>
             </div>
           </div>
@@ -1101,12 +1101,12 @@ export function KoalaWorkspace({
       <div className="absolute top-1.5 right-2 sm:top-2 sm:right-3 z-20 flex items-center gap-1.5">
         <ApprovalsPill />
         {/* One three-dots menu — folds New chat, History, Brief/Drafts, and
-            (rep) Run now / Memory / Koala settings into a single animated
+            (rep) Run now / Memory / Axil settings into a single animated
             dropdown so the chat surface stays open instead of carrying a row of
             stacked icons. The fade+slide is the shared EASE_OUT curve baked
             into DropdownMenuContent (components/ui/dropdown-menu.tsx,
             motion-reduce aware). Routes resolve per variant — rep:
-            /s/<slug>/koala/*, manager: /manager/* — never a broken /s//… href. */}
+            /s/<slug>/axil/*, manager: /manager/* — never a broken /s//… href. */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
@@ -1130,7 +1130,7 @@ export function KoalaWorkspace({
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
               <Link
-                href={isManager ? '/manager/brief' : `/s/${slug}/koala/brief`}
+                href={isManager ? '/manager/brief' : `/s/${slug}/axil/brief`}
                 className="cursor-pointer"
               >
                 <BookOpen size={14} className="mr-2" />
@@ -1139,7 +1139,7 @@ export function KoalaWorkspace({
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link
-                href={isManager ? '/manager/reviews' : `/s/${slug}/koala/inbox`}
+                href={isManager ? '/manager/reviews' : `/s/${slug}/axil/inbox`}
                 className="cursor-pointer"
               >
                 <Inbox size={14} className="mr-2" />
@@ -1164,15 +1164,15 @@ export function KoalaWorkspace({
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuItem asChild>
-                  <Link href={`/s/${slug}/koala/memory`} className="cursor-pointer">
+                  <Link href={`/s/${slug}/axil/memory`} className="cursor-pointer">
                     <NotebookText size={14} className="mr-2" />
                     Memory
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href={`/s/${slug}/koala?tab=settings`} className="cursor-pointer">
+                  <Link href={`/s/${slug}/axil?tab=settings`} className="cursor-pointer">
                     <Settings size={14} className="mr-2" />
-                    Koala settings
+                    Axil settings
                   </Link>
                 </DropdownMenuItem>
               </>
@@ -1227,7 +1227,7 @@ export function KoalaWorkspace({
       {isLoadingConversation ? (
         /* Skeleton mirrors the empty-state hero shape below — a centered
            greeting-sized placeholder + a composer-sized rectangle pinned to
-           the bottom. Same shapes as app/s/[slug]/koala/loading.tsx so the
+           the bottom. Same shapes as app/s/[slug]/axil/loading.tsx so the
            in-component transition between conversations and the route-level
            Suspense fallback feel like one calm fade, not two surfaces. */
         <>
@@ -1253,13 +1253,13 @@ export function KoalaWorkspace({
            fully before the active-conversation tree mounts. This is the
            load-bearing constraint here: a previous attempt wrapped both
            branches with `mode="popLayout"` and a shared
-           `layoutId="koala-composer"` to morph the composer between hero
+           `layoutId="axil-composer"` to morph the composer between hero
            and docked positions, but popLayout keeps the exiting node alive
            through the exit animation, so the rep briefly had TWO
            textareas in the DOM whenever `isEmpty` flipped false. mode="wait"
            + distinct keys keeps only one composer alive at any time, at the
            cost of a small dead-time window (~180ms) between the hero exit
-           and the conversation enter — reads as "Koala heard you, getting
+           and the conversation enter — reads as "Axil heard you, getting
            ready" rather than a hard cut. Do NOT reintroduce a shared
            layoutId here. `initial={false}` suppresses the entrance
            animation on initial page load — the transition is for the
@@ -1274,7 +1274,7 @@ export function KoalaWorkspace({
               transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
               className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 pb-16 sm:pb-20"
             >
-              {/* The daily brief lives at /koala/brief (sidebar entry).
+              {/* The daily brief lives at /axil/brief (sidebar entry).
                   It used to render inline above the composer here on the
                   empty workspace, but the focal serif headline + cards
                   competed with the chat hero — two focal elements on one
@@ -1347,7 +1347,7 @@ export function KoalaWorkspace({
                     // would also hit this code path, though we don't virtualize)
                     // skip the animation. User messages: no entrance animation
                     // — typed text reading "instantly there" is the rep's
-                    // own action, not Koala delivering something.
+                    // own action, not Axil delivering something.
                     const isFresh = !seenMessageIdsRef.current.has(msg.id);
                     if (isFresh) seenMessageIdsRef.current.add(msg.id);
                     const animateEntrance = isFresh && msg.role === 'assistant';
@@ -1507,9 +1507,9 @@ export function KoalaWorkspace({
                     );
                   })()}
 
-                  {/* Errors land inline as Koala assistant messages
+                  {/* Errors land inline as Axil assistant messages
                       (see useAgentTask.landKoalaError) so the failure mode
-                      reads like Koala talking, not a red system banner. The
+                      reads like Axil talking, not a red system banner. The
                       `error` state is still tracked for telemetry / a11y but
                       not rendered here. */}
 
@@ -1524,7 +1524,7 @@ export function KoalaWorkspace({
               sits exactly where the user's eye is. ChatGPT / Claude pattern. */}
 
           {/* Docked input — pinned to the bottom of the active thread.
-              Previously a `motion.div` with `layoutId="koala-composer"`
+              Previously a `motion.div` with `layoutId="axil-composer"`
               shared with the empty-state hero composer above. The shared
               layoutId + popLayout AnimatePresence combo briefly mounted
               both composers (= two textareas in the DOM). Plain <div>

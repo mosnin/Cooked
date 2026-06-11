@@ -1,7 +1,7 @@
-"""Manager tool registry — Koala-for-Managers.
+"""Manager tool registry — Axil-for-Managers.
 
 The team-side agent has its own tool catalog, distinct from the rep
-agent's `agent/koala.py:make_koala_agent` toolbelt. Where the rep side
+agent's `agent/axil.py:make_axil_agent` toolbelt. Where the rep side
 acts on a single workspace's CRM, the manager side reads across the whole
 team's swarm of rep spaces.
 
@@ -28,8 +28,8 @@ Adding a new manager tool:
   2. Collect tools in a module-level list (e.g. `TEAM_TOOLS`).
   3. Import that list here and extend MANAGER_TOOLS with it.
 
-The agent runtime (`agent/koala_manager.py:make_manager_agent`) reads
-MANAGER_TOOLS at agent-build time, exactly mirroring how `agent/koala.py`
+The agent runtime (`agent/axil_manager.py:make_manager_agent`) reads
+MANAGER_TOOLS at agent-build time, exactly mirroring how `agent/axil.py`
 reads its own native tool imports for the rep agent.
 """
 

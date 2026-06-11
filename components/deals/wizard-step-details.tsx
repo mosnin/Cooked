@@ -302,7 +302,7 @@ export function WizardStepDetails({
                   <Input
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Property address, city, or MLS#…"
+                    placeholder="Property address, city, or CRM#…"
                     className="pl-8 text-sm"
                   />
                 </div>

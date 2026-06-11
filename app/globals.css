@@ -747,16 +747,16 @@
 }
 
 /* ──────────────────────────────────────────────────────────────────────────
- * Koala thinking shimmer — used by the chat transcript while the agent is
+ * Axil thinking shimmer — used by the chat transcript while the agent is
  * spinning up or between tool calls. Plays through the muted→foreground→
  * muted gradient so the word "Thinking" reads as alive but calm.
  * ────────────────────────────────────────────────────────────────────────── */
-@keyframes koala-thinking-shimmer {
+@keyframes axil-thinking-shimmer {
   0%   { background-position: 200% 0; }
   100% { background-position: -200% 0; }
 }
 
-.koala-thinking-shimmer {
+.axil-thinking-shimmer {
   /* A bright wedge sweeps across the muted base. Foreground colors come
      from CSS vars so dark mode flips automatically. The 200% bg-size lets
      the keyframe push the highlight cleanly off both edges. */
@@ -773,59 +773,59 @@
   -webkit-background-clip: text;
   color: transparent;
   /* 2.4s = calm. ease-in-out softens the turnaround so it never reads jittery. */
-  animation: koala-thinking-shimmer 2.4s ease-in-out infinite;
+  animation: axil-thinking-shimmer 2.4s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .koala-thinking-shimmer {
+  .axil-thinking-shimmer {
     animation: none;
     background-position: 0 0;
   }
   /* Legacy inline-style selector kept for any old callsites. */
-  [style*="koala-thinking-shimmer"] { animation: none !important; background-position: 0 0 !important; }
+  [style*="axil-thinking-shimmer"] { animation: none !important; background-position: 0 0 !important; }
 }
 
-/* ── Koala streaming cursor ────────────────────────────────────────────────
+/* ── Axil streaming cursor ────────────────────────────────────────────────
  * step-start keeps the blink hard-edged (typewriter), not a gentle fade.
  * 0.9s is slightly irregular against the LLM token cadence so they don't
  * cancel each other out visually. */
-@keyframes koala-cursor-blink {
+@keyframes axil-cursor-blink {
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
 }
-.koala-cursor {
+.axil-cursor {
   display: inline-block;
   width: 2px;
   height: 0.9em;
   margin-left: 2px;
   vertical-align: text-bottom;
   background: currentColor;
-  animation: koala-cursor-blink 0.9s step-start infinite;
+  animation: axil-cursor-blink 0.9s step-start infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .koala-cursor { animation: none; opacity: 1; }
+  .axil-cursor { animation: none; opacity: 1; }
 }
 
-/* ── Koala embed mode ─────────────────────────────────────────────────────
- * When a dashboard page renders inside the Koala RightPanel iframe it
+/* ── Axil embed mode ─────────────────────────────────────────────────────
+ * When a dashboard page renders inside the Axil RightPanel iframe it
  * loads with `?embed=1`. The EmbedDetector component (mounted in
- * app/s/[slug]/layout.tsx) sets `data-koala-embed="true"` on <html>.
- * The outer Koala already owns the sidebar, header, and chat input — so
+ * app/s/[slug]/layout.tsx) sets `data-axil-embed="true"` on <html>.
+ * The outer Axil already owns the sidebar, header, and chat input — so
  * the iframe must render ONLY the page content. Hide every chrome layer
  * the iframe shouldn't show. Normal page visits (no `?embed=1`) are
  * unaffected — the attribute is never set, the rules never match. */
-[data-koala-embed='true'] [data-dashboard-sidebar],
-[data-koala-embed='true'] [data-dashboard-header],
-[data-koala-embed='true'] [data-dashboard-mobile-nav],
-[data-koala-embed='true'] [data-page-chat-input],
-[data-koala-embed='true'] [data-platform-banner] {
+[data-axil-embed='true'] [data-dashboard-sidebar],
+[data-axil-embed='true'] [data-dashboard-header],
+[data-axil-embed='true'] [data-dashboard-mobile-nav],
+[data-axil-embed='true'] [data-page-chat-input],
+[data-axil-embed='true'] [data-platform-banner] {
   display: none !important;
 }
 /* Sidebar/header collapse means the content column shouldn't carry the
- * extra bottom padding the KoalaBar used to reserve. Tighten it. The
+ * extra bottom padding the AxilBar used to reserve. Tighten it. The
  * dashboard-content class is set in LayoutShell. */
-[data-koala-embed='true'] .dashboard-content {
+[data-axil-embed='true'] .dashboard-content {
   padding-bottom: 1rem !important;
 }
 

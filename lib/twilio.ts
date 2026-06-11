@@ -242,6 +242,73 @@ export async function createCall(params: CreateCallParams): Promise<PlaceCallRes
   }
 }
 
+// ── Click-to-call orchestration ──────────────────────────────────────────────
+
+/**
+ * The public origin Twilio callbacks must reach. Twilio can't call back to
+ * localhost, so this falls back to the canonical app origin. Used to build the
+ * absolute StatusCallback / recording / TwiML URLs handed to Twilio.
+ */
+export function callbackBaseUrl(): string {
+  return (
+    process.env.NEXT_PUBLIC_APP_ORIGIN ??
+    process.env.NEXT_PUBLIC_APP_URL ??
+    process.env.NEXT_PUBLIC_VERCEL_URL ??
+    'https://my.usekoala.com'
+  ).replace(/\/$/, '');
+}
+
+const WEBHOOK_PATH = '/api/webhooks/twilio-voice';
+
+/** Build one of this app's Twilio webhook URLs with context query params. */
+function webhookUrl(query: Record<string, string | null | undefined>): string {
+  const u = new URL(`${callbackBaseUrl()}${WEBHOOK_PATH}`);
+  for (const [k, v] of Object.entries(query)) {
+    if (v) u.searchParams.set(k, v);
+  }
+  return u.toString();
+}
+
+export interface PlaceClickToCallParams {
+  spaceId: string;
+  contactId?: string | null;
+  /** The rep's own phone — Twilio dials this leg first. */
+  agentNumber: string;
+  /** The contact's phone — bridged in once the agent answers. */
+  contactNumber: string;
+}
+
+/**
+ * Agent-first click-to-call. We create a call to the rep; once they answer,
+ * Twilio fetches the `?type=dial` TwiML which bridges to the contact with
+ * dual-channel recording. Context rides on the callback URLs so the webhook
+ * acts without a DB round-trip on the agent leg.
+ */
+export async function placeClickToCall(params: PlaceClickToCallParams): Promise<PlaceCallResult> {
+  const config = getTwilioConfig();
+  if (!config) {
+    logger.warn('[twilio] placeClickToCall skipped — not configured', { spaceId: params.spaceId });
+    return { ok: false, reason: 'not_configured' };
+  }
+
+  const agentE164 = toE164(params.agentNumber);
+  const contactE164 = toE164(params.contactNumber);
+  if (!agentE164 || !contactE164) return { ok: false, reason: 'invalid_number' };
+  if (isBlockedNumber(agentE164) || isBlockedNumber(contactE164)) {
+    logger.warn('[twilio] blocked premium-rate number', { spaceId: params.spaceId });
+    return { ok: false, reason: 'blocked_number' };
+  }
+
+  const ctx = { spaceId: params.spaceId, contactId: params.contactId ?? null };
+  return createCall({
+    to: agentE164,
+    // TwiML the agent leg fetches on answer → bridges to the contact + records.
+    url: webhookUrl({ type: 'dial', bridgeTo: contactE164, ...ctx }),
+    statusCallback: webhookUrl({ type: 'status', ...ctx }),
+    recordingStatusCallback: webhookUrl({ type: 'recording', ...ctx }),
+  });
+}
+
 // ── Recording fetch ──────────────────────────────────────────────────────────
 
 /**

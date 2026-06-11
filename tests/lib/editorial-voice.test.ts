@@ -98,7 +98,7 @@ describe('editorial voice — forbidden phrases', () => {
 });
 
 // ── Home story sentence length ──────────────────────────────────────────────
-// The /koala home renders one sentence as an h1 in a serif title face. Past
+// The /axil home renders one sentence as an h1 in a serif title face. Past
 // ~80 characters it wraps to two lines and the silhouette stops feeling like
 // a thought; it feels like a paragraph. The deterministic ladder must stay
 // under that bar even on the longest legitimate inputs (long person names,

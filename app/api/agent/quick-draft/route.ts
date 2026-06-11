@@ -1,7 +1,7 @@
 /**
  * POST /api/agent/quick-draft
  *
- * The /koala home's inline draft engine. Phase 7 — no more chat teleport.
+ * The /axil home's inline draft engine. Phase 7 — no more chat teleport.
  * The rep taps "Send a check-in" on the home, this composes a draft
  * inline and returns it; the UI shows it; the rep taps Send and the
  * existing AgentDraft → PATCH approve → sendDraft pipeline fires the email
@@ -196,7 +196,7 @@ export async function POST(req: NextRequest) {
         channel: sendBody.channel,
         subject: sendBody.channel === 'email' ? sendBody.subject!.trim() : null,
         content: sendBody.body.trim(),
-        reasoning: `Quick draft from /koala home (${sendBody.intent}).`,
+        reasoning: `Quick draft from /axil home (${sendBody.intent}).`,
         priority: 0,
         status: 'pending',
       })

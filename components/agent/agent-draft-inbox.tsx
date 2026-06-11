@@ -23,7 +23,7 @@ import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { timeAgo } from '@/lib/formatting';
 import { StaggerList, StaggerItem } from '@/components/motion/stagger-list';
-import { ApprovalCelebration, type ApprovalKind } from '@/components/koala/approval-celebration';
+import { ApprovalCelebration, type ApprovalKind } from '@/components/axil/approval-celebration';
 
 interface DeliveryResult {
   sent: boolean;

@@ -93,7 +93,7 @@ function PrettyArgs({ prompt }: { prompt: PermissionPromptData }): React.ReactEl
  * — no JSON, no pencil. Send fires the existing approval pipeline with the
  * edited subject/body, which routes to Resend (email) or Telnyx (SMS) on
  * the server side. Read-only recipient (To:) — recipient selection happens
- * upstream in the Koala conversation, not in this card.
+ * upstream in the Axil conversation, not in this card.
  */
 function InlineComposeCard({
   kind,
@@ -228,7 +228,7 @@ export function PermissionPromptView({
   // Inline compose state for send_email / send_sms. The draft fields are
   // editable in place — no JSON-pencil step — and ride through to the
   // server as `editedArgs` on Send. Initial values come from the prompt's
-  // args (what Koala composed). Reset when the prompt id changes so a
+  // args (what Axil composed). Reset when the prompt id changes so a
   // second queued send doesn't show the previous draft.
   const initialCompose = useMemo(() => {
     const a = prompt.args as Record<string, unknown>;

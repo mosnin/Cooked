@@ -65,7 +65,7 @@ describe('decideRoute', () => {
   it('routes attachments without action verbs to direct (multimodal Q&A)', () => {
     const att = [{ id: 'a1', mimeType: 'image/png' }];
     expect(decideRoute('What is this listing showing?', att)).toBe('direct');
-    expect(decideRoute('Summarize this MLS sheet', att)).toBe('direct');
+    expect(decideRoute('Summarize this CRM sheet', att)).toBe('direct');
     expect(decideRoute('', att)).toBe('direct');
   });
 
@@ -153,7 +153,7 @@ describe('shouldEscalate', () => {
     expect(
       shouldEscalate('A CMA (Comparative Market Analysis) compares recent sales nearby.'),
     ).toBe(false);
-    expect(shouldEscalate('This MLS sheet shows a 3-bed, 2-bath at $450k.')).toBe(false);
+    expect(shouldEscalate('This CRM sheet shows a 3-bed, 2-bath at $450k.')).toBe(false);
   });
 
   it('does not escalate on empty input', () => {

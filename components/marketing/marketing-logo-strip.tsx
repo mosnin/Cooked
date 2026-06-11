@@ -10,8 +10,8 @@
  * - Greyscale media slots (the slot itself reads as a placeholder; the
  *   real logos arrive in PR follow-on and ship as greyscale SVG).
  * - Stagger reveal on scroll-into-view, once.
- * - Optional eyebrow above ("USED BY REAL ESTATE PROS") and optional muted
- *   subhead below ("12,000+ real estate professionals.") — both recede
+ * - Optional eyebrow above ("USED BY SALES PROS") and optional muted
+ *   subhead below ("12,000+ sales professionals.") — both recede
  *   so the logo row is the focal element.
  *
  * Logos are passed in as `{ name }` only. The component picks the visual
@@ -36,9 +36,9 @@ export interface MarketingLogoStripItem {
 export interface MarketingLogoStripProps {
   /** Logos to display, in order, left to right. */
   items: MarketingLogoStripItem[];
-  /** Small all-caps label above the row. Defaults to "USED BY REAL ESTATE PROS". */
+  /** Small all-caps label above the row. Defaults to "USED BY SALES PROS". */
   eyebrow?: string;
-  /** Optional muted line below the row (e.g. "12,000+ real estate professionals."). */
+  /** Optional muted line below the row (e.g. "12,000+ sales professionals."). */
   subhead?: string;
   /** Override the per-logo slot className (e.g. to shrink or widen). */
   logoClassName?: string;
@@ -48,7 +48,7 @@ export interface MarketingLogoStripProps {
 
 export function MarketingLogoStrip({
   items,
-  eyebrow = 'USED BY REAL ESTATE PROS',
+  eyebrow = 'USED BY SALES PROS',
   subhead,
   logoClassName,
   className,

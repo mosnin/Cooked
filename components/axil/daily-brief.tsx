@@ -18,13 +18,13 @@
  * renders only when its underlying data is present — calm silence beats
  * filler. The composed `brief.headline` still exists (email + SMS
  * templates consume it) but the surface no longer renders it; the
- * "Today." greeting from KoalaPageShell orients without competing.
+ * "Today." greeting from AxilPageShell orients without competing.
  *
  * Sections:
  *   ON DECK   the rep's action cards (reuses brief.cards)
  *   YOUR DAY  today's events from /api/calendar/events (when connected)
  *   PIPELINE  active · closing this week · at risk (from /api/agent/brief/sections)
- *   OVERNIGHT what Koala did in the last 12h (from the same endpoint)
+ *   OVERNIGHT what Axil did in the last 12h (from the same endpoint)
  */
 
 import { useEffect, useState } from 'react';
@@ -50,7 +50,7 @@ interface Props {
   initialBrief?: Brief;
   /** When true, suppress the auto-collapse → settled lifecycle. The
    *  brief stays in the live state regardless of seenAt / actedAt. Used
-   *  by the dedicated /koala/brief page where the rep navigated
+   *  by the dedicated /axil/brief page where the rep navigated
    *  here intentionally — they want the full brief, not the receipt. */
   alwaysLive?: boolean;
 }
@@ -185,7 +185,7 @@ export function DailyBrief({ slug, initialBrief, alwaysLive = false }: Props) {
   function recordActed(): void;
   function recordActed(cardIndex?: number, source?: SignalSource, kind?: SignalKind) {
     // Body shape depends on whether this came from a card tap (B5
-    // telemetry) or from the empty-state "Tell Koala" button (which
+    // telemetry) or from the empty-state "Tell Axil" button (which
     // has no card identity).
     const body =
       typeof cardIndex === 'number' && source && kind
@@ -280,7 +280,7 @@ export function DailyBrief({ slug, initialBrief, alwaysLive = false }: Props) {
 // ── Live state ────────────────────────────────────────────────────────────────
 
 /**
- * Sectioned command-center layout. KoalaPageShell already provides the
+ * Sectioned command-center layout. AxilPageShell already provides the
  * "Today." greeting; we render the four sections directly. Each section
  * renders only when its data is present — calm silence over filler.
  */
@@ -551,7 +551,7 @@ function singularize(label: string, count: number): string {
 
 /**
  * Day-one rep: no cards, no calendar events, no pipeline, no overnight
- * activity. Single quiet sentence + the same "Tell Koala" CTA the empty-
+ * activity. Single quiet sentence + the same "Tell Axil" CTA the empty-
  * state used to surface, so the brief stays actionable on a quiet morning.
  */
 function QuietMorning({
@@ -568,11 +568,11 @@ function QuietMorning({
       </p>
       <div className="mt-6">
         <Link
-          href={`/s/${slug}/koala`}
+          href={`/s/${slug}/axil`}
           onClick={() => onAct()}
           className={cn(PRIMARY_PILL, 'min-h-[44px] sm:min-h-0')}
         >
-          Tell Koala
+          Tell Axil
         </Link>
       </div>
     </div>

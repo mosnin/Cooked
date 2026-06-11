@@ -162,7 +162,7 @@ function RepIdentity({
         // the top of the page — no body-coloured strip above it on iOS
         // even when the safe-area drops content below the notch. The
         // image grows in height a touch on mobile (h-28) so the extra
-        // vertical real estate goes INTO the brand frame, not into empty
+        // vertical sales goes INTO the brand frame, not into empty
         // space above it.
         <div className="relative -mx-5 sm:-mx-8 -mt-5 sm:-mt-6 mb-[-2.75rem] h-28 sm:h-32 overflow-hidden">
           {/* eslint-disable-next-line @next/next/no-img-element */}

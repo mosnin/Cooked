@@ -9,7 +9,7 @@
  *
  * Design (Jobs lens): paper-flat, serif h1 + status sentence, one builder card,
  * a calm preview of the auto-selected comps + the computed range, a hairline-
- * divided list of past reports. No MLS, no external lookups — comps come from
+ * divided list of past reports. No CRM, no external lookups — comps come from
  * the rep's own Property rows.
  *
  * Build pass (Musk lens): the heavy lifting (comp selection, stats) lives in

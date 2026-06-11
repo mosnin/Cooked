@@ -24,7 +24,7 @@ export function BlogTeaser() {
         <div className="max-w-2xl">
           <Eyebrow>From the team</Eyebrow>
           <h2 className="mt-5 font-title text-[clamp(2rem,4.5vw,3.5rem)] font-normal leading-[1.04] tracking-[-0.018em] text-foreground">
-            Thinking on the business of real estate.
+            Thinking on the business of sales.
           </h2>
         </div>
         <Link

@@ -12,7 +12,7 @@
  *       forwards Anthropic's `source: { type: 'url' }` shape verbatim.
  *     - PDFs:   `{type: 'document', source: {type: 'url', url}}` — Claude's
  *       PDF support reads page-level layout AND OCRs scanned PDFs. The
- *       same block shape handles rep contract scans + MLS PDFs.
+ *       same block shape handles rep contract scans + CRM PDFs.
  *
  *   openai (GPT-4o / GPT-5 vision)
  *     - Images: `{type: 'image_url', image_url: {url}}` (OpenAI Chat

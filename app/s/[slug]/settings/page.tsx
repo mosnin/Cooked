@@ -12,7 +12,7 @@ import { IntakeTrustSignalsForm } from './intake-trust-signals-form';
 import { YourDataSection } from './your-data-section';
 import { McpSection, TemplatesSection } from './integrations-section';
 import { ConnectedAppsSection } from '@/components/settings/connected-apps-section';
-import { MemoryList } from '@/components/koala/memory-list';
+import { MemoryList } from '@/components/axil/memory-list';
 import { RoutinesManager } from '@/components/routines/routines-manager';
 import { AIProfileForm } from '@/components/profile/ai-profile-form';
 import { ChatModelPicker } from '@/components/agent/chat-model-picker';
@@ -334,7 +334,7 @@ export default async function SettingsPage({
 
       {/* Memory — what Koala has learned about this workspace. Read-only
           here; the correction pattern is "delete the wrong fact and let
-          Koala re-learn it" — same logic as on the old /koala/memory
+          Koala re-learn it" — same logic as on the old /axil/memory
           surface. The tab is a mount point; the list component owns the
           empty/loading/error states. */}
       {activeTab === 'memory' && (

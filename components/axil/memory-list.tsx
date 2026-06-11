@@ -8,7 +8,7 @@
  * Editing isn't supported in v1: each row carries a vector embedding
  * generated at write time, and editing without re-embedding silently
  * degrades retrieval. The correction pattern is "delete the wrong fact and
- * let Koala re-learn it" — same logic as in /api/agent/memory/[id]/route.ts.
+ * let Axil re-learn it" — same logic as in /api/agent/memory/[id]/route.ts.
  */
 
 import { useEffect, useState, useCallback } from 'react';
@@ -108,7 +108,7 @@ export function MemoryList() {
   // Flat chronological list — the four-section grouping ("About your business
   // / about people / about deals / other") forced category labels nobody
   // asked for. The entity name on each row is enough orientation; the rest
-  // is just facts in the order Koala learned them.
+  // is just facts in the order Axil learned them.
   return (
     <motion.ul
       variants={STAGGER_CONTAINER}

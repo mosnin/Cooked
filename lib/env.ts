@@ -75,8 +75,13 @@ const optionalSchema = z.object({
   // Email / SMS
   RESEND_API_KEY: z.string().optional(),
   RESEND_FROM_EMAIL: z.string().optional(),
-  TELNYX_API_KEY: z.string().optional(),
-  TELNYX_FROM_NUMBER: z.string().optional(),
+  TELNYX_API_KEY: z.string().optional(),      // lib/sms.ts (SMS only — voice runs on Twilio)
+  TELNYX_FROM_NUMBER: z.string().optional(),  // lib/sms.ts (SMS only — voice runs on Twilio)
+
+  // Twilio voice — outbound click-to-call, recording, and call transcription.
+  TWILIO_ACCOUNT_SID: z.string().optional(),  // lib/twilio.ts
+  TWILIO_AUTH_TOKEN: z.string().optional(),   // lib/twilio.ts (also signs webhook validation)
+  TWILIO_PHONE_NUMBER: z.string().optional(), // lib/twilio.ts (caller id calls are placed FROM)
 
   // Object storage (Wasabi S3)
   WASABI_ACCESS_KEY_ID: z.string().optional(),
@@ -143,11 +148,12 @@ const optionalSchema = z.object({
   // Webhook signing secrets
   CLERK_WEBHOOK_SECRET: z.string().optional(),       // app/api/webhooks/clerk
   COMPOSIO_WEBHOOK_SECRET: z.string().optional(),    // app/api/webhooks/composio
-  TELNYX_WEBHOOK_SECRET: z.string().optional(),      // app/api/webhooks/telnyx-voice
+  // Twilio webhooks are validated with the X-Twilio-Signature scheme keyed by
+  // TWILIO_AUTH_TOKEN (above) — no separate webhook secret to set.
 
-  // Telnyx voice
-  TELNYX_AGENT_NUMBER: z.string().optional(),        // app/api/calls
-  TELNYX_VOICE_CONNECTION_ID: z.string().optional(), // lib/voice.ts
+  // Twilio voice — the rep's own number Twilio rings first (deploy-wide fallback
+  // when a space hasn't set SpaceSetting.phoneNumber).
+  TWILIO_AGENT_NUMBER: z.string().optional(),        // app/api/calls
 
   // Crypto / token signing (each falls back to CLERK_SECRET_KEY if unset)
   ENCRYPTION_KEY: z.string().optional(),             // lib/crypto.ts

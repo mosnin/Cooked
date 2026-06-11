@@ -10,6 +10,7 @@ import {
   Building2,
   FolderOpen,
   Aperture,
+  Target,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
@@ -43,19 +44,19 @@ export interface NavItem {
 // past them every time they want to talk to Koala.
 //
 // Everything else in the sidebar is the rep-facing substrate they still
-// expect from a CRM: People, Deals, Calendar, Properties, Intake.
+// expect from a CRM: People, Deals, Practice, Calendar, Products, Intake.
 
 export const repNavItems: NavItem[] = [
   {
-    href: '/koala',
+    href: '/axil',
     label: 'Koala',
     icon: MessageCircle,
     isAI: true,
     badgeKey: 'pendingDrafts',
     children: [
-      { href: '/koala/brief', label: 'Brief' },
-      { href: '/koala/inbox', label: 'Inbox' },
-      { href: '/koala/history', label: 'History' },
+      { href: '/axil/brief', label: 'Brief' },
+      { href: '/axil/inbox', label: 'Inbox' },
+      { href: '/axil/history', label: 'History' },
     ],
   },
   {
@@ -73,6 +74,11 @@ export const repNavItems: NavItem[] = [
     icon: Briefcase,
   },
   {
+    href: '/practice',
+    label: 'Practice',
+    icon: Target,
+  },
+  {
     href: '/calendar',
     label: 'Calendar',
     icon: Calendar,
@@ -84,13 +90,13 @@ export const repNavItems: NavItem[] = [
   },
   {
     href: '/properties',
-    label: 'Properties',
+    label: 'Products',
     icon: Building2,
     badgeKey: 'properties',
     children: [
-      { href: '/properties/new', label: 'Add property' },
+      { href: '/properties/new', label: 'Add product' },
       { href: '/properties/commissions', label: 'Commissions' },
-      { href: '/cma', label: 'CMA' },
+      { href: '/cma', label: 'Pricing analysis' },
     ],
   },
   {
@@ -153,7 +159,7 @@ export const secondaryNavItems: { href: string; label: string; icon: LucideIcon 
 
 /** Primary items with shorter labels for the mobile bottom bar. */
 export const mobileNavItems = [
-  { href: '/koala', label: 'Koala', icon: MessageCircle },
+  { href: '/axil', label: 'Koala', icon: MessageCircle },
   { href: '/contacts', label: 'People', icon: Users },
   { href: '/deals', label: 'Deals', icon: Briefcase },
   { href: '/calendar', label: 'Calendar', icon: Calendar },

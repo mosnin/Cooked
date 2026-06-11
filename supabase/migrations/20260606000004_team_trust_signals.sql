@@ -4,7 +4,7 @@
 -- is served via the team variant — team policy beats per-agent
 -- copy for legal text.
 --
---   teamLicenseNumber       — team-level real-estate license #
+--   teamLicenseNumber       — team-level sales license #
 --   teamFairHousingNotice   — multi-line Fair Housing statement
 --   teamShowEqualHousingMark — render the Equal Housing Opportunity logo
 

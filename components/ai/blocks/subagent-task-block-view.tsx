@@ -3,7 +3,7 @@
 /**
  * SubagentTaskBlockView — the live inline card for a delegated sub-agent task.
  *
- * When Koala calls `delegate_task`, it spawns a Modal sub-agent run (a swarm)
+ * When Axil calls `delegate_task`, it spawns a Modal sub-agent run (a swarm)
  * and drops one of these into the chat thread. The card subscribes to the
  * existing swarm SSE stream (/api/swarm/{runId}/stream) and updates in place as
  * the sub-agents plan → work → finish — so the rep watches the deep work

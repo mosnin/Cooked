@@ -56,7 +56,7 @@ interface Lead {
 // scoring sequence below dictates which tier each gets — Marcus turns out
 // to be the hottest and rises to the top.
 const INTAKE_ORDER: Lead[] = [
-  { id: 'sandra', name: 'Sandra Liu', source: 'Zillow intake', tier: 'cold' },
+  { id: 'sandra', name: 'Sandra Liu', source: 'LinkedIn intake', tier: 'cold' },
   { id: 'james', name: 'James O’Connor', source: 'Referral · M. Patel', tier: 'warm' },
   { id: 'marcus', name: 'Marcus Chen', source: 'Open house · 415 Lex', tier: 'hot' },
 ];

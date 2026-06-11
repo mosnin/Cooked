@@ -58,7 +58,7 @@ function metaFor(actionType: string): { verb: string; icon: LucideIcon } {
 }
 
 /**
- * "What I did" — proof of work. Most-recent autonomous actions Koala
+ * "What I did" — proof of work. Most-recent autonomous actions Axil
  * completed without human intervention. First section of the dispatch
  * console so the rep opens the page and immediately sees the agent
  * earned its keep.
@@ -105,7 +105,7 @@ export function WhatIDid({ slug }: { slug: string }) {
         )}
         {!loading && entries.length > 0 && (
           <Link
-            href={`/s/${slug}/koala/activity`}
+            href={`/s/${slug}/axil/activity`}
             className="ml-auto inline-flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground transition-colors"
           >
             See all

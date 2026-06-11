@@ -31,7 +31,7 @@ export interface OnboardingDraftInput {
   tone: DraftTone;
   /** Audience values from the who-you-serve stage (e.g. 'first_time_buyers'). */
   clientTypes: string[];
-  /** Lead-source values from the sources stage (e.g. 'zillow'). */
+  /** Lead-source values from the sources stage (e.g. 'linkedin'). */
   leadSources: string[];
 }
 
@@ -45,7 +45,7 @@ export interface OnboardingDraftResult {
 /** Lead-source value → the phrase that reads naturally in "a new ___ lead". */
 const SOURCE_PHRASE: Record<string, string> = {
   sphere: 'referral',
-  zillow: 'Zillow',
+  linkedin: 'LinkedIn',
   facebook: 'Facebook',
   instagram: 'Instagram',
   linkedin: 'LinkedIn',

@@ -1,5 +1,5 @@
 /**
- * POST /api/koala/transcribe
+ * POST /api/axil/transcribe
  *
  * Accepts a multipart audio blob, runs OpenAI Whisper, returns
  * `{ transcript: string }`.
@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
   if (authResult instanceof NextResponse) return authResult;
   const { userId } = authResult;
 
-  const { allowed } = await checkRateLimit(`koala:transcribe:${userId}`, 10, 60);
+  const { allowed } = await checkRateLimit(`axil:transcribe:${userId}`, 10, 60);
   if (!allowed) {
     return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
   }
@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
     const transcript = (typeof transcription === 'string' ? transcription : '').trim();
     return NextResponse.json({ transcript });
   } catch (err) {
-    console.error('[koala/transcribe] error', err);
+    console.error('[axil/transcribe] error', err);
     return NextResponse.json({ error: 'Transcription failed' }, { status: 500 });
   }
 }

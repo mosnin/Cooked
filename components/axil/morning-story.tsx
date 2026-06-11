@@ -26,7 +26,7 @@ interface Props {
 type LoadState = 'loading' | 'ok' | 'error';
 
 /**
- * Koala-voiced fallback sentences. Called when the API is unavailable or
+ * Axil-voiced fallback sentences. Called when the API is unavailable or
  * when the data is empty/null. The sentences are direct, useful, one idea.
  */
 function getFallback(state: LoadState, isFresh: boolean): string {
@@ -36,7 +36,7 @@ function getFallback(state: LoadState, isFresh: boolean): string {
 }
 
 /**
- * The /koala home's one sentence. Phase 5 made it expand into an action
+ * The /axil home's one sentence. Phase 5 made it expand into an action
  * panel; Phase 7 made the panel actually do work — compose actions now
  * draft, preview, and send inline. The rep never leaves the home.
  */

@@ -396,8 +396,8 @@ async def chat_turn(item: dict):
     from openai.types.shared import Reasoning
     from schemas import AgentSettings, Space
     from security.context import AgentContext
-    from koala import make_koala_agent
-    from koala_manager import make_manager_agent
+    from axil import make_axil_agent
+    from axil_manager import make_manager_agent
     from config import settings
     from llm import (
         decide_reasoning_effort,
@@ -667,12 +667,12 @@ async def chat_turn(item: dict):
             # the list at agent-build time. No edit to this dispatch needed
             # when Phase 2 lands.
             if mode == "manager":
-                koala = make_manager_agent(
+                axil = make_manager_agent(
                     workspace_info=workspace_info,
                     model=resolved_model,
                 )
             else:
-                koala = make_koala_agent(
+                axil = make_axil_agent(
                     extra_tools=integration_tools,
                     workspace_info=workspace_info,
                     model=resolved_model,
@@ -693,7 +693,7 @@ async def chat_turn(item: dict):
             # `model` is a string slug; wrap it in the SDK Model object so the
             # OpenRouter slug routes via our configured client instead of the
             # SDK's prefix dispatcher (which raises `Unknown prefix: x-ai`).
-            koala.model = make_chat_model(model)
+            axil.model = make_chat_model(model)
             try:
                 # Explicit loop bound. The SDK re-sends the full system prompt
                 # + tool-schema block + every accumulated tool result on EACH
@@ -701,7 +701,7 @@ async def chat_turn(item: dict):
                 # of steps. Capping the loop is the hard ceiling on a runaway
                 # turn's token bill; a legit plan rarely needs more than this.
                 result = Runner.run_streamed(
-                    koala,
+                    axil,
                     input=input_items,
                     context=ctx,
                     run_config=run_config,

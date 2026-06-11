@@ -27,7 +27,7 @@ import { FOCUS_CARD_MAX } from '@/lib/geometry';
 import { BODY_MUTED, QUIET_LINK, TITLE_FONT, PRIMARY_PILL } from '@/lib/typography';
 import { buildIntakeUrl } from '@/lib/intake';
 import { levenshtein } from '@/lib/draft-feedback';
-import { KoalaWordmarkInline } from '@/components/agent/koala-authored';
+import { AxilWordmarkInline } from '@/components/agent/axil-authored';
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -84,7 +84,7 @@ interface Props {
   firstName?: string;
   /**
    * Day-one CTA — the parent prefills the composer with this text and
-   * focuses it. Wired through koala-workspace.
+   * focuses it. Wired through axil-workspace.
    */
   onTellMeAboutLead?: (prefill: string) => void;
 }
@@ -469,7 +469,7 @@ export function FocusCard({
       <div className="flex items-center gap-3 text-sm">
         <span className="inline-flex items-center gap-1.5 text-amber-600 dark:text-amber-400">
           <HelpCircle size={13} />
-          Koala has a question
+          Axil has a question
         </span>
         {question.Contact && (
           <span className="text-xs text-muted-foreground truncate">
@@ -556,7 +556,7 @@ function FocusWelcome({
   }
 
   function handleTellMe() {
-    onTellMeAboutLead?.('Hi Koala, my most recent lead is ');
+    onTellMeAboutLead?.('Hi Axil, my most recent lead is ');
   }
 
   return (
@@ -577,7 +577,7 @@ function FocusWelcome({
         Welcome{firstName ? `, ${firstName}` : ''}.
       </h2>
       <p className={cn(BODY_MUTED, 'mt-2 max-w-md mx-auto leading-relaxed')}>
-        I&apos;m <KoalaWordmarkInline />. I track your deals, draft your follow-ups, and flag what&apos;s stuck &mdash; automatically. Start with a lead and I&apos;ll show you.
+        I&apos;m <AxilWordmarkInline />. I track your deals, draft your follow-ups, and flag what&apos;s stuck &mdash; automatically. Start with a lead and I&apos;ll show you.
       </p>
       <div className="mt-6 flex flex-col items-center gap-3">
         <button

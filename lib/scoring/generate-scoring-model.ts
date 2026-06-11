@@ -248,7 +248,7 @@ function parseAIWeightsResponse(raw: AIResponseRaw): ScoringModelAIResponse {
   };
 }
 
-const SYSTEM_PROMPT = `You are a real estate lead scoring expert. Given an intake form's questions, generate an optimal scoring model.
+const SYSTEM_PROMPT = `You are a sales lead scoring expert. Given an intake form's questions, generate an optimal scoring model.
 
 RESPONSE FORMAT:
 - "weights" is an ARRAY of objects, each with: questionId (string), weight (number 0-100), optionScores (array or null), ranges (array or null).
@@ -265,7 +265,7 @@ For RENTAL leads, prioritize: move-in timeline urgency, income stability, employ
 
 For BUYER leads, prioritize: pre-approval status, purchase budget, timeline to close, property type clarity, and readiness to commit.
 
-When creating number ranges, consider realistic real estate values in USD.
+When creating number ranges, consider realistic sales values in USD.
 
 The weights MUST sum to exactly 100. Double-check your arithmetic.`;
 

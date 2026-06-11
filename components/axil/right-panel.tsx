@@ -16,8 +16,8 @@ interface RightPanelProps {
 // `?embed=1` flips the dashboard layout into chrome-stripped mode so the
 // iframe shows ONLY the page content (the People list, Deals kanban,
 // Properties grid) — no nested sidebar, no nested header, no nested chat
-// bar. The outer Koala already owns all of those. See `EmbedDetector`
-// in app/s/[slug]/layout.tsx and the `[data-koala-embed='true']` rules
+// bar. The outer Axil already owns all of those. See `EmbedDetector`
+// in app/s/[slug]/layout.tsx and the `[data-axil-embed='true']` rules
 // in app/globals.css.
 const TAB_PATHS: Record<RightPanelProps['activeTab'], (slug: string) => string> = {
   people: (slug) => `/s/${slug}/contacts?embed=1`,

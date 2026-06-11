@@ -1,12 +1,19 @@
-"""Demo booking tool — agent creates a Demo row + mirrors to the rep's
-external calendar.
+"""Product demo booking tool — agent schedules a product demo (Demo row) +
+mirrors it to the rep's external calendar.
 
-The rep lives in Google Calendar (or Outlook); Koala doesn't own a
-calendar. After booking the Demo row, this tool writes through to the
-connected external calendar via Composio's GOOGLECALENDAR_CREATE_EVENT
-and logs a CalendarEventMirror row as the backup audit record. If no
-calendar is connected, the Demo is still booked; the calendar surface
-will teach the rep to connect.
+A demo here is a booked product demo / sales meeting with a prospect. The
+rep lives in Google Calendar (or Outlook); Axil doesn't own a calendar.
+After booking the Demo row, this tool writes through to the connected
+external calendar via Composio's GOOGLECALENDAR_CREATE_EVENT and logs a
+CalendarEventMirror row as the backup audit record. If no calendar is
+connected, the demo is still booked; the calendar surface will teach the
+rep to connect.
+
+Contract note: the registered tool name stays `book_demo` and the Demo
+table's `propertyAddress` column (mapped from the `property_address`
+argument) is held stable — both are shared with the TS runtime + API. In
+the sales product that field carries an optional location / product or
+account context for the demo, not a street address.
 
 Tenant boundary: spaceId from RunContextWrapper, never an argument.
 Contact must belong to the space.
@@ -54,8 +61,9 @@ async def book_demo(
     property_address: str | None = None,
     notes: str | None = None,
 ) -> dict[str, Any]:
-    """Book a demo for a contact + mirror to the connected external calendar."""
+    """Book a product demo with a prospect + mirror to the connected external calendar."""
     # starts_at: ISO 8601 (include tz; naive = UTC). duration_minutes: 5-240 (default 30).
+    # property_address: optional location or product/account context for the demo (free text).
     # Contact must have email on file. Through-writes to Google Calendar if connected.
     space_id = ctx.context.space_id
     db = await supabase()
@@ -244,7 +252,7 @@ async def _write_demo_through_to_external_calendar(
     #    keep the cold path light — agent.settings is a heavy module.
     description_parts: list[str] = []
     if property_address:
-        description_parts.append(f"Property: {property_address}")
+        description_parts.append(f"Context: {property_address}")
     if guest_email:
         description_parts.append(f"Guest: {guest_name} <{guest_email}>")
     if notes:

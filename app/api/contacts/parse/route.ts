@@ -33,7 +33,7 @@ type ParseError = {
 };
 
 const SYSTEM_PROMPT = [
-  'You are a CRM contact parser for a real-estate agent. Extract structured fields',
+  'You are a CRM contact parser for a sales agent. Extract structured fields',
   "from the rep's note. Return JSON only — no prose.",
   '',
   'Schema:',

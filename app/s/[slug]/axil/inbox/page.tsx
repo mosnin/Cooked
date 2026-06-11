@@ -1,5 +1,5 @@
 /**
- * /koala/inbox — the merged Drafts + Approvals surface.
+ * /axil/inbox — the merged Drafts + Approvals surface.
  *
  * Drafts and Approvals share one intent: "Koala paused, waiting on
  * your tap." Drafts = a message awaiting send-off. Approvals = a task
@@ -10,7 +10,7 @@
  * sections (Send / Edit / Hold for drafts vs. Approve / Reject for
  * approvals).
  *
- * /koala/drafts and /koala/approvals both redirect here so bookmarks
+ * /axil/drafts and /axil/approvals both redirect here so bookmarks
  * stay live.
  */
 
@@ -20,7 +20,7 @@ import { getSpaceFromSlug } from '@/lib/space';
 import { supabase } from '@/lib/supabase';
 import { cn } from '@/lib/utils';
 import { AgentDraftInbox } from '@/components/agent/agent-draft-inbox';
-import { KoalaPageShell } from '@/components/koala/koala-page-shell';
+import { AxilPageShell } from '@/components/axil/axil-page-shell';
 import { ApprovalActions } from '../approvals/approval-actions';
 
 export const dynamic = 'force-dynamic';
@@ -62,7 +62,7 @@ function pendingActionLabel(metadata: Record<string, unknown> | null): string {
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 
-export default async function KoalaInboxPage({
+export default async function AxilInboxPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
@@ -106,7 +106,7 @@ export default async function KoalaInboxPage({
   const pendingCount = draftCount + approvalList.length;
 
   return (
-    <KoalaPageShell
+    <AxilPageShell
       greeting="Inbox."
       title={pendingCount === 0 ? 'Nothing waiting.' : 'Need your call.'}
     >
@@ -159,6 +159,6 @@ export default async function KoalaInboxPage({
           )}
         </>
       )}
-    </KoalaPageShell>
+    </AxilPageShell>
   );
 }

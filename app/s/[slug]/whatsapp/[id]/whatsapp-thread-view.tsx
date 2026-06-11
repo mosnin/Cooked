@@ -24,7 +24,7 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, Send } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
-import { ShimmerText } from '@/components/koala/shimmer-text';
+import { ShimmerText } from '@/components/axil/shimmer-text';
 import { cn } from '@/lib/utils';
 import { EASE_APPLE } from '@/lib/motion';
 import {

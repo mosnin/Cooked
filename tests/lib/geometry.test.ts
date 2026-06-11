@@ -87,7 +87,7 @@ describe('geometry — the Vitruvian macro frame', () => {
       expect(FOCUS_CARD_MAX).toBe(`max-w-[${FOCUS_CARD_WIDTH_PX}px]`);
     });
 
-    it('KoalaBar uses Tailwind`s max-w-3xl which equals 768px = KOALA_BAR_WIDTH_PX', () => {
+    it('AxilBar uses Tailwind`s max-w-3xl which equals 768px = KOALA_BAR_WIDTH_PX', () => {
       // Tailwind's `max-w-3xl` = 48rem = 768px at the default 16px root.
       // Kept as a class-string alias rather than `max-w-[768px]` for
       // semantic readability at the call site.

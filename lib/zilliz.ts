@@ -61,7 +61,7 @@ export async function deleteVector(spaceId: string, id: string): Promise<void> {
  * If `queryText` is provided, runs hybrid retrieval: BM25 (Postgres
  * tsvector) + cosine fused via RRF. The BM25 leg fixes the failure mode
  * where pure semantic search loses on exact-string matches — addresses
- * ("123 Oak St"), MLS numbers, contact names. When `queryText` is omitted
+ * ("123 Oak St"), CRM numbers, contact names. When `queryText` is omitted
  * the function degrades to the original cosine-only behavior (caller
  * doesn't have to know which RPC ran).
  */

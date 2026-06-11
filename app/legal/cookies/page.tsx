@@ -1,6 +1,6 @@
 export const metadata = {
   title: 'Cookie Policy | Koala',
-  description: 'Cookie Policy for Koala, a B2B SaaS agentic OS for real estate agents and teams.',
+  description: 'Cookie Policy for Koala, a B2B SaaS agentic OS for sales agents and teams.',
 };
 
 export default function CookiePolicyPage() {

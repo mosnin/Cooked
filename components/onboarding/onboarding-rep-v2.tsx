@@ -281,7 +281,7 @@ export function OnboardingRepV2({ defaultName }: Props) {
       });
       if (!completeRes.ok) throw new Error('complete');
 
-      redirectRef.current = `/s/${slug}/koala`;
+      redirectRef.current = `/s/${slug}/axil`;
       setPhase('ready');
     } catch {
       setError("Couldn't finish setup. Usually temporary.");
@@ -597,7 +597,7 @@ function BusinessAffordance({
           autoFocus
           value={businessName}
           onChange={(e) => onChangeBusinessName(e.target.value)}
-          placeholder="Coastal Realty"
+          placeholder="Coastal Sales"
           className={INPUT_CLS}
         />
       </div>
@@ -654,7 +654,7 @@ function WhereAffordance({
         />
       </div>
       <div>
-        <FieldLabel>How long have you been in real estate?</FieldLabel>
+        <FieldLabel>How long have you been in sales?</FieldLabel>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
           {TENURE_OPTIONS.map((opt) => (
             <PickerButton key={opt.value} selected={tenure === opt.value} onClick={() => onChangeTenure(opt.value)}>
@@ -712,7 +712,7 @@ function ServeAffordance({
           onChange={(e) => onChangeGuidance(e.target.value)}
           rows={3}
           maxLength={500}
-          placeholder='e.g. "Never push for a demo on the first message. Always sign off as Sarah from Coastal Realty."'
+          placeholder='e.g. "Never push for a demo on the first message. Always sign off as Sarah from Coastal Sales."'
           className={cn(INPUT_CLS, 'resize-none text-sm')}
         />
       </div>

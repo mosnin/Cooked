@@ -1,6 +1,6 @@
 /**
  * Command-center section data — PIPELINE + OVERNIGHT for the redesigned
- * /koala/brief surface.
+ * /axil/brief surface.
  *
  * The brief.cards array (ON DECK) and brief.momentum / brief.tomorrow
  * lines come from compose.ts. These two helpers add the two new section

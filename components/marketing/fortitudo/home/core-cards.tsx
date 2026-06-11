@@ -3,7 +3,7 @@
 /**
  * Core cards: fortitudo's services grid rebuilt as the five things Koala does,
  * each a premium GradientCard (3D tilt, ASCII signature, Koala-orange glow).
- * Copy is Koala's real-estate-CRM substance, lifted from the existing home.
+ * Copy is Koala's sales-CRM substance, lifted from the existing home.
  */
 
 import { motion } from 'motion/react';

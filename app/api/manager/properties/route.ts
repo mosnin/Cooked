@@ -111,7 +111,7 @@ export async function POST(req: NextRequest) {
   const { data, error } = await supabase.from('Property').insert(insert).select().single();
   if (error) {
     if ((error as { code?: string }).code === '23505') {
-      return NextResponse.json({ error: 'A property with that MLS number already exists' }, { status: 409 });
+      return NextResponse.json({ error: 'A property with that CRM number already exists' }, { status: 409 });
     }
     logger.error('[manager/properties/POST] insert failed', { teamId: ctx.team.id }, error);
     return NextResponse.json({ error: 'Failed to create property' }, { status: 500 });

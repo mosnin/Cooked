@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Property photos can be a hair larger than profile assets (5 MB) so the
-    // rep doesn't have to compress every MLS-quality JPEG before upload.
+    // rep doesn't have to compress every CRM-quality JPEG before upload.
     // Other types stay capped at 2 MB.
     const sizeCap = type === 'property-photo' ? 5 * 1024 * 1024 : 2 * 1024 * 1024;
     if (file.size > sizeCap) {

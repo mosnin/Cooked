@@ -21,7 +21,7 @@ interface AssessmentData {
   isLoaded: boolean;
 }
 
-interface KoalaAssessmentCardProps {
+interface AxilAssessmentCardProps {
   entityType: 'contact' | 'deal';
   entityId: string;
   entityName: string;
@@ -37,7 +37,7 @@ const GOAL_LABELS: Record<string, string> = {
   custom: 'Custom goal',
 };
 
-export function KoalaAssessmentCard({ entityType, entityId, entityName, slug }: KoalaAssessmentCardProps) {
+export function AxilAssessmentCard({ entityType, entityId, entityName, slug }: AxilAssessmentCardProps) {
   const [data, setData] = useState<AssessmentData>({
     brief: null,
     briefUpdatedAt: null,
@@ -104,7 +104,7 @@ export function KoalaAssessmentCard({ entityType, entityId, entityName, slug }: 
       <div className="rounded-2xl border border-dashed border-orange-200 dark:border-orange-900/30 p-4 flex items-center gap-3">
         <Bot size={14} className="text-orange-400 flex-shrink-0" />
         <p className="text-xs text-muted-foreground">
-          Koala hasn't assessed {entityName} yet. Run the agent to generate insights.
+          Axil hasn't assessed {entityName} yet. Run the agent to generate insights.
         </p>
       </div>
     );
@@ -128,7 +128,7 @@ export function KoalaAssessmentCard({ entityType, entityId, entityName, slug }: 
             <Bot size={12} className="text-white" />
           </div>
           <div className="text-left">
-            <p className="text-xs font-semibold text-orange-700 dark:text-orange-300">Koala's Assessment</p>
+            <p className="text-xs font-semibold text-orange-700 dark:text-orange-300">Axil's Assessment</p>
             {data.briefUpdatedAt && (
               <p className="text-[10px] text-orange-400/70">Updated {timeAgo(data.briefUpdatedAt)}</p>
             )}

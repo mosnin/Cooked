@@ -66,7 +66,7 @@ const mockGetSpaceForUser = vi.mocked(getSpaceForUser);
 const SPACE = {
   id: 'space_1',
   slug: 'jane',
-  name: 'Jane Realty',
+  name: 'Jane Sales',
   emoji: null,
   ownerId: 'user_db_1',
   teamId: null,

@@ -12,7 +12,7 @@ Two tools live here because they both answer "how is the team performing?":
                                 ranked at-risk list + a plain-English summary.
 
 The classification is intentionally band-based, not absolute. The chief-of-
-staff voice (see `agent/koala_manager.py:MANAGER_INSTRUCTIONS`) frames every
+staff voice (see `agent/axil_manager.py:MANAGER_INSTRUCTIONS`) frames every
 rep's number against the team benchmark — never as a judgment. "Alice's
 median is 28h vs team median 6h" is OK. "Alice is slow" is not.
 
@@ -498,12 +498,12 @@ async def find_at_risk_agents(
 
     # ── 7. Summary sentence ─────────────────────────────────────────────────
     if not at_risk:
-        summary = "No agents are showing flight-risk signals right now — team looks engaged."
+        summary = "No reps are showing flight-risk signals right now — team looks engaged."
     else:
         top = at_risk[0]
         top_reasons = "; ".join(top["reasons"])
         summary = (
-            f"{len(at_risk)} agent{'s' if len(at_risk) != 1 else ''} showing "
+            f"{len(at_risk)} rep{'s' if len(at_risk) != 1 else ''} showing "
             f"flight-risk signals; {top['name']} has the strongest "
             f"({top_reasons})."
         )

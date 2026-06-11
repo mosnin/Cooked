@@ -39,7 +39,7 @@ export interface DealChecklistItem {
 
 /**
  * Residential buyer flow. Offsets are *days from the closeDate*, so a negative
- * offset means "before closing". Items that happen early in escrow (earnest
+ * offset means "before closing". Items that happen early in legal (earnest
  * money, inspection) are pegged to today when closeDate is too far out — we
  * clamp any dueAt earlier than today so the list isn't born already overdue.
  */

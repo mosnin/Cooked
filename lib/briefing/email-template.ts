@@ -41,7 +41,7 @@ export interface BriefEmailHtmlParams {
  */
 export function briefEmailHtml(params: BriefEmailHtmlParams): string {
   const { brief, spaceSlug, briefDate, appOrigin, unsubscribeUrl, businessName } = params;
-  const deepLink = `${appOrigin}/s/${encodeURIComponent(spaceSlug)}/koala?brief=${encodeURIComponent(briefDate)}`;
+  const deepLink = `${appOrigin}/s/${encodeURIComponent(spaceSlug)}/axil?brief=${encodeURIComponent(briefDate)}`;
   const dateLine = formatDateLabel(briefDate);
   const subhead = brief.subheadline ? `<p style="margin:14px 0 0;font-size:14px;color:#6b7280;line-height:1.55">${esc(brief.subheadline)}</p>` : '';
   const footerName = esc(businessName ?? 'your workspace');

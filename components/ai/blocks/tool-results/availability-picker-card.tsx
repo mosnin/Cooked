@@ -4,7 +4,7 @@
  * AvailabilityPickerCard — renders the slots returned by the
  * `propose_demo_times` tool as a tappable day-by-day grid. Click a slot
  * → the workspace fires a "Schedule the demo at <slot>" prompt, which
- * Koala handles via the normal schedule_demo approval flow. No new
+ * Axil handles via the normal schedule_demo approval flow. No new
  * endpoint, no permission bypass.
  *
  * Slots arrive pre-formatted with `label` ("Tue, May 20 · 10:00 AM") so
@@ -28,7 +28,7 @@ export interface AvailabilityPickerCardProps {
   contactId?: string;
   propertyAddress?: string;
   durationMinutes: number;
-  /** Called with a pre-formatted prompt the workspace forwards to Koala
+  /** Called with a pre-formatted prompt the workspace forwards to Axil
    *  as the rep's next message. When omitted the card renders as
    *  read-only — slots become inert pills. */
   onSelectSlot?: (prompt: string) => void;
@@ -127,7 +127,7 @@ function SlotButton({
   const interactive = Boolean(onSelectSlot);
   const handleClick = () => {
     if (!onSelectSlot) return;
-    // Pre-format the prompt Koala will receive. Include enough context
+    // Pre-format the prompt Axil will receive. Include enough context
     // (contact, property) that the model doesn't need to re-ask. The
     // ISO timestamp is the load-bearing detail — schedule_demo parses it.
     const parts = ['Schedule the demo at', slot.label];

@@ -1,10 +1,10 @@
 -- DocumentEmbedding: add lexical search alongside the existing cosine path.
 --
 -- Why hybrid: pure semantic search loses to exact-string matches on
--- addresses ("123 Oak St"), MLS numbers, contact names, deal titles —
+-- addresses ("123 Oak St"), product SKUs, contact names, deal titles —
 -- the embedding squashes the literal token into a fuzzy region of vector
--- space, and "123 Oak St" returns "Oak St condo" before it returns the
--- actual address row. BM25 (Postgres tsvector + ts_rank_cd) gets the
+-- space, and "Acme Pro plan" returns a similar offering before it returns
+-- the actual row. BM25 (Postgres tsvector + ts_rank_cd) gets the
 -- exact match right; cosine gets the semantic match right. RRF
 -- (Reciprocal Rank Fusion) combines them without needing to normalize
 -- score scales.

@@ -22,7 +22,7 @@ V1 delivers the full lead-to-deal lifecycle: shareable intake form, AI lead scor
 
 ## Non Goals
 
-Multi-currency, MLS integration, document signing, email/SMS campaigns, property listing management, multi-user workspaces, white-label branding, public API, and team collaboration beyond team membership are explicitly out of scope for v1.
+Multi-currency, CRM integration, document signing, email/SMS campaigns, property listing management, multi-user workspaces, white-label branding, public API, and team collaboration beyond team membership are explicitly out of scope for v1.
 
 ## Technical Summary
 

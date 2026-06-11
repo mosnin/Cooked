@@ -231,10 +231,10 @@ export const slackSource: SignalGatherer = {
             subject: {
               id: `slack-dm-${ch.id}`,
               name: `DM from ${name}`,
-              href: `/koala/today`,
+              href: `/axil/today`,
             },
             evidence: `DM from ${name} at ${formatLocalTime(msg.ts)}.`,
-            draftedAction: { kind: 'open', href: `/koala/today` },
+            draftedAction: { kind: 'open', href: `/axil/today` },
           });
         } else if (mentionsRep(msg.text, repSlackId)) {
           const sender = userById.get(msg.user);
@@ -249,12 +249,12 @@ export const slackSource: SignalGatherer = {
             subject: {
               id: `slack-mention-${ch.id}-${msg.ts}`,
               name: `${name} in ${channelLabel}`,
-              href: `/koala/today`,
+              href: `/axil/today`,
             },
             evidence: snippet
               ? `${name} in ${channelLabel}: "${snippet}".`
               : `${name} mentioned you in ${channelLabel}.`,
-            draftedAction: { kind: 'open', href: `/koala/today` },
+            draftedAction: { kind: 'open', href: `/axil/today` },
           });
         }
       }

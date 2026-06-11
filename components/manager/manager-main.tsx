@@ -15,7 +15,7 @@ import { cn } from '@/lib/utils';
  *
  *   - `/manager` (the Koala chat home) → full-height, no padding box, so the
  *     workspace centers its own `max-w-3xl` column (identical to the rep
- *     `/s/[slug]/koala`).
+ *     `/s/[slug]/axil`).
  *   - every other manager page → the same `dashboard-content` padded, centered
  *     container the rep dashboard uses
  *     (`px-4 sm:px-6 md:px-10 lg:px-12 py-5 md:py-7`), so nothing touches the edge.

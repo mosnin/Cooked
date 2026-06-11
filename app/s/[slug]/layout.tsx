@@ -12,8 +12,8 @@ import { getManagerContext } from '@/lib/permissions';
 import { LiveNotifications } from '@/components/dashboard/live-notifications';
 import { PlatformBanner } from '@/components/platform-banner';
 import { CommandPalette } from '@/components/command-palette/command-palette';
-import { KoalaBar } from '@/components/koala/koala-bar';
-import { EmbedDetector } from '@/components/koala/embed-detector';
+import { AxilBar } from '@/components/axil/axil-bar';
+import { EmbedDetector } from '@/components/axil/embed-detector';
 import { LayoutShell } from '@/components/dashboard/layout-shell';
 import { KoalaSplash } from '@/components/dashboard/koala-splash';
 import { pickGreeting } from '@/lib/greetings';
@@ -280,7 +280,7 @@ export default async function DashboardLayout({
         </div>
       </SidebarCollapseProvider>
       <MobileNav slug={slug} isManager={isManager} />
-      <KoalaBar slug={slug} />
+      <AxilBar slug={slug} />
       <CommandPalette slug={slug} />
       {/* FirstPromoter attribution. FprScript loads fpr.js here (the dashboard
           context where ReferralTracker runs); without it, fpr('referral') would

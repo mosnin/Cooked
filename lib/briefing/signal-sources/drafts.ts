@@ -21,7 +21,7 @@
  *   - Standard draft, any tier:                0.83
  *
  * The brief shows the top drafts as REPLY cards; the rest stay in the
- * FocusCard queue on /koala/today. The two surfaces complement: the
+ * FocusCard queue on /axil/today. The two surfaces complement: the
  * brief is the morning curated view, the focus card is the working queue.
  */
 

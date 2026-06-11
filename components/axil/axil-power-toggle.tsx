@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * KoalaPowerToggle — the muzzle. A header control that shows whether the
+ * AxilPowerToggle — the muzzle. A header control that shows whether the
  * autonomous agent is running and lets the rep stop it in one tap.
  *
  * Wired to the existing /api/agent/settings endpoint (the `enabled` flag) —
@@ -29,7 +29,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 
-export function KoalaPowerToggle() {
+export function AxilPowerToggle() {
   const [enabled, setEnabled] = useState<boolean | null>(null);
   const [saving, setSaving] = useState(false);
   const [confirmPause, setConfirmPause] = useState(false);
@@ -58,14 +58,14 @@ export function KoalaPowerToggle() {
         body: JSON.stringify({ enabled: next }),
       });
       if (!res.ok) {
-        toast.error("Couldn't change Koala's status. Try again.");
+        toast.error("Couldn't change Axil's status. Try again.");
         return;
       }
       const data = (await res.json()) as { enabled: boolean };
       setEnabled(data.enabled);
-      toast.success(data.enabled ? 'Koala is running.' : 'Koala is paused. It won’t act until you resume it.');
+      toast.success(data.enabled ? 'Axil is running.' : 'Axil is paused. It won’t act until you resume it.');
     } catch {
-      toast.error("Couldn't reach Koala. Try again.");
+      toast.error("Couldn't reach Axil. Try again.");
     } finally {
       setSaving(false);
     }
@@ -89,8 +89,8 @@ export function KoalaPowerToggle() {
         type="button"
         onClick={handleClick}
         disabled={saving}
-        title={enabled ? 'Koala is running — click to pause' : 'Koala is paused — click to resume'}
-        aria-label={enabled ? 'Pause Koala' : 'Resume Koala'}
+        title={enabled ? 'Axil is running — click to pause' : 'Axil is paused — click to resume'}
+        aria-label={enabled ? 'Pause Axil' : 'Resume Axil'}
         className={cn(
           'inline-flex items-center gap-1.5 h-8 px-2.5 rounded-full border border-border/70 text-xs font-medium transition-colors disabled:opacity-50',
           enabled
@@ -109,15 +109,15 @@ export function KoalaPowerToggle() {
             )}
           />
         )}
-        <span className="hidden sm:inline">{enabled ? 'Koala on' : 'Paused'}</span>
+        <span className="hidden sm:inline">{enabled ? 'Axil on' : 'Paused'}</span>
       </button>
 
       <AlertDialog open={confirmPause} onOpenChange={setConfirmPause}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Pause Koala?</AlertDialogTitle>
+            <AlertDialogTitle>Pause Axil?</AlertDialogTitle>
             <AlertDialogDescription>
-              Koala stops acting on its own — no drafts, no follow-ups, no
+              Axil stops acting on its own — no drafts, no follow-ups, no
               automated work. Anything already waiting for your approval stays
               put. You can resume from the header anytime.
             </AlertDialogDescription>
@@ -130,7 +130,7 @@ export function KoalaPowerToggle() {
                 void persist(false);
               }}
             >
-              Pause Koala
+              Pause Axil
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

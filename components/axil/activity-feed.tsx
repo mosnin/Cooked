@@ -50,7 +50,7 @@ const ACTION_META: Record<string, { verb: string; icon: LucideIcon }> = {
   lead_routed_out: { verb: 'routed a contact to a teammate:', icon: ArrowRightLeft },
   lead_routed_in: { verb: 'received a contact from a teammate:', icon: ArrowRightLeft },
   // Task lifecycle (logged when a rep pauses/resumes/cancels/completes
-  // a Koala task). Phrased so the "I <verb> <target>" template still reads.
+  // a Axil task). Phrased so the "I <verb> <target>" template still reads.
   task_completed: { verb: 'marked a task done for', icon: CheckCircle2 },
   task_paused: { verb: 'paused a task for', icon: CheckCircle2 },
   task_cancelled: { verb: 'cancelled a task for', icon: CheckCircle2 },
@@ -164,7 +164,7 @@ export function ActivityFeed({ slug }: { slug: string }) {
         <div className="rounded-xl border border-dashed border-border/70 bg-muted/20 px-5 py-10 text-center">
           <p className="text-sm text-foreground">Quiet here.</p>
           <p className="text-xs text-muted-foreground mt-1">
-            When Koala acts, it&apos;ll show up here.
+            When Axil acts, it&apos;ll show up here.
           </p>
         </div>
       )}

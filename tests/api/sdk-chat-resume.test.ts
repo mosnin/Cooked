@@ -126,7 +126,7 @@ const ROW: PausedRow = {
   status: 'pending',
   expiresAt: new Date(Date.now() + 3600_000).toISOString(),
 };
-const SPACE = { id: 's_1', slug: 'jane', name: 'Jane Realty', ownerId: 'u_1' };
+const SPACE = { id: 's_1', slug: 'jane', name: 'Jane Sales', ownerId: 'u_1' };
 
 function queueRow(row: PausedRow | null) {
   tableQueue.AgentPausedRun = [{ data: row }];

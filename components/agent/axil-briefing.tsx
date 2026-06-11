@@ -29,7 +29,7 @@ interface BriefingData {
   isLoaded: boolean;
 }
 
-export function KoalaBriefing({ slug }: { slug: string }) {
+export function AxilBriefing({ slug }: { slug: string }) {
   const [data, setData] = useState<BriefingData>({
     priorityItems: [],
     generatedAt: null,
@@ -71,7 +71,7 @@ export function KoalaBriefing({ slug }: { slug: string }) {
     return () => controller.abort();
   }, []);
 
-  const agentHref = `/s/${slug}/koala`;
+  const agentHref = `/s/${slug}/axil`;
   const hasAnything = data.pendingDrafts > 0 || data.pendingQuestions > 0 || data.priorityItems.length > 0;
 
   if (!data.isLoaded) {
@@ -93,7 +93,7 @@ export function KoalaBriefing({ slug }: { slug: string }) {
         </div>
         <div className="min-w-0">
           <p className="text-sm font-medium">You&apos;re ahead of it</p>
-          <p className="text-xs text-muted-foreground mt-0.5">Nothing urgent on Koala&apos;s desk &mdash; pipeline looks healthy. I&apos;ll surface anything that needs you.</p>
+          <p className="text-xs text-muted-foreground mt-0.5">Nothing urgent on Axil&apos;s desk &mdash; pipeline looks healthy. I&apos;ll surface anything that needs you.</p>
         </div>
       </div>
     );
@@ -108,7 +108,7 @@ export function KoalaBriefing({ slug }: { slug: string }) {
             <Bot size={14} className="text-white" />
           </div>
           <div>
-            <p className="text-sm font-semibold text-orange-700 dark:text-orange-300">From Koala&apos;s desk</p>
+            <p className="text-sm font-semibold text-orange-700 dark:text-orange-300">From Axil&apos;s desk</p>
             {data.generatedAt && (
               <p className="text-[10px] text-orange-500/70 dark:text-orange-400/60">
                 Updated {timeAgo(data.generatedAt)}

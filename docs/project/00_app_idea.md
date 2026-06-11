@@ -6,7 +6,7 @@ Koala
 
 ## One Sentence Product Definition
 
-Koala is a real estate CRM for solo reps that turns a single intake link into qualified, AI-scored renter leads with a clean pipeline for follow-up, demos, and deals.
+Koala is a sales CRM for solo reps that turns a single intake link into qualified, AI-scored renter leads with a clean pipeline for follow-up, demos, and deals.
 
 ## Core User
 
@@ -108,7 +108,7 @@ Auth (Clerk), multi-step onboarding, public intake form, AI lead scoring with ex
 ## Non Goals
 
 - Multi-currency support
-- MLS integration
+- CRM integration
 - Document signing / transaction management
 - Email/SMS campaign automation
 - Property listing management

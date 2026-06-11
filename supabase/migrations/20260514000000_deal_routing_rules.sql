@@ -4,8 +4,8 @@
 -- The BP7a/b lead-routing engine picks a rep_member via a single global
 -- choice on the Team row: manual, round_robin, or score_based. That
 -- works for homogeneous teams, but teams with territorial or
--- specialty agents (rental vs buyer specialist, luxury vs starter, named
--- accounts) need to express preferences like "route every rental under
+-- specialty reps (inbound vs outbound specialist, enterprise vs SMB, named
+-- accounts) need to express preferences like "route every inbound lead under
 -- $3k to Sam" BEFORE the round-robin kicks in. This table lets a manager
 -- describe those preferences as an ordered list of rules.
 --
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS "DealRoutingRule" (
   -- lead. These map 1:1 onto columns that exist on Contact today so the
   -- engine can evaluate without joining: Contact.leadType (text),
   -- Contact.budget (double precision), and Contact.tags (text[]).
-  "leadType"               text,              -- e.g. 'buyer' | 'rental'; NULL = any
+  "leadType"               text,              -- e.g. 'buyer' | 'inbound'; NULL = any
   "minBudget"              numeric(14, 2),    -- inclusive; NULL = no min
   "maxBudget"              numeric(14, 2),    -- inclusive; NULL = no max
   "matchTag"               text,              -- Contact.tag that must be present; NULL = any

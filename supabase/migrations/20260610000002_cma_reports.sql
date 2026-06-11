@@ -1,12 +1,13 @@
--- CMA reports — a rep generates a Comparative Market Analysis from a
--- subject property + comparable Property rows already in their workspace, then
--- shares a public link with a seller.
+-- CmaReport — a rep generates a Competitive Pricing Analysis from a
+-- subject product + comparable Property rows already in their workspace, then
+-- shares a public link with a prospect or customer.
 --
 -- Fully in-house: comps are selected from the rep's own Property table (no
--- MLS, no external API). The computed analysis (subject snapshot, chosen comps,
--- price range, $/sqft) is frozen into `payload` at publish time so the public
--- page renders a stable report even if the underlying Property rows later
--- change or get deleted. shareToken gates the public /cma/[token] route the way
+-- external CRM data sources or enrichment APIs). The computed analysis
+-- (subject snapshot, chosen comps, price range, per-unit pricing) is frozen
+-- into `payload` at publish time so the public page renders a stable report
+-- even if the underlying Property rows later change or get deleted.
+-- shareToken gates the public /cma/[token] route the way
 -- PropertyPacket.token gates /packet/[token].
 --
 -- RLS is enabled with no policies: every read/write goes through the server

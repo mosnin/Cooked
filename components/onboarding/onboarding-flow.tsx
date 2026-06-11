@@ -426,7 +426,7 @@ export function OnboardingFlow({ defaultName, userImageUrl: _userImageUrl }: Onb
           title="What do you call your business?"
           subtitle="Goes on intake forms, emails, and your public page."
           label="Business or brand name"
-          placeholder="Sunset Realty"
+          placeholder="Sunset Sales"
           value={values.businessName}
           onChange={(v) => set('businessName', v)}
           onNext={goNext}
@@ -492,7 +492,7 @@ export function OnboardingFlow({ defaultName, userImageUrl: _userImageUrl }: Onb
         <TextStep
           title="What's your team called?"
           label="Team name"
-          placeholder="Sunset Realty Group"
+          placeholder="Sunset Sales Group"
           value={values.teamName}
           onChange={(v) => set('teamName', v)}
           onNext={goNext}

@@ -166,7 +166,7 @@ export function MobileNav({ slug, isManager = false, isManagerOnly = false }: Mo
   const base = `/s/${slug}`;
 
   // Koala workspace owns its own bottom area (sticky composer). Hide the bar there.
-  if (pathname?.startsWith(`${base}/koala`)) return null;
+  if (pathname?.startsWith(`${base}/axil`)) return null;
 
   const isOnManagerPage = pathname.startsWith('/manager');
   if (isManager && (isOnManagerPage || isManagerOnly)) {
@@ -180,7 +180,7 @@ export function MobileNav({ slug, isManager = false, isManagerOnly = false }: Mo
   const byHref = Object.fromEntries(
     mobileNavItems.map((item) => [item.href, item]),
   );
-  const koalaItem = byHref['/koala'];
+  const koalaItem = byHref['/axil'];
   const sideOrder = ['/contacts', '/deals', '/calendar', '/settings'] as const;
   const sideItems = sideOrder.map((href) => byHref[href]).filter(Boolean);
 

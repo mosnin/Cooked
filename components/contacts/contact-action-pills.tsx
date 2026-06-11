@@ -24,8 +24,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Mic } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { DURATION_BASE, EASE_OUT } from '@/lib/motion';
-import { MorningActionSheet } from '@/components/koala/morning-action-sheet';
-import type { MorningActionIntent } from '@/components/koala/morning-actions';
+import { MorningActionSheet } from '@/components/axil/morning-action-sheet';
+import type { MorningActionIntent } from '@/components/axil/morning-actions';
 import type {
   PeopleDetailAction,
   PeopleDetailActionIntent,
@@ -71,7 +71,7 @@ export function ContactActionPills({
     }
     if (action.intent === 'schedule-demo') {
       router.push(
-        `/s/${slug}/koala?prefill=${encodeURIComponent(
+        `/s/${slug}/axil?prefill=${encodeURIComponent(
           `Schedule a demo with ${contactName}.`,
         )}`,
       );
@@ -98,11 +98,11 @@ export function ContactActionPills({
             {a.label}
           </button>
         ))}
-        {/* "Log a demo" stays a Link — the /koala/log surface is a short
+        {/* "Log a demo" stays a Link — the /axil/log surface is a short
             recording flow, not a draft. Outline-shape to read as a peer to
             the secondary pills. */}
         <Link
-          href={`/s/${slug}/koala/log?personId=${contactId}`}
+          href={`/s/${slug}/axil/log?personId=${contactId}`}
           className={cn(
             'inline-flex items-center gap-1.5 h-9 rounded-md px-4 text-sm transition-colors',
             'border border-border/70 bg-background text-foreground hover:bg-muted/40',

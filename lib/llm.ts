@@ -18,7 +18,7 @@
  *   - **Audio only** — Whisper transcription, TTS, and the Realtime API —
  *     talks to the OpenAI API directly (`process.env.OPENAI_API_KEY`), because
  *     OpenRouter does not expose those endpoints. Those routes
- *     (`app/api/ai/transcribe|speak|realtime-session`, the Telnyx voice
+ *     (`app/api/ai/transcribe|speak|realtime-session`, the Twilio voice
  *     webhook) are the ONLY sanctioned direct-OpenAI callers. If you find a
  *     direct OpenAI client anywhere else doing text completion, it's a bug.
  *

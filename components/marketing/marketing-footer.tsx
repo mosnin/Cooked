@@ -87,7 +87,7 @@ export function MarketingFooter() {
               <BrandLogo className="h-5" alt="Koala" />
             </Link>
             <p className="mt-4 text-[13px] leading-snug text-muted-foreground max-w-[14ch]">
-              The agentic OS for real-estate agents and teams.
+              The agentic OS for sales agents and teams.
             </p>
           </div>
 

@@ -117,7 +117,7 @@ import { POST } from '@/app/api/manager/members/[id]/offboard/route';
 function makeTeam(overrides: Partial<Team> = {}): Team {
   return {
     id: 'brk_1',
-    name: 'Acme Realty',
+    name: 'Acme Sales',
     ownerId: 'u_owner',
     status: 'active',
     slaEnabled: false,

@@ -1,6 +1,6 @@
 /**
  * Phase 7 — tests for the inline draft-and-send endpoint that backs the
- * /koala home action sheet.
+ * /axil home action sheet.
  *
  * Two modes share the route: 'preview' (call OpenAI, return composed
  * subject+body) and 'send' (insert AgentDraft, call sendDraft, flip
@@ -66,7 +66,7 @@ vi.mock('@/lib/api-auth', () => ({
   requireAuth: vi.fn(async () => ({ userId: 'clerk_1' })),
 }));
 vi.mock('@/lib/space', () => ({
-  getSpaceForUser: vi.fn(async () => ({ id: 's_1', slug: 'jane', name: 'Jane Realty', ownerId: 'u1' })),
+  getSpaceForUser: vi.fn(async () => ({ id: 's_1', slug: 'jane', name: 'Jane Sales', ownerId: 'u1' })),
 }));
 vi.mock('@/lib/audit', () => ({ audit: vi.fn(async () => undefined) }));
 vi.mock('@/lib/logger', () => ({

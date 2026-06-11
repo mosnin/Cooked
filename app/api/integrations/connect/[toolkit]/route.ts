@@ -45,7 +45,7 @@ export async function POST(
   }
 
   // Some catalog entries (Follow-up Boss, Compass, BoomTown, kvCORE, Real
-  // Geeks) are real-estate apps Composio doesn't have a toolkit for yet.
+  // Geeks) are sales apps Composio doesn't have a toolkit for yet.
   // The UI renders them with a disabled "Coming soon" pill, so reaching
   // this path means a stale client. Refuse cleanly and name the app.
   if (COMING_SOON_TOOLKITS.has(toolkit)) {

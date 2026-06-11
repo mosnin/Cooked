@@ -1,7 +1,7 @@
 import { Bot } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-interface KoalaAvatarProps {
+interface AxilAvatarProps {
   size?: 'xs' | 'sm' | 'md' | 'lg';
   className?: string;
   pulse?: boolean;
@@ -14,7 +14,7 @@ const sizes = {
   lg: { container: 'w-10 h-10', icon: 18, rounded: 'rounded-xl' },
 };
 
-export function KoalaAvatar({ size = 'sm', className, pulse = false }: KoalaAvatarProps) {
+export function AxilAvatar({ size = 'sm', className, pulse = false }: AxilAvatarProps) {
   const s = sizes[size];
   return (
     <div className={cn(
@@ -29,12 +29,12 @@ export function KoalaAvatar({ size = 'sm', className, pulse = false }: KoalaAvat
   );
 }
 
-interface KoalaBadgeProps {
+interface AxilBadgeProps {
   label?: string;
   className?: string;
 }
 
-export function KoalaBadge({ label = 'Koala', className }: KoalaBadgeProps) {
+export function AxilBadge({ label = 'Axil', className }: AxilBadgeProps) {
   return (
     <span className={cn(
       'inline-flex items-center gap-1 text-[10px] font-semibold text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-900/50 rounded-full px-1.5 py-0.5',

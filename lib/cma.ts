@@ -2,7 +2,7 @@
  * CMA (Comparative Market Analysis) — pure logic.
  *
  * In-house only. Comps come from the rep's own Property rows (the same
- * source `find_comparable_properties` uses) — never MLS, never an external API.
+ * source `find_comparable_properties` uses) — never CRM, never an external API.
  *
  * `buildCma` selects comps for a subject (by beds/baths/price/area similarity),
  * computes the headline stats, and returns a frozen payload the public report

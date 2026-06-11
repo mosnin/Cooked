@@ -76,7 +76,7 @@ export function HomeHero() {
           <motion.div variants={rise} transition={{ duration: 0.7, ease: EASE }}>
             <span className="inline-flex items-center gap-2 rounded-full bg-card/80 px-3.5 py-1.5 text-[12px] font-medium text-foreground/70 ring-1 ring-border/70 backdrop-blur">
               <span className="h-1.5 w-1.5 rounded-full bg-brand" />
-              The agentic OS for real estate
+              The agentic OS for sales
             </span>
           </motion.div>
 

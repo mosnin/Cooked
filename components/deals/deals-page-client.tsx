@@ -178,7 +178,7 @@ export function DealsPageClient({
             {/* The conversation is the front door. Saying it out loud is
                 faster than any form, so it gets the primary pill. */}
             <Link
-              href={`/s/${slug}/koala?prefill=${encodeURIComponent("I'm adding a new deal — ")}`}
+              href={`/s/${slug}/axil?prefill=${encodeURIComponent("I'm adding a new deal — ")}`}
               className={PRIMARY_PILL}
             >
               Tell Koala →

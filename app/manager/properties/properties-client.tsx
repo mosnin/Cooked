@@ -360,7 +360,7 @@ function AddPropertyForm({ members, onCreated, onCancel }: AddPropertyFormProps)
         </div>
 
         <div className="grid grid-cols-2 gap-2">
-          <FormField label="MLS #">
+          <FormField label="CRM #">
             <Input
               type="text"
               value={v.mlsNumber}

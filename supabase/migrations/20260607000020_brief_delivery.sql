@@ -13,7 +13,7 @@
 --                              ... WHERE ... IS NULL RETURNING — the
 --                              row that gets the return value wins
 --                              the race and sends.
--- emailMessageId / smsMessageId  Resend / Telnyx IDs for ops + audit.
+-- emailMessageId / smsMessageId  Resend / Twilio IDs for ops + audit.
 -- briefDeliveryErrorCode      permanent-failure code (e.g.,
 --                              'email_bounced', 'sms_no_phone',
 --                              'sms_opt_out'). Tomorrow's brief reads

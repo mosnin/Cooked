@@ -26,7 +26,7 @@ interface PriorityData {
 }
 
 /**
- * "Today's focus" — Koala's curated picks of contacts to reach out to.
+ * "Today's focus" — Axil's curated picks of contacts to reach out to.
  * Backed by the AgentMemory PRIORITY_LIST written by the coordinator after
  * each run. Hides itself when there's no priority list yet (newly enabled
  * agent, or pre-first-run).

@@ -22,10 +22,10 @@ type Logo = { src: string; alt: string };
 const LOGOS: Logo[] = [
   { src: '/marketing/logos/lpt.png', alt: 'Luxe Properties' },
   { src: '/marketing/logos/compass.png', alt: 'Compass' },
-  { src: '/marketing/logos/exit.svg', alt: 'EXIT Realty' },
+  { src: '/marketing/logos/exit.svg', alt: 'EXIT Sales' },
   { src: '/marketing/logos/remax.png', alt: 'RE/MAX' },
-  { src: '/marketing/logos/source.png', alt: 'The Source Realty' },
-  { src: '/marketing/logos/team4.png', alt: 'Zander Realty Group' },
+  { src: '/marketing/logos/source.png', alt: 'The Source Sales' },
+  { src: '/marketing/logos/team4.png', alt: 'Zander Sales Group' },
 ];
 
 export function LogoMarquee() {

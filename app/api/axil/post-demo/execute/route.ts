@@ -1,5 +1,5 @@
 /**
- * POST /api/koala/post-demo/execute
+ * POST /api/axil/post-demo/execute
  *
  * Body: { proposals: { tool: string, args: Record<string, unknown> }[] }
  * Returns: { results: { tool, ok, summary, error? }[] }
@@ -19,7 +19,7 @@ import {
   POST_DEMO_TOOL_ALLOWLIST,
   POST_DEMO_INTEGRATION_SLUG_ALLOWLIST,
   doneVerbForToolkit,
-} from '@/lib/koala/post-demo';
+} from '@/lib/axil/post-demo';
 import { activeToolkits } from '@/lib/integrations/connections';
 import { composioConfigured, executeToolForEntity } from '@/lib/integrations/composio';
 import { logger } from '@/lib/logger';
@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
   const space = await getSpaceForUser(userId);
   if (!space) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
-  const { allowed } = await checkRateLimit(`koala:post-demo-exec:${userId}`, 30, 60);
+  const { allowed } = await checkRateLimit(`axil:post-demo-exec:${userId}`, 30, 60);
   if (!allowed) return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
 
   let body: ExecuteBody;
@@ -142,7 +142,7 @@ export async function POST(req: NextRequest) {
           arguments: p.args,
         });
         if (resp.successful) {
-          // Log a CalendarEventMirror row when Koala fires a calendar
+          // Log a CalendarEventMirror row when Axil fires a calendar
           // create through Composio. The rep's calendar is the
           // source of truth; this row is forensics — if they swap
           // providers later we still know what we put there.
@@ -187,7 +187,7 @@ export async function POST(req: NextRequest) {
         }
       }
     } catch (err) {
-      logger.error('[koala/post-demo/execute] tool threw', { tool: p.tool }, err);
+      logger.error('[axil/post-demo/execute] tool threw', { tool: p.tool }, err);
       results.push({
         tool: p.tool,
         ok: false,
@@ -253,7 +253,7 @@ async function logCalendarMirrorBestEffort(args: {
     });
   } catch (err) {
     logger.warn(
-      '[koala/post-demo/execute] mirror insert failed',
+      '[axil/post-demo/execute] mirror insert failed',
       { spaceId: args.spaceId },
       err,
     );

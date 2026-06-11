@@ -40,8 +40,8 @@ logger = structlog.get_logger()
 # this triggers, shrink the curated allowlist before raising the cap.
 MAX_TOTAL_TOOLS = 100
 
-# Number of native tools shipped on every Koala agent. Source of truth
-# is koala.py:make_koala_agent's base_tools list — bump this constant
+# Number of native tools shipped on every Axil agent. Source of truth
+# is axil.py:make_axil_agent's base_tools list — bump this constant
 # when adding/removing natives so the budget math stays honest.
 _NATIVE_TOOL_COUNT = 36
 
@@ -52,7 +52,7 @@ _SCHEMA_FETCH_TIMEOUT = 30.0
 # so curated and dispatched calls behave the same on slow upstreams.
 _EXEC_TIMEOUT = 120.0
 
-# Native tool names that ship on every Koala agent. Any curated tool
+# Native tool names that ship on every Axil agent. Any curated tool
 # whose lowercased slug would collide gets a toolkit prefix added
 # defensively. The xAI Chat Completions endpoint rejects the entire
 # request with `Duplicate function definition` when two functions share
@@ -60,7 +60,7 @@ _EXEC_TIMEOUT = 120.0
 # user-visible symptom is a chat that says "integrations connected"
 # then fails on the next turn with a 400 from the model provider.
 #
-# Keep this in sync with koala.py:make_koala_agent's base_tools list.
+# Keep this in sync with axil.py:make_axil_agent's base_tools list.
 _NATIVE_TOOL_NAMES = frozenset({
     "create_contact", "find_contacts", "get_contact_activity", "update_contact",
     "create_deal", "find_deals", "update_deal", "advance_deal_stage",

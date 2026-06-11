@@ -4,7 +4,7 @@
  * `<MarketingHeroHome>` — the opening hero for the logged-out homepage (`/`).
  *
  * Premium/luxury rebuild. The old hero was a full-bleed stock photo with a
- * dark overlay and an orange CTA pill — the real-estate-website cliché, and a
+ * dark overlay and an orange CTA pill — the sales-website cliché, and a
  * break of our own foreground-button rule. This replaces it with the move the
  * best software sites make: lead with the product.
  *

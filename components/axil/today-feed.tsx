@@ -12,7 +12,7 @@ import { FocusCard } from './focus-card';
 
 /**
  * The default surface — focus mode. One focal item at a time. The rep
- * lands on /koala and sees ONE thing waiting on them with Send / Edit /
+ * lands on /axil and sees ONE thing waiting on them with Send / Edit /
  * Hold for later. When that's done, the next one slides in. When the queue
  * clears, a calm acknowledgement.
  *

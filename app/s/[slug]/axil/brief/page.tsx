@@ -1,5 +1,5 @@
 /**
- * /koala/brief — the dedicated daily brief page.
+ * /axil/brief — the dedicated daily brief page.
  *
  * The brief's serif morning sentence IS the page's identity, so we omit
  * the shell's static title to avoid two serif h1s stacking. The greeting
@@ -13,12 +13,12 @@ import { notFound, redirect } from 'next/navigation';
 import { auth } from '@clerk/nextjs/server';
 import { getSpaceFromSlug } from '@/lib/space';
 import { supabase } from '@/lib/supabase';
-import { KoalaPageShell } from '@/components/koala/koala-page-shell';
-import { DailyBrief } from '@/components/koala/daily-brief';
+import { AxilPageShell } from '@/components/axil/axil-page-shell';
+import { DailyBrief } from '@/components/axil/daily-brief';
 
 export const dynamic = 'force-dynamic';
 
-export default async function KoalaBriefPage({
+export default async function AxilBriefPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
@@ -39,8 +39,8 @@ export default async function KoalaBriefPage({
   if (!spaceOwner) notFound();
 
   return (
-    <KoalaPageShell greeting="Today.">
+    <AxilPageShell greeting="Today.">
       <DailyBrief slug={slug} alwaysLive />
-    </KoalaPageShell>
+    </AxilPageShell>
   );
 }

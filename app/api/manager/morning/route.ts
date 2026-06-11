@@ -37,7 +37,7 @@
  * which is the worst kind of inconsistency.
  *
  * Auth: manager_owner or manager_admin. Rep-only members get 403 — they
- * have their own /koala morning story.
+ * have their own /axil morning story.
  */
 import { NextResponse } from 'next/server';
 import { requireManager } from '@/lib/permissions';

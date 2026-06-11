@@ -109,7 +109,7 @@ function composePrompt(ctx: ToolContext, opts: BuildOptions, snapshotBlock: stri
   });
 
   const lines: string[] = [
-    `You are Koala's assistant, an AI that helps real estate professionals run their pipeline.`,
+    `You are Koala's assistant, an AI that helps sales professionals run their pipeline.`,
     ``,
     `Workspace: "${ctx.space.name}"`,
     `Today: ${today}`,

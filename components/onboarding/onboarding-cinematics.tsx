@@ -35,7 +35,7 @@ const EASE = [0.22, 1, 0.36, 1] as const;
 
 // ── Act I: the cold open ────────────────────────────────────────────────────
 
-const INTRO_LINE = 'Introducing the future of real estate software.';
+const INTRO_LINE = 'Introducing the future of sales software.';
 
 // Timeline (ms). line → mark → blur out.
 const INTRO_TO_MARK = 2100;

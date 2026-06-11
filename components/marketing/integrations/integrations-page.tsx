@@ -37,7 +37,7 @@ const CATEGORY_ORDER: { key: IntegrationCategory; label: string }[] = [
   { key: 'docs', label: 'Docs & sheets' },
   { key: 'storage', label: 'Storage' },
   { key: 'crm', label: 'CRM' },
-  { key: 'real-estate', label: 'Real estate' },
+  { key: 'sales', label: 'Sales' },
   { key: 'docs-sign', label: 'Signing' },
   { key: 'tasks', label: 'Tasks' },
   { key: 'forms', label: 'Forms' },

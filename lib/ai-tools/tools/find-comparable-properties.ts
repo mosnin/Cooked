@@ -1,9 +1,9 @@
 /**
  * `find_comparable_properties` — search local Property rows in this workspace.
  *
- * Read-only. Honest about scope: this is NOT MLS. It searches Property rows
+ * Read-only. Honest about scope: this is NOT CRM. It searches Property rows
  * the rep has saved (their own listings, off-market notes, owned). If
- * MLS lookup is needed, that's a separate integration that doesn't exist yet.
+ * CRM lookup is needed, that's a separate integration that doesn't exist yet.
  *
  * Sort: when a price midpoint is computable from priceMin + priceMax (or one
  * of them), rank by ABS(price - midpoint). Otherwise default to recently
@@ -32,7 +32,7 @@ const parameters = z
       .optional()
       .describe("Property.listingStatus filter."),
   })
-  .describe('Find up to 6 saved properties matching the criteria. Local CRM only — no MLS.');
+  .describe('Find up to 6 saved properties matching the criteria. Local CRM only — no CRM.');
 
 interface PropertyMatch {
   id: string;
@@ -53,7 +53,7 @@ export const findComparablePropertiesTool = defineTool<typeof parameters, FindCo
   name: 'find_comparable_properties',
   riskLevel: 'safe',
   description:
-    'Search saved Property rows in this workspace by location, beds/baths, price range, status. Returns up to 6. Does NOT query MLS.',
+    'Search saved Property rows in this workspace by location, beds/baths, price range, status. Returns up to 6. Does NOT query CRM.',
   parameters,
   requiresApproval: false,
 

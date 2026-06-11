@@ -1,6 +1,6 @@
 export const metadata = {
   title: 'Terms of Service | Koala',
-  description: 'Terms of Service for Koala, a B2B SaaS agentic OS for real estate agents and teams.',
+  description: 'Terms of Service for Koala, a B2B SaaS agentic OS for sales agents and teams.',
 };
 
 export default function TermsPage() {
@@ -25,7 +25,7 @@ export default function TermsPage() {
         <ul className="mt-3 list-disc pl-5 text-sm text-muted-foreground space-y-2 leading-6">
           <li><strong className="text-foreground">&quot;Service&quot;</strong> means the Koala platform, including the web application at my.usekoala.com, all related APIs, integrations, AI features (including lead scoring, voice AI assistant, and MCP server integration), deal pipelines, demo scheduling, and documentation.</li>
           <li><strong className="text-foreground">&quot;User&quot;</strong> means any individual or entity that accesses or uses the Service, including Subscribers and Applicants.</li>
-          <li><strong className="text-foreground">&quot;Subscriber&quot;</strong> means a rep, team, or other entity that creates an account and subscribes to the Service to manage real estate operations, including intake forms, lead management, deal pipelines, and team team management.</li>
+          <li><strong className="text-foreground">&quot;Subscriber&quot;</strong> means a rep, team, or other entity that creates an account and subscribes to the Service to manage sales operations, including intake forms, lead management, deal pipelines, and team team management.</li>
           <li><strong className="text-foreground">&quot;Applicant&quot;</strong> means any individual who submits information through a Subscriber&apos;s intake forms or interacts with the Service on behalf of or at the direction of a Subscriber.</li>
           <li><strong className="text-foreground">&quot;Content&quot;</strong> means all data, text, files, images, and other materials uploaded, submitted, or generated through the Service.</li>
           <li><strong className="text-foreground">&quot;Subscriber Data&quot;</strong> means all Content that a Subscriber or their Applicants submit, upload, or generate through the Service, including lead information, deal data, demo schedules, and AI scoring results.</li>
@@ -72,7 +72,7 @@ export default function TermsPage() {
             <li>Reverse engineer, decompile, or disassemble any part of the Service.</li>
             <li>Use AI scoring outputs to make automated legal decisions regarding Applicants without human review.</li>
           </ul>
-          <p>4.3. <strong className="text-foreground">Fair Housing Compliance.</strong> Subscribers who are licensed real estate professionals must comply with all applicable fair housing laws. The Service must not be used to discriminate against any person based on race, color, religion, sex, national origin, familial status, disability, or any other protected class.</p>
+          <p>4.3. <strong className="text-foreground">Fair Housing Compliance.</strong> Subscribers who are licensed sales professionals must comply with all applicable fair housing laws. The Service must not be used to discriminate against any person based on race, color, religion, sex, national origin, familial status, disability, or any other protected class.</p>
         </div>
       </section>
 

@@ -46,7 +46,7 @@ const STRICT_DIRS = ['components/onboarding'];
  */
 const STRICT_DIRS_TODO = [
   'components/agent',     // mostly leaf files (NAMED_LEAF_FILES) — audit + tag the rest
-  'components/koala',    // koala-bar / koala-avatar / etc. — leaf files; tag the rest
+  'components/axil',    // koala-bar / koala-avatar / etc. — leaf files; tag the rest
   'components/contacts',  // KOALA_PILL use site lives here; audit other orange usages
   'components/leads',     // lead-warm indicator usage — leaf file candidates
   'components/dashboard',
@@ -61,14 +61,14 @@ const STRICT_DIRS_TODO = [
  * the brand orange contexts.
  */
 const NAMED_LEAF_FILES = new Set<string>([
-  // KOALA_AVATAR + KOALA_WORDMARK_INLINE + KoalaAuthoredDot all live here
-  'components/agent/koala-authored.tsx',
+  // KOALA_AVATAR + KOALA_WORDMARK_INLINE + AxilAuthoredDot all live here
+  'components/agent/axil-authored.tsx',
   // AGENT_BADGE
   'components/agent/agent-generated-badge.tsx',
   // LOGO — the brand mark itself
   'components/ui/brand-logo.tsx',
   // KOALA_AVATAR widget
-  'components/agent/koala-avatar.tsx',
+  'components/agent/axil-avatar.tsx',
   // ACTIVITY_BAR + LEAD_WARM — the score/progress bar fills
   'components/agent/lead-score-bar.tsx',
   // The KOALA_PILL constant lives in typography.ts
@@ -160,8 +160,8 @@ describe('STYLESHEET enforcement — brand orange is scarce', () => {
         `${violations.length} orange usage(s) on STRICT product chrome without a brandOrange tag:\n\n` +
         `${formatted}${extra}\n\n` +
         `Either wrap with brandOrange('<CONTEXT>', '...') from lib/colors.ts,\n` +
-        `use one of the five named primitives (KoalaAuthoredDot,\n` +
-        `KoalaWordmarkInline, AgentGeneratedBadge, etc.), or use\n` +
+        `use one of the five named primitives (AxilAuthoredDot,\n` +
+        `AxilWordmarkInline, AgentGeneratedBadge, etc.), or use\n` +
         `KOALA_PILL from lib/typography.ts. Adding a sixth named context\n` +
         `requires deleting one of the existing five.\n`,
       );

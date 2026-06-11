@@ -9,6 +9,7 @@ ROOT = pathlib.Path('/home/user/Cooked')
 # ---- Protected tokens: replace with sentinels first, restore at the end ----
 # These must NOT be touched by any koala->axil rule.
 PROTECT = [
+    '/manager/koala',        # un-renamed manager route — must stay
     'KOALA_AVATAR',          # lib/colors.ts BrandOrangeContext (config)
     'KOALA_BAR_MAX',         # lib/geometry.ts layout const (config)
     'koalaErrorMessage',     # lib/ai-tools/koala-voice.ts (out of scope export)
@@ -17,8 +18,11 @@ PROTECT = [
     'koala-cursor',          # global CSS class
     'koala-bar-input',       # internal DOM id, unreferenced
     'koala.bar.',            # sessionStorage key prefix
+    'usekoala',              # brand domain (usekoala.com)
+    'koala-diagram-shell',   # marketing component (out of scope)
     "id: 'koala'",           # inngest product id
     "'koala'",               # agentType enum value literal
+    "landKoalaError",        # internal helper wrapping koalaErrorMessage (keep)
 ]
 
 def protect(text):
@@ -58,19 +62,26 @@ PATHSEG = {
     '@/components/agent/koala-avatar': '@/components/agent/axil-avatar',
     '@/components/agent/koala-briefing': '@/components/agent/axil-briefing',
     '@/components/ui/koala-prompt-box': '@/components/ui/axil-prompt-box',
+    # relative imports of renamed agent files (e.g. agent-mission-control)
+    './koala-assessment-card': './axil-assessment-card',
+    './koala-authored': './axil-authored',
+    './koala-avatar': './axil-avatar',
+    './koala-briefing': './axil-briefing',
     # remaining (non-renamed) files in the moved dir: just the dir prefix
     '@/components/koala/': '@/components/axil/',
+    # lib/koala moved to lib/axil
+    '@/lib/koala/': '@/lib/axil/',
+    "'@/lib/koala'": "'@/lib/axil'",
     # API + app route imports in tests
     '@/app/api/koala/': '@/app/api/axil/',
 }
 
-# route + api string-literal path replacements (the dirs physically moved)
-ROUTE = {
-    '/api/koala/': '/api/axil/',
-    '/s/${slug}/koala': '/s/${slug}/axil',
-    '/s/[slug]/koala': '/s/[slug]/axil',
-    'http://localhost/api/koala/': 'http://localhost/api/axil/',
-}
+# Route/path literal replacement: any remaining '/koala' segment is a rep
+# route or api path that physically moved to '/axil'. '/manager/koala' is in
+# PROTECT (sentinel) so it is never seen here. Import paths (@/components/koala,
+# @/lib/koala) are converted by PATHSEG first.
+def route_fix(text):
+    return text.replace('/koala', '/axil')
 
 # Persona user-visible strings / words. Applied last as a general Koala->Axil,
 # but ONLY after the targeted rules above, and only in files we deem persona.
@@ -80,12 +91,11 @@ def transform(path: pathlib.Path, persona_prose: bool):
     raw = path.read_text()
     text = protect(raw)
 
-    # route/api literals first (longest keys first)
-    for k in sorted(ROUTE, key=len, reverse=True):
-        text = text.replace(k, ROUTE[k])
-    # import path segments (longest first so specific file paths win over dir)
+    # import path segments first (longest first so specific file paths win over dir)
     for k in sorted(PATHSEG, key=len, reverse=True):
         text = text.replace(k, PATHSEG[k])
+    # then any remaining /koala route/api literal -> /axil
+    text = route_fix(text)
     # PascalCase identifiers (longest first)
     for ident in sorted(PASCAL, key=len, reverse=True):
         text = re.sub(r'\b'+ident+r'\b', 'Axil'+ident[5:], text)

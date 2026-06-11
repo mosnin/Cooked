@@ -230,9 +230,9 @@ export function AIProfileForm({ slug: _slug, spaceId }: AIProfileFormProps) {
         </div>
       </div>
 
-      {/* ── 2. Real estate focus ──────────────────────────────────── */}
+      {/* ── 2. Sales focus ──────────────────────────────────── */}
       <div className="space-y-3">
-        <p className={SECTION_LABEL}>Your real estate focus</p>
+        <p className={SECTION_LABEL}>Your sales focus</p>
 
         <div className="space-y-1.5">
           <Label className="text-[12.5px] font-medium text-foreground">Specialties</Label>
@@ -251,7 +251,7 @@ export function AIProfileForm({ slug: _slug, spaceId }: AIProfileFormProps) {
 
         <div className="space-y-1.5">
           <Label htmlFor="yearsExperience" className="text-[12.5px] font-medium text-foreground">
-            Years in real estate
+            Years in sales
           </Label>
           <Input
             id="yearsExperience"

@@ -1,13 +1,13 @@
 /**
- * POST /api/koala/post-demo
+ * POST /api/axil/post-demo
  *
  * Body: { transcript: string, contextHint?: { personId?, dealId? } }
  * Returns: { proposals: ProposedAction[] }
  *
  * The rep records a 30-second demo debrief; the client transcribes
- * it via /api/koala/transcribe; this route turns the transcript into a
+ * it via /api/axil/transcribe; this route turns the transcript into a
  * stack of intended tool calls (NOT executed) for the rep to approve
- * in one tap. Execution happens via /api/koala/post-demo/execute once
+ * in one tap. Execution happens via /api/axil/post-demo/execute once
  * the rep commits.
  */
 import { NextRequest, NextResponse } from 'next/server';
@@ -20,7 +20,7 @@ import {
   attachHumanSummaries,
   loadPostDemoIntegrationTools,
   proposeActions,
-} from '@/lib/koala/post-demo';
+} from '@/lib/axil/post-demo';
 import { supabase } from '@/lib/supabase';
 import { logger } from '@/lib/logger';
 
@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
   const space = await getSpaceForUser(userId);
   if (!space) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
-  const { allowed } = await checkRateLimit(`koala:post-demo:${userId}`, 20, 60);
+  const { allowed } = await checkRateLimit(`axil:post-demo:${userId}`, 20, 60);
   if (!allowed) return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
 
   let body: PostDemoBody;
@@ -91,7 +91,7 @@ export async function POST(req: NextRequest) {
     const enriched = await attachHumanSummaries(supabase, space.id, proposals);
     return NextResponse.json({ proposals: enriched });
   } catch (err) {
-    logger.error('[koala/post-demo] orchestrator failed', { userId, spaceId: space.id }, err);
+    logger.error('[axil/post-demo] orchestrator failed', { userId, spaceId: space.id }, err);
     return NextResponse.json({ error: 'Orchestrator failed' }, { status: 500 });
   }
 }

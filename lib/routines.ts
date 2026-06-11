@@ -37,7 +37,7 @@ export const ROUTINE_MAX_DAY_OF_MONTH = 28;
 /**
  * Structured provenance for runs the rep did not initiate by chat.
  * Currently only `composio_trigger` exists; the kind discriminator is
- * here so future inbound paths (calendar webhook, MLS push, etc.) can
+ * here so future inbound paths (calendar webhook, CRM push, etc.) can
  * layer on the same column without a schema change.
  *
  * The orchestrator stashes this on AgentContext; the drafts tool writes

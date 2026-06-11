@@ -5,7 +5,7 @@ import { ArrowLeft } from 'lucide-react';
 import { getSpaceFromSlug } from '@/lib/space';
 import { supabase } from '@/lib/supabase';
 import { cn } from '@/lib/utils';
-import { KoalaPageShell } from '@/components/koala/koala-page-shell';
+import { AxilPageShell } from '@/components/axil/axil-page-shell';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -92,7 +92,7 @@ export default async function AgentTasksPage({
           <h1 className="text-xl font-semibold">Something went wrong</h1>
           <p className="text-sm text-muted-foreground">We couldn&apos;t load your tasks. This is usually temporary.</p>
           <a
-            href={`/s/${slug}/koala/tasks`}
+            href={`/s/${slug}/axil/tasks`}
             className="inline-block px-4 py-2 text-sm font-medium rounded-md bg-primary text-primary-foreground hover:bg-primary/90"
           >
             Try again
@@ -105,7 +105,7 @@ export default async function AgentTasksPage({
   const taskList = (tasks ?? []) as AgentTask[];
 
   return (
-    <KoalaPageShell
+    <AxilPageShell
       greeting="Tasks."
       title="Agent Tasks"
       subtitle="Long-running goals Koala is working on."
@@ -113,13 +113,13 @@ export default async function AgentTasksPage({
       {/* Back-link + cross-link sit inside children so the shell header stays pure. */}
       <div className="flex items-center justify-between">
         <Link
-          href={`/s/${slug}/koala`}
+          href={`/s/${slug}/axil`}
           className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft size={12} /> Koala
         </Link>
         <Link
-          href={`/s/${slug}/koala/approvals`}
+          href={`/s/${slug}/axil/approvals`}
           className="text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
           Pending approvals →
@@ -143,7 +143,7 @@ export default async function AgentTasksPage({
             return (
               <li key={task.id}>
                 <Link
-                  href={`/s/${slug}/koala/tasks/${task.id}`}
+                  href={`/s/${slug}/axil/tasks/${task.id}`}
                   className="flex items-start gap-3 py-4 hover:bg-muted/30 transition-colors -mx-2 px-2 rounded-md"
                 >
                   {/* Status badge */}
@@ -167,6 +167,6 @@ export default async function AgentTasksPage({
           })}
         </ul>
       )}
-    </KoalaPageShell>
+    </AxilPageShell>
   );
 }

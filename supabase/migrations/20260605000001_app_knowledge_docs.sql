@@ -91,7 +91,7 @@ Seller deals support listing agreements, seller disclosures, comparative market 
 To upload, go to the deal detail page and click the Documents tab. Drag a file onto the drop zone or click Choose file.'),
 
 ('properties', 'How properties work',
-'Properties are real estate listings linked to your deals. They store address, list price, beds, baths, square footage, and listing status.
+'Properties are sales listings linked to your deals. They store address, list price, beds, baths, square footage, and listing status.
 To add a property, create a new deal — properties are created as part of the deal flow. Click Add property in the sidebar under Properties, which takes you to the new deal form.
 To view all properties, click Properties in the sidebar.
 Commission reports and year-to-date earnings are under Properties → Commissions in the sidebar.'),

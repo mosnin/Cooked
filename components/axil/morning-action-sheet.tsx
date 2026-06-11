@@ -132,7 +132,7 @@ export function MorningActionSheet({ slug, intent, context, onSent, onCancel }: 
     const prefill = draft.subject
       ? `Subject: ${draft.subject}\n\n${draft.body}`
       : draft.body;
-    router.push(`/s/${slug}/koala?prefill=${encodeURIComponent(prefill)}`);
+    router.push(`/s/${slug}/axil?prefill=${encodeURIComponent(prefill)}`);
   }
 
   return (
@@ -191,7 +191,7 @@ export function MorningActionSheet({ slug, intent, context, onSent, onCancel }: 
             </button>
             <button
               type="button"
-              onClick={() => router.push(`/s/${slug}/koala`)}
+              onClick={() => router.push(`/s/${slug}/axil`)}
               className="inline-flex h-9 items-center rounded-full border border-border/70 bg-background px-4 text-sm hover:bg-muted/40"
             >
               Open chat
@@ -255,7 +255,7 @@ export function MorningActionSheet({ slug, intent, context, onSent, onCancel }: 
       )}
 
       {/* The win moment — the same surface that fired the send transforms in
-          place into one calm sentence in Koala's voice. The component owns
+          place into one calm sentence in Axil's voice. The component owns
           the dwell + dissolve and tells us when to collapse the parent. */}
       <AnimatePresence>
         {phase === 'celebrating' && celebrationKind && (

@@ -1,5 +1,5 @@
 /**
- * Generates the /koala home sentence with OpenAI.
+ * Generates the /axil home sentence with OpenAI.
  *
  * The deterministic ladder in `lib/morning-story.ts` still ships as fallback
  * — it runs on the client with the API response. This module's job is to
@@ -58,7 +58,7 @@ function hasNamedSubject(s: MorningSummary): boolean {
 }
 
 const SYSTEM_PROMPT =
-  "Compose ONE sentence as Koala, the AI assistant for a real-estate CRM. " +
+  "Compose ONE sentence as Koala, the AI assistant for a sales CRM. " +
   "Names subjects, not counts. Direct, warm, no marketing copy. " +
   "Return only the sentence, nothing else.";
 

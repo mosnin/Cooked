@@ -43,7 +43,7 @@ export function FortitudoFooter() {
                 <img src="/logo-white.png" alt="Koala" className="block h-5 w-auto" />
               </Link>
               <p className="max-w-xs text-sm text-white/50">
-                The agentic OS for real-estate agents and teams. The
+                The agentic OS for sales agents and teams. The
                 busywork runs itself, so the hours go to closing.
               </p>
             </div>

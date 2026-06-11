@@ -1,10 +1,10 @@
 /**
- * GET /api/koala/approvals
+ * GET /api/axil/approvals
  *
  * Returns the list of AgentTask rows that are paused awaiting human
  * approval, for the caller's space. Mirrors the query that powers
- * `/s/[slug]/koala/approvals/page.tsx` so the slide-over pill in the
- * Koala header can render the same data without a route change.
+ * `/s/[slug]/axil/approvals/page.tsx` so the slide-over pill in the
+ * Axil header can render the same data without a route change.
  *
  * Response: { count: number, tasks: ApprovalTask[] }
  */
@@ -43,7 +43,7 @@ export async function GET() {
     .limit(50);
 
   if (error) {
-    console.error('[api/koala/approvals] query error:', error);
+    console.error('[api/axil/approvals] query error:', error);
     return NextResponse.json({ error: 'Could not load approvals' }, { status: 500 });
   }
 

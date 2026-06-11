@@ -1,7 +1,7 @@
 /**
  * GET /api/agent/morning
  *
- * The composed morning story for the /koala home. Returns counts AND named
+ * The composed morning story for the /axil home. Returns counts AND named
  * subjects so the brand voice can say "The Chen deal hasn't moved in 14
  * days" instead of just "1 deal is stuck." Specific over generic. Names
  * over counts. The home's job is to be the deepest surface, not the

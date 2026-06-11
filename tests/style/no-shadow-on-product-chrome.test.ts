@@ -16,7 +16,7 @@
  *
  * Phase 1 (this commit): only `components/onboarding` is in the strict
  * zone. Subsequent phases promote `components/agent`, then
- * `components/koala`, then the per-area dirs.
+ * `components/axil`, then the per-area dirs.
  *
  * Why a vitest test, not an ESLint rule. A focused fixture is faster
  * to maintain, runs in the same CI as everything else, and produces a
@@ -41,7 +41,7 @@ const STRICT_DIRS = [
   // These are the two most brand-heavy dirs — locking them paper-flat
   // is the highest-value strict promotion.
   'components/agent',
-  'components/koala',
+  'components/axil',
 ];
 
 /**
@@ -77,7 +77,7 @@ const SHADOW_ALLOWLIST = new Set<string>([
   // The docked Koala composer/bar — a floating surface over page
   // content (backdrop-blur + lift), same class as a toast/dialog.
   // The floating mic pill and recording state share the lift.
-  'components/koala/koala-bar.tsx',
+  'components/axil/axil-bar.tsx',
 ]);
 
 function collectFiles(dir: string): string[] {

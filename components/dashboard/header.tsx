@@ -37,7 +37,7 @@ import { useSidebarCollapsed } from '@/components/dashboard/sidebar-collapse';
 import { NotificationCenter } from './notification-center';
 import { NotificationBell } from '@/components/manager/notification-bell';
 import { ShareLinksMenu } from './share-links-menu';
-import { KoalaPowerToggle } from '@/components/koala/koala-power-toggle';
+import { AxilPowerToggle } from '@/components/axil/axil-power-toggle';
 import { getBreadcrumbLabel } from '@/lib/breadcrumb-routes';
 
 // Manager mobile nav is sourced from the SINGLE source of truth shared with the
@@ -117,7 +117,7 @@ export function Header({ slug, spaceId, spaceName, title, isManager = false, isM
   const { theme, toggleTheme } = useTheme();
   const isOnManagerPage = pathname.startsWith('/manager');
   const showManagerMobileNavOnly = isManager && isOnManagerPage;
-  const isOnKoala = pathname.startsWith(`${base}/koala`);
+  const isOnKoala = pathname.startsWith(`${base}/axil`);
   const { user } = useUser();
   // Admin console link — DB platformRole (server prop) OR Clerk metadata, so
   // an admin set either way sees it. Matches the desktop sidebar.
@@ -250,7 +250,7 @@ export function Header({ slug, spaceId, spaceName, title, isManager = false, isM
                 <>
                   {/* Primary nav ALWAYS renders. The rep must be able to
                       reach any destination from any route — the previous
-                      drawer hid the nav entirely on /koala, which left them
+                      drawer hid the nav entirely on /axil, which left them
                       stranded with only chat history.
 
                       Uses the SAME SidebarNavItem the desktop sidebar
@@ -279,7 +279,7 @@ export function Header({ slug, spaceId, spaceName, title, isManager = false, isM
                   </div>
 
                   {/* Chat history — animates in/out below the primary nav
-                      when the route enters/leaves /koala. Same motion
+                      when the route enters/leaves /axil. Same motion
                       params as the desktop sidebar's koala section so the
                       app feels coherent across viewports. */}
                   <AnimatePresence initial={false} mode="wait">
@@ -515,7 +515,7 @@ export function Header({ slug, spaceId, spaceName, title, isManager = false, isM
           lives on the sidebar's pill (and ⌘K) so the header doesn't carry a
           duplicate trigger. */}
       <div className="flex items-center gap-1.5">
-        {slug && <KoalaPowerToggle />}
+        {slug && <AxilPowerToggle />}
         {slug && !isOnManagerPage && <ShareLinksMenu slug={slug} />}
         {slug && <NotificationCenter slug={slug} spaceId={spaceId} />}
         {isManagerOnly && !slug && <NotificationBell />}

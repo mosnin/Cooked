@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * The one Koala-voiced sentence the rep sees AFTER an approval lands.
+ * The one Axil-voiced sentence the rep sees AFTER an approval lands.
  *
  * Three surfaces consume this — the morning home's MorningActionSheet, the
  * agent drafts inbox, and the chat permission prompt. They all hand in a
@@ -16,7 +16,7 @@
  *   footnote. The fade-out collapses the height to 0 so the surrounding
  *   layout reflows cleanly.
  * - No icons. No checkmark. The sentence IS the celebration.
- * - Tasteful 4px slide-in from the left as the line appears — Koala
+ * - Tasteful 4px slide-in from the left as the line appears — Axil
  *   pausing to look the rep in the eye, not a slot machine spin.
  */
 import { useEffect } from 'react';
@@ -108,7 +108,7 @@ export function approvalKindForTool(toolName: string): ApprovalKind | null {
  *
  * Decisions worth defending:
  * - The two-thought rhythm ("Sent. I'll watch for a reply.") — the first
- *   word names what just happened; the second sentence names what Koala
+ *   word names what just happened; the second sentence names what Axil
  *   does next. Two short thoughts, one continuous breath.
  * - `person-hot` / `person-cold` name the direction the rep just fired.
  *   The rep already knows which verb they tapped; the celebration

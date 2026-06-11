@@ -2,7 +2,7 @@
  * Central registry of tools available to the on-demand agent loop.
  *
  * Post-cutover the only remaining surface that uses this registry is the
- * post-demo proposal-execute path (`app/api/koala/post-demo/execute/route.ts`)
+ * post-demo proposal-execute path (`app/api/axil/post-demo/execute/route.ts`)
  * — it looks up tools by name and runs them imperatively without a model
  * in the loop. The chat itself goes through the SDK's own registry built
  * inside `lib/ai-tools/sdk-chat.ts`.

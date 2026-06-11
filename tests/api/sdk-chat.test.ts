@@ -81,7 +81,7 @@ vi.mock('@/lib/supabase', () => {
 vi.mock('@/lib/ai-tools/context', () => ({
   resolveToolContext: vi.fn(async () => ({
     userId: 'user_clerk_123',
-    space: { id: 's_1', slug: 'jane', name: 'Jane Realty', ownerId: 'u_1' },
+    space: { id: 's_1', slug: 'jane', name: 'Jane Sales', ownerId: 'u_1' },
     signal: new AbortController().signal,
   })),
 }));

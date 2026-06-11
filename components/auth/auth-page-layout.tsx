@@ -50,7 +50,7 @@ export function AuthPageLayout({ children, heading, subheading, variant: _varian
 
         <div className="relative z-10">
           <p className="font-brand text-xs uppercase tracking-[0.25em] text-brand">
-            The agentic OS for real estate
+            The agentic OS for sales
           </p>
           <h2 className="font-brand mt-4 text-4xl leading-tight tracking-tight text-foreground">
             I keep your day moving, so you don&apos;t have to.

@@ -1,5 +1,5 @@
 /**
- * /koala/today — redirects to /koala/brief.
+ * /axil/today — redirects to /axil/brief.
  *
  * The old "full day" dashboard stacked seven equal-weight panels with no
  * focal element — the Jobs-lens audit scored it 1/5 on hierarchy and
@@ -17,11 +17,11 @@
 
 import { redirect } from 'next/navigation';
 
-export default async function KoalaTodayRedirect({
+export default async function AxilTodayRedirect({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  redirect(`/s/${slug}/koala/brief`);
+  redirect(`/s/${slug}/axil/brief`);
 }

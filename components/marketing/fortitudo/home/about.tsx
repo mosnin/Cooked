@@ -34,7 +34,7 @@ export function About() {
           <div>
             <p className="font-brand text-xs uppercase tracking-[0.25em] text-brand">Why Koala</p>
             <h2 className="font-brand mt-3 text-3xl text-foreground sm:text-4xl lg:text-5xl">
-              Real estate, working the way the rest of the world{' '}
+              Sales, working the way the rest of the world{' '}
               <span className="text-gradient-brand">already does.</span>
             </h2>
             <p className="mt-5 text-lg text-foreground/65">

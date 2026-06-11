@@ -75,7 +75,7 @@ import type { ToolContext } from '@/lib/ai-tools/types';
 function makeCtx(): ToolContext {
   return {
     userId: 'user_1',
-    space: { id: 'space_1', slug: 'jane', name: 'Jane Realty', ownerId: 'u1' },
+    space: { id: 'space_1', slug: 'jane', name: 'Jane Sales', ownerId: 'u1' },
     signal: new AbortController().signal,
   };
 }

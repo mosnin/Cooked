@@ -18,7 +18,7 @@
  * Persistence:
  *   - End of stage 2: `save_profile` + `create_space`. Slug is committed.
  *   - End of stages 3, 4, 5: `save_rep_profile` upsert (cumulative).
- *   - End of stage 6: `complete` → redirect to /s/{slug}/koala.
+ *   - End of stage 6: `complete` → redirect to /s/{slug}/axil.
  *
  * Refresh recovery is intentionally minimal in Phase 1 — if the rep
  * bails mid-flow they re-enter stage 1 (their workspace persists). Resume
@@ -65,7 +65,7 @@ const CLIENT_TYPE_OPTIONS: { value: string; label: string }[] = [
 
 const LEAD_SOURCE_OPTIONS: { value: string; label: string; icon?: string }[] = [
   { value: 'sphere', label: 'Sphere & referrals' },
-  { value: 'zillow', label: 'Zillow' },
+  { value: 'linkedin', label: 'LinkedIn' },
   { value: 'facebook', label: 'Facebook', icon: '/integrations/facebook.svg' },
   { value: 'instagram', label: 'Instagram', icon: '/integrations/instagram.svg' },
   { value: 'linkedin', label: 'LinkedIn', icon: '/integrations/linkedin.svg' },
@@ -257,7 +257,7 @@ export function OnboardingRep({ defaultName }: Props) {
   //
   // Team owners take a different terminal step. The quick path had been
   // offering "team_owner" as a role but then completing as `accountType:
-  // 'rep'` and routing to /s/{slug}/koala — silently dropping the user
+  // 'rep'` and routing to /s/{slug}/axil — silently dropping the user
   // who said they ran a team onto the solo-rep dashboard, with no
   // Team row ever created. Now: when role is team_owner, complete
   // as `accountType: 'both'`, call /api/manager/create with the workspace
@@ -310,7 +310,7 @@ export function OnboardingRep({ defaultName }: Props) {
       if (!completeRes.ok) throw new Error('complete');
 
       toast.success("You're in. Koala is ready.");
-      router.push(`/s/${slug}/koala`);
+      router.push(`/s/${slug}/axil`);
     } catch {
       setError("Couldn't finish setup — usually temporary.");
       setSubmitting(false);
@@ -501,7 +501,7 @@ function StageWhoYouAre(props: {
             autoComplete="organization"
             value={props.businessName}
             onChange={(e) => props.onChangeBusinessName(e.target.value)}
-            placeholder="Coastal Realty"
+            placeholder="Coastal Sales"
             className="w-full rounded-lg border border-border bg-background px-3.5 py-2.5 text-base focus:outline-none focus:ring-2 focus:ring-ring"
           />
         </Section>
@@ -617,7 +617,7 @@ function StageWhoYouServe(props: {
           onChange={(e) => props.onChangeVoiceGuidance(e.target.value)}
           rows={3}
           maxLength={500}
-          placeholder='e.g. "Never push for a demo on the first message. Always sign off as Sarah from Coastal Realty."'
+          placeholder='e.g. "Never push for a demo on the first message. Always sign off as Sarah from Coastal Sales."'
           className="w-full rounded-lg border border-border bg-background px-3.5 py-2.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-ring"
         />
       </Section>

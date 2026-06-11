@@ -2,7 +2,7 @@ import { notFound, redirect } from 'next/navigation';
 import { auth } from '@clerk/nextjs/server';
 import { getSpaceFromSlug } from '@/lib/space';
 import { supabase } from '@/lib/supabase';
-import { KoalaWorkspace } from '@/components/koala/koala-workspace';
+import { AxilWorkspace } from '@/components/axil/axil-workspace';
 import type { Conversation } from '@/lib/types';
 import type { MessageBlock } from '@/lib/ai-tools/blocks';
 import { composioConfigured } from '@/lib/integrations/composio';
@@ -18,7 +18,7 @@ import {
 // across navigations and the workspace ends up with stale initialMessages.
 export const dynamic = 'force-dynamic';
 
-export default async function KoalaPage({
+export default async function AxilPage({
   params,
   searchParams,
 }: {
@@ -133,7 +133,7 @@ export default async function KoalaPage({
 
   return (
     <div className="flex h-full flex-col">
-      <KoalaWorkspace
+      <AxilWorkspace
         slug={slug}
         view={view}
         initialMessages={initialMessages}

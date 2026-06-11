@@ -11,20 +11,20 @@ import { composeOnboardingDraft } from '@/lib/onboarding-draft';
 
 const base = {
   name: 'Sarah Chen',
-  businessName: 'Coastal Realty',
+  businessName: 'Coastal Sales',
   tone: 'warm' as const,
   clientTypes: ['first_time_buyers'],
-  leadSources: ['zillow'],
+  leadSources: ['linkedin'],
 };
 
 describe('composeOnboardingDraft', () => {
   it('personalizes with first name, business, source, and tone', () => {
     const { frame, body } = composeOnboardingDraft(base);
-    expect(frame).toContain('Zillow');
+    expect(frame).toContain('LinkedIn');
     expect(body).toContain('Sarah');         // first name, not full name
     expect(body).not.toContain('Sarah Chen'); // never the full name in the sign-off body opener
-    expect(body).toContain('Coastal Realty');
-    expect(body).toContain('via Zillow');
+    expect(body).toContain('Coastal Sales');
+    expect(body).toContain('via LinkedIn');
   });
 
   it('warm tone includes an audience-aware clause when one matches', () => {
@@ -50,9 +50,9 @@ describe('composeOnboardingDraft', () => {
   });
 
   it('uses the first lead source as primary when several are selected', () => {
-    const { frame } = composeOnboardingDraft({ ...base, leadSources: ['facebook', 'zillow'] });
+    const { frame } = composeOnboardingDraft({ ...base, leadSources: ['facebook', 'linkedin'] });
     expect(frame).toContain('Facebook');
-    expect(frame).not.toContain('Zillow');
+    expect(frame).not.toContain('LinkedIn');
   });
 
   it('falls back gracefully when name and business are empty', () => {
@@ -68,7 +68,7 @@ describe('composeOnboardingDraft', () => {
 
   it('never produces double spaces regardless of input combination', () => {
     const tones = ['warm', 'direct'] as const;
-    const sources = [[], ['zillow'], ['sphere'], ['idx_website']];
+    const sources = [[], ['linkedin'], ['sphere'], ['idx_website']];
     const audiences = [[], ['luxury'], ['renters'], ['sellers']];
     for (const tone of tones) {
       for (const leadSources of sources) {

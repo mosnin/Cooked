@@ -110,7 +110,7 @@ export default async function PacketPage({ params }: Props) {
               {property.propertyType && <Row label="Type" value={property.propertyType.replace('_', ' ')} />}
               {property.yearBuilt != null && <Row label="Year built" value={String(property.yearBuilt)} />}
               {property.lotSizeSqft != null && <Row label="Lot" value={`${property.lotSizeSqft.toLocaleString()} sqft`} />}
-              {property.mlsNumber && <Row label="MLS #" value={property.mlsNumber} />}
+              {property.mlsNumber && <Row label="CRM #" value={property.mlsNumber} />}
             </dl>
 
             {property.notes && (

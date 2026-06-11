@@ -344,7 +344,7 @@ def _build_cache_marker() -> dict[str, Any]:
 
     Two markers cover the static input surface:
       1. SYSTEM — placed on the system-message content. Caches the
-         KOALA_INSTRUCTIONS (~1.5K tokens after Phase 1) + workspace_info
+         AXIL_INSTRUCTIONS (~1.5K tokens after Phase 1) + workspace_info
          + ai_profile.
       2. TOOLS — placed on the LAST tool. The provider caches the entire
          tools array up through any tool carrying a marker, so one marker

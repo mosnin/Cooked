@@ -62,7 +62,7 @@ export const addPropertyTool = defineTool<typeof parameters, AddPropertyResult>(
   name: 'add_property',
   riskLevel: 'low',
   description:
-    'Add a new property to the workspace. Captures address plus optional list price, beds/baths, MLS number. Prompts for approval first.',
+    'Add a new property to the workspace. Captures address plus optional list price, beds/baths, CRM number. Prompts for approval first.',
   parameters,
   requiresApproval: true,
   rateLimit: { max: 30, windowSeconds: 3600 },

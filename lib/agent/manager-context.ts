@@ -30,7 +30,7 @@ import type { Team, TeamMembership } from '@/lib/types';
  * Roles allowed to use the manager chat surface.
  *
  * `rep_member` is excluded by design — a rep inside a team
- * already has their own Koala at `/s/<slug>/koala`. The manager chat is
+ * already has their own Koala at `/s/<slug>/axil`. The manager chat is
  * the chief-of-staff variant, scoped to team-wide operations, and
  * rep_members do not run those operations.
  */

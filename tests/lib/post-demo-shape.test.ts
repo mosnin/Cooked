@@ -18,7 +18,7 @@ import {
   doneVerbForToolkit,
   type ProposedAction,
   type IntegrationToolSpec,
-} from '@/lib/koala/post-demo';
+} from '@/lib/axil/post-demo';
 
 describe('shapeProposals', () => {
   it('returns [] for non-object input', () => {

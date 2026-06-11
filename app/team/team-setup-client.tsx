@@ -68,7 +68,7 @@ function CreateForm() {
         <input
           type="text"
           required
-          placeholder="e.g. Preston Realty Group"
+          placeholder="e.g. Preston Sales Group"
           value={name}
           onChange={(e) => setName(e.target.value)}
           maxLength={120}

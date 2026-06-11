@@ -1,16 +1,16 @@
 /**
- * KoalaPageShell — the single canonical container for every Koala sub-route.
+ * AxilPageShell — the single canonical container for every Axil sub-route.
  *
- * Same product = same identity below the page chrome. Every /koala/* leaf
+ * Same product = same identity below the page chrome. Every /axil/* leaf
  * page (brief, drafts, activity, memory, approvals, routines, integrations)
  * wraps its content in this shell so containers, headers, vertical rhythm,
  * and muted-greeting pattern stay identical. No surprise hero text, no
  * drifted spacing.
  *
  * Header treatment per the Jobs-lens audit: serif Times h1 + status
- * sentence. The chat HOME is chat-mode (own treatment in koala-workspace.tsx).
+ * sentence. The chat HOME is chat-mode (own treatment in axil-workspace.tsx).
  * The sub-pages — brief, drafts, activity, memory — are reading-and-deciding
- * mode. Reading-mode pages get the serif. That's how Koala pages feel like
+ * mode. Reading-mode pages get the serif. That's how Axil pages feel like
  * one product.
  *
  * `title` and `subtitle` are optional. When the page's content carries its
@@ -24,14 +24,14 @@
  * `variant` — 'rep' (default) or 'manager'. Does not change the shell's
  * visual structure today, but is forwarded so downstream consumers and the
  * manager-home renderer can pass `variant="manager"` when composing sub-pages
- * inside the manager surface. The KoalaWorkspace nav dropdown (Brief /
+ * inside the manager surface. The AxilWorkspace nav dropdown (Brief /
  * Drafts / History) reads the same prop to resolve manager-correct routes.
  */
 import type { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 import { BODY_MUTED, H1, TITLE_FONT, SECTION_RHYTHM } from '@/lib/typography';
 
-interface KoalaPageShellProps {
+interface AxilPageShellProps {
   /** Small muted line above the title, e.g. "Drafts." or "Memory." */
   greeting: string;
   /** Page title — serif Times. Optional: omit when the content owns the
@@ -41,27 +41,27 @@ interface KoalaPageShellProps {
   subtitle?: string;
   children: ReactNode;
   /**
-   * Which Koala surface this shell is embedded in.
+   * Which Axil surface this shell is embedded in.
    *
-   * - `rep` (default) — /s/[slug]/koala/* sub-pages.
+   * - `rep` (default) — /s/[slug]/axil/* sub-pages.
    * - `manager` — /manager/* sub-pages.
    *
    * The shell's visual output is identical for both variants today. The prop
    * is pinned on the interface so the manager-home renderer (and any future
-   * manager-specific sub-page) can declare intent clearly. The KoalaWorkspace
+   * manager-specific sub-page) can declare intent clearly. The AxilWorkspace
    * control-cluster dropdown uses the same prop to resolve Brief / Drafts /
    * History destinations to the correct route family.
    */
   variant?: 'rep' | 'manager';
 }
 
-export function KoalaPageShell({
+export function AxilPageShell({
   greeting,
   title,
   subtitle,
   children,
   variant = 'rep',
-}: KoalaPageShellProps) {
+}: AxilPageShellProps) {
   void variant; // consumed by callers for route resolution — no visual branch today
   return (
     <div className="h-full overflow-y-auto">

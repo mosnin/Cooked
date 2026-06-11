@@ -12,7 +12,7 @@ import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
  *   1. Creates an ApplicationMessage with a structured demo-request body
  *      so the existing message thread reflects the ask.
  *   2. Creates an AgentQuestion scoped to the rep's space + this
- *      contact, which surfaces in /koala's focus card / questions panel
+ *      contact, which surfaces in /axil's focus card / questions panel
  *      so the rep sees it as the next thing that needs them.
  *   3. (TODO follow-up) emails the rep via the existing notify path.
  *
@@ -245,7 +245,7 @@ async function notifyRepOfDemoRequest(
           </div>
           <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:20px">
             <tr><td>
-              <a href="${appUrl}/s/${space.slug}/koala" style="display:inline-block;background:#0f172a;color:#ffffff;font-size:14px;font-weight:600;text-decoration:none;padding:10px 22px;border-radius:8px">Open in Koala &rarr;</a>
+              <a href="${appUrl}/s/${space.slug}/axil" style="display:inline-block;background:#0f172a;color:#ffffff;font-size:14px;font-weight:600;text-decoration:none;padding:10px 22px;border-radius:8px">Open in Koala &rarr;</a>
             </td></tr>
           </table>
         </td></tr>

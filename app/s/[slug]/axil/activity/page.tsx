@@ -2,10 +2,10 @@ import { redirect } from 'next/navigation';
 import { auth } from '@clerk/nextjs/server';
 
 /**
- * /koala/activity — legacy URL. The page now lives at /koala/history
+ * /axil/activity — legacy URL. The page now lives at /axil/history
  * (rep's noun, not ours). Kept as a redirect for bookmark safety.
  */
-export default async function KoalaActivityRedirect({
+export default async function AxilActivityRedirect({
   params,
 }: {
   params: Promise<{ slug: string }>;
@@ -14,5 +14,5 @@ export default async function KoalaActivityRedirect({
   const { userId } = await auth();
   if (!userId) redirect('/login/rep');
 
-  redirect(`/s/${slug}/koala/history`);
+  redirect(`/s/${slug}/axil/history`);
 }

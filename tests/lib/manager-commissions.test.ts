@@ -155,7 +155,7 @@ import { GET } from '@/app/api/manager/commissions/export/route';
 function makeTeam(overrides: Partial<Team> = {}): Team {
   return {
     id: 'brk_1',
-    name: 'Acme Realty',
+    name: 'Acme Sales',
     ownerId: 'u_owner',
     status: 'active',
     slaEnabled: false,

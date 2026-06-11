@@ -7,13 +7,13 @@ describe('briefing — SMS template builder', () => {
   it('produces a single-segment body for a short headline', () => {
     const { body, truncated } = buildBriefSms({
       headline: 'Sarah Chen replied.',
-      spaceSlug: 'patel-realty',
+      spaceSlug: 'patel-sales',
       briefDate: '2026-05-30',
       appOrigin: ORIGIN,
     });
     expect(body.startsWith('Koala: ')).toBe(true);
     expect(body).toContain('Sarah Chen replied.');
-    expect(body).toContain(`${ORIGIN}/s/patel-realty/koala?brief=2026-05-30`);
+    expect(body).toContain(`${ORIGIN}/s/patel-sales/axil?brief=2026-05-30`);
     expect(body.length).toBeLessThanOrEqual(160);
     expect(truncated).toBe(false);
   });
@@ -59,7 +59,7 @@ describe('briefing — SMS template builder', () => {
 
   it('handles a long URL by aggressively truncating the headline', () => {
     const longishHeadline = 'Sarah Chen finally replied to your follow-up about the disclosure';
-    const longishSlug = 'patel-realty-of-greater-boston-llc';
+    const longishSlug = 'patel-sales-of-greater-boston-llc';
     const { body, truncated } = buildBriefSms({
       headline: longishHeadline,
       spaceSlug: longishSlug,

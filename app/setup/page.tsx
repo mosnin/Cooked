@@ -104,7 +104,7 @@ export default async function SetupPage({
         redirect('/manager');
       }
     }
-    redirect(`/s/${dbUser.space.slug}/koala`);
+    redirect(`/s/${dbUser.space.slug}/axil`);
   }
 
   // Create user record if missing.
@@ -170,7 +170,7 @@ export default async function SetupPage({
 
   // Check again after upsert — user may already have a space
   if (resolvedUser?.space?.slug) {
-    redirect(`/s/${resolvedUser.space.slug}/koala`);
+    redirect(`/s/${resolvedUser.space.slug}/axil`);
   }
 
   // If the user has a manager_admin membership (e.g. accepted an admin invitation),

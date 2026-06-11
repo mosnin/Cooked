@@ -1,4 +1,5 @@
-"""Question tool — agents use this to ask the rep for guidance when uncertain."""
+"""Question tool — Axil uses this to ask the sales rep for guidance when uncertain
+(e.g. an ambiguous prospect, deal direction, or what to say in outreach)."""
 
 from __future__ import annotations
 

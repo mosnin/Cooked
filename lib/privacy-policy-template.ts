@@ -16,7 +16,7 @@ export function generatePrivacyPolicy(
   entityType: 'rep' | 'team'
 ): string {
   const entity = escHtml(entityName || (entityType === 'team' ? 'Our Team' : 'Our Office'));
-  const entityLabel = entityType === 'team' ? 'team' : 'real estate professional';
+  const entityLabel = entityType === 'team' ? 'team' : 'sales professional';
   const today = new Date().toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -87,7 +87,7 @@ export function generatePrivacyPolicy(
 <ul>
   <li><strong>Active client data:</strong> Retained for the duration of our business relationship and for a reasonable period thereafter</li>
   <li><strong>Lead and inquiry data:</strong> Retained for up to 24 months from your last interaction with us, unless you request earlier deletion</li>
-  <li><strong>Application data:</strong> Retained in accordance with applicable real estate and fair housing record-keeping requirements</li>
+  <li><strong>Application data:</strong> Retained in accordance with applicable sales and fair housing record-keeping requirements</li>
   <li><strong>Consent records:</strong> Retained for as long as needed to demonstrate compliance with applicable laws</li>
 </ul>
 
@@ -113,7 +113,7 @@ export function generatePrivacyPolicy(
 <p>We may update this Privacy Policy from time to time. We will notify you of material changes by posting the updated policy with a revised "Last updated" date. Your continued interaction with us after such changes constitutes acceptance of the updated policy.</p>
 
 <h3>12. Platform Disclaimer</h3>
-<p>Koala (my.usekoala.com) is a software platform that provides tools for real estate professionals to manage their client relationships. <strong>Koala is not responsible for the privacy practices of individual ${entityLabel}s or teams that use its platform.</strong> This privacy policy is maintained by ${entity}, and all inquiries about data handling should be directed to ${entity}, not to Koala. Koala processes data solely as instructed by ${entity} and bears no independent liability for the data collection or use practices described herein.</p>
+<p>Koala (my.usekoala.com) is a software platform that provides tools for sales professionals to manage their client relationships. <strong>Koala is not responsible for the privacy practices of individual ${entityLabel}s or teams that use its platform.</strong> This privacy policy is maintained by ${entity}, and all inquiries about data handling should be directed to ${entity}, not to Koala. Koala processes data solely as instructed by ${entity} and bears no independent liability for the data collection or use practices described herein.</p>
 
 <h3>13. Contact Information</h3>
 <p>If you have questions about this Privacy Policy or wish to exercise your rights, please contact us:</p>

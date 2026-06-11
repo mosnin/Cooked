@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { formatProgress, formatLastOpened, DWELL_MS } from '@/components/koala/use-brief-lifecycle';
+import { formatProgress, formatLastOpened, DWELL_MS } from '@/components/axil/use-brief-lifecycle';
 
 describe('briefing lifecycle — receipt formatting', () => {
   describe('formatProgress', () => {

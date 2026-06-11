@@ -17,7 +17,7 @@ export const BREADCRUMB_ROUTES: Array<{ path: string; label: string; exact?: boo
   { path: '/activity', label: 'Activity' },
   { path: '/settings/team', label: 'Team' },
   { path: '/settings', label: 'Settings' },
-  { path: '/koala', label: 'Koala' },
+  { path: '/axil', label: 'Koala' },
   { path: '/team', label: 'Team' },
   { path: '/profile', label: 'Profile' },
   // Manager routes

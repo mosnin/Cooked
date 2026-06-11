@@ -55,12 +55,12 @@ interface CrmEntry {
   native?: boolean;
 }
 
-/** CRM + real-estate entries surfaced on this page, in display order.
- *  Follow Up Boss leads the real-estate group (native API-key connect).
+/** CRM + sales entries surfaced on this page, in display order.
+ *  Follow Up Boss leads the sales group (native API-key connect).
  *  General CRMs follow (Composio OAuth). Coming-soon entries render as
  *  disabled pills — no fake connect path. */
 const CRM_ENTRIES: CrmEntry[] = [
-  // Real-estate CRMs — Follow Up Boss connects natively via API key
+  // Sales CRMs — Follow Up Boss connects natively via API key
   { toolkit: 'follow_up_boss', name: 'Follow Up Boss', blurb: 'Paste your API key — Koala mirrors your people.', native: true },
   { toolkit: 'compass', name: 'Compass', blurb: 'Mirror your Compass pipeline.', comingSoon: true },
   { toolkit: 'boomtown', name: 'BoomTown', blurb: 'Pull BoomTown leads here.', comingSoon: true },
@@ -218,7 +218,7 @@ function ConnectPanel({ slug, onConnected }: { slug: string; onConnected: () => 
     }
   }
 
-  // Real-estate CRMs (native FUB + coming-soon) lead; general OAuth CRMs follow.
+  // Sales CRMs (native FUB + coming-soon) lead; general OAuth CRMs follow.
   const realEstate = CRM_ENTRIES.filter((e) => e.native || e.comingSoon);
   const live = CRM_ENTRIES.filter((e) => !e.native && !e.comingSoon);
 
@@ -228,9 +228,9 @@ function ConnectPanel({ slug, onConnected }: { slug: string; onConnected: () => 
         <p className="text-sm text-destructive">{connectError}</p>
       )}
 
-      {/* Real-estate CRMs — Follow Up Boss connects natively, the rest soon */}
+      {/* Sales CRMs — Follow Up Boss connects natively, the rest soon */}
       <section className="space-y-3">
-        <p className={SECTION_LABEL}>Real estate CRMs</p>
+        <p className={SECTION_LABEL}>Sales CRMs</p>
         <ul className="divide-y divide-border/60">
           {realEstate.map((entry) => (
             <CrmConnectRow
