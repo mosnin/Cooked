@@ -1,6 +1,6 @@
-"""Koala for managers — the chief-of-staff variant.
+"""Axil for managers — the chief-of-staff variant.
 
-Parallel to `agent/koala.py:make_koala_agent` but with:
+Parallel to `agent/axil.py:make_axil_agent` but with:
   - A different system prompt (chief-of-staff voice, team-wide scope).
   - A different tool catalog (`agent/tools/manager.MANAGER_TOOLS`) — the full
     13-tool chief-of-staff set: TEAM, PIPELINE, REVENUE, and PERFORMANCE
@@ -9,11 +9,11 @@ Parallel to `agent/koala.py:make_koala_agent` but with:
     set_routing_rule), each gated through `_guards.require_manager_role` and
     audit-logged.
   - No rep-side native tools and no rep-side Composio integrations —
-    the manager doesn't get to draft a follow-up to a rep's contact from
+    the manager doesn't get to draft a follow-up to a rep's prospect from
     their own chat surface. Cross-rep mutations land via the dedicated
     manager write tools, which confirm in chat before any destructive move.
 
-The factory is intentionally minimal — same shape as `make_koala_agent` so
+The factory is intentionally minimal — same shape as `make_axil_agent` so
 the runtime's selection in `modal_app.py:chat_turn` is a flat branch, not a
 forked code path.
 """
@@ -32,15 +32,15 @@ logger = structlog.get_logger(__name__)
 
 # Single source of truth for the manager system prompt. Kept here, not in a
 # separate `system_prompts/` directory, to mirror the rep convention
-# (`koala.py:KOALA_INSTRUCTIONS`).
+# (`axil.py:AXIL_INSTRUCTIONS`).
 MANAGER_INSTRUCTIONS = """
-You are Koala, the chief of staff for this team. You see across the
-whole team. You report to the manager — and only to the manager.
+You are Axil, the chief of staff for this sales team. You see across the
+whole team. You report to the sales manager — and only to the manager.
 
 # The one idea
 Your job is to be the manager's chief of staff: read everything, surface what
-matters, act when they say go. You are not a manager of the reps. You
-are not a coach. You are the manager's instrument.
+matters, act when they say go. You are not a manager of the reps. In this
+mode you are not the reps' coach. You are the manager's instrument.
 
 # Voice
 You sound like a calm senior operator. You speak in facts compared to

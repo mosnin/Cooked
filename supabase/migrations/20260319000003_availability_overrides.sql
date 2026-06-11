@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS "DemoAvailabilityOverride" (
   "isBlocked" boolean NOT NULL DEFAULT false,
   "startHour" integer,  -- null when isBlocked = true
   "endHour"   integer,  -- null when isBlocked = true
-  label       text,     -- optional label e.g. "Open house Saturday", "Vacation"
+  label       text,     -- optional label e.g. "Team offsite Saturday", "Vacation"
   "createdAt" timestamptz NOT NULL DEFAULT now()
 );
 

@@ -72,9 +72,17 @@ from tools.studio import generate_studio_image, edit_studio_image
 
 logger = structlog.get_logger(__name__)
 
-KOALA_INSTRUCTIONS = """
-You are Koala, an AI cowork for a real estate professional. A peer, not
-a chatbot — never apologise for being software, never say "as an AI."
+AXIL_INSTRUCTIONS = """
+You are Axil, the AI agent inside Koala — a sales platform. You work the
+pipeline alongside a sales rep (an AE or SDR): a peer, not a chatbot.
+Never apologise for being software, never say "as an AI." When you name
+yourself, you are Axil; Koala is the product you run inside.
+
+# What you do
+You work a sales rep's pipeline end to end: qualify inbound leads, draft
+follow-up, book product demos, advance deals, track commissions, and
+analyze the pipeline for what needs attention. You also coach the rep
+(see "Coaching" below). Speed and clarity win deals; act like it.
 
 # Trust contract
 Routines and autonomous runs draft, never send. Explicit human imperative
@@ -90,7 +98,7 @@ The opening message tells you which:
 
 # Tool-first
 Never invent CRM data — look it up. If a tool returns nothing, say so;
-don't fabricate. Check recall_memory before contact-facing drafts. Use
+don't fabricate. Check recall_memory before prospect-facing drafts. Use
 native find_*/get_* for CRM data; integration tools for external systems.
 
 # Planning
@@ -100,10 +108,23 @@ lookups or one-tool answers. After create_plan, execute steps in order;
 skip a step only if a lookup returned nothing.
 
 # Records vs memory
-"Add a lead/contact/buyer/seller" → create_contact immediately.
+"Add a lead/contact/prospect" → create_contact immediately.
 "Create/start/open a deal" → create_deal (link contact_ids if known;
 leave stage blank to land in the right pipeline). Memory stores
 observations; it is never a substitute for creating the record.
+
+# Coaching
+You also coach the rep to close more. When the rep asks you to review a
+call (they will paste or point you at a call transcript), read it and give
+concrete, specific feedback: what worked, what to fix, and the exact lines
+or moments to do differently — graded on discovery, objection handling,
+value articulation, talk ratio, and the close. Be a sharp sales coach:
+direct, evidence-based, never vague praise. You can also run a mock sales
+call: the rep practices against you while you roleplay a prospect from a
+configured ICP (Ideal Customer Profile) — you raise that ICP's objections,
+match its temperament, then score the rep on the same rubric with a written
+coaching report. The mock-call surface lives in the Koala app (Practice);
+from chat, point the rep there to start one when they ask to practice.
 
 # Integrations
 workspace_info lists connected toolkits — that list is the truth about
@@ -195,14 +216,14 @@ async def load_ai_profile(space_id: str, db) -> str | None:
         return None
 
 
-def make_koala_agent(
+def make_axil_agent(
     ai_profile_text: str | None = None,
     extra_tools: list | None = None,
     workspace_info: str | None = None,
     model: str | None = None,
 ) -> Agent:
     """
-    Build the single Koala agent. Constructed fresh per run.
+    Build the single Axil agent. Constructed fresh per run.
 
     `extra_tools` lets the caller append integration tools loaded per
     rep (Gmail, Slack, HubSpot, etc. via Composio). Native CRM tools
@@ -218,7 +239,7 @@ def make_koala_agent(
     Assembly order matters for OpenAI's implicit prompt cache. The cache
     hits on the longest common prefix across requests, so we put the
     universally-stable text first and per-space content after:
-      1. KOALA_INSTRUCTIONS — identical across every space + every run.
+      1. AXIL_INSTRUCTIONS — identical across every space + every run.
          Caches once per OpenAI organization at runtime; every rep's
          agent reuses the same cached prefix.
       2. workspace_info — per-space, stable until the intake URL or name
@@ -227,7 +248,7 @@ def make_koala_agent(
          profile occasionally). Caches per-space until they edit it.
     """
     configure_agents_sdk()
-    parts: list[str] = [KOALA_INSTRUCTIONS]
+    parts: list[str] = [AXIL_INSTRUCTIONS]
     if workspace_info:
         parts.append(workspace_info)
     if ai_profile_text:
@@ -257,7 +278,7 @@ def make_koala_agent(
         store_memory,
         # Goals
         manage_goal,
-        # Routines — standing instructions Koala runs on a schedule
+        # Routines — standing instructions Axil runs on a schedule
         manage_routines,
         # Drafts + outcomes
         draft_message,
@@ -288,7 +309,7 @@ def make_koala_agent(
         edit_studio_image,
     ]
     return Agent[None](
-        name="Koala",
+        name="Axil",
         model=make_chat_model(resolve_chat_model(model)),
         instructions=instructions,
         tools=base_tools + (extra_tools or []),
