@@ -1,15 +1,15 @@
 'use client';
 
 /**
- * /s/[slug]/calendar — the realtor's calendar, here.
+ * /s/[slug]/calendar — the rep's calendar, here.
  *
- * Chippi doesn't own a calendar. The realtor already lives in Google
+ * Koala doesn't own a calendar. The rep already lives in Google
  * Calendar (or Outlook); this surface mirrors what's there AND lets
  * them add events that write THROUGH to the same calendar.
  *
  * Four views — Month (default), Week, Day, Agenda — backed by the
  * same /api/calendar/events GET. View mode persists per slug in
- * localStorage so the realtor's preferred lens sticks.
+ * localStorage so the rep's preferred lens sticks.
  *
  * Three connection states still hold:
  *   1. Not connected → calm prompt, one primary action (connect).
@@ -94,8 +94,8 @@ const CHIP_ENTER_VARIANTS: Variants = {
   animate: { opacity: 1, y: 0, transition: { duration: DUR_QUICK, ease: EASE } },
 };
 
-/* Chip enter (optimistic, just-created by the realtor): scale 0.95 → 1 +
- * fade. The slight pop tells the realtor "your event landed" without
+/* Chip enter (optimistic, just-created by the rep): scale 0.95 → 1 +
+ * fade. The slight pop tells the rep "your event landed" without
  * shouting. 240ms with the Apple curve. */
 const CHIP_OPTIMISTIC_VARIANTS: Variants = {
   initial: { opacity: 0, scale: 0.95 },
@@ -112,7 +112,7 @@ interface CalendarEventOut {
   htmlLink: string | null;
   attendees: { email: string; name: string | null; responseStatus: string | null }[];
   /**
-   * Client-only marker — set true when the realtor just created this event
+   * Client-only marker — set true when the rep just created this event
    * locally. Drives the optimistic "scale 0.95 → 1 + fade" entrance on the
    * chip. Cleared after the animation lands (we don't ship it to the API).
    */
@@ -145,7 +145,7 @@ function isViewMode(v: string | null): v is ViewMode {
 }
 
 function viewStorageKey(slug: string) {
-  return `chippi:calendar:view:${slug}`;
+  return `koala:calendar:view:${slug}`;
 }
 
 function providerLabel(provider: string | null): string {
@@ -214,7 +214,7 @@ export function CalendarView({
       const stored = window.localStorage.getItem(viewStorageKey(slug));
       // On mobile, Month/Week are unusable in the 640px column — auto-fall
       // back to Day on first paint. We do NOT persist this override: if the
-      // realtor explicitly taps Month/Week later, that intent sticks.
+      // rep explicitly taps Month/Week later, that intent sticks.
       const mobile = window.innerWidth < 640;
       if (mobile && (!stored || stored === 'month' || stored === 'week')) {
         setView('day');
@@ -384,7 +384,7 @@ export function CalendarView({
           <p className={BODY_MUTED}>
             {connected
               ? `Reading from ${providerLabel(provider)}.`
-              : 'Connect your calendar so I can see your day and put tours on it.'}
+              : 'Connect your calendar so I can see your day and put demos on it.'}
           </p>
         </header>
 
@@ -420,7 +420,7 @@ export function CalendarView({
         )}
 
         {connected && !loading && !errorMessage && (
-          // Cross-fade the body when the realtor flips Month/Week/Day/Agenda,
+          // Cross-fade the body when the rep flips Month/Week/Day/Agenda,
           // or when entering/leaving search mode.
           // 180ms with the Apple ease — no jump-cut, no slide. The key
           // changes on view or searchQuery so each state gets a clean entrance.
@@ -583,7 +583,7 @@ function ToggleRow({
           <div className="flex items-center gap-1 min-w-0">
             {/* Chevron press: 10° tilt on press, snap back. 180ms each leg.
              * The press rotation gives the chrome a tactile beat — the
-             * realtor feels the calendar step instead of just seeing it. */}
+             * rep feels the calendar step instead of just seeing it. */}
             <motion.button
               type="button"
               onClick={onPrev}
@@ -739,7 +739,7 @@ function MonthView({
                 >
                   {/* Day-number badge. The today-ring is a separately
                    * animated overlay — 240ms opacity glow on mount. If the
-                   * realtor lands on the month and today already has a
+                   * rep lands on the month and today already has a
                    * ring, we want it to feel like it's lighting up, not
                    * sitting there static. */}
                   <span
@@ -796,7 +796,7 @@ function ChipInCell({
   event: CalendarEventOut;
   reduced: boolean;
   stopPropagation?: boolean;
-  /** `short` = "9a Tour" (Month — time prefix matters). `title` = "Tour"
+  /** `short` = "9a Demo" (Month — time prefix matters). `title` = "Demo"
    *  (Week/Day — hour slot already carries the time). */
   labelMode?: 'short' | 'title';
 }) {
@@ -1113,7 +1113,7 @@ function EventChip({ event, reduced }: { event: CalendarEventOut; reduced: boole
 /* ── Search results view ─────────────────────────────────────────────── */
 /* Client-side filter of the already-loaded 30-day event window. Matches
  * against title, location (description), and attendee emails/names — the
- * same fields a realtor would want to search. Renders as an Agenda-style
+ * same fields a rep would want to search. Renders as an Agenda-style
  * list so it reuses the same vocabulary without inventing a new surface. */
 
 function matchesQuery(ev: CalendarEventOut, q: string): boolean {
@@ -1284,7 +1284,7 @@ function NotConnectedState({ slug }: { slug: string }) {
           </div>
           <div className="space-y-1.5">
             <p className={BODY}>
-              Connect your calendar and I&apos;ll put tours on it, watch for
+              Connect your calendar and I&apos;ll put demos on it, watch for
               conflicts, and pull your day into the brief.
             </p>
             <p className={BODY_MUTED}>
@@ -1425,7 +1425,7 @@ function AddEventModal({
   );
 
   // Two entrances, one modal.
-  // Mobile: slide up from below (220ms). The realtor's thumb just tapped
+  // Mobile: slide up from below (220ms). The rep's thumb just tapped
   // the bottom-anchored "+ New" — the surface arrives from where they
   // touched. We layer the slide on top of the base zoom; net effect reads
   // as a slide with a subtle settle.
@@ -1449,7 +1449,7 @@ function AddEventModal({
               id="event-title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Tour @ 456 Oak"
+              placeholder="Demo @ 456 Oak"
               autoFocus
               required
             />

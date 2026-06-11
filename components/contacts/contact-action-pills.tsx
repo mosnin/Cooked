@@ -3,17 +3,17 @@
 /**
  * Action pills under the contact-detail headline. Same shape and copy as
  * <MorningStory />` — tap a pill, the inline draft surface opens, the
- * realtor reviews + sends without leaving the page.
+ * rep reviews + sends without leaving the page.
  *
  * Before this file existed, the pills rendered as `<button>` with a
- * `data-intent` attribute and *no onClick handler* — every realtor who
+ * `data-intent` attribute and *no onClick handler* — every rep who
  * tapped "Welcome them" or "Reach out" got silence. The bug was honest:
  * the page advertised actions it didn't fire. This component wires them.
  *
  * Compose intents (`check-in`, `log-call`, `welcome`, `reach-out`) go
  * through the existing `<MorningActionSheet />` — same draft pipeline as
- * the morning home. `schedule-tour` is a navigate-style verb; the API
- * doesn't compose a tour message, so it drops the realtor into the chat
+ * the morning home. `schedule-demo` is a navigate-style verb; the API
+ * doesn't compose a demo message, so it drops the rep into the chat
  * with a prefill that names the contact and the intent.
  */
 
@@ -24,8 +24,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Mic } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { DURATION_BASE, EASE_OUT } from '@/lib/motion';
-import { MorningActionSheet } from '@/components/chippi/morning-action-sheet';
-import type { MorningActionIntent } from '@/components/chippi/morning-actions';
+import { MorningActionSheet } from '@/components/axil/morning-action-sheet';
+import type { MorningActionIntent } from '@/components/axil/morning-actions';
 import type {
   PeopleDetailAction,
   PeopleDetailActionIntent,
@@ -69,10 +69,10 @@ export function ContactActionPills({
       setActiveIntent(action.intent);
       return;
     }
-    if (action.intent === 'schedule-tour') {
+    if (action.intent === 'schedule-demo') {
       router.push(
-        `/s/${slug}/chippi?prefill=${encodeURIComponent(
-          `Schedule a tour with ${contactName}.`,
+        `/s/${slug}/axil?prefill=${encodeURIComponent(
+          `Schedule a demo with ${contactName}.`,
         )}`,
       );
     }
@@ -98,18 +98,18 @@ export function ContactActionPills({
             {a.label}
           </button>
         ))}
-        {/* "Log a tour" stays a Link — the /chippi/log surface is a short
+        {/* "Log a demo" stays a Link — the /axil/log surface is a short
             recording flow, not a draft. Outline-shape to read as a peer to
             the secondary pills. */}
         <Link
-          href={`/s/${slug}/chippi/log?personId=${contactId}`}
+          href={`/s/${slug}/axil/log?personId=${contactId}`}
           className={cn(
             'inline-flex items-center gap-1.5 h-9 rounded-md px-4 text-sm transition-colors',
             'border border-border/70 bg-background text-foreground hover:bg-muted/40',
           )}
         >
           <Mic size={13} />
-          Log a tour
+          Log a demo
         </Link>
       </div>
 

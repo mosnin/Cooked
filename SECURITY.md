@@ -1,18 +1,18 @@
 # SECURITY.md
 
-Consolidated security patterns and rules for Chippi. Read this before modifying auth, API routes, or data access.
+Consolidated security patterns and rules for Koala. Read this before modifying auth, API routes, or data access.
 
 ---
 
 ## 1. Threat model summary
 
-Chippi is a multi-tenant SaaS. The primary security concerns are:
+Koala is a multi-tenant SaaS. The primary security concerns are:
 
 1. **Cross-tenant data leakage** — User A seeing User B's contacts, deals, or messages
 2. **Unauthorized access** — Unauthenticated users accessing protected resources
 3. **Input injection** — SQL injection, XSS, PostgREST filter injection
-4. **Privilege escalation** — Realtors accessing broker/admin functionality
-5. **Rate abuse** — Automated spam on public endpoints (intake form, tour booking)
+4. **Privilege escalation** — Reps accessing manager/admin functionality
+5. **Rate abuse** — Automated spam on public endpoints (intake form, demo booking)
 
 ---
 
@@ -42,7 +42,7 @@ Request → Clerk middleware (route protection)
 | `/dashboard(.*)` | Clerk middleware — redirect to sign-in |
 | `/s/(.*)` | Clerk middleware — redirect to sign-in |
 | `/onboarding(.*)` | Clerk middleware — redirect to sign-in |
-| `/broker(.*)` | Clerk middleware + `requireBroker()` |
+| `/manager(.*)` | Clerk middleware + `requireManager()` |
 | `/admin(.*)` | Clerk middleware + `requirePlatformAdmin()` |
 | `/apply/*` | Public — no auth |
 | `/api/public/*` | Public — no auth |
@@ -132,8 +132,8 @@ if (!deal || !contact) return NextResponse.json({ error: 'Not found' }, { status
 
 | Role | How determined | Access |
 |------|---------------|--------|
-| Realtor | Default for all users | Own workspace only |
-| Broker | Has `BrokerageMembership` with broker role | `/broker` dashboard + member oversight |
+| Rep | Default for all users | Own workspace only |
+| Manager | Has `TeamMembership` with manager role | `/manager` dashboard + member oversight |
 | Platform Admin | `User.platformRole = 'admin'` | `/admin` + all management |
 
 ### Permission helpers (`lib/permissions.ts`)
@@ -141,8 +141,8 @@ if (!deal || !contact) return NextResponse.json({ error: 'Not found' }, { status
 ```typescript
 isPlatformAdmin()       // DB check + Clerk metadata fallback
 requirePlatformAdmin()  // Throws if not admin
-getBrokerContext()      // Returns brokerage + membership or null
-requireBroker()         // Throws if not broker_owner or broker_admin
+getManagerContext()      // Returns team + membership or null
+requireManager()         // Throws if not manager_owner or manager_admin
 getCurrentDbUser()      // Clerk userId → internal User row
 ```
 
@@ -215,8 +215,8 @@ Implementation in `lib/rate-limit.ts` using Upstash Redis sliding-window counter
 | `POST /api/ai/task` | 30 tasks/hr per user | `ai:task:{userId}` |
 | `POST /api/ai/task/approve/[requestId]` | 60/hr per user | `ai:task-approve:{userId}` |
 | `POST /api/contacts/import` | 5/hr per user | User-based |
-| `POST /api/broker/invite` | 20/hr per user | User-based |
-| `POST /api/broker/join` | 10/hr per user | User-based |
+| `POST /api/manager/invite` | 20/hr per user | User-based |
+| `POST /api/manager/join` | 10/hr per user | User-based |
 
 ### Per-tool rate limits (AI agent mutations)
 
@@ -229,7 +229,7 @@ Every mutating tool ships its own `rateLimit: { max, windowSeconds }` in `lib/ai
 | `update_contact` | 100 | 3600 s (1 hr) | `lib/ai-tools/tools/update-contact.ts` |
 | `advance_deal_stage` | 60 | 3600 s (1 hr) | `lib/ai-tools/tools/advance-deal-stage.ts` |
 | `create_deal` | 30 | 3600 s (1 hr) | `lib/ai-tools/tools/create-deal.ts` |
-| `schedule_tour` | 30 | 3600 s (1 hr) | `lib/ai-tools/tools/schedule-tour.ts` |
+| `schedule_demo` | 30 | 3600 s (1 hr) | `lib/ai-tools/tools/schedule-demo.ts` |
 | `add_checklist_item` | 60 | 3600 s (1 hr) | `lib/ai-tools/tools/add-checklist-item.ts` |
 | `delegate_to_subagent` | 20 | 3600 s (1 hr) | `lib/ai-tools/tools/delegate-to-subagent.ts` |
 
@@ -245,10 +245,10 @@ Every mutating tool ships its own `rateLimit: { max, windowSeconds }` in `lib/ai
 - Redis idempotency lock for concurrent submissions
 - IP-based rate limiting: 10/hr (see section 8)
 
-### `/api/public/tours/*` (tour booking)
+### `/api/public/demos/*` (demo booking)
 
 - No auth required (guest-facing)
-- Atomic booking via `book_tour_atomic` RPC (prevents double-booking)
+- Atomic booking via `book_demo_atomic` RPC (prevents double-booking)
 - Guest manage token for self-service cancellation/rescheduling
 
 ### Security considerations for public endpoints
@@ -331,11 +331,11 @@ await audit({
 
 Add new verbs to the union rather than casting at call sites. `OFFBOARD` covers the agent-offboarding transfer flow (Phase BP1).
 
-### Broker surfacing
+### Manager surfacing
 
-Audit rows are surfaced to brokers at **`/broker/activity`** (`app/broker/activity/page.tsx`). The page is brokerage-scoped via two queries merged server-side:
-- rows whose `spaceId` is in the brokerage's `Space.id` set (`Space.brokerageId = ctx.brokerage.id`), and
-- rows with `spaceId IS NULL` where `metadata->>brokerageId = ctx.brokerage.id` (for brokerage-level events that don't live inside a single space).
+Audit rows are surfaced to managers at **`/manager/activity`** (`app/manager/activity/page.tsx`). The page is team-scoped via two queries merged server-side:
+- rows whose `spaceId` is in the team's `Space.id` set (`Space.teamId = ctx.team.id`), and
+- rows with `spaceId IS NULL` where `metadata->>teamId = ctx.team.id` (for team-level events that don't live inside a single space).
 
 Results are trimmed to the most recent 100 rows inside a 90-day window with a compound `createdAt|id` cursor for pagination.
 
@@ -358,5 +358,5 @@ Run this after any change to auth, API routes, or data access:
 - [ ] User input is validated (Zod for structured data, escaping for search)
 - [ ] No internal IDs or error details leaked in public responses
 - [ ] File uploads validated for type and size
-- [ ] Admin/broker routes use permission helpers, not raw role checks
+- [ ] Admin/manager routes use permission helpers, not raw role checks
 - [ ] New public endpoints have rate limiting considerations documented

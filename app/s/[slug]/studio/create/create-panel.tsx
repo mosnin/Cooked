@@ -4,7 +4,7 @@
  * CreatePanel — the interactive surface of /s/[slug]/studio/create.
  *
  * Prompt in, image out. The result is stored server-side as a File row, so it
- * lands in the realtor's Files library, and generation cost is metered into
+ * lands in the rep's Files library, and generation cost is metered into
  * usage by the API route. This surface stays about the creative output.
  */
 
@@ -35,7 +35,7 @@ export function CreatePanel({
   initialPrompt?: string;
   initialModel?: string;
 } = {}) {
-  // Duplicate flow: the realtor opened this panel from a Library tile and
+  // Duplicate flow: the rep opened this panel from a Library tile and
   // wants to re-render the same prompt. We seed state from the URL params
   // so the form is pre-filled and a single click re-runs the generation.
   const [prompt, setPrompt] = useState(initialPrompt ?? '');
@@ -108,7 +108,7 @@ export function CreatePanel({
     setGenerating(true);
     setError(null);
     // Visible affordance — a 5-10s silent wait reads as broken. The toast
-    // outlives the in-page spinner if the realtor scrolls or switches tabs.
+    // outlives the in-page spinner if the rep scrolls or switches tabs.
     const kind = STUDIO_MODELS[model]?.kind === 'video' ? 'video' : 'image';
     const toastId = toastLoading(
       kind === 'video' ? 'Generating your video…' : 'Generating your image…',

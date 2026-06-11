@@ -39,7 +39,7 @@ const contactsByStageConfig = {
 
 const STAGE_FILLS: Record<string, string> = {
   Qualifying: 'hsl(var(--muted-foreground) / 0.5)',
-  Tour: 'hsl(var(--foreground) / 0.7)',
+  Demo: 'hsl(var(--foreground) / 0.7)',
   Applied: 'hsl(var(--foreground))',
 };
 
@@ -109,7 +109,7 @@ export function ClientsView({ data }: { data: ClientsAnalyticsData }) {
       </div>
 
       {/* Conversion funnel — paper-flat, hairline boxes with serif numbers */}
-      <ChartSection title="Client pipeline funnel" sub="Conversion rates across your renter pipeline">
+      <ChartSection title="Client pipeline funnel" sub="Conversion rates across your prospect pipeline">
         <div className="flex flex-col sm:flex-row gap-4 items-stretch py-2">
           {data.contactFunnel.map((stage, i) => {
             const opacity = 1 - i * 0.15;

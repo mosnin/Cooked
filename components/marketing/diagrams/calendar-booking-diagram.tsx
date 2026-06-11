@@ -3,30 +3,30 @@
 /**
  * `<CalendarBookingDiagram />` — booked from the reply.
  *
- * One beat: an empty calendar week view; a TOUR block fades into the
+ * One beat: an empty calendar week view; a DEMO block fades into the
  * Wednesday 2pm slot; a small "Confirmed with M. Chen" row appears
- * below the grid, anchored by the Chippi badge.
+ * below the grid, anchored by the Koala badge.
  *
  * Layout is fully fluid: the grid is the single flex-1 region and splits its
  * height into equal `grid-rows-4` fractions, so it fills the shell at every
  * aspect (`video`, `wide` 21:9, `square`) with no clipping. Four hours, not
- * six, so each row stays tall enough to hold the tour block's three lines at
+ * six, so each row stays tall enough to hold the demo block's three lines at
  * the shortest (`wide`) box. The confirmation row is shrink-0 and truncates.
  *
  * Motion contract:
  *   - 7.5s cycle.
  *   - 800ms hold on empty grid.
- *   - Tour block: opacity 0 → 1 + 6px y-translate up, 280ms, EASE_APPLE.
+ *   - Demo block: opacity 0 → 1 + 6px y-translate up, 280ms, EASE_APPLE.
  *   - 600ms after block lands, confirmation row fades in (220ms).
  *   - 2.2s hold. Then 200ms fade-out across both, 700ms pause, restart.
  *
- * Reduced-motion: render tour block + confirmation row visible.
+ * Reduced-motion: render demo block + confirmation row visible.
  *
  * Visual vocabulary matches the product calendar:
  *   - Hairline border around the whole grid (`border-border/60`).
  *   - Header row with day labels (`bg-muted/20`).
  *   - Hour rows separated by `border-t border-border/60`.
- *   - Tour block: hairline-bordered tile, `text-[10px] font-medium`.
+ *   - Demo block: hairline-bordered tile, `text-[10px] font-medium`.
  *   - Time-of-day labels: `text-[10px] tabular-nums text-muted-foreground`.
  */
 
@@ -36,10 +36,10 @@ import { CalendarCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { EASE_APPLE } from '@/lib/motion';
 import {
-  ChippiDiagramShell,
-  DiagramChippiBadge,
+  KoalaDiagramShell,
+  DiagramKoalaBadge,
   useDiagramMotion,
-} from './chippi-diagram-shell';
+} from './koala-diagram-shell';
 
 interface CalendarBookingDiagramProps {
   aspect?: 'video' | 'square' | 'wide' | 'tall';
@@ -47,13 +47,13 @@ interface CalendarBookingDiagramProps {
 }
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
-// Four hours, not six: enough to stage a 2pm tour with context above (12, 1)
-// and below (3) while leaving each row tall enough to hold the tour block's
+// Four hours, not six: enough to stage a 2pm demo with context above (12, 1)
+// and below (3) while leaving each row tall enough to hold the demo block's
 // three lines at the shortest aspect (`wide`, ~56px/row at the md 2-col width).
 const HOURS = ['12', '1', '2', '3'];
 
-// Phase: 0 empty, 1 tour visible, 2 tour + confirm visible, 3 fade-out.
-const TOUR_AT = 900;
+// Phase: 0 empty, 1 demo visible, 2 demo + confirm visible, 3 fade-out.
+const DEMO_AT = 900;
 const CONFIRM_AT = 1500;
 const HOLD_END = 4000;
 const CYCLE_TOTAL = 4600;
@@ -63,9 +63,9 @@ export function CalendarBookingDiagram({
   className,
 }: CalendarBookingDiagramProps) {
   return (
-    <ChippiDiagramShell aspect={aspect} pad={6} className={className}>
+    <KoalaDiagramShell aspect={aspect} pad={6} className={className}>
       <CalendarBookingContent />
-    </ChippiDiagramShell>
+    </KoalaDiagramShell>
   );
 }
 
@@ -79,7 +79,7 @@ function CalendarBookingContent() {
     const timers: ReturnType<typeof setTimeout>[] = [];
 
     function runCycle() {
-      timers.push(setTimeout(() => !cancelled && setPhase(1), TOUR_AT));
+      timers.push(setTimeout(() => !cancelled && setPhase(1), DEMO_AT));
       timers.push(setTimeout(() => !cancelled && setPhase(2), CONFIRM_AT));
       timers.push(setTimeout(() => !cancelled && setPhase(3), HOLD_END));
       timers.push(
@@ -97,13 +97,13 @@ function CalendarBookingContent() {
     };
   }, [reduced]);
 
-  const tourVisible = phase === 1 || phase === 2;
+  const demoVisible = phase === 1 || phase === 2;
   const confirmVisible = phase === 2;
 
   return (
     <div className="w-full h-full flex flex-col gap-2.5 min-h-0">
       {/* Calendar week grid — matches product calendar vocabulary. Fills all
-          available height; rows distribute as equal fractions so the tour
+          available height; rows distribute as equal fractions so the demo
           block always has room at every aspect. */}
       <div className="flex-1 min-h-0 border border-border/60 rounded-md overflow-hidden bg-background flex flex-col">
         {/* Header row: time-column gutter + day labels. shrink-0. */}
@@ -137,7 +137,7 @@ function CalendarBookingContent() {
                 {h}
               </div>
               {DAYS.map((d) => {
-                const isTourCell = d === 'Wed' && h === '2';
+                const isDemoCell = d === 'Wed' && h === '2';
                 return (
                   <div
                     key={`${d}-${h}`}
@@ -146,11 +146,11 @@ function CalendarBookingContent() {
                       rowIdx > 0 && 'border-t border-border/60',
                     )}
                   >
-                    {isTourCell && (
+                    {isDemoCell && (
                       <motion.div
                         initial={false}
                         animate={
-                          tourVisible
+                          demoVisible
                             ? { opacity: 1, y: 0 }
                             : { opacity: 0, y: 6 }
                         }
@@ -163,7 +163,7 @@ function CalendarBookingContent() {
                       >
                         <div className="min-w-0">
                           <p className="text-[9px] uppercase tracking-wider text-foreground/70 leading-none">
-                            Tour
+                            Demo
                           </p>
                           <p className="text-[10px] font-medium text-foreground leading-tight mt-0.5 truncate">
                             415 Lexington
@@ -182,10 +182,10 @@ function CalendarBookingContent() {
         </div>
       </div>
 
-      {/* Confirmation strip — quiet row below the grid; the Chippi badge
+      {/* Confirmation strip — quiet row below the grid; the Koala badge
           anchors the authorship. shrink-0 so the grid above stays fluid.
           The day + time live on the grid block already, so the strip says
-          one thing — Chippi booked it — and truncates rather than wrapping
+          one thing — Koala booked it — and truncates rather than wrapping
           at the narrowest (`wide`) width. */}
       <motion.div
         initial={false}
@@ -198,7 +198,7 @@ function CalendarBookingContent() {
         </span>
         <span className="min-w-0 truncate text-foreground">Confirmed with M. Chen</span>
         <span className="ml-auto shrink-0">
-          <DiagramChippiBadge label="Chippi" />
+          <DiagramKoalaBadge label="Koala" />
         </span>
       </motion.div>
     </div>

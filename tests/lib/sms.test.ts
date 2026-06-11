@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { newLeadSMS, newTourSMS, tourConfirmationSMS, newDealSMS } from '@/lib/sms';
+import { newLeadSMS, newDemoSMS, demoConfirmationSMS, newDealSMS } from '@/lib/sms';
 
 describe('SMS template builders', () => {
   it('newLeadSMS targets the owner phone', () => {
@@ -25,8 +25,8 @@ describe('SMS template builders', () => {
     expect(result.body).toContain('+15551234567');
   });
 
-  it('newTourSMS formats date, time, and property', () => {
-    const result = newTourSMS({
+  it('newDemoSMS formats date, time, and property', () => {
+    const result = newDemoSMS({
       spaceName: 'Acme',
       guestName: 'Bob',
       date: 'Mar 5',
@@ -39,8 +39,8 @@ describe('SMS template builders', () => {
     expect(result.body).toContain('123 Main St');
   });
 
-  it('tourConfirmationSMS targets the guest, not the owner', () => {
-    const result = tourConfirmationSMS({
+  it('demoConfirmationSMS targets the guest, not the owner', () => {
+    const result = demoConfirmationSMS({
       guestName: 'Bob',
       guestPhone: '+15551112222',
       businessName: 'Acme',

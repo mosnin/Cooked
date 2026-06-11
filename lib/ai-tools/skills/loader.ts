@@ -29,7 +29,7 @@
  *   - `title` + `prompt` (optional, paired) — make the skill user-invocable
  *     from the chat's `/` menu. `title` is the menu label; `prompt` is the
  *     text dropped into the composer when the skill is picked (it may carry
- *     one `{placeholder}` for the realtor to fill in). A skill appears in
+ *     one `{placeholder}` for the rep to fill in). A skill appears in
  *     the menu only when BOTH are present — there is no separate flag.
  *   - `order` (optional) — sort position in the `/` menu; lower is higher.
  *
@@ -42,7 +42,7 @@
  * Hot-reload is NOT implemented. Restart the process to pick up new skills.
  * Anthropic's Claude Code does fs.watchFile() on known paths; replicating
  * that here is ~30 lines of chokidar glue and doesn't earn its place at
- * Chippi's current scale (3 skills). Add if/when the count crosses ~20.
+ * Koala's current scale (3 skills). Add if/when the count crosses ~20.
  *
  * Bundling note: skills are loaded at module-init time via `process.cwd()`-
  * relative paths so Next.js's output tracer follows the readFileSync calls
@@ -206,12 +206,12 @@ export function __resetSkillCacheForTests(): void {
   _cached = null;
 }
 
-/** A skill the realtor can invoke from the chat `/` menu. */
+/** A skill the rep can invoke from the chat `/` menu. */
 export interface UserSkill {
   slug: string;
   title: string;
   description: string;
-  /** Composer text; may contain one `{placeholder}` for the realtor to fill. */
+  /** Composer text; may contain one `{placeholder}` for the rep to fill. */
   prompt: string;
 }
 

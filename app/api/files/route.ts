@@ -76,7 +76,7 @@ export async function GET(req: NextRequest) {
 
   // Query both surfaces in parallel — File (Files page uploads) AND
   // Attachment (chat uploads). The Files page renders the union so the
-  // realtor sees every file in one place. Each row carries `source` so
+  // rep sees every file in one place. Each row carries `source` so
   // the UI can show a small "From chat" badge and the delete path can
   // route to the right endpoint.
   const [fileRes, attachmentRes] = await Promise.all([
@@ -219,7 +219,7 @@ export async function GET(req: NextRequest) {
   );
 
   // Quota gauge counts File-table bytes only — chat attachments don't
-  // count against the realtor's storage quota (they're conversation
+  // count against the rep's storage quota (they're conversation
   // ephemera with their own retention).
   const usedBytes = fileRows.reduce((sum, r) => sum + r.sizeBytes, 0);
 

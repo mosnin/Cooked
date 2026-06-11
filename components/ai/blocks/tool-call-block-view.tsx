@@ -23,7 +23,7 @@ import { cn } from '@/lib/utils';
 import type { ToolCallBlock } from '@/lib/ai-tools/blocks';
 import { ContactsResult } from './tool-results/contacts-result';
 import { DealsResult } from './tool-results/deals-result';
-import { ToursResult } from './tool-results/tours-result';
+import { DemosResult } from './tool-results/demos-result';
 import { PropertiesResult } from './tool-results/properties-result';
 import { AvailabilityPickerCard } from './tool-results/availability-picker-card';
 
@@ -73,7 +73,7 @@ const TOOL_ICONS: Record<string, typeof Users> = {
   get_contact: Users,
   search_deals: Briefcase,
   pipeline_summary: BarChart3,
-  search_tours: CalendarDays,
+  search_demos: CalendarDays,
   get_note: FileText,
   send_email: Mail,
   send_sms: MessageSquare,
@@ -86,7 +86,7 @@ const TOOL_ICONS: Record<string, typeof Users> = {
 };
 
 /**
- * Tool-specific running verb. Realtors don't think in developer words like
+ * Tool-specific running verb. Reps don't think in developer words like
  * "Running" — they think in actions. Each verb maps to what the tool is
  * actually doing from the user's perspective.
  */
@@ -99,10 +99,10 @@ const TOOL_RUNNING_LABEL: Record<string, string> = {
   find_quiet_hot_persons: 'Analyzing…',
   find_deal: 'Looking up…',
   find_overdue_followups: 'Looking up…',
-  schedule_tour: 'Checking calendar…',
-  reschedule_tour: 'Checking calendar…',
+  schedule_demo: 'Checking calendar…',
+  reschedule_demo: 'Checking calendar…',
   check_availability: 'Checking calendar…',
-  find_tours: 'Checking calendar…',
+  find_demos: 'Checking calendar…',
   send_email: 'Drafting…',
   draft_email: 'Drafting…',
   draft_message: 'Drafting…',
@@ -143,14 +143,14 @@ function truncateErrorMessage(text: string, max: number): string {
 }
 
 /**
- * Produce a short prose hint from the tool args that a realtor can read at
- * a glance. UUID fields (contactId, dealId) are meaningless to realtors so
+ * Produce a short prose hint from the tool args that a rep can read at
+ * a glance. UUID fields (contactId, dealId) are meaningless to reps so
  * we skip them. Returns null when nothing useful can be shown.
  */
 function argsProseHint(args: Record<string, unknown> | undefined | null): string | null {
   if (!args) return null;
 
-  // UUIDs: skip entirely — they mean nothing to a realtor.
+  // UUIDs: skip entirely — they mean nothing to a rep.
   const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
   const isUUID = (v: unknown): boolean =>
     typeof v === 'string' && UUID_RE.test(v);
@@ -169,7 +169,7 @@ function argsProseHint(args: Record<string, unknown> | undefined | null): string
   }
 
   // Skip if the only fields are UUIDs or known-useless ids.
-  const UUID_KEYS = new Set(['contactId', 'dealId', 'tourId', 'propertyId', 'id']);
+  const UUID_KEYS = new Set(['contactId', 'dealId', 'demoId', 'propertyId', 'id']);
   const meaningful = Object.entries(args).filter(
     ([k, v]) => !UUID_KEYS.has(k) && !isUUID(v) && typeof v !== 'object',
   );
@@ -277,8 +277,8 @@ export function ToolCallBlockView({
     if (block.display === 'deals' && Array.isArray((data as { deals?: unknown[] }).deals)) {
       return <DealsResult data={data as { deals: never[] }} />;
     }
-    if (block.display === 'tours' && Array.isArray((data as { tours?: unknown[] }).tours)) {
-      return <ToursResult data={data as { tours: never[] }} />;
+    if (block.display === 'demos' && Array.isArray((data as { demos?: unknown[] }).demos)) {
+      return <DemosResult data={data as { demos: never[] }} />;
     }
     if (block.display === 'properties' && Array.isArray((data as { properties?: unknown[] }).properties)) {
       return <PropertiesResult data={data as { properties: never[] }} />;
@@ -306,7 +306,7 @@ export function ToolCallBlockView({
     return null;
   })();
 
-  // Inline error breadcrumb. On failure the realtor needs to know WHY without
+  // Inline error breadcrumb. On failure the rep needs to know WHY without
   // hunting for the expand chevron — Stream C's status-honesty pattern
   // (commit 4859066). Truncated to keep the transcript scannable; the full
   // text remains in the expandable details pane.
@@ -357,7 +357,7 @@ export function ToolCallBlockView({
       {/* Compact step row. Collapsed by default — args, summary, and full
           result detail live behind the expand chevron. Three pieces stay
           visible without an expand-click: (1) the rich result card below,
-          since it IS the realtor's answer; (2) the rose-tone error
+          since it IS the rep's answer; (2) the rose-tone error
           breadcrumb on failure (Stream C status-honesty pattern); and
           (3) a subtle row-shimmer while running, replacing the spinner-
           only signal with a calm, paper-flat sweep. */}
@@ -390,7 +390,7 @@ export function ToolCallBlockView({
         </span>
 
         {/* Args hint — only when expanded. Collapsed view stays minimal
-            (icon + label + status); the realtor expands to see context. */}
+            (icon + label + status); the rep expands to see context. */}
         {argsHint && expanded && (
           <span className="text-[11px] text-muted-foreground truncate flex-1 min-w-0">
             {argsHint}
@@ -420,7 +420,7 @@ export function ToolCallBlockView({
       </button>
 
       {/* Inline error breadcrumb for failed tools. Always visible — this
-          is Stream C's status-honesty pattern (commit 4859066): the realtor
+          is Stream C's status-honesty pattern (commit 4859066): the rep
           must not have to hunt for the expand chevron to see WHY a call
           failed. Tone token matches STYLESHEET.md status-pill failed tone. */}
       {inlineError && (
@@ -433,7 +433,7 @@ export function ToolCallBlockView({
       )}
 
       {/* Rich inline result rendering — visible by default for known data
-          shapes (contacts, deals, tours) so the realtor doesn't have to expand. */}
+          shapes (contacts, deals, demos) so the rep doesn't have to expand. */}
       {richResult}
 
       {/* Collapsible details — rendered below the row, slightly indented.

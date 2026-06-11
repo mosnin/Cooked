@@ -4,7 +4,7 @@
  * Pure functions so they're easy to test and share between the kanban card,
  * the pipeline strips, and (later) the Today inbox.
  *
- * Health is deliberately simple — three states only — because realtors don't
+ * Health is deliberately simple — three states only — because reps don't
  * think in probability percentages. A deal is either cruising, needs a nudge,
  * or has gone cold.
  */
@@ -43,7 +43,7 @@ function daysBetween(a: Date, b: Date): number {
  * Won / lost / on-hold deals always return 'on-track' — they aren't in flight.
  */
 // stageChangedAt is optional in the input so callers that pre-date the column
-// (broker pipeline, morning routes, old tests) keep compiling. Internally we
+// (manager pipeline, morning routes, old tests) keep compiling. Internally we
 // prefer it when present and fall back to updatedAt when not.
 type DealHealthInput = {
   status: Deal['status'];
@@ -75,18 +75,18 @@ export function dealHealth(deal: DealHealthInput): DealHealthMeta {
     ? daysBetween(today, new Date(stageRef.getFullYear(), stageRef.getMonth(), stageRef.getDate()))
     : null;
 
-  // Expected close date — overdue means something the realtor expected to close
+  // Expected close date — overdue means something the rep expected to close
   // and didn't. Real deal blockers live here.
   const close = deal.closeDate ? new Date(deal.closeDate) : null;
   const closeDays = close && !isNaN(close.getTime())
     ? daysBetween(new Date(close.getFullYear(), close.getMonth(), close.getDate()), today)
     : null;
 
-  // Follow-up overdue means the realtor committed to doing something and hasn't.
+  // Follow-up overdue means the rep committed to doing something and hasn't.
   const followUp = deal.followUpAt ? new Date(deal.followUpAt) : null;
   const followUpOverdue = !!(followUp && !isNaN(followUp.getTime()) && followUp.getTime() < today.getTime());
 
-  // Realtor-authored next action that's past its due date — a strong
+  // Rep-authored next action that's past its due date — a strong
   // "this specific deal is being ignored" signal.
   const nextDue = deal.nextActionDueAt ? new Date(deal.nextActionDueAt) : null;
   const nextActionOverdue = !!(deal.nextAction && nextDue && !isNaN(nextDue.getTime()) && nextDue.getTime() < today.getTime());
@@ -120,7 +120,7 @@ export function dealHealth(deal: DealHealthInput): DealHealthMeta {
  * Surface the deal's "what's next" for the card and Today inbox.
  *
  * Priority:
- *   1. Explicit `nextAction` — realtor typed it, respect it.
+ *   1. Explicit `nextAction` — rep typed it, respect it.
  *   2. Follow-up date — "follow up today / overdue / in 3 days".
  *   3. Close date — "closing today / in 5 days".
  *   4. null — card falls back to the deal title.
@@ -134,7 +134,7 @@ export function inferNextAction(
 
   const today = startOfToday();
 
-  // 1. Realtor-authored next action wins.
+  // 1. Rep-authored next action wins.
   if (deal.nextAction && deal.nextAction.trim()) {
     return {
       label: deal.nextAction.trim(),
@@ -165,7 +165,7 @@ export function inferNextAction(
 
 /**
  * Partition active deals into the three attention strips shown above the
- * board: closing this week, at-risk/stuck, and waiting on the realtor.
+ * board: closing this week, at-risk/stuck, and waiting on the rep.
  *
  * A deal can appear in multiple buckets — e.g. a deal closing this week with
  * an overdue follow-up is both "closing" and "waiting on me". We dedupe only

@@ -3,18 +3,22 @@
 /**
  * /s/[slug]/calls — Call log.
  *
- * One intent: a quiet record of who you called and what Chippi heard. Each row
- * is a call with a status pill, the contact (or number), and how long it ran.
- * Tap a row to expand its Chippi summary and full transcript.
+ * One intent: a quiet record of who you called and what was said. Each row is a
+ * call with a status pill, the contact (or number), and how long it ran. Tap a
+ * row to expand its recording, Axil's summary, and the full transcript.
+ *
+ * Recording + transcript come from Twilio: the call is recorded, transcribed,
+ * and summarized after it ends. Transcripts also feed Axil's coaching, so a rep
+ * (and their manager) can review what worked and what to tighten next time.
  *
  * Design: Jobs lens — paper-flat, hairline-divided rows, calm copy. The
- * summary is the focal payoff inside an expanded row; the transcript sits
- * quietly beneath it. No configuration the realtor operates here — placing a
- * call happens from a contact; this surface is the memory.
+ * summary is the focal payoff inside an expanded row; the recording link and
+ * transcript sit quietly beneath it. No configuration the rep operates here —
+ * placing a call happens from a contact; this surface is the memory.
  */
 
 import { useCallback, useEffect, useState } from 'react';
-import { Phone, PhoneOff, ChevronDown } from 'lucide-react';
+import { Phone, PhoneOff, ChevronDown, PlayCircle } from 'lucide-react';
 import { StaggerList, StaggerItem } from '@/components/motion/stagger-list';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -40,6 +44,8 @@ type CallStatus =
   | 'failed'
   | 'no_answer';
 
+type TranscriptStatus = 'pending' | 'available' | 'failed' | null;
+
 interface Call {
   id: string;
   contactId: string | null;
@@ -50,10 +56,27 @@ interface Call {
   status: CallStatus;
   recordingUrl: string | null;
   transcript: string | null;
+  transcriptStatus: TranscriptStatus;
   summary: string | null;
   durationSec: number | null;
   createdAt: string;
 }
+
+// Transcript badge tones — mirrors the call-status palette in STYLESHEET.md.
+const TRANSCRIPT_BADGE: Record<'pending' | 'available' | 'failed', { label: string; cls: string }> = {
+  pending: {
+    label: 'Transcribing',
+    cls: 'text-amber-700 bg-amber-50 dark:text-amber-400 dark:bg-amber-500/15',
+  },
+  available: {
+    label: 'Transcript ready',
+    cls: 'text-emerald-700 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-500/15',
+  },
+  failed: {
+    label: 'Transcript failed',
+    cls: 'text-muted-foreground bg-muted',
+  },
+};
 
 // Status pill tones — the canonical status palette from STYLESHEET.md.
 const STATUS_STYLES: Record<CallStatus, string> = {
@@ -93,7 +116,7 @@ function formatDuration(sec: number | null): string | null {
 }
 
 function statusSentence(calls: Call[]): string {
-  if (calls.length === 0) return 'Your calls land here, recorded and summarized.';
+  if (calls.length === 0) return 'Your calls land here — recorded, transcribed, and summarized.';
   const last = calls[0];
   const who = last.contactName ?? last.toNumber;
   return `Last call: ${who}.`;
@@ -202,7 +225,7 @@ export function CallsView({ slug }: { slug: string }) {
         </div>
         <p className={cn(CAPTION)}>
           Your phone rings first; once you pick up, we connect you to the contact and record the
-          call. Chippi summarizes it when it ends.
+          call. Axil transcribes and summarizes it when it ends.
         </p>
       </section>
 
@@ -218,7 +241,7 @@ export function CallsView({ slug }: { slug: string }) {
           <div className="rounded-xl border border-dashed border-border/70 bg-muted/20 px-5 py-10 text-center">
             <p className={cn(BODY)}>No calls yet.</p>
             <p className={cn(CAPTION, 'mt-1')}>
-              Call a contact and the recording, transcript, and summary show up here.
+              Call a prospect and the recording, transcript, and Axil&rsquo;s summary show up here.
             </p>
           </div>
         ) : (
@@ -226,7 +249,13 @@ export function CallsView({ slug }: { slug: string }) {
             {calls.map((c) => {
               const isOpen = expanded === c.id;
               const duration = formatDuration(c.durationSec);
-              const hasDetail = Boolean(c.summary || c.transcript);
+              const transcriptBadge =
+                c.transcriptStatus && c.transcriptStatus in TRANSCRIPT_BADGE
+                  ? TRANSCRIPT_BADGE[c.transcriptStatus as 'pending' | 'available' | 'failed']
+                  : null;
+              const hasDetail = Boolean(
+                c.summary || c.transcript || c.recordingUrl || transcriptBadge,
+              );
               return (
                 <StaggerItem key={c.id}>
                   <div className="py-3">
@@ -263,6 +292,16 @@ export function CallsView({ slug }: { slug: string }) {
                       >
                         {STATUS_LABELS[c.status]}
                       </span>
+                      {transcriptBadge && (
+                        <span
+                          className={cn(
+                            'hidden sm:inline-flex shrink-0 text-xs font-medium rounded-full px-2.5 py-0.5',
+                            transcriptBadge.cls,
+                          )}
+                        >
+                          {transcriptBadge.label}
+                        </span>
+                      )}
                       {hasDetail && (
                         <ChevronDown
                           size={14}
@@ -277,19 +316,47 @@ export function CallsView({ slug }: { slug: string }) {
 
                     {isOpen && hasDetail && (
                       <div className="mt-3 ml-10 space-y-4">
+                        {c.recordingUrl && (
+                          <a
+                            href={c.recordingUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={cn(
+                              CAPTION,
+                              'inline-flex items-center gap-1.5 text-foreground/80 hover:text-foreground transition-colors',
+                            )}
+                          >
+                            <PlayCircle size={14} strokeWidth={1.75} />
+                            Listen to the recording
+                          </a>
+                        )}
                         {c.summary && (
                           <div className="space-y-1.5">
-                            <p className={cn(SECTION_LABEL)}>Chippi summary</p>
+                            <p className={cn(SECTION_LABEL)}>Axil summary</p>
                             <p className={cn(BODY)}>{c.summary}</p>
                           </div>
                         )}
-                        {c.transcript && (
+                        {c.transcript ? (
                           <div className="space-y-1.5">
                             <p className={cn(SECTION_LABEL)}>Transcript</p>
                             <p className={cn(CAPTION, 'whitespace-pre-wrap leading-relaxed')}>
                               {c.transcript}
                             </p>
+                            <p className={cn(META, 'pt-0.5')}>
+                              Transcripts feed Axil&rsquo;s coaching.
+                            </p>
                           </div>
+                        ) : (
+                          transcriptBadge && (
+                            <div className="space-y-1.5">
+                              <p className={cn(SECTION_LABEL)}>Transcript</p>
+                              <p className={cn(CAPTION, 'text-muted-foreground')}>
+                                {c.transcriptStatus === 'pending'
+                                  ? 'Transcribing the call — this shows up shortly after the call ends.'
+                                  : 'No transcript was produced for this call.'}
+                              </p>
+                            </div>
+                          )
                         )}
                       </div>
                     )}

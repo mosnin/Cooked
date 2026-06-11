@@ -61,7 +61,7 @@ import type { ToolContext } from '@/lib/ai-tools/types';
 function makeCtx(): ToolContext {
   return {
     userId: 'user_1',
-    space: { id: 'space_1', slug: 'jane', name: 'Jane Realty', ownerId: 'u1' },
+    space: { id: 'space_1', slug: 'jane', name: 'Jane Sales', ownerId: 'u1' },
     signal: new AbortController().signal,
   };
 }
@@ -95,7 +95,7 @@ describe('findPersonTool', () => {
             phone: '+14155550101',
             leadScore: 87,
             scoreLabel: 'hot',
-            type: 'TOUR',
+            type: 'DEMO',
             followUpAt: null,
             lastContactedAt: new Date(Date.now() - 2 * 86_400_000).toISOString(),
             snoozedUntil: null,
@@ -147,7 +147,7 @@ describe('findPersonTool', () => {
     expect(p.phone).toBe('+14155550101');
     expect(p.leadScore).toBe(87);
     expect(p.scoreLabel).toBe('hot');
-    expect(p.type).toBe('TOUR');
+    expect(p.type).toBe('DEMO');
     expect(p.status).toBe('active');
     expect(p.days_since_last_touch).toBe(2);
     // Active deals only — the lost deal is excluded.

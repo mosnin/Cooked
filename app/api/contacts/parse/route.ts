@@ -19,7 +19,7 @@ type ParsedContact = {
   email: string | null;
   phone: string | null;
   type: 'rental' | 'buyer' | null;
-  stage: 'Qualifying' | 'Tour' | 'Application' | null;
+  stage: 'Qualifying' | 'Demo' | 'Application' | null;
   monthlyBudget: number | null;
   properties: string[];
   preferences: string | null;
@@ -33,8 +33,8 @@ type ParseError = {
 };
 
 const SYSTEM_PROMPT = [
-  'You are a CRM contact parser for a real-estate agent. Extract structured fields',
-  "from the realtor's note. Return JSON only — no prose.",
+  'You are a CRM contact parser for a sales agent. Extract structured fields',
+  "from the rep's note. Return JSON only — no prose.",
   '',
   'Schema:',
   '{',
@@ -42,7 +42,7 @@ const SYSTEM_PROMPT = [
   '  "email": string | null,',
   '  "phone": string | null (digits only, no formatting),',
   '  "type": "rental" | "buyer" | null,',
-  '  "stage": "Qualifying" | "Tour" | "Application" | null,',
+  '  "stage": "Qualifying" | "Demo" | "Application" | null,',
   '  "monthlyBudget": number | null (in dollars, derived from "$4200/mo" or similar),',
   '  "properties": string[] (any addresses/listings mentioned),',
   '  "preferences": string | null (free-text — neighborhood, bedroom count, pet-friendly, etc.),',
@@ -142,7 +142,7 @@ export async function POST(req: NextRequest) {
       messages: [
         { role: 'system', content: SYSTEM_PROMPT },
         // Wrap the user-controlled text so it can't be confused with an instruction.
-        { role: 'user', content: `Realtor note:\n"""\n${trimmed}\n"""` },
+        { role: 'user', content: `Rep note:\n"""\n${trimmed}\n"""` },
       ],
     });
     raw = completion.choices[0]?.message?.content ?? null;
@@ -256,8 +256,8 @@ function stageType(v: unknown): 'rental' | 'buyer' | null {
   return v === 'rental' || v === 'buyer' ? v : null;
 }
 
-function stageName(v: unknown): 'Qualifying' | 'Tour' | 'Application' | null {
-  return v === 'Qualifying' || v === 'Tour' || v === 'Application' ? v : null;
+function stageName(v: unknown): 'Qualifying' | 'Demo' | 'Application' | null {
+  return v === 'Qualifying' || v === 'Demo' || v === 'Application' ? v : null;
 }
 
 function confidence(v: unknown): 'high' | 'medium' | 'low' {

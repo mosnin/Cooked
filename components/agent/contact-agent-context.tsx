@@ -15,7 +15,7 @@ interface AgentContext {
 
 const GOAL_LABELS: Record<string, string> = {
   follow_up_sequence: 'Follow-up',
-  tour_booking: 'Tour booking',
+  demo_booking: 'Demo booking',
   offer_progress: 'Offer',
   deal_close: 'Closing',
   reengagement: 'Re-engage',

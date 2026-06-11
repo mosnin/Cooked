@@ -18,12 +18,12 @@ export const dynamic = 'force-dynamic';
  * Studio landing — the home that explains what Studio is.
  *
  * Previously this route redirected straight to /create, which dropped the
- * realtor into a tool with zero context. Now it's the canonical realtor
+ * rep into a tool with zero context. Now it's the canonical rep
  * page (muted greeting → serif H1 → status sentence) followed by a flat
  * grid of the five Studio workflows. Each card is a Link to a sub-route.
  *
  * Cards are paper-flat: hairline border, muted hover, no shadow. Matches
- * the canonical card vocabulary on the rest of the realtor surface.
+ * the canonical card vocabulary on the rest of the rep surface.
  */
 export default async function StudioPage({
   params,
@@ -56,7 +56,7 @@ export default async function StudioPage({
     {
       href: `/s/${slug}/studio/schedule`,
       title: 'Schedule',
-      subtitle: 'Pick a time, Chippi posts when you are not online.',
+      subtitle: 'Pick a time, Koala posts when you are not online.',
       icon: CalendarClock,
     },
     {

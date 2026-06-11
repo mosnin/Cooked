@@ -31,9 +31,9 @@ import { motion } from 'motion/react';
 import { cn } from '@/lib/utils';
 import { EASE_APPLE } from '@/lib/motion';
 import {
-  ChippiDiagramShell,
+  KoalaDiagramShell,
   useDiagramMotion,
-} from './chippi-diagram-shell';
+} from './koala-diagram-shell';
 
 interface TeamMembersDiagramProps {
   aspect?: 'video' | 'square' | 'wide' | 'tall';
@@ -106,9 +106,9 @@ export function TeamMembersDiagram({
   className,
 }: TeamMembersDiagramProps) {
   return (
-    <ChippiDiagramShell aspect={aspect} pad={6} className={className}>
+    <KoalaDiagramShell aspect={aspect} pad={6} className={className}>
       <TeamMembersContent />
-    </ChippiDiagramShell>
+    </KoalaDiagramShell>
   );
 }
 

@@ -6,7 +6,7 @@
  *
  * Header follows STYLESHEET.md § "The status-sentence pattern":
  *   muted greeting line (with period) → serif h1 → one-sentence status.
- * The status sentence is computed from File table totals so the realtor
+ * The status sentence is computed from File table totals so the rep
  * lands on a calm fact, not a directive ("Drop a file here…" reads as a
  * tooltip; "27 files. 142 MB so far." reads as the workspace's state).
  */

@@ -2,7 +2,7 @@
 
 /**
  * RainbowButton: the marketing CTA flourish. Ported from fortitudo; the
- * rainbow color stops are retuned to a warm Chippi palette (see --color-1..5
+ * rainbow color stops are retuned to a warm Koala palette (see --color-1..5
  * in globals.css). Reserved for the logged-out site's primary CTA moments.
  */
 

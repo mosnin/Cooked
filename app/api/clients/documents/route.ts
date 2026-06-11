@@ -24,7 +24,7 @@ const ALLOWED_TYPES = [
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 ];
 
-/** Magic-number check — same defense as the realtor upload route. */
+/** Magic-number check — same defense as the rep upload route. */
 function contentMatchesType(header: Uint8Array): boolean {
   const isPdf = header[0] === 0x25 && header[1] === 0x50 && header[2] === 0x44 && header[3] === 0x46;
   const isJpeg = header[0] === 0xff && header[1] === 0xd8;
@@ -117,7 +117,7 @@ export async function POST(req: NextRequest) {
   const spaceId = (contact as { spaceId: string }).spaceId;
 
   const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_').slice(0, 120);
-  // Reuse the contact-documents prefix so it lands beside realtor-uploaded docs
+  // Reuse the contact-documents prefix so it lands beside rep-uploaded docs
   // for the same contact; the DB row's uploadedBy distinguishes the source.
   const fileKey = buildKey('contactDocuments', spaceId, contactId, `${crypto.randomUUID()}-${safeName}`);
 

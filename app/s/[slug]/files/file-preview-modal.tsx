@@ -264,7 +264,7 @@ function PreviewBody({
   }
 
   // "other" — keep today's pure-icon experience inside the modal so the
-  // realtor still sees the file name and gets a Download.
+  // rep still sees the file name and gets a Download.
   return (
     <div className="px-5 py-16 flex flex-col items-center gap-3 text-center bg-muted/20">
       <FileText className="h-10 w-10 text-muted-foreground/60" />

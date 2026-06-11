@@ -7,7 +7,7 @@
 ALTER TABLE "Contact" REPLICA IDENTITY FULL;
 ALTER TABLE "Deal" REPLICA IDENTITY FULL;
 ALTER TABLE "DealStage" REPLICA IDENTITY FULL;
-ALTER TABLE "Tour" REPLICA IDENTITY FULL;
+ALTER TABLE "Demo" REPLICA IDENTITY FULL;
 
 -- Add tables to the supabase_realtime publication
 -- (this publication is created automatically by Supabase)
@@ -36,9 +36,9 @@ BEGIN
 
   IF NOT EXISTS (
     SELECT 1 FROM pg_publication_tables
-    WHERE pubname = 'supabase_realtime' AND tablename = 'Tour'
+    WHERE pubname = 'supabase_realtime' AND tablename = 'Demo'
   ) THEN
-    ALTER PUBLICATION supabase_realtime ADD TABLE "Tour";
+    ALTER PUBLICATION supabase_realtime ADD TABLE "Demo";
   END IF;
 END $$;
 
@@ -60,6 +60,6 @@ CREATE POLICY "realtime: anon can read deal stages by space"
   ON "DealStage" FOR SELECT TO anon
   USING (true);
 
-CREATE POLICY "realtime: anon can read tours by space"
-  ON "Tour" FOR SELECT TO anon
+CREATE POLICY "realtime: anon can read demos by space"
+  ON "Demo" FOR SELECT TO anon
   USING (true);

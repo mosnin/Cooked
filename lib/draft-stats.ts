@@ -2,9 +2,9 @@
  * Pure aggregation helpers for AgentDraft feedback + outcome rows.
  *
  * Two consumers:
- *   1. `GET /api/agent/draft-stats` — realtor-scoped, single space.
- *   2. The broker dashboard's "Draft impact" card — brokerage-scoped, all
- *      spaces in the brokerage rolled up.
+ *   1. `GET /api/agent/draft-stats` — rep-scoped, single space.
+ *   2. The manager dashboard's "Draft impact" card — team-scoped, all
+ *      spaces in the team rolled up.
  *
  * Keeping the math here means both surfaces report the same numbers off the
  * same input. The route and the card are responsible for fetching the rows

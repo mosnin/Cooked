@@ -16,7 +16,7 @@ import type { ToolContext } from '@/lib/ai-tools/types';
 function makeCtx(): ToolContext {
   return {
     userId: 'u_1',
-    space: { id: 's_1', slug: 'jane', name: 'Jane Realty', ownerId: 'u_1' },
+    space: { id: 's_1', slug: 'jane', name: 'Jane Sales', ownerId: 'u_1' },
     signal: new AbortController().signal,
   };
 }
@@ -41,7 +41,7 @@ describe('buildPipelineAnalystAgent', () => {
     expect(names).toContain('find_overdue_followups');
   });
 
-  it('asTool() produces a FunctionTool with the realtor-tuned name + description', () => {
+  it('asTool() produces a FunctionTool with the rep-tuned name + description', () => {
     const agent = buildPipelineAnalystAgent(makeCtx());
     const asTool = agent.asTool({
       toolName: 'analyze_pipeline',
@@ -73,7 +73,7 @@ describe('buildContactResearcherAgent', () => {
     expect(names).toContain('find_deal');
   });
 
-  it('asTool() produces a FunctionTool with the realtor-tuned name + description', () => {
+  it('asTool() produces a FunctionTool with the rep-tuned name + description', () => {
     const agent = buildContactResearcherAgent(makeCtx());
     const asTool = agent.asTool({
       toolName: 'research_person',

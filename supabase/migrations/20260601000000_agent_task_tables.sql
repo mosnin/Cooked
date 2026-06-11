@@ -5,7 +5,7 @@
 --   AgentTask        — a unit of work the agent has been asked to perform.
 --                      May be triggered manually, by a schedule, or by another
 --                      task (parentTaskId). Tracks overall status, token spend,
---                      and estimated cost so the realtor can audit what Chippi
+--                      and estimated cost so the rep can audit what Koala
 --                      has been doing.
 --
 --   ExecutionStep    — one tool call within a task run. A task produces a

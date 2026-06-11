@@ -48,7 +48,7 @@ function downloadTemplate() {
   const csv = [
     'Name,Phone,Email,Budget,Type,Notes',
     'Jane Smith,555-123-4567,jane@example.com,2500,QUALIFICATION,Looking for 2BR near downtown',
-    'Bob Chen,555-987-6543,bob@example.com,1800,TOUR,Prefers ground floor',
+    'Bob Chen,555-987-6543,bob@example.com,1800,DEMO,Prefers ground floor',
   ].join('\n');
   const blob = new Blob([csv], { type: 'text/csv' });
   const url = URL.createObjectURL(blob);
@@ -68,7 +68,7 @@ const FIELD_OPTIONS: { value: ContactField; label: string }[] = [
   { value: 'phone', label: 'Phone' },
   { value: 'email', label: 'Email' },
   { value: 'budget', label: 'Budget ($/mo)' },
-  { value: 'type', label: 'Stage (QUALIFICATION/TOUR/APPLICATION)' },
+  { value: 'type', label: 'Stage (QUALIFICATION/DEMO/APPLICATION)' },
   { value: 'notes', label: 'Notes' },
   { value: 'ignore', label: '— Ignore column —' },
 ];

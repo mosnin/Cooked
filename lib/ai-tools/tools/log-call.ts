@@ -1,7 +1,7 @@
 /**
  * `log_call` — append a call to the contact's audit trail.
  *
- * Approval-gated because the activity log is what the realtor's brokerage
+ * Approval-gated because the activity log is what the rep's team
  * audits at end-of-month. The model writing into it without a "yes" is the
  * kind of thing that erodes trust fast.
  *
@@ -64,7 +64,7 @@ export const logCallTool = defineTool<typeof parameters, LogCallResult>({
       .select('id, name')
       .eq('id', args.personId)
       .eq('spaceId', ctx.space.id)
-      .is('brokerageId', null)
+      .is('teamId', null)
       .maybeSingle();
     if (lookupErr) {
       return { summary: `Contact lookup failed: ${lookupErr.message}`, display: 'error' };

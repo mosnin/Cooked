@@ -62,7 +62,7 @@ export function validateCreatePayload(
     // `end_datetime` fields, which want a datetime string. Represent an
     // all-day event as a 24-hour timed event from local midnight to the
     // next day's midnight — Google renders this visually identical to a
-    // true all-day event for the realtor, and we avoid a fragile date-
+    // true all-day event for the rep, and we avoid a fragile date-
     // only path through the Composio wrapper. v2 can branch to true
     // all-day when we extend `writeEventThrough`.
     if (endDate < startDate) return { ok: false, error: 'End date is before start.' };

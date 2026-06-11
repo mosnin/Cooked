@@ -1,6 +1,6 @@
 -- Drop dead AgentSettings columns.
 --
--- After collapsing the multi-agent platform into a single Chippi agent
+-- After collapsing the multi-agent platform into a single Koala agent
 -- and deleting the 15-minute heartbeat:
 --
 --   autonomyLevel             — three-mode autonomy (autonomous / draft_required

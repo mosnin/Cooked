@@ -5,7 +5,7 @@
  * nothing summed those costs into a usable signal. Per-user rate limits
  * (60 generations/hour) bounded throughput but not spend — at the most
  * expensive model ($0.50/call, e.g. seedance-video), a runaway agent or
- * compromised realtor account could burn $30/hour, $720/day, with zero
+ * compromised rep account could burn $30/hour, $720/day, with zero
  * automated guard.
  *
  * This module owns the per-space daily cap. Both /api/studio/generate
@@ -14,7 +14,7 @@
  * spend ≥ the cap, the request is rejected before fal.ai is called.
  *
  * Cap is a single env-tunable knob (STUDIO_DAILY_SPEND_CAP_USD), default
- * $50/day per space — generous for a real working realtor, hard ceiling
+ * $50/day per space — generous for a real working rep, hard ceiling
  * on the abuse path. Set higher in env when a power user complains;
  * never silently expand it from code.
  */
@@ -35,7 +35,7 @@ function getCapUsd(): number {
 /**
  * Sum StudioGeneration.costUsd for the given space over the last 24
  * hours. Best-effort: a DB hiccup logs a warning and returns 0 (we'd
- * rather let a generation through than block a paying realtor on a
+ * rather let a generation through than block a paying rep on a
  * transient outage). The rate limiter still bounds throughput.
  */
 export async function getStudioSpendToday(spaceId: string): Promise<number> {

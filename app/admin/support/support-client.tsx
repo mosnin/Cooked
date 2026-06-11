@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * Admin support center — triage every realtor help request.
+ * Admin support center — triage every rep help request.
  *
  * Structure mirrors announcement-client.tsx: a status filter strip, a table of
  * tickets, and a Dialog for the full message + inline triage (status, priority,
@@ -204,7 +204,7 @@ export function SupportClient({
           <EmptyState
             icon={LifeBuoy}
             title="Nothing here. Quiet day."
-            description="Help requests from realtors will land here for triage."
+            description="Help requests from reps will land here for triage."
           />
         </div>
       ) : (
@@ -347,7 +347,7 @@ export function SupportClient({
                     value={draftNote}
                     maxLength={ADMIN_NOTE_MAX}
                     onChange={(e) => setDraftNote(e.target.value)}
-                    placeholder="Triage notes — not shown to the realtor."
+                    placeholder="Triage notes — not shown to the rep."
                     rows={3}
                   />
                 </div>

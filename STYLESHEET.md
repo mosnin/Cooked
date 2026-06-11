@@ -11,9 +11,9 @@ same vocabulary.
 
 ## The one idea
 
-Chippi feels **calm, paper-flat, and quietly confident**.
+Koala feels **calm, paper-flat, and quietly confident**.
 
-A realtor opens it and the surface gets out of the way. There are no shadows,
+A rep opens it and the surface gets out of the way. There are no shadows,
 no gradients, no celebrations. The chrome recedes. The work — names, numbers,
 drafts — is the only thing that's loud. Brand orange exists, but it's earned;
 it does not decorate.
@@ -40,7 +40,7 @@ back a layer.
    no exclamation marks unless something genuinely warrants celebration.
 6. **Sweat the corner radius and the silence.** Spacing, easing, and stop-time
    between micro-interactions are not optional details — they are the design.
-7. **The agent has a single voice.** When Chippi appears anywhere — toast,
+7. **The agent has a single voice.** When Koala appears anywhere — toast,
    draft card, activity row, badge — it carries the same orange + serif
    signature. Nothing else does.
 
@@ -85,7 +85,7 @@ If a feature looks like it needs a new dep, the bar is high — it almost never 
 --primary           = foreground. Black on white, white on black. NOT orange.
 --destructive       red
 
---brand             #ff964f — Chippi orange
+--brand             #ff964f — Koala orange
 --brand-foreground  white
 --brand-subtle      #fff4eb / #2a1f17 — washed orange tint
 
@@ -113,34 +113,34 @@ Brand orange (`--brand`, `text-orange-500`, `text-orange-600 dark:text-orange-40
 | Context (constant in `lib/colors.ts`) | Where | Built in |
 |---|---|---|
 | `LOGO` | The logo + wordmark + onboarding brand wash | `components/ui/brand-logo.tsx`, `components/onboarding/onboarding-shell.tsx` |
-| `CHIPPI_AVATAR` | Chip widget in composer/header/toast; `ChippiWordmarkInline` (serif "Chippi" in prose, used at most once per surface) | `components/agent/chippi-avatar.tsx`, `components/agent/chippi-authored.tsx` |
-| `AGENT_BADGE` | Authorship pill on AgentDraft rows, conversation messages, activity rows; the 4px `ChippiAuthoredDot` on Chippi-actored rows | `components/agent/agent-generated-badge.tsx`, `components/agent/chippi-authored.tsx` |
+| `KOALA_AVATAR` | Chip widget in composer/header/toast; `KoalaWordmarkInline` (serif "Koala" in prose, used at most once per surface) | `components/agent/koala-avatar.tsx`, `components/agent/koala-authored.tsx` |
+| `AGENT_BADGE` | Authorship pill on AgentDraft rows, conversation messages, activity rows; the 4px `KoalaAuthoredDot` on Koala-actored rows | `components/agent/agent-generated-badge.tsx`, `components/agent/koala-authored.tsx` |
 | `ACTIVITY_BAR` | Progress fill on autonomous-run activity bars and in-flight indicators | `components/agent/lead-score-bar.tsx` and equivalents |
 | `LEAD_WARM` | Lead-warm tier indicator (mustard, not orange — but conceptually adjacent) | `components/agent/lead-score-bar.tsx` |
 
 It does **not** appear on default buttons, primary CTAs, links, focus rings,
 nav, or "active" indicators. Those are all foreground (black/white). If you
-catch yourself reaching for orange on a non-Chippi element, that's the bug.
+catch yourself reaching for orange on a non-Koala element, that's the bug.
 
 The five contexts are codified as `BRAND_ORANGE_CONTEXTS` in `lib/colors.ts`,
 along with a `brandOrange()` wrapper for tagging deliberate usage. Adding a
 sixth context requires deleting one of the existing five — discipline lives
 in the constraint, not in this paragraph.
 
-#### `CHIPPI_PILL` — the one pill that wears the brand
+#### `KOALA_PILL` — the one pill that wears the brand
 
 `PRIMARY_PILL` is the locked primary pill (foreground bg). Buttons that
-DIRECTLY invoke Chippi ("Tell Chippi", "Ask Chippi", "Chippi, help with this")
-use `CHIPPI_PILL` instead: same vocabulary, but the hover state shifts to a
-barely-perceptible warm halo so the realtor feels Chippi at the moment they
-reach for the button. Reach for `CHIPPI_PILL` only on buttons that name
-Chippi explicitly — otherwise, `PRIMARY_PILL` stays the default.
+DIRECTLY invoke Koala ("Tell Koala", "Ask Koala", "Koala, help with this")
+use `KOALA_PILL` instead: same vocabulary, but the hover state shifts to a
+barely-perceptible warm halo so the rep feels Koala at the moment they
+reach for the button. Reach for `KOALA_PILL` only on buttons that name
+Koala explicitly — otherwise, `PRIMARY_PILL` stays the default.
 
 #### Enforcement
 
 `tests/style/no-stray-orange.test.ts` fails CI when a file in
 `STRICT_DIRS` uses an `*-orange-*` class without importing
-`brandOrange` (or `CHIPPI_PILL`, or being one of the named leaf
+`brandOrange` (or `KOALA_PILL`, or being one of the named leaf
 components). The strict zone grows directory by directory as we audit
 + tag the existing call sites.
 
@@ -218,7 +218,7 @@ Every page header looks like this:
 ```
 
 Three lines: muted greeting line (with period) → serif h1 → one-sentence
-status. Same shape on Chippi home, Reviews, agent-activity, broker overview.
+status. Same shape on Koala home, Reviews, agent-activity, manager overview.
 **Don't break the pattern.** It's how the surface reads as one product.
 
 ---
@@ -245,7 +245,7 @@ exist in the harmonic.
 
 | Width | When |
 |---|---|
-| `max-w-5xl mx-auto` | Broker overview, dashboard pages |
+| `max-w-5xl mx-auto` | Manager overview, dashboard pages |
 | `max-w-4xl mx-auto` | Reviews, focused list views |
 | `max-w-3xl mx-auto` | Chat, settings, intake — single-column reading |
 | `max-w-[1500px]` | Wide tables, kanban |
@@ -255,7 +255,7 @@ Always paired with `pb-12` so the page has bottom breathing room.
 
 ### Geometry — the FocusCard rule
 
-The realtor's primary surface is the FocusCard. It sits inside the
+The rep's primary surface is the FocusCard. It sits inside the
 1500px page max minus 2 × 48px content padding at `lg`, giving an
 inner content column of **1404px**. The card itself is **868px**.
 
@@ -282,7 +282,7 @@ octave → fifth → fourth):
 | Token | Formula | Value |
 |---|---|---|
 | `SIDEBAR_WIDTH_PX` | `RHYTHM_U × 5` | 240 |
-| `CHIPPI_BAR_WIDTH_PX` | `RHYTHM_U × 16` | 768 |
+| `KOALA_BAR_WIDTH_PX` | `RHYTHM_U × 16` | 768 |
 | `PAGE_PAD_LG_PX` | `RHYTHM_U × 1` | 48 |
 
 **φ family** — the FocusCard inscribed inside the column:
@@ -423,7 +423,7 @@ Shadows live in exactly four places at the system level:
 Marketing pages (`app/features/*`, `components/ui/hero-section-1.tsx`,
 `floating-chat-widget`, etc.) DO use `shadow-sm` / `shadow-xl` /
 `shadow-2xl`. **The product does not.** When working in `app/s/[slug]/*`,
-`app/broker/*`, or any dashboard component, leave shadows in the marketing
+`app/manager/*`, or any dashboard component, leave shadows in the marketing
 layer and use borders instead.
 
 ### Enforcement
@@ -435,10 +435,10 @@ surfaces — promoting a directory is a one-way door. The file's
 `STRICT_DIRS_TODO` list shows the migration backlog.
 
 Strict today: `components/onboarding`, `components/agent`,
-`components/chippi` (the brand-heavy dirs). The docked Chippi composer
-(`chippi-bar.tsx`) is allowlisted — it's a floating surface, same class
+`components/koala` (the brand-heavy dirs). The docked Koala composer
+(`koala-bar.tsx`) is allowlisted — it's a floating surface, same class
 as a toast. Remaining backlog: `components/contacts`, `components/deals`,
-`components/dashboard`, `components/settings`, `app/s`, `app/broker`.
+`components/dashboard`, `components/settings`, `app/s`, `app/manager`.
 
 ---
 
@@ -562,7 +562,7 @@ Desc      text-sm text-muted-foreground
 ```
 
 Use AlertDialog (not Dialog) for **destructive or irreversible** actions.
-The "Pause me?" disable-Chippi confirmation is the canonical example.
+The "Pause me?" disable-Koala confirmation is the canonical example.
 AlertDialog gates with two buttons (Cancel + Action), forces a choice,
 and the Action button uses the destructive variant when warranted.
 
@@ -618,8 +618,8 @@ Head cell   h-10 px-2 text-left align-middle text-muted-foreground font-medium t
 Cell        p-2 align-middle
 ```
 
-Use `<Table>` for genuine tabular data — broker leaderboard, audit logs,
-analytics. For the dashboard's per-realtor list (where you want avatars,
+Use `<Table>` for genuine tabular data — manager leaderboard, audit logs,
+analytics. For the dashboard's per-rep list (where you want avatars,
 flowing text, and inline metadata) use the **divide-y row list** pattern
 instead — tables read as bureaucratic; the row list reads as a feed.
 
@@ -697,13 +697,13 @@ segmented-control trick. **Use it for any tab strip or window selector.**
 
 The product talks like a sharp colleague who already knows your book of business.
 
-- Lowercase verb in toasts: `"Tour booked — Sarah Chen."` Period.
+- Lowercase verb in toasts: `"Demo booked — Sarah Chen."` Period.
 - One-sentence status lines under every page title.
 - Active voice; "drafted" not "has been drafted."
 - Empty states are calm facts: "You're all caught up.", "Nothing flagged.
   Quiet day.", "quiet — nothing in flight."
 - Microcopy on buttons is verb-led: "Open", "Resolve", "Pause", "Run now".
-- "Chippi" is the agent's name. Capitalised. Don't say "the agent" or "the
+- "Koala" is the agent's name. Capitalised. Don't say "the agent" or "the
   AI" or "the assistant" anywhere user-facing.
 - No emojis in product chrome. Suggestion chips are the one exception.
 - No exclamation marks. Confidence doesn't shout.
@@ -799,8 +799,8 @@ Loud-to-quiet from the top:
 2. **The pending action.** Pending drafts count, open reviews count, the
    unreviewed item — these get the foreground pill (`bg-primary
    text-primary-foreground`) so they read as "you owe this."
-3. **Chippi's authorship.** Anything authored by the agent gets the
-   orange tint or the small Chippi badge. The orange in chrome is **only**
+3. **Koala's authorship.** Anything authored by the agent gets the
+   orange tint or the small Koala badge. The orange in chrome is **only**
    for this; it's the brand's quiet signature.
 
 ### What always recedes
@@ -817,9 +817,9 @@ element will pull the eye on its own.
 
 ---
 
-## Dashboard homepage (`app/s/[slug]/chippi/page.tsx`)
+## Dashboard homepage (`app/s/[slug]/koala/page.tsx`)
 
-The Chippi workspace is the realtor's home. It is **the** product surface;
+The Koala workspace is the rep's home. It is **the** product surface;
 the rest of the app is in service of it.
 
 ### Layout
@@ -828,13 +828,13 @@ the rest of the app is in service of it.
   The composer is a docked `sticky bottom-0` element with a gradient mask
   fading content above it.
 - **Vertical flow**: greeting (centered serif h1) → MorningReplay (only
-  if there's overnight activity to show) → HowChippiWorksTip (one-time)
+  if there's overnight activity to show) → HowKoalaWorksTip (one-time)
   → TodayFeed → composer + suggestion chips.
 - **Active conversation mode** swaps the Today view for a transcript:
   `ScrollArea`, `max-w-3xl mx-auto px-4 sm:px-6 pt-12 sm:pt-14 pb-4`,
   message list with `space-y-7` between turns.
 
-### Hero (the first surface a realtor sees)
+### Hero (the first surface a rep sees)
 
 ```tsx
 <header className="space-y-1.5 text-center">
@@ -854,11 +854,11 @@ narrative read of the workspace ("You have 3 leads to follow up with."
 or similar).
 
 **This is the only h1 in the product that's centered.** Everywhere else,
-h1 is left-aligned. The Chippi home is centered because the surface is
+h1 is left-aligned. The Koala home is centered because the surface is
 intentionally calm and conversational; the rest of the app is dense and
 left-aligned.
 
-### Suggestion chips (`SUGGESTIONS` constant in chippi-workspace)
+### Suggestion chips (`SUGGESTIONS` constant in koala-workspace)
 
 ```
 inline-flex items-center gap-1.5 rounded-full
@@ -899,13 +899,13 @@ The **logged-out** surfaces (the marketing site under `app/(marketing)/`
 and the auth pages under `app/(auth)/`) run a **different, louder** visual
 system than the product. The product is paper-flat and neutral; the
 logged-out site is the **studio ASCII** aesthetic, adopted wholesale from
-the fortitudo design and retinted to Chippi orange. This split is
+the fortitudo design and retinted to Koala orange. This split is
 deliberate: marketing does the pitch, the product does the work.
 
 **This system NEVER leaks into the product.** Everything here is opt-in via
 a class (`.font-brand`, `.text-gradient-brand`, `.rounded-marketing-*`) or
 lives in `components/marketing/fortitudo/**`. The dashboard, agent chat, and
-broker app stay on the neutral system documented above. The `no-stray-orange`
+manager app stay on the neutral system documented above. The `no-stray-orange`
 and `no-shadow-on-product-chrome` tests still pass because `components/marketing`
 is outside the strict zone — orange and shadows are *expected* here.
 
@@ -917,7 +917,7 @@ is outside the strict zone — orange and shadows are *expected* here.
   `--font-brand`. The product never uses it (the product's serif flourish is
   still Times via `--font-title`).
 - **ASCII field** — `components/marketing/fortitudo/ascii-field.tsx`. A slow
-  canvas field of glyphs in Chippi orange (#ff964f → pale amber on the crests),
+  canvas field of glyphs in Koala orange (#ff964f → pale amber on the crests),
   orange-on-transparent so it reads on **both** light and dark. It's the
   signature behind every hero and inside the closing CTA card.
 - **Orange is the marketing primary.** On the logged-out site, primary CTAs,
@@ -935,11 +935,11 @@ is outside the strict zone — orange and shadows are *expected* here.
 
 | Piece | File | Notes |
 |---|---|---|
-| Floating pill nav | `nav.tsx` | Frosted card pill, mega-menu dropdowns, full-screen ASCII mobile menu. Chippi routes + Clerk auth links. |
+| Floating pill nav | `nav.tsx` | Frosted card pill, mega-menu dropdowns, full-screen ASCII mobile menu. Koala routes + Clerk auth links. |
 | Inset charcoal footer | `footer.tsx` | Rounded dark card, brand small-caps column heads. |
 | Scroll progress | `scroll-progress.tsx` | Thin brand-orange bar pinned top. |
-| Theme toggle | `theme-toggle.tsx` | Round chip, wired to Chippi's `ThemeProvider`. |
-| Gradient card | `gradient-card.tsx` | 3D-tilt dark card + ASCII + orange glow. Home "what Chippi does". |
+| Theme toggle | `theme-toggle.tsx` | Round chip, wired to Koala's `ThemeProvider`. |
+| Gradient card | `gradient-card.tsx` | 3D-tilt dark card + ASCII + orange glow. Home "what Koala does". |
 | Spotlight card | `spotlight-card.tsx` | Cursor-tracking orange glow, theme-aware. Steps / testimonials / beliefs. |
 | Rotating word | `rotating-word.tsx` | Headline word that morphs (blur + slide). |
 | Dot flow / loader | `dot-flow.tsx`, `dot-loader.tsx` | The GSAP status chip in the hero. |
@@ -949,13 +949,13 @@ The route-group `layout.tsx` mounts ScrollProgress + nav + footer, so **every**
 logged-out page inherits the look. Home sections live in
 `components/marketing/fortitudo/home/**`. The shared `MarketingHero` /
 `MarketingCTA` and the home-kit `Eyebrow` were retuned to this system so the
-sub-pages (realtors, brokerages, integrations, company, pricing, status) cohere.
+sub-pages (reps, teams, integrations, company, pricing, status) cohere.
 
 ### Where the discipline still holds
 
 - **Copy voice is unchanged** — calm, lowercase verbs, no exclamation marks,
-  no em dashes, no invented metrics. Realtors/brokerages never get phone
-  numbers and Chippi never texts/calls leads; marketing copy never implies it.
+  no em dashes, no invented metrics. Reps/teams never get phone
+  numbers and Koala never texts/calls leads; marketing copy never implies it.
 - **The product is off-limits.** If you find yourself reaching for `.font-brand`
   or `bg-brand` as a *primary* outside `components/marketing/**` or the auth
   layout, that's the bug. The product's orange rule (the five contexts) is
@@ -1012,7 +1012,7 @@ RIGHT panel  (brand promise)
 
 ### Role switcher (login pages only)
 
-A two-tab segmented control above the form: Realtor / Broker. Lives in a
+A two-tab segmented control above the form: Rep / Manager. Lives in a
 `rounded-full bg-foreground/[0.04] p-1` shell. Active tab gets
 `bg-background border border-border/70`; inactive is muted-foreground
 with hover→foreground.
@@ -1057,8 +1057,8 @@ decoration is the thing the whole system refuses.
 | Moment | Where | Why it's earned |
 |---|---|---|
 | List stagger | every dashboard list | Orients the eye as rows arrive; ends flat, no overshoot. |
-| Approval sentence | `ApprovalCelebration` | The ONE beat after a realtor approves. *The sentence is the celebration — no icon, no checkmark, no pulse.* |
-| Onboarding reveal | `TypingText` in the V2 reveal | The payoff of the welcome promise — the realtor watches Chippi write. The one place we spend motion freely. |
+| Approval sentence | `ApprovalCelebration` | The ONE beat after a rep approves. *The sentence is the celebration — no icon, no checkmark, no pulse.* |
+| Onboarding reveal | `TypingText` in the V2 reveal | The payoff of the welcome promise — the rep watches Koala write. The one place we spend motion freely. |
 | Segmented-control slide | tabs, role switcher | `layoutId` shared-element; the iOS move. |
 
 ### The bar for adding a new animated moment
@@ -1070,7 +1070,7 @@ team has repeatedly *removed* motion on purpose:
 - The morning story was demoted from a focal hero to a calm "What's new"
   list row (multiple commits). It is **not** a typewriter target — that
   would re-promote what was deliberately quieted.
-- The floating "Chippi is working" activity toast was removed. Don't
+- The floating "Koala is working" activity toast was removed. Don't
   re-add a floating live indicator.
 - The send-confirmation celebration is a sentence, by explicit decision.
   Don't add an orange pulse to it.
@@ -1079,17 +1079,17 @@ If your new moment fights one of these, it's decoration. Cut it.
 
 ### Components built ahead of an honest home
 
-`ChippiAuthoredDot` (Phase 2) still has **no consumer yet** — on purpose.
-The activity feed and "What I did" are first-person Chippi ("I drafted…"),
+`KoalaAuthoredDot` (Phase 2) still has **no consumer yet** — on purpose.
+The activity feed and "What I did" are first-person Koala ("I drafted…"),
 and an authored-dot only earns its place on a *mixed-author* timeline
-(realtor actions interleaved with Chippi's), which the current surfaces
+(rep actions interleaved with Koala's), which the current surfaces
 don't render. Wire it when such a surface exists. Forcing it onto an
-all-Chippi surface makes it decoration on every row — exactly the
+all-Koala surface makes it decoration on every row — exactly the
 scarcity failure the brand-orange rule guards against.
 
-`ChippiWordmarkInline` earned its first consumer on the day-one
-`FocusCard` welcome ("I'm Chippi. I track your deals…"). That's the
-realtor's first emotional moment with the agent; naming the brand once,
+`KoalaWordmarkInline` earned its first consumer on the day-one
+`FocusCard` welcome ("I'm Koala. I track your deals…"). That's the
+rep's first emotional moment with the agent; naming the brand once,
 in serif Times orange, anchors every first-person "I" that follows.
 Don't add a second instance to that surface — scarcity is the whole
 point. New surfaces are welcome to use it once, where the brand
@@ -1097,13 +1097,13 @@ genuinely belongs.
 
 ---
 
-## Onboarding storytelling (`components/onboarding/onboarding-realtor-v2.tsx`)
+## Onboarding storytelling (`components/onboarding/onboarding-rep-v2.tsx`)
 
 Onboarding is a **story**, not a wizard. The wizard collects fields then
 summarizes them. The story has an emotional arc: welcome → recognition →
 trust → a payoff where the product *does something for you before you
 arrive*. This is the Apple onboarding move, and it's the one place we
-spend motion freely — because the realtor's first impression is the
+spend motion freely — because the rep's first impression is the
 whole game.
 
 ### The arc
@@ -1112,7 +1112,7 @@ Nine stages, **one idea each**. Never put two ideas on one onboarding
 screen — that's the wizard smell.
 
 ```
-1. welcome   — "Hi. I'm Chippi." + the one promise. (the cover, no dots)
+1. welcome   — "Hi. I'm Koala." + the one promise. (the cover, no dots)
 2. name      — name + role. Role auto-advances when the name's filled.
 3. business  — business name → live slug check.
 4. where     — ZIP + tenure. Creates the workspace.
@@ -1120,7 +1120,7 @@ screen — that's the wizard smell.
 6. serve     — audience + voice guidance.
 7. voice     — pick warm vs direct from two real drafts.
 8. sources   — top 1-2 lead sources.
-9. reveal    — Chippi TYPES a first-touch draft, live. (the payoff, no dots)
+9. reveal    — Koala TYPES a first-touch draft, live. (the payoff, no dots)
 ```
 
 ### The three patterns that make it a story
@@ -1129,15 +1129,15 @@ screen — that's the wizard smell.
    the profile questions. Names the single most common new-user fear —
    *"will it send things without me?"* — once, plainly, in serif:
    *"I draft. You approve. Nothing leaves without your name on it."*
-   A 1.4s minimum-display gate keeps the realtor from tapping past
+   A 1.4s minimum-display gate keeps the rep from tapping past
    before reading. Then it's never mentioned again. **Don't turn this
    into a settings toggle** — it's a promise, not a preference.
 
 2. **The typing reveal** (`StageReveal` + `TypingText`). The payoff.
-   Chippi types out a real first-touch message in the realtor's chosen
+   Koala types out a real first-touch message in the rep's chosen
    voice, naming their business, tuned to their primary lead source.
    The "take me in" button fades in only once typing finishes — the
-   realtor *watches Chippi work*, then walks in. The draft is
+   rep *watches Koala work*, then walks in. The draft is
    **deterministic** (`lib/onboarding-draft.ts`), never an LLM call:
    onboarding is the one screen we cannot let a model misfire on, and
    the magic is the live typing, not the generation.
@@ -1150,18 +1150,18 @@ screen — that's the wizard smell.
 
 ### Rollback discipline
 
-V2 is the **live onboarding** — what every new realtor sees. Two escape
+V2 is the **live onboarding** — what every new rep sees. Two escape
 hatches stay wired for safety:
 
-- **`?legacy=1`** on `/setup` — per-request rollback for a single realtor
+- **`?legacy=1`** on `/setup` — per-request rollback for a single rep
   (support can hand this URL to a user who hits trouble).
 - **`NEXT_PUBLIC_ONBOARDING_V2=false`** — deploy-level kill switch. Flip
   this on Vercel and redeploy to revert every signup to V1 without a
   code change.
 
-The legacy `onboarding-realtor.tsx` stays as that rollback path until V2
+The legacy `onboarding-rep.tsx` stays as that rollback path until V2
 has run in prod for a week without incident. Then a single cleanup PR
-deletes V1, the gate, and the `onboarding-realtor-shared.tsx` consumer
+deletes V1, the gate, and the `onboarding-rep-shared.tsx` consumer
 in V2. Until that PR lands: **don't refactor the legacy flow** — it's
 scheduled for removal; editing code you're about to delete is risk with
 no payoff.
@@ -1197,7 +1197,7 @@ MessageSquare   SMS / draft
 Mail            email
 Bell            follow-up scheduled
 Brain           memory / observation
-MessageCircle   Chippi (the agent itself)
+MessageCircle   Koala (the agent itself)
 ```
 
 ---
@@ -1214,8 +1214,8 @@ components/ui/button.tsx         The only canonical button
 components/ui/empty-state.tsx    Empty-state component (use it)
 components/motion/stagger-list.tsx   StaggerList + StaggerItem (use them)
 components/agent/agent-generated-badge.tsx   AgentGeneratedBadge + AgentGeneratedBorder
-components/agent/chippi-authored.tsx ChippiAuthoredDot + ChippiWordmarkInline
-components/onboarding/onboarding-realtor-v2.tsx   The V2 storytelling onboarding flow
+components/agent/koala-authored.tsx KoalaAuthoredDot + KoalaWordmarkInline
+components/onboarding/onboarding-rep-v2.tsx   The V2 storytelling onboarding flow
 components/onboarding/typing-text.tsx             TypingText typewriter (reduced-motion aware)
 lib/onboarding-draft.ts          composeOnboardingDraft — the deterministic reveal draft
 tests/style/no-shadow-on-product-chrome.test.ts   CI enforcement of the paper-flat rule

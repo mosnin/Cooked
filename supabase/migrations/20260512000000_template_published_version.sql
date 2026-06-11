@@ -1,5 +1,5 @@
 -- ============================================================================
--- BP6 audit follow-up: track publishedVersion on BrokerageTemplate
+-- BP6 audit follow-up: track publishedVersion on TeamTemplate
 -- ============================================================================
 -- The UI was inferring "up to date vs edited since last publish" by comparing
 -- `updatedAt` against `publishedAt` with a 1-second slack. That was
@@ -16,12 +16,12 @@
 -- pushed-and-untouched rows.
 -- ============================================================================
 
-ALTER TABLE "BrokerageTemplate"
+ALTER TABLE "TeamTemplate"
   ADD COLUMN IF NOT EXISTS "publishedVersion" integer;
 
 -- Backfill existing rows: the version that was pushed = the current version
 -- (nothing's edited between that publish and this migration).
-UPDATE "BrokerageTemplate"
+UPDATE "TeamTemplate"
    SET "publishedVersion" = version
  WHERE "publishedAt" IS NOT NULL
    AND "publishedVersion" IS NULL;

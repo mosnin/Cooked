@@ -16,7 +16,7 @@
  *     also throttles itself, but that limiter lives in agent process memory —
  *     a buggy or restarted Modal container could blow past it. The server-
  *     side cap turns a runaway agent into "the next 27 sends fail" instead
- *     of "the realtor's whole contact list gets spammed at 03:00."
+ *     of "the rep's whole contact list gets spammed at 03:00."
  */
 
 import crypto from 'crypto';
@@ -32,10 +32,10 @@ const AGENT_INTERNAL_SECRET = process.env.AGENT_INTERNAL_SECRET ?? '';
 const VALID_CHANNELS = new Set(['email', 'sms']);
 
 /** Per-space cap on autonomous sends. 30 in 5min covers any realistic burst
- *  (a multi-action post-tour batch, a multi-stage drip resuming) while
+ *  (a multi-action post-demo batch, a multi-stage drip resuming) while
  *  shutting down a runaway agent before it can burn through a contact
  *  list. Email + SMS share the same bucket — the rate limit is about the
- *  realtor's contacts, not the underlying transport. */
+ *  rep's contacts, not the underlying transport. */
 const RATE_LIMIT_MAX = 30;
 const RATE_LIMIT_WINDOW_SECONDS = 5 * 60;
 

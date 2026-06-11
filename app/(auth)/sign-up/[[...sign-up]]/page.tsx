@@ -5,7 +5,7 @@ import type { Metadata } from 'next';
 import { BODY_MUTED, QUIET_LINK } from '@/lib/typography';
 import { cn } from '@/lib/utils';
 
-export const metadata: Metadata = { title: 'Sign Up — Chippi' };
+export const metadata: Metadata = { title: 'Sign Up — Koala' };
 
 export default async function SignUpPage({
   searchParams,
@@ -13,11 +13,11 @@ export default async function SignUpPage({
   searchParams: Promise<{ intent?: string; redirect_url?: string }>;
 }) {
   const { intent, redirect_url } = await searchParams;
-  const isBroker = intent === 'broker';
-  const redirectIntent = isBroker ? 'broker' : 'realtor';
-  const signInBase = isBroker ? '/login/broker' : '/login/realtor';
+  const isManager = intent === 'manager';
+  const redirectIntent = isManager ? 'manager' : 'rep';
+  const signInBase = isManager ? '/login/manager' : '/login/rep';
   // Validate redirect_url: allow safe internal paths, block path traversal
-  const SAFE_PREFIXES = ['/s/', '/broker', '/admin', '/invite/', '/subscribe', '/billing-required', '/authorize'];
+  const SAFE_PREFIXES = ['/s/', '/manager', '/admin', '/invite/', '/subscribe', '/billing-required', '/authorize'];
   const isSafeRedirect = redirect_url
     && SAFE_PREFIXES.some(p => redirect_url.startsWith(p))
     && !redirect_url.includes('..');
@@ -31,9 +31,9 @@ export default async function SignUpPage({
 
   return (
     <AuthPageLayout
-      heading="Set up Chippi."
+      heading="Set up Koala."
       subheading="Two minutes."
-      variant={isBroker ? 'broker' : 'realtor'}
+      variant={isManager ? 'manager' : 'rep'}
     >
       <div className="w-full space-y-4">
         <ThemedSignUp

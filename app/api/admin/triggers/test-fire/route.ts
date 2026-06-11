@@ -6,10 +6,10 @@
  *
  * The full trigger pipeline runs end-to-end: HMAC verify (real
  * signature, since we sign with the same secret the receiver checks),
- * dedupe, rate-cap, Inngest enqueue, handler dispatch. The realtor's
+ * dedupe, rate-cap, Inngest enqueue, handler dispatch. The rep's
  * draft inbox gets a new row at the end if everything is wired.
  *
- * Use case — "my realtor says Chippi went quiet; is the pipe broken?"
+ * Use case — "my rep says Koala went quiet; is the pipe broken?"
  * Without this, an operator has to log into Composio's dashboard and
  * manually fire a trigger, or wait for real upstream activity. This
  * route closes that loop in seconds.

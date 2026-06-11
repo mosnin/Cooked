@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS "AgentGoal" (
   "spaceId"      TEXT        NOT NULL REFERENCES "Space"("id") ON DELETE CASCADE,
   "contactId"    TEXT        REFERENCES "Contact"("id") ON DELETE SET NULL,
   "dealId"       TEXT        REFERENCES "Deal"("id") ON DELETE SET NULL,
-  "goalType"     VARCHAR(50) NOT NULL CHECK ("goalType" IN ('follow_up_sequence','tour_booking','offer_progress','deal_close','reengagement','custom')),
+  "goalType"     VARCHAR(50) NOT NULL CHECK ("goalType" IN ('follow_up_sequence','demo_booking','offer_progress','deal_close','reengagement','custom')),
   "description"  TEXT        NOT NULL,
   "instructions" TEXT,
   "status"       VARCHAR(20) NOT NULL DEFAULT 'active' CHECK ("status" IN ('active','completed','cancelled','paused')),
@@ -20,7 +20,7 @@ CREATE INDEX IF NOT EXISTS "AgentGoal_spaceId_status_idx" ON "AgentGoal"("spaceI
 CREATE INDEX IF NOT EXISTS "AgentGoal_contactId_idx"      ON "AgentGoal"("contactId") WHERE "contactId" IS NOT NULL;
 CREATE INDEX IF NOT EXISTS "AgentGoal_dealId_idx"         ON "AgentGoal"("dealId")    WHERE "dealId"    IS NOT NULL;
 
--- AgentQuestion: questions the agent asks the realtor when uncertain
+-- AgentQuestion: questions the agent asks the rep when uncertain
 CREATE TABLE IF NOT EXISTS "AgentQuestion" (
   "id"          UUID         PRIMARY KEY DEFAULT gen_random_uuid(),
   "spaceId"     TEXT         NOT NULL REFERENCES "Space"("id") ON DELETE CASCADE,

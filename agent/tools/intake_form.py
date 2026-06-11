@@ -1,8 +1,8 @@
-"""Intake form tools — read and edit the realtor's lead intake form config.
+"""Intake form tools — read and edit the rep's lead intake form config.
 
 The form config lives in SpaceSetting.rentalFormConfig / buyerFormConfig as
-jsonb.  These tools give Chippi the ability to inspect and surgically modify
-the form without the realtor having to open the form builder UI.
+jsonb.  These tools give Koala the ability to inspect and surgically modify
+the form without the rep having to open the form builder UI.
 
 All mutations operate on a full read-modify-write cycle so concurrent writes
 from the UI and the agent are handled gracefully (last-write-wins, which is

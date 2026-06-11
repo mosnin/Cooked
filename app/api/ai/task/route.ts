@@ -1,7 +1,7 @@
 /**
  * POST /api/ai/task — on-demand agent streaming endpoint.
  *
- * Every chat turn proxies to the Modal Python sandbox running Chippi via the
+ * Every chat turn proxies to the Modal Python sandbox running Koala via the
  * OpenAI Agents SDK. Modal provides the secure isolated execution environment
  * for long-running, autonomous, multi-step reasoning chains. The Next.js layer
  * handles auth, rate-limiting, persistence, and SSE translation; Modal handles
@@ -17,7 +17,7 @@
  *   7. Translate Modal SSE events → standard agent event format.
  *   8. Persist the assistant message on turn completion.
  *
- * Set CHIPPI_CHAT_RUNTIME=ts to fall back to the in-process TypeScript runtime
+ * Set KOALA_CHAT_RUNTIME=ts to fall back to the in-process TypeScript runtime
  * (useful for local dev without a Modal deployment).
  */
 
@@ -32,10 +32,10 @@ import { resolveToolContext } from '@/lib/ai-tools/context';
 import { isReservedConversationTitle } from '@/lib/chat/conversation-access';
 import type { ToolContext } from '@/lib/ai-tools/types';
 import {
-  chippiErrorMessage,
+  koalaErrorMessage,
   computeConversationTitle,
   fallbackHeuristic,
-} from '@/lib/ai-tools/chippi-voice';
+} from '@/lib/ai-tools/koala-voice';
 import {
   emit as emitTelemetry,
   hasEmitted as hasEmittedTelemetry,
@@ -96,7 +96,7 @@ interface PostBody {
   /**
    * Explicit per-message runtime pick from the composer's Chat/Agent switch.
    *   - 'chat'  → lean single-call path: one LLM completion + read-only vector
-   *               search over the realtor's data. No tools, no agent loop, so
+   *               search over the rep's data. No tools, no agent loop, so
    *               a turn costs ~3k tokens. The structural fix for the
    *               500k-tokens-per-input blowup: most turns never touch the
    *               tool loop at all.
@@ -140,12 +140,12 @@ async function resolveConversation(
       .select('id, spaceId, title')
       .eq('id', conversationId)
       .maybeSingle();
-    // Reject reserved broker/team titles. A broker_owner's personal spaceId
-    // equals their realtor space, and the pre-migration broker/team rows still
+    // Reject reserved manager/team titles. A manager_owner's personal spaceId
+    // equals their rep space, and the pre-migration manager/team rows still
     // live in this shared table — so the spaceId check alone is NOT isolation.
-    // Without this, a broker/team conversationId would be accepted on the
-    // realtor surface, its history fed to the model, and new realtor turns
-    // persisted into that broker conversation. Fall through to a fresh one.
+    // Without this, a manager/team conversationId would be accepted on the
+    // rep surface, its history fed to the model, and new rep turns
+    // persisted into that manager conversation. Fall through to a fresh one.
     if (data && data.spaceId === spaceId && !isReservedConversationTitle(data.title)) {
       if (!data.title || data.title === 'New conversation') {
         autoTitleConversation(spaceId, conversationId, userMessage);
@@ -290,7 +290,7 @@ function proxyModalStream({
       const textChunks: string[] = [];
       // Ordered render list assembled as the turn streams — text + tool-call
       // blocks. Persisted verbatim so a reloaded conversation shows what
-      // Chippi actually did (tool calls, plan cards), not just a flat reply.
+      // Koala actually did (tool calls, plan cards), not just a flat reply.
       const blocks: MessageBlock[] = [];
       // Track args from the most recent create_plan tool_call_start so we can
       // emit plan_created when the matching tool_call_result arrives.
@@ -459,7 +459,7 @@ function proxyModalStream({
       } catch (err) {
         if (!abortController.signal.aborted) {
           logger.error('[ai/task] modal stream read error', { spaceId }, err);
-          push(controller, { type: 'error', message: chippiErrorMessage('internal') });
+          push(controller, { type: 'error', message: koalaErrorMessage('internal') });
           sentTerminal = true;
         }
       } finally {
@@ -472,7 +472,7 @@ function proxyModalStream({
         await persistOnce();
         if (!sentTerminal && !abortController.signal.aborted) {
           logger.warn('[ai/task] modal stream ended with no terminal event', { spaceId });
-          push(controller, { type: 'error', message: chippiErrorMessage('internal') });
+          push(controller, { type: 'error', message: koalaErrorMessage('internal') });
         }
         controller.close();
         reader.releaseLock();
@@ -537,11 +537,11 @@ export async function POST(req: NextRequest) {
     checkRateLimit(`chat:space:${ctx.space.id}`, 60, 600),
   ]);
   if (!userLimit.allowed) {
-    return NextResponse.json({ error: chippiErrorMessage('rate_limited') }, { status: 429 });
+    return NextResponse.json({ error: koalaErrorMessage('rate_limited') }, { status: 429 });
   }
   if (!ipLimit.allowed || !spaceLimit.allowed) {
     return NextResponse.json(
-      { error: chippiErrorMessage('rate_limited') },
+      { error: koalaErrorMessage('rate_limited') },
       { status: 429, headers: { 'Retry-After': '600' } },
     );
   }
@@ -554,14 +554,14 @@ export async function POST(req: NextRequest) {
   //
   // Gate on the account that actually FUNDS the space, not the Space row: Solo/
   // Pro pay from the Space, but Team / Team Plus members are funded by their
-  // Brokerage pool and their own Space status stays 'inactive' by design — so
-  // reading only the Space let a lapsed brokerage keep premium AI on every seat.
+  // Team pool and their own Space status stays 'inactive' by design — so
+  // reading only the Space let a lapsed team keep premium AI on every seat.
   try {
     const { account } = await resolveBillingAccount(ctx.space.id);
     const { data: subRow } =
-      account.type === 'brokerage'
+      account.type === 'team'
         ? await supabase
-            .from('Brokerage')
+            .from('Team')
             .select('stripeSubscriptionStatus')
             .eq('id', account.id)
             .maybeSingle()
@@ -581,7 +581,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json(
           {
             error:
-              'Your subscription needs attention — update your payment method in billing to keep using Chippi. Your workspace and data stay available.',
+              'Your subscription needs attention — update your payment method in billing to keep using Koala. Your workspace and data stay available.',
           },
           { status: 402 },
         );
@@ -637,7 +637,7 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     if (err instanceof CreditsExhaustedError) {
       return NextResponse.json(
-        { error: 'Out of credits. Buy a top-up or upgrade your plan to keep chatting with Chippi.' },
+        { error: 'Out of credits. Buy a top-up or upgrade your plan to keep chatting with Koala.' },
         { status: 402 },
       );
     }
@@ -649,14 +649,14 @@ export async function POST(req: NextRequest) {
     conversationId = await resolveConversation(ctx.space.id, body.conversationId ?? null, message);
   } catch (err) {
     logger.error('[ai/task] conversation resolve failed', { spaceSlug }, err);
-    return NextResponse.json({ error: chippiErrorMessage('internal') }, { status: 500 });
+    return NextResponse.json({ error: koalaErrorMessage('internal') }, { status: 500 });
   }
 
   try {
     await saveUserMessage({ spaceId: ctx.space.id, conversationId, content: message });
   } catch (err) {
     logger.error('[ai/task] save user message failed', { spaceSlug }, err);
-    return NextResponse.json({ error: chippiErrorMessage('internal') }, { status: 500 });
+    return NextResponse.json({ error: koalaErrorMessage('internal') }, { status: 500 });
   }
 
   // The turn's credit charge is applied by the model-aware ChatUsage trigger
@@ -666,10 +666,10 @@ export async function POST(req: NextRequest) {
 
   void (async () => {
     try {
-      if (await hasEmittedTelemetry(ctx.space.id, 'chippi_first_message')) return;
+      if (await hasEmittedTelemetry(ctx.space.id, 'koala_first_message')) return;
       const signupAt = await getFirstEmittedAt(ctx.space.id, 'signup_completed');
       await emitTelemetry({
-        event: 'chippi_first_message',
+        event: 'koala_first_message',
         spaceId: ctx.space.id,
         userId: ctx.userId,
         payload: {
@@ -704,7 +704,7 @@ export async function POST(req: NextRequest) {
   // first token. Modal is reached two ways and two ways only:
   //   1. the agent runtime spawns deep / swarm sub-tasks ON Modal via
   //      delegate_task (the keystone use the owner wants Modal for), and
-  //   2. CHIPPI_CHAT_RUNTIME=modal proxies the WHOLE agent turn to the sandbox
+  //   2. KOALA_CHAT_RUNTIME=modal proxies the WHOLE agent turn to the sandbox
   //      (kept as a fallback / for running heavy turns entirely in Modal).
   // Router errors → 'agent' (its safe default), so a router bug can't silently
   // drop a real action.
@@ -767,8 +767,8 @@ export async function POST(req: NextRequest) {
       // shouldEscalate() ("I can't send that from here…"), re-run the SAME
       // message on the in-process TS agent (full tool surface) and pipe its
       // stream through. This was previously hardwired to `false`, so a
-      // misrouted action committed the toolless deflection — the realtor
-      // read that as "Chippi has no tools".
+      // misrouted action committed the toolless deflection — the rep
+      // read that as "Koala has no tools".
       onEscalate: async () => {
         logger.info('[ai/task] direct → agent escalation', { spaceSlug, model: turnModel });
         return streamTsChatTurn({
@@ -785,11 +785,11 @@ export async function POST(req: NextRequest) {
   }
 
   // Agent path → Modal. Two ways in:
-  //   1. CHIPPI_CHAT_RUNTIME=modal forces ALL agent turns through the sandbox.
+  //   1. KOALA_CHAT_RUNTIME=modal forces ALL agent turns through the sandbox.
   //      This is a deliberate deploy choice, so a missing MODAL_CHAT_URL is a
   //      misconfiguration we surface loudly (callModalAgent returns 503) rather
   //      than silently downgrading the whole deploy to the TS runtime.
-  //   2. The realtor picked Agent mode for THIS message. Prefer Modal, but if
+  //   2. The rep picked Agent mode for THIS message. Prefer Modal, but if
   //      MODAL_CHAT_URL is unset, degrade gracefully to the in-process TS agent
   //      (it has the full tool surface too) instead of failing the one turn.
   const forcedModal = chatRuntime() === 'modal';
@@ -808,8 +808,8 @@ export async function POST(req: NextRequest) {
   }
 
   // ── Default: in-process TS runtime (PRIMARY) ─────────────────────────────
-  // App-wide LLM client (OpenRouter-first), the realtor's workspace model,
-  // full Chippi tool set, approval gates, rate limits, tool-call logging,
+  // App-wide LLM client (OpenRouter-first), the rep's workspace model,
+  // full Koala tool set, approval gates, rate limits, tool-call logging,
   // multimodal, and the delegate_task orchestrator. No Modal cold start —
   // first token is fast. Deep work is spawned ON Modal via delegate_task and
   // streamed back inline.
@@ -828,7 +828,7 @@ export async function POST(req: NextRequest) {
 // ── Workspace model lookup ────────────────────────────────────────────────
 
 /**
- * Resolve the chat model the realtor's workspace is configured for. The
+ * Resolve the chat model the rep's workspace is configured for. The
  * direct path needs this BEFORE the LLM call (provider detection drives
  * multimodal encoding); the agent path reads it inside Modal so it doesn't
  * need this helper. Falls back to DEFAULT_CHAT_MODEL on any lookup failure.
@@ -876,9 +876,9 @@ async function callModalAgent(input: CallModalAgentInput): Promise<Response> {
     secret: process.env.AGENT_INTERNAL_SECRET ?? '',
     space_id: ctx.space.id,
     // Composio scopes connections per "entity" (Clerk userId). Without
-    // this, Modal can't know which realtor's Gmail / Slack / etc. to
+    // this, Modal can't know which rep's Gmail / Slack / etc. to
     // load — the agent ends up with zero integration tools regardless
-    // of how many the realtor has connected. The Python side reads
+    // of how many the rep has connected. The Python side reads
     // `user_id` to look up active toolkits in IntegrationConnection
     // and load them via the Composio Python SDK.
     user_id: ctx.userId,
@@ -898,13 +898,13 @@ async function callModalAgent(input: CallModalAgentInput): Promise<Response> {
     });
   } catch (err) {
     logger.error('[ai/task] Modal fetch failed', { spaceSlug }, err);
-    return NextResponse.json({ error: chippiErrorMessage('internal') }, { status: 502 });
+    return NextResponse.json({ error: koalaErrorMessage('internal') }, { status: 502 });
   }
 
   if (!modalRes.ok || !modalRes.body) {
     const status = modalRes.status;
     logger.error('[ai/task] Modal returned error', { status, spaceSlug });
-    return NextResponse.json({ error: chippiErrorMessage('internal') }, { status: 502 });
+    return NextResponse.json({ error: koalaErrorMessage('internal') }, { status: 502 });
   }
 
   return proxyModalStream({

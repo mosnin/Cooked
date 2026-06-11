@@ -66,7 +66,7 @@ test('buildIntakeUrl produces full URL with path-based slug', () => {
 });
 
 test('intake URL is always path-based, never subdomain-based', () => {
-  const slugs = ['test', 'my-real-estate', 'agent-smith-123'];
+  const slugs = ['test', 'my-sales-team', 'agent-smith-123'];
   for (const slug of slugs) {
     const url = buildIntakeUrl(slug);
     assert.ok(url.includes(`/apply/${slug}`), `URL for "${slug}" must contain /apply/${slug}`);

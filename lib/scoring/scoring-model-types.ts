@@ -6,7 +6,7 @@
  * includes per-option point values; for number fields it includes range buckets.
  *
  * Separate models are generated for rental vs buyer forms because different
- * real estate signals carry different importance.
+ * sales signals carry different importance.
  */
 
 export interface NumberRange {

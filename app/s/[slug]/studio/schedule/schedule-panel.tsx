@@ -3,9 +3,9 @@
 /**
  * SchedulePanel — /s/[slug]/studio/schedule.
  *
- * Queue a post: an image, a caption, the social platforms the realtor has
+ * Queue a post: an image, a caption, the social platforms the rep has
  * connected through Composio, and a time. Creates a StudioPost row. The
- * connected-platform list is whatever the realtor connected on the
+ * connected-platform list is whatever the rep connected on the
  * Integrations tab — read from the same IntegrationConnection records.
  */
 
@@ -101,7 +101,7 @@ export function SchedulePanel({
   }, [refresh]);
 
   // An asset handed off from Create / Edit / Library — pre-load it as the
-  // post image so the realtor never has to re-upload.
+  // post image so the rep never has to re-upload.
   useEffect(() => {
     if (!initialFileId) return;
     let cancelled = false;
@@ -115,7 +115,7 @@ export function SchedulePanel({
           setPreview(data.url);
         }
       } catch {
-        // ignore — the realtor can still upload manually
+        // ignore — the rep can still upload manually
       }
     })();
     return () => {

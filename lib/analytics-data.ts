@@ -100,16 +100,16 @@ export interface ClientsAnalyticsData {
   totalLeads: number;
 }
 
-export interface ToursAnalyticsData {
-  totalTours: number;
-  completedTours: number;
-  cancelledTours: number;
-  noShowTours: number;
-  scheduledTours: number;
-  toursConvertedToDeals: number;
-  tourConversionRate: number;
-  toursByStatus: LabelCount[];
-  toursOverTime: MonthBucket[];
+export interface DemosAnalyticsData {
+  totalDemos: number;
+  completedDemos: number;
+  cancelledDemos: number;
+  noShowDemos: number;
+  scheduledDemos: number;
+  demosConvertedToDeals: number;
+  demoConversionRate: number;
+  demosByStatus: LabelCount[];
+  demosOverTime: MonthBucket[];
 }
 
 export interface PipelineAnalyticsData {
@@ -147,14 +147,14 @@ interface RawData {
     priority: string;
     createdAt: string;
     status: string;
-    sourceTourId: string | null;
+    sourceDemoId: string | null;
   }[];
   stages: {
     id: string;
     name: string;
     color: string;
   }[];
-  tours: {
+  demos: {
     id: string;
     status: string;
     createdAt: string;
@@ -162,21 +162,21 @@ interface RawData {
 }
 
 export async function fetchRawAnalyticsData(spaceId: string): Promise<RawData> {
-  const [contactsRes, dealsRes, stagesRes, toursRes] = await Promise.all([
+  const [contactsRes, dealsRes, stagesRes, demosRes] = await Promise.all([
     supabase
       .from('Contact')
       .select('id, type, tags, leadScore, scoreLabel, scoringStatus, createdAt, applicationData, scoreDetails, leadType')
       .eq('spaceId', spaceId),
     supabase
       .from('Deal')
-      .select('id, value, stageId, priority, createdAt, status, sourceTourId')
+      .select('id, value, stageId, priority, createdAt, status, sourceDemoId')
       .eq('spaceId', spaceId),
     supabase
       .from('DealStage')
       .select('id, name, color')
       .eq('spaceId', spaceId),
     supabase
-      .from('Tour')
+      .from('Demo')
       .select('id, status, createdAt')
       .eq('spaceId', spaceId),
   ]);
@@ -185,7 +185,7 @@ export async function fetchRawAnalyticsData(spaceId: string): Promise<RawData> {
     contacts: (contactsRes.data ?? []) as RawData['contacts'],
     deals: (dealsRes.data ?? []) as RawData['deals'],
     stages: (stagesRes.data ?? []) as RawData['stages'],
-    tours: (toursRes.data ?? []) as RawData['tours'],
+    demos: (demosRes.data ?? []) as RawData['demos'],
   };
 }
 
@@ -401,19 +401,19 @@ export function buildClientsAnalyticsData(raw: RawData): ClientsAnalyticsData {
 
   const contactsByStage = [
     { label: 'Qualifying', count: raw.contacts.filter((c) => c.type === 'QUALIFICATION').length },
-    { label: 'Tour', count: raw.contacts.filter((c) => c.type === 'TOUR').length },
+    { label: 'Demo', count: raw.contacts.filter((c) => c.type === 'DEMO').length },
     { label: 'Applied', count: raw.contacts.filter((c) => c.type === 'APPLICATION').length },
   ];
 
   const qualCount = raw.contacts.filter((c) => c.type === 'QUALIFICATION').length;
-  const tourCount = raw.contacts.filter((c) => c.type === 'TOUR').length;
+  const demoCount = raw.contacts.filter((c) => c.type === 'DEMO').length;
   const appCount = raw.contacts.filter((c) => c.type === 'APPLICATION').length;
 
   const contactFunnel = [
     { label: 'Qualifying', count: qualCount, rate: 100 },
     // Each subsequent rate is relative to the top of the funnel (qualCount) so the
     // funnel bars are always decreasing and rates stay ≤ 100%.
-    { label: 'Tour', count: tourCount, rate: qualCount > 0 ? Math.min(100, Math.round((tourCount / qualCount) * 100)) : 0 },
+    { label: 'Demo', count: demoCount, rate: qualCount > 0 ? Math.min(100, Math.round((demoCount / qualCount) * 100)) : 0 },
     { label: 'Applied', count: appCount, rate: qualCount > 0 ? Math.min(100, Math.round((appCount / qualCount) * 100)) : 0 },
   ];
 
@@ -430,23 +430,23 @@ export function buildClientsAnalyticsData(raw: RawData): ClientsAnalyticsData {
   };
 }
 
-export function buildToursAnalyticsData(raw: RawData): ToursAnalyticsData {
+export function buildDemosAnalyticsData(raw: RawData): DemosAnalyticsData {
   const months = last6Months();
-  const allTours = raw.tours;
+  const allDemos = raw.demos;
 
-  const totalTours = allTours.length;
-  const completedTours = allTours.filter((t) => t.status === 'completed').length;
-  const cancelledTours = allTours.filter((t) => t.status === 'cancelled').length;
-  const noShowTours = allTours.filter((t) => t.status === 'no_show').length;
-  const scheduledTours = allTours.filter((t) => t.status === 'scheduled' || t.status === 'confirmed').length;
-  // Count unique tours that generated at least one deal (not total deals from tours)
-  const tourIdsWithDeals = new Set(
-    raw.deals.filter((d) => d.sourceTourId != null).map((d) => d.sourceTourId!),
+  const totalDemos = allDemos.length;
+  const completedDemos = allDemos.filter((t) => t.status === 'completed').length;
+  const cancelledDemos = allDemos.filter((t) => t.status === 'cancelled').length;
+  const noShowDemos = allDemos.filter((t) => t.status === 'no_show').length;
+  const scheduledDemos = allDemos.filter((t) => t.status === 'scheduled' || t.status === 'confirmed').length;
+  // Count unique demos that generated at least one deal (not total deals from demos)
+  const demoIdsWithDeals = new Set(
+    raw.deals.filter((d) => d.sourceDemoId != null).map((d) => d.sourceDemoId!),
   );
-  const toursConvertedToDeals = tourIdsWithDeals.size;
-  const tourConversionRate = completedTours > 0 ? Math.min(100, Math.round((toursConvertedToDeals / completedTours) * 100)) : 0;
+  const demosConvertedToDeals = demoIdsWithDeals.size;
+  const demoConversionRate = completedDemos > 0 ? Math.min(100, Math.round((demosConvertedToDeals / completedDemos) * 100)) : 0;
 
-  // Tours by status — use human-readable labels for known statuses
+  // Demos by status — use human-readable labels for known statuses
   const STATUS_LABELS: Record<string, string> = {
     completed: 'Completed',
     scheduled: 'Scheduled',
@@ -455,30 +455,30 @@ export function buildToursAnalyticsData(raw: RawData): ToursAnalyticsData {
     no_show: 'No-show',
   };
   const statusCounts: Record<string, number> = {};
-  for (const t of allTours) {
+  for (const t of allDemos) {
     const s = t.status || 'unknown';
     const label = STATUS_LABELS[s] ?? (s.charAt(0).toUpperCase() + s.slice(1));
     statusCounts[label] = (statusCounts[label] ?? 0) + 1;
   }
-  const toursByStatus = Object.entries(statusCounts)
+  const demosByStatus = Object.entries(statusCounts)
     .map(([label, count]) => ({ label, count }))
     .sort((a, b) => b.count - a.count);
 
-  const toursOverTime = buildMonthBuckets(
-    allTours.map((t) => new Date(t.createdAt)),
+  const demosOverTime = buildMonthBuckets(
+    allDemos.map((t) => new Date(t.createdAt)),
     months,
   );
 
   return {
-    totalTours,
-    completedTours,
-    cancelledTours,
-    noShowTours,
-    scheduledTours,
-    toursConvertedToDeals,
-    tourConversionRate,
-    toursByStatus,
-    toursOverTime,
+    totalDemos,
+    completedDemos,
+    cancelledDemos,
+    noShowDemos,
+    scheduledDemos,
+    demosConvertedToDeals,
+    demoConversionRate,
+    demosByStatus,
+    demosOverTime,
   };
 }
 

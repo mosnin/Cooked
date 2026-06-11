@@ -1,8 +1,8 @@
 // Database model types — replaces Prisma generated types
 
 export type PlatformRole = 'user' | 'admin';
-export type AccountType = 'realtor' | 'broker_only' | 'both';
-export type MembershipRole = 'broker_owner' | 'broker_admin' | 'realtor_member';
+export type AccountType = 'rep' | 'manager_only' | 'both';
+export type MembershipRole = 'manager_owner' | 'manager_admin' | 'rep_member';
 export type InvitationStatus = 'pending' | 'accepted' | 'expired' | 'cancelled';
 
 export type User = {
@@ -21,7 +21,7 @@ export type User = {
   accountType: AccountType;
 };
 
-export type Brokerage = {
+export type Team = {
   id: string;
   name: string;
   ownerId: string;
@@ -30,14 +30,14 @@ export type Brokerage = {
   logoUrl: string | null;
   joinCode: string | null;
   privacyPolicyHtml: string | null;
-  brokerageFormConfig: IntakeFormConfig | null;
-  brokerageRentalFormConfig: IntakeFormConfig | null;
-  brokerageBuyerFormConfig: IntakeFormConfig | null;
-  brokerageRentalScoringModel: import('@/lib/scoring/scoring-model-types').ScoringModel | null;
-  brokerageBuyerScoringModel: import('@/lib/scoring/scoring-model-types').ScoringModel | null;
+  teamFormConfig: IntakeFormConfig | null;
+  teamRentalFormConfig: IntakeFormConfig | null;
+  teamBuyerFormConfig: IntakeFormConfig | null;
+  teamRentalScoringModel: import('@/lib/scoring/scoring-model-types').ScoringModel | null;
+  teamBuyerScoringModel: import('@/lib/scoring/scoring-model-types').ScoringModel | null;
   /**
    * Plan tier (V2 — lib/plans.ts). 'team' → 5 seats, 'team_plus' → 10. A
-   * brokerage that hasn't subscribed may still carry a legacy/unset value in
+   * team that hasn't subscribed may still carry a legacy/unset value in
    * the DB; anything outside {team, team_plus} is treated as "no active plan".
    */
   plan: 'team' | 'team_plus';
@@ -48,27 +48,27 @@ export type Brokerage = {
   stripeSubscriptionStatus: 'active' | 'trialing' | 'past_due' | 'canceled' | 'unpaid' | 'inactive';
   stripePeriodEnd: Date | null;
   createdAt: Date;
-  // Intake trust signals — brokerage-level compliance text inherited by
-  // /apply/b/[brokerageId]. Per-space SpaceSetting values take a back seat
-  // when the intake is served via the brokerage variant.
-  brokerageLicenseNumber: string | null;
-  brokerageFairHousingNotice: string | null;
-  brokerageShowEqualHousingMark: boolean;
+  // Intake trust signals — team-level compliance text inherited by
+  // /apply/b/[teamId]. Per-space SpaceSetting values take a back seat
+  // when the intake is served via the team variant.
+  teamLicenseNumber: string | null;
+  teamComplianceNotice: string | null;
+  teamShowComplianceMark: boolean;
   // Speed-to-lead SLA policy (added in 20260612000000_lead_sla.sql)
   slaEnabled: boolean;
   slaFirstResponseMinutes: number;
   slaEscalateMinutes: number;
 };
 
-export type BrokerageMembership = {
+export type TeamMembership = {
   id: string;
-  brokerageId: string;
+  teamId: string;
   userId: string;
   role: MembershipRole;
   invitedById: string | null;
   createdAt: Date;
-  // Per-member broker profile (20260615000000). Owner/admin customize their
-  // own profile within the brokerage. Null until the member fills it in.
+  // Per-member manager profile (20260615000000). Owner/admin customize their
+  // own profile within the team. Null until the member fills it in.
   displayName?: string | null;
   title?: string | null;
   bio?: string | null;
@@ -78,9 +78,9 @@ export type BrokerageMembership = {
 
 export type Invitation = {
   id: string;
-  brokerageId: string;
+  teamId: string;
   email: string;
-  roleToAssign: 'broker_admin' | 'realtor_member';
+  roleToAssign: 'manager_admin' | 'rep_member';
   token: string;
   status: InvitationStatus;
   expiresAt: Date;
@@ -97,7 +97,7 @@ export type Space = {
   emoji: string;
   createdAt: Date;
   ownerId: string;
-  brokerageId: string | null;
+  teamId: string | null;
   stripeCustomerId: string | null;
   stripeSubscriptionId: string | null;
   stripeSubscriptionStatus: SubscriptionStatus;
@@ -110,7 +110,7 @@ export type SpaceSetting = {
   notifications: boolean;
   smsNotifications: boolean;
   notifyNewLeads: boolean;
-  notifyTourBookings: boolean;
+  notifyDemoBookings: boolean;
   notifyNewDeals: boolean;
   notifyFollowUps: boolean;
   // Daily brief settings (Phase B3 / B6)
@@ -155,12 +155,12 @@ export type SpaceSetting = {
   privacyPolicyUrl: string | null;
   privacyPolicyHtml: string | null;
   consentCheckboxLabel: string | null;
-  // Intake trust signals — realtor/brokerage-supplied compliance slots
-  // rendered in the public intake footer. Chippi provides the slot;
-  // the realtor fills the actual legal text.
+  // Intake trust signals — rep/team-supplied compliance slots
+  // rendered in the public intake footer. Koala provides the slot;
+  // the rep fills the actual legal text.
   intakeLicenseNumber: string | null;
-  intakeFairHousingNotice: string | null;
-  intakeShowEqualHousingMark: boolean;
+  intakeComplianceNotice: string | null;
+  intakeShowComplianceMark: boolean;
   // Dynamic form builder
   formConfig: IntakeFormConfig | null;
   formConfigSource: FormConfigSource;
@@ -249,7 +249,7 @@ export type ApplicationData = {
   // Step 4: Household
   adultsOnApplication?: number;
   childrenOrDependents?: number;
-  coRenters?: string;
+  stakeholders?: string;
   emergencyContactName?: string;
   emergencyContactPhone?: string;
   // Step 5: Income
@@ -258,10 +258,10 @@ export type ApplicationData = {
   monthlyGrossIncome?: number | string;
   additionalIncome?: number;
   // Step 6: Rental History
-  currentLandlordName?: string;
-  currentLandlordPhone?: string;
-  previousLandlordName?: string;
-  previousLandlordPhone?: string;
+  currentProviderName?: string;
+  currentProviderPhone?: string;
+  previousProviderName?: string;
+  previousProviderPhone?: string;
   currentRentPaid?: number;
   latePayments?: boolean;
   leaseViolations?: boolean;
@@ -314,7 +314,7 @@ export type LeadScoreDetails = {
   leadState: string;
 };
 
-export type ClientType = 'QUALIFICATION' | 'TOUR' | 'APPLICATION';
+export type ClientType = 'QUALIFICATION' | 'DEMO' | 'APPLICATION';
 
 export interface DealMilestone {
   id: string;           // crypto.randomUUID()
@@ -342,7 +342,7 @@ export type Deal = {
   commissionRate: number | null;
   probability: number | null;
   milestones: DealMilestone[];
-  /** Realtor-authored "what's next" — shown prominently on the card and in the Today inbox. */
+  /** Rep-authored "what's next" — shown prominently on the card and in the Today inbox. */
   nextAction: string | null;
   nextActionDueAt: Date | null;
   /** Captured when a deal is marked won or lost so we can learn from it later. */
@@ -412,10 +412,10 @@ export interface Property {
   listingUrl: string | null;
   photos: string[];
   notes: string | null;
-  /** Brokerage pool: set when this property belongs to a brokerage's central
-   *  pool (created by the broker). Null for a realtor's own property. */
-  brokerageId?: string | null;
-  /** Brokerage pool: the member realtor's Space this pool property is assigned
+  /** Team pool: set when this property belongs to a team's central
+   *  pool (created by the manager). Null for a rep's own property. */
+  teamId?: string | null;
+  /** Team pool: the member rep's Space this pool property is assigned
    *  to. Null = unassigned (sitting in the pool). */
   assignedSpaceId?: string | null;
   createdAt: string;
@@ -464,7 +464,7 @@ export type DealContactRole =
   | 'co_agent'
   | 'lender'
   | 'title'
-  | 'escrow'
+  | 'legal'
   | 'inspector'
   | 'appraiser'
   | 'attorney'
@@ -519,9 +519,9 @@ export type Conversation = {
   preview?: string | null;
 };
 
-export type TourStatus = 'scheduled' | 'confirmed' | 'completed' | 'cancelled' | 'no_show';
+export type DemoStatus = 'scheduled' | 'confirmed' | 'completed' | 'cancelled' | 'no_show';
 
-export type Tour = {
+export type Demo = {
   id: string;
   spaceId: string;
   contactId: string | null;
@@ -532,7 +532,7 @@ export type Tour = {
   notes: string | null;
   startsAt: Date;
   endsAt: Date;
-  status: TourStatus;
+  status: DemoStatus;
   googleEventId: string | null;
   createdAt: Date;
   updatedAt: Date;
@@ -565,7 +565,7 @@ export type FormQuestionType =
 
 export type FormLeadType = 'rental' | 'buyer' | 'general';
 
-export type FormConfigSource = 'custom' | 'brokerage' | 'legacy';
+export type FormConfigSource = 'custom' | 'team' | 'legacy';
 
 export type FormQuestionOption = {
   value: string;
@@ -652,7 +652,7 @@ export type FormAnalyticsEvent = {
 
 // ── Application Portal Types ──
 
-export type ApplicationMessageSenderType = 'applicant' | 'realtor';
+export type ApplicationMessageSenderType = 'applicant' | 'rep';
 
 export type ApplicationMessage = {
   id: string;
@@ -677,7 +677,7 @@ export type ApplicationStatusUpdate = {
 export type ApplicationStatus =
   | 'received'
   | 'under_review'
-  | 'tour_scheduled'
+  | 'demo_scheduled'
   | 'approved'
   | 'declined'
   | 'waitlisted';

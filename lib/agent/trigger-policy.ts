@@ -1,6 +1,6 @@
 const VALID_EVENTS = [
   'new_lead',
-  'tour_completed',
+  'demo_completed',
   'deal_stage_changed',
   'application_submitted',
   'inbound_message',

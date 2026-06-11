@@ -53,16 +53,16 @@ export async function POST(req: NextRequest) {
   }
 
   // Generate API key (for direct Bearer auth)
-  const rawKey = `chippi_${crypto.randomBytes(24).toString('hex')}`;
+  const rawKey = `koala_${crypto.randomBytes(24).toString('hex')}`;
   const keyHash = crypto.createHash('sha256').update(rawKey).digest('hex');
   const keyPrefix = rawKey.slice(0, 12) + '...';
 
   // Generate OAuth client credentials (for Claude MCP connector)
-  const clientId = `chippi_${crypto.randomBytes(16).toString('hex')}`;
+  const clientId = `koala_${crypto.randomBytes(16).toString('hex')}`;
   const clientSecret = `cs_${crypto.randomBytes(32).toString('hex')}`;
   const clientSecretHash = crypto.createHash('sha256').update(clientSecret).digest('hex');
 
-  // Default 365-day TTL — keys cool off after a year unless the realtor
+  // Default 365-day TTL — keys cool off after a year unless the rep
   // rotates. Long enough that a set-and-forget Claude connector keeps
   // working through a billing cycle; short enough that a stale leak goes
   // cold within a year. Legacy keys (created before this migration)
@@ -91,8 +91,8 @@ export async function POST(req: NextRequest) {
     key: rawKey,
     clientId,
     clientSecret,
-    tokenUrl: 'https://my.usechippi.com/api/mcp/oauth/token',
-    mcpUrl: 'https://my.usechippi.com/api/mcp',
+    tokenUrl: 'https://my.usekoala.com/api/mcp/oauth/token',
+    mcpUrl: 'https://my.usekoala.com/api/mcp',
   }, { status: 201 });
 }
 

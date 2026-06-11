@@ -47,7 +47,7 @@ export default async function PublicBookingPage({
   const [{ data: settingsData }, { data: customSettings }, { data: ownerData }] = await Promise.all([
     supabase
       .from('SpaceSetting')
-      .select('tourBookingPageTitle, tourBookingPageIntro, businessName, tourDuration, timezone, logoUrl, realtorPhotoUrl')
+      .select('demoBookingPageTitle, demoBookingPageIntro, businessName, demoDuration, timezone, logoUrl, repPhotoUrl')
       .eq('spaceId', space.id)
       .maybeSingle(),
     supabase
@@ -68,13 +68,13 @@ export default async function PublicBookingPage({
 
   const allSettings = { ...((settingsData ?? {}) as any), ...((customSettings ?? {}) as any) };
   const settings = allSettings as {
-    tourBookingPageTitle: string | null;
-    tourBookingPageIntro: string | null;
+    demoBookingPageTitle: string | null;
+    demoBookingPageIntro: string | null;
     businessName: string | null;
-    tourDuration: number | null;
+    demoDuration: number | null;
     timezone: string | null;
     logoUrl: string | null;
-    realtorPhotoUrl: string | null;
+    repPhotoUrl: string | null;
     intakeAccentColor: string | null;
     intakeFont: string | null;
     intakeDarkMode: boolean | null;
@@ -86,13 +86,13 @@ export default async function PublicBookingPage({
     trackingPixels: TrackingPixelsType | null;
   } | null;
 
-  const pageTitle = settings?.tourBookingPageTitle || 'Book a Tour';
-  const pageIntro = settings?.tourBookingPageIntro || 'Pick a time that works for you and we\'ll confirm your tour.';
+  const pageTitle = settings?.demoBookingPageTitle || 'Book a Demo';
+  const pageIntro = settings?.demoBookingPageIntro || 'Pick a time that works for you and we\'ll confirm your demo.';
   const businessName = settings?.businessName || space.name;
-  const duration = settings?.tourDuration || 30;
+  const duration = settings?.demoDuration || 30;
   const timezone = settings?.timezone || 'America/New_York';
   const agentName = ownerData?.name || businessName;
-  const rawAgentPhoto = settings?.realtorPhotoUrl || ownerData?.avatar || null;
+  const rawAgentPhoto = settings?.repPhotoUrl || ownerData?.avatar || null;
   const logoUrl = settings?.logoUrl || null;
 
   // Resolve the same identity material as /p/[slug] so the booking page
@@ -118,8 +118,8 @@ export default async function PublicBookingPage({
     return <FormUnavailable agentName={agentName} />;
   }
 
-  // Hide the Chippi mark on paid tiers — visible only on the free tier as
-  // a value-exchange brand exposure. The realtor pays for white-label when
+  // Hide the Koala mark on paid tiers — visible only on the free tier as
+  // a value-exchange brand exposure. The rep pays for white-label when
   // they're on an active paid plan (or trialing into one).
   const hidePoweredBy = subStatus === 'active' || subStatus === 'trialing';
 

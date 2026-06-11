@@ -53,7 +53,7 @@ export const logMeetingTool = defineTool<typeof parameters, LogMeetingResult>({
       .select('id, name')
       .eq('id', args.personId)
       .eq('spaceId', ctx.space.id)
-      .is('brokerageId', null)
+      .is('teamId', null)
       .maybeSingle();
     if (lookupErr) {
       return { summary: `Contact lookup failed: ${lookupErr.message}`, display: 'error' };

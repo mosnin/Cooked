@@ -1,7 +1,7 @@
 -- ═══════════════════════════════════════════════════════════════════════════
--- Routine — a standing instruction for Chippi: a sentence and a time.
+-- Routine — a standing instruction for Koala: a sentence and a time.
 --
--- The realtor writes one English instruction and picks how often it runs.
+-- The rep writes one English instruction and picks how often it runs.
 -- An hourly Vercel cron (/api/cron/routines) finds rows whose nextRunAt has
 -- passed and fires the Modal autonomous run with the instruction attached.
 -- Like every autonomous path, the run DRAFTS — it never sends unattended.
@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS "Routine" (
   "enabled"       boolean NOT NULL DEFAULT true,
   -- Set by the cron when it dispatches a run. status reflects whether the
   -- Modal webhook accepted the job, not the run's eventual outcome — the
-  -- realtor reads the Activity feed for what the run actually did.
+  -- rep reads the Activity feed for what the run actually did.
   "lastRunAt"     timestamptz,
   "lastRunStatus" text CHECK ("lastRunStatus" IN ('ok', 'error')),
   -- Always trigger-managed. Never written by a caller.
@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS "Routine" (
 -- The cron's hot path: enabled routines that are due.
 CREATE INDEX IF NOT EXISTS "Routine_due_idx"
   ON "Routine" ("nextRunAt") WHERE "enabled" = true;
--- The realtor's list view.
+-- The rep's list view.
 CREATE INDEX IF NOT EXISTS "Routine_space_idx"
   ON "Routine" ("spaceId");
 

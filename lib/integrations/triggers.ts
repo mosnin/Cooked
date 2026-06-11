@@ -1,17 +1,17 @@
 /**
  * Composio trigger subscriptions — the inbound half of the integrations
  * story. Triggers are how the platform tells us "something happened in
- * the realtor's connected app" so Chippi can react without being asked.
+ * the rep's connected app" so Koala can react without being asked.
  *
  * This module owns four things:
  *
  *   1. CURATED_TRIGGERS — the slugs we auto-register per toolkit. Hard-
- *      coded, not realtor-configurable. The realtor's choice surface is
+ *      coded, not rep-configurable. The rep's choice surface is
  *      the connect/disconnect button, not a trigger picker.
  *
  *   2. TRIGGER_DISPATCH — what to do when a delivery arrives. One of:
  *        DRAFT     — fire an autonomous run with a templated instruction
- *                    so the agent drafts a response for the realtor to
+ *                    so the agent drafts a response for the rep to
  *                    approve. Never auto-sends.
  *        NOTICE    — surface a card to the activity toast (Phase 4 —
  *                    NOT WIRED yet; falls through to a logged no-op).
@@ -58,15 +58,15 @@ export interface IntegrationTriggerRow {
  * Slugs verified against Composio's published catalog
  * (composio.dev/toolkits/<slug>.md → "Supported Triggers" table). Do
  * NOT guess slugs into this map — registration would fail silently and
- * the realtor would never see Chippi "noticing" what the catalog implies.
+ * the rep would never see Koala "noticing" what the catalog implies.
  *
  * Empty array = we don't ingest triggers for that toolkit, either
  * because Composio doesn't ship any or because the available ones don't
- * map to actionable realtor moments. See the per-entry comments for the
+ * map to actionable rep moments. See the per-entry comments for the
  * thinking.
  */
 export const CURATED_TRIGGERS: Record<string, string[]> = {
-  // ── Comms: the realtor's inbox surfaces ───────────────────────────
+  // ── Comms: the rep's inbox surfaces ───────────────────────────
   gmail: ['GMAIL_NEW_GMAIL_MESSAGE'],
   outlook: ['OUTLOOK_MESSAGE_TRIGGER'],
   // Slack's "RECEIVE_MESSAGE" fires on every channel post — too noisy.
@@ -74,7 +74,7 @@ export const CURATED_TRIGGERS: Record<string, string[]> = {
   slack: ['SLACK_DIRECT_MESSAGE_RECEIVED', 'SLACK_REACTION_ADDED'],
   discord: ['DISCORD_NEW_MESSAGE_TRIGGER'],
 
-  // ── Calendar: tours, accepts, cancellations ───────────────────────
+  // ── Calendar: demos, accepts, cancellations ───────────────────────
   googlecalendar: [
     'GOOGLECALENDAR_ATTENDEE_RESPONSE_CHANGED_TRIGGER',
     'GOOGLECALENDAR_EVENT_CANCELED_DELETED_TRIGGER',
@@ -113,18 +113,18 @@ export const CURATED_TRIGGERS: Record<string, string[]> = {
   linkedin: [], // no curated triggers; LinkedIn restricts webhook access heavily
   reddit: [], // monitoring/polling pattern not yet exposed as a Composio trigger
   youtube: [
-    // Subscription / new-activity triggers exist but a realtor's YouTube
+    // Subscription / new-activity triggers exist but a rep's YouTube
     // is a content channel, not a real-time signal source. Skip until
-    // proven realtors want it.
+    // proven reps want it.
   ],
   google_ads: [], // no trigger surface; the catalog ships read tools only
-  notion: [], // page/database triggers exist, but Notion isn't load-bearing in the realtor workflow
+  notion: [], // page/database triggers exist, but Notion isn't load-bearing in the rep workflow
   googledocs: [], // doc-content triggers ship but rarely actionable; skip until asked
-  googlesheets: [], // metadata-changed triggers are noisy; the realtor wants outcomes, not cell edits
+  googlesheets: [], // metadata-changed triggers are noisy; the rep wants outcomes, not cell edits
   googledrive: [], // file-created could be useful (new disclosure?) but the signal is too generic
   onedrive: [], // same shape as googledrive
   dropbox: [], // same shape
-  zoho: [], // CRM mirror; left empty until a realtor asks
+  zoho: [], // CRM mirror; left empty until a rep asks
   docusign: [], // envelope-completed is real but Composio's trigger surface is unclear
   dropbox_sign: [], // same shape as docusign
   typeform: [], // form submissions arrive via Typeform's own webhook (configured Typeform-side)
@@ -145,7 +145,7 @@ export const CURATED_TRIGGERS: Record<string, string[]> = {
  *
  * In v2, every curated slug is DRAFT-kind: the templated instruction
  * gives the model the context, and the model decides whether to draft
- * a response, ask the realtor a question, or do nothing. The kind enum
+ * a response, ask the rep a question, or do nothing. The kind enum
  * stays for future cost-tiered routing (NOTICE = activity card with no
  * Modal cost; DATA_SYNC = direct DB write).
  */
@@ -290,7 +290,7 @@ function build(args: {
  * key in order.
  *
  * Voice rule: action sentences describe a JUDGMENT to make, not a
- * rulebook to follow. The model knows the realtor's CRM and history;
+ * rulebook to follow. The model knows the rep's CRM and history;
  * we trust it to judge noise vs signal rather than enumerate cases.
  */
 const TEMPLATES: Record<string, (p: Record<string, unknown>) => string | null> = {
@@ -366,7 +366,7 @@ const TEMPLATES: Record<string, (p: Record<string, unknown>) => string | null> =
         ['New status', pickString(p, 'responseStatus', 'response', 'status')],
       ],
       action:
-        'If this is a tour or client meeting, draft a warm confirm (if accepted) or a reschedule offer (if declined). Internal events can pass.',
+        'If this is a demo or client meeting, draft a warm confirm (if accepted) or a reschedule offer (if declined). Internal events can pass.',
     }),
 
   GOOGLECALENDAR_EVENT_CANCELED_DELETED_TRIGGER: (p) =>
@@ -377,7 +377,7 @@ const TEMPLATES: Record<string, (p: Record<string, unknown>) => string | null> =
         ['Was', pickString(p, 'startTime', 'start', 'startDateTime')],
       ],
       action:
-        'If this was a tour or client meeting, draft a follow-up acknowledging and offering to reschedule.',
+        'If this was a demo or client meeting, draft a follow-up acknowledging and offering to reschedule.',
     }),
 
   GOOGLECALENDAR_EVENT_STARTING_SOON_TRIGGER: (p) => {
@@ -604,11 +604,11 @@ function templateInstruction(
  * Called from the OAuth callback AFTER `upsertByComposioId` confirms the
  * row is active. Each (connection, slug) pair becomes one IntegrationTrigger
  * row. A registration failure for one slug is logged + recorded with
- * status='failed' and does NOT block the rest — a realtor with three
+ * status='failed' and does NOT block the rest — a rep with three
  * triggers should get the two that work even if one slug is wrong.
  *
  * Best-effort overall: a Composio outage here doesn't reject the OAuth
- * completion. The realtor sees the connection succeed; missing triggers
+ * completion. The rep sees the connection succeed; missing triggers
  * surface later via the health endpoint and can be re-registered on
  * reconnect.
  */
@@ -672,7 +672,7 @@ export async function registerForConnection(args: {
 /**
  * Delete every trigger subscription for a connection — at Composio AND
  * locally. Called from `connections.revoke` BEFORE the connection itself
- * is torn down, so a disconnected realtor doesn't keep paying for
+ * is torn down, so a disconnected rep doesn't keep paying for
  * webhook deliveries that go nowhere.
  *
  * If the connection row is hard-deleted (ON DELETE CASCADE removes our
@@ -703,9 +703,9 @@ export async function deleteForConnection(connectionId: string): Promise<void> {
 
 /**
  * Flip every IntegrationTrigger row for a connection between 'active'
- * and 'paused'. Realtor-facing — the integrations panel offers ONE
+ * and 'paused'. Rep-facing — the integrations panel offers ONE
  * toggle per connected app, not one per trigger. Per-trigger granularity
- * is a settings rabbit hole the realtor does not need.
+ * is a settings rabbit hole the rep does not need.
  *
  * Idempotent: pausing an already-paused connection is a no-op.
  * Failed rows (status='failed') are left alone — those are a separate
@@ -737,7 +737,7 @@ export async function setPausedForConnection(args: {
 /**
  * Did this connection have ANY active trigger at the time of the check?
  * Used by the integrations list endpoint to render the per-connection
- * "Chippi is watching" / "Paused" affordance. Returns false when the
+ * "Koala is watching" / "Paused" affordance. Returns false when the
  * connection has no rows at all (nothing curated for that toolkit).
  */
 export async function hasActiveTriggers(connectionId: string): Promise<boolean> {
@@ -757,13 +757,13 @@ export type TriggerSummary = 'off' | 'active' | 'paused' | 'failed';
  * Four states:
  *   - "off"     → no triggers registered (toolkit has empty CURATED_TRIGGERS)
  *   - "active"  → at least one trigger active
- *   - "paused"  → triggers registered but realtor paused them
- *   - "failed"  → registration attempted but Composio rejected; realtor
- *                 sees Chippi promised to watch and silently doesn't
+ *   - "paused"  → triggers registered but rep paused them
+ *   - "failed"  → registration attempted but Composio rejected; rep
+ *                 sees Koala promised to watch and silently doesn't
  *                 unless we expose this state.
  *
  * Precedence: active > paused > failed > off. If a connection has both
- * a working trigger and a broken one, we show active (the realtor's
+ * a working trigger and a broken one, we show active (the rep's
  * coverage isn't zero) — the broken slug surfaces in /api/integrations/health.
  */
 export async function summariesForConnections(connectionIds: string[]): Promise<
@@ -834,7 +834,7 @@ export async function dispatchTrigger(args: {
     const tagged = `[Autonomous run — Composio trigger: ${args.triggerSlug}]\n\n${instruction}`;
     // Also pass the structured triggerSource through so the drafts
     // tool can persist it on AgentDraft.triggerSource. The inbox UI
-    // reads from that column to render the "Chippi noticed because
+    // reads from that column to render the "Koala noticed because
     // [event]" breadcrumb — the trust moment Phase 4 surfaces.
     const triggerSource = {
       kind: 'composio_trigger' as const,

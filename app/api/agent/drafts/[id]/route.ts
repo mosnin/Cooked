@@ -79,7 +79,7 @@ export async function PATCH(
     );
   }
 
-  // Allow the realtor to edit content before approving
+  // Allow the rep to edit content before approving
   let finalContent: string = existing.content;
   if (newStatus === 'approved' && body.content !== undefined) {
     if (typeof body.content !== 'string' || body.content.trim().length === 0) {
@@ -162,7 +162,7 @@ export async function PATCH(
   //
   // Whitespace-normalized comparison: a stray trailing space or a double
   // newline collapsed to a single one is NOT an edit. Otherwise we'd record
-  // 'edited_and_approved' on rows where the realtor literally just hit Approve.
+  // 'edited_and_approved' on rows where the rep literally just hit Approve.
   const serverEditDistance = normalizedLevenshtein(existing.content, finalContent);
   const contentChanged = serverEditDistance > 0;
   patch.feedback_action = contentChanged ? 'edited_and_approved' : 'approved';

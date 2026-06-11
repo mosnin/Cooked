@@ -14,7 +14,7 @@ import type { Metadata, Viewport } from 'next';
 
 /** viewport-fit=cover lets the page draw under the iOS notch / status-bar
  *  area instead of leaving a body-coloured strip above the cover photo.
- *  Same treatment /p/[slug] uses — the intake is the realtor's storefront,
+ *  Same treatment /p/[slug] uses — the intake is the rep's storefront,
  *  it should feel flush to the device. Non-iOS browsers ignore this; free
  *  fix everywhere else. */
 export const viewport: Viewport = {
@@ -47,7 +47,7 @@ export const revalidate = 0;
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const space = await getSpaceFromSlug(slug);
-  if (!space) return { title: 'Application — Chippi' };
+  if (!space) return { title: 'Application — Koala' };
 
   const { data: settings } = await supabase
     .from('SpaceSetting')
@@ -86,7 +86,7 @@ export default async function PublicApplyPage({
   const [{ data: coreSettings }, { data: customSettings }, { data: ownerData }, { data: profileRow }] = await Promise.all([
     supabase
       .from('SpaceSetting')
-      .select('intakePageTitle, intakePageIntro, businessName, logoUrl, realtorPhotoUrl, privacyPolicyHtml, isVerified')
+      .select('intakePageTitle, intakePageIntro, businessName, logoUrl, repPhotoUrl, privacyPolicyHtml, isVerified')
       .eq('spaceId', space.id)
       .maybeSingle(),
     supabase
@@ -97,7 +97,7 @@ export default async function PublicApplyPage({
         'intakeDisclaimerText, intakeThankYouTitle, intakeThankYouMessage, ' +
         'intakeFooterLinks, intakeDisabledSteps, intakeCustomQuestions, ' +
         'intakeFaviconUrl, bio, socialLinks, privacyPolicyUrl, consentCheckboxLabel, ' +
-        'intakeLicenseNumber, intakeFairHousingNotice, intakeShowEqualHousingMark, ' +
+        'intakeLicenseNumber, intakeComplianceNotice, intakeShowComplianceMark, ' +
         'formConfig, formConfigSource, rentalFormConfig, buyerFormConfig, trackingPixels'
       )
       .eq('spaceId', space.id)
@@ -121,7 +121,7 @@ export default async function PublicApplyPage({
     intakePageIntro: string | null;
     businessName: string | null;
     logoUrl: string | null;
-    realtorPhotoUrl: string | null;
+    repPhotoUrl: string | null;
     intakeAccentColor: string | null;
     intakeBorderRadius: string | null;
     intakeFont: string | null;
@@ -141,8 +141,8 @@ export default async function PublicApplyPage({
     privacyPolicyUrl: string | null;
     consentCheckboxLabel: string | null;
     intakeLicenseNumber: string | null;
-    intakeFairHousingNotice: string | null;
-    intakeShowEqualHousingMark: boolean | null;
+    intakeComplianceNotice: string | null;
+    intakeShowComplianceMark: boolean | null;
     formConfig: import('@/lib/types').IntakeFormConfig | null;
     formConfigSource: string | null;
     rentalFormConfig: import('@/lib/types').IntakeFormConfig | null;
@@ -158,14 +158,14 @@ export default async function PublicApplyPage({
   const isVerified = settings?.isVerified === true;
 
   // Photo resolution chain (matches /p/[slug] so identity is consistent across surfaces):
-  //   profilePhotoUrl (ProfilePage) → realtorPhotoUrl (SpaceSetting) → User.avatar → Clerk imageUrl.
+  //   profilePhotoUrl (ProfilePage) → repPhotoUrl (SpaceSetting) → User.avatar → Clerk imageUrl.
   // Storage values may be private object keys — sign them in parallel.
-  const [profilePagePhoto, realtorPhotoFromStorage, coverPhotoUrl] = await Promise.all([
+  const [profilePagePhoto, repPhotoFromStorage, coverPhotoUrl] = await Promise.all([
     resolveStoredPhoto(profileRow?.profilePhotoUrl ?? null),
-    resolveStoredPhoto(settings?.realtorPhotoUrl ?? ownerData?.avatar ?? null),
+    resolveStoredPhoto(settings?.repPhotoUrl ?? ownerData?.avatar ?? null),
     resolveStoredPhoto(profileRow?.coverPhotoUrl ?? null),
   ]);
-  let agentPhoto: string | null = profilePagePhoto ?? realtorPhotoFromStorage ?? null;
+  let agentPhoto: string | null = profilePagePhoto ?? repPhotoFromStorage ?? null;
   if (!agentPhoto && ownerData?.clerkId) {
     try {
       const clerk = await clerkClient();
@@ -188,8 +188,8 @@ export default async function PublicApplyPage({
     return <FormUnavailable agentName={agentName} />;
   }
 
-  // Hide the Chippi mark on paid tiers — visible only on the free tier as
-  // a value-exchange brand exposure. The realtor pays for white-label when
+  // Hide the Koala mark on paid tiers — visible only on the free tier as
+  // a value-exchange brand exposure. The rep pays for white-label when
   // they're on an active paid plan (or trialing into one).
   const hidePoweredBy = status === 'active' || status === 'trialing';
 
@@ -200,22 +200,22 @@ export default async function PublicApplyPage({
   let resolvedBuyerFormConfig: IFC | null = null;
   const formConfigSource = settings?.formConfigSource ?? 'legacy';
 
-  if (formConfigSource === 'brokerage' && space.brokerageId) {
-    // Fetch form configs from brokerage template
+  if (formConfigSource === 'team' && space.teamId) {
+    // Fetch form configs from team template
     try {
-      const { data: brokerageData } = await supabase
-        .from('Brokerage')
-        .select('brokerageFormConfig, brokerageRentalFormConfig, brokerageBuyerFormConfig')
-        .eq('id', space.brokerageId)
+      const { data: teamData } = await supabase
+        .from('Team')
+        .select('teamFormConfig, teamRentalFormConfig, teamBuyerFormConfig')
+        .eq('id', space.teamId)
         .maybeSingle();
-      if (brokerageData) {
-        const legacySingle = (brokerageData.brokerageFormConfig ?? null) as IFC | null;
+      if (teamData) {
+        const legacySingle = (teamData.teamFormConfig ?? null) as IFC | null;
         const legacySingleLeadType = legacySingle?.leadType === 'buyer' ? 'buyer' : 'rental';
 
-        resolvedRentalFormConfig = (brokerageData.brokerageRentalFormConfig ?? null) as IFC | null;
-        resolvedBuyerFormConfig = (brokerageData.brokerageBuyerFormConfig ?? null) as IFC | null;
+        resolvedRentalFormConfig = (teamData.teamRentalFormConfig ?? null) as IFC | null;
+        resolvedBuyerFormConfig = (teamData.teamBuyerFormConfig ?? null) as IFC | null;
 
-        // Backwards compatibility for legacy single brokerage form config:
+        // Backwards compatibility for legacy single team form config:
         // route it to the correct lead type instead of always treating it as rental.
         if (!resolvedRentalFormConfig && !resolvedBuyerFormConfig && legacySingle) {
           if (legacySingleLeadType === 'buyer') {
@@ -228,7 +228,7 @@ export default async function PublicApplyPage({
         resolvedFormConfig = legacySingle;
       }
     } catch {
-      // Brokerage fetch failed — fall back to legacy form
+      // Team fetch failed — fall back to legacy form
     }
   } else if (formConfigSource === 'custom') {
     const legacySingle = settings?.formConfig ?? null;
@@ -292,8 +292,8 @@ export default async function PublicApplyPage({
         hidePoweredBy={hidePoweredBy}
         footerLinks={customization.footerLinks}
         licenseNumber={settings?.intakeLicenseNumber ?? null}
-        fairHousingNotice={settings?.intakeFairHousingNotice ?? null}
-        showEqualHousingMark={settings?.intakeShowEqualHousingMark ?? false}
+        complianceNotice={settings?.intakeComplianceNotice ?? null}
+        showComplianceMark={settings?.intakeShowComplianceMark ?? false}
       >
         <IntakeChat
           slug={slug}

@@ -25,10 +25,10 @@ interface Props {
   slug: string;
   initial: Property;
   linkedDeals: { id: string; title: string; status: string; value: number | null; closeDate: string | null }[];
-  linkedTours: { id: string; guestName: string; startsAt: string; status: string }[];
+  linkedDemos: { id: string; guestName: string; startsAt: string; status: string }[];
 }
 
-export function PropertyDetailClient({ slug, initial, linkedDeals, linkedTours }: Props) {
+export function PropertyDetailClient({ slug, initial, linkedDeals, linkedDemos }: Props) {
   const router = useRouter();
   const [property, setProperty] = useState(initial);
   const [editing, setEditing] = useState(false);
@@ -59,9 +59,9 @@ export function PropertyDetailClient({ slug, initial, linkedDeals, linkedTours }
   }
 
   async function remove() {
-    if (!confirm('Delete this property? Linked deals and tours stay intact.')) return;
+    if (!confirm('Delete this product? Linked deals and demos stay intact.')) return;
     const res = await fetch(`/api/properties/${property.id}`, { method: 'DELETE' });
-    if (!res.ok) { toast.error("Couldn't delete that property."); return; }
+    if (!res.ok) { toast.error("Couldn't delete that product."); return; }
     toast.success('Deleted.');
     router.push(`/s/${slug}/properties`);
   }
@@ -73,7 +73,7 @@ export function PropertyDetailClient({ slug, initial, linkedDeals, linkedTours }
   if (editing) {
     return (
       <div className="rounded-xl border border-border/70 bg-card p-5">
-        <h1 className="text-lg font-semibold mb-4">Edit property</h1>
+        <h1 className="text-lg font-semibold mb-4">Edit product</h1>
         <PropertyForm
           initial={property}
           onCancel={() => setEditing(false)}
@@ -88,8 +88,8 @@ export function PropertyDetailClient({ slug, initial, linkedDeals, linkedTours }
   return (
     <div className="space-y-8">
       {/* ── Hero ────────────────────────────────────────────────────────
-          Full-width 16:9 photo. Real estate leads with the photo — the
-          old 360px sidebar treatment hid it behind chrome. When no photo
+          Full-width 16:9 photo. The product catalog leads with the photo —
+          the old 360px sidebar treatment hid it behind chrome. When no photo
           is on file: same aspect ratio, hairline border, calm muted copy
           (not a coloured block). */}
       <div className="overflow-hidden rounded-xl border border-border/70 bg-muted/20">
@@ -146,7 +146,7 @@ export function PropertyDetailClient({ slug, initial, linkedDeals, linkedTours }
           <dl className="grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-3">
             {property.yearBuilt != null && <Fact label="Year built" value={String(property.yearBuilt)} />}
             {property.lotSizeSqft != null && <Fact label="Lot" value={`${property.lotSizeSqft.toLocaleString()} sqft`} />}
-            {property.mlsNumber && <Fact label="MLS" value={property.mlsNumber} />}
+            {property.mlsNumber && <Fact label="CRM" value={property.mlsNumber} />}
           </dl>
         )}
 
@@ -185,7 +185,7 @@ export function PropertyDetailClient({ slug, initial, linkedDeals, linkedTours }
         </div>
       </div>
 
-      {/* ── Linked deals + tours ────────────────────────────────────────
+      {/* ── Linked deals + demos ────────────────────────────────────────
           Below the facts, not in a sidebar. Section labels use the
           canonical SECTION_LABEL small-caps treatment. */}
       <div className="space-y-8 border-t border-border/60 pt-6">
@@ -205,10 +205,10 @@ export function PropertyDetailClient({ slug, initial, linkedDeals, linkedTours }
           }))}
         />
         <LinkedSection
-          title="Tours"
+          title="Demos"
           icon={CalendarDays}
-          empty="No tours have been scheduled here yet."
-          items={linkedTours.map((t) => {
+          empty="No demos have been scheduled here yet."
+          items={linkedDemos.map((t) => {
             const d = new Date(t.startsAt);
             return {
               key: t.id,

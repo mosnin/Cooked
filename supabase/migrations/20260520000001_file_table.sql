@@ -3,7 +3,7 @@
 --
 -- Distinct from ContactDocument, DealDocument, Attachment: those tables
 -- carry domain-specific metadata (which deal, which contact, which chat).
--- This is the user-facing "Files" page surface — anything the realtor
+-- This is the user-facing "Files" page surface — anything the rep
 -- uploaded without attaching to a specific record.
 --
 -- Files land in Wasabi at `files/{spaceId}/{uuid}-{filename}`. The
@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS "File" (
   "createdAt"     timestamptz NOT NULL DEFAULT now()
 );
 
--- Hot path: realtor's Files page query → spaceId + recency.
+-- Hot path: rep's Files page query → spaceId + recency.
 CREATE INDEX IF NOT EXISTS "File_spaceId_createdAt_idx"
   ON "File" ("spaceId", "createdAt" DESC);
 
@@ -35,7 +35,7 @@ CREATE INDEX IF NOT EXISTS "File_spaceId_createdAt_idx"
 CREATE INDEX IF NOT EXISTS "File_spaceId_category_idx"
   ON "File" ("spaceId", "category", "createdAt" DESC);
 
--- Per-user quota query for brokerages (multiple realtors share a Space).
+-- Per-user quota query for teams (multiple reps share a Space).
 CREATE INDEX IF NOT EXISTS "File_userId_createdAt_idx"
   ON "File" ("userId", "createdAt" DESC);
 

@@ -1,5 +1,5 @@
 /**
- * Documents page — the realtor's own documents: things they write or paste
+ * Documents page — the rep's own documents: things they write or paste
  * in-app, as opposed to files they upload. Thin server shell; the editor and
  * list live client-side in DocumentsPanel against /api/files/documents.
  */

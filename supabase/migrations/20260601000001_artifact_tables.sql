@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS "Artifact" (
   "stepId"           text        REFERENCES "ExecutionStep"(id) ON DELETE SET NULL,
   "artifactType"     text        NOT NULL CHECK ("artifactType" IN (
                                    'draft_email','draft_sms','deal_update','contact_update',
-                                   'tour_booking','goal_plan','report','raw_output')),
+                                   'demo_booking','goal_plan','report','raw_output')),
   "title"            text        NOT NULL,
   "contentType"      text        NOT NULL DEFAULT 'text/plain',
   "status"           text        NOT NULL DEFAULT 'draft' CHECK ("status" IN (
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS "ArtifactVersion" (
   "content"         text        NOT NULL,
   "contentHash"     text        NOT NULL,
   "metadata"        jsonb       DEFAULT '{}',
-  "createdByAgent"  text        NOT NULL DEFAULT 'chippi',
+  "createdByAgent"  text        NOT NULL DEFAULT 'koala',
   "createdAt"       timestamptz NOT NULL DEFAULT now()
 );
 

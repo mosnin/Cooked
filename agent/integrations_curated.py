@@ -2,13 +2,13 @@
 
 Why this exists (Musk-lens): the dispatcher pattern (find_integration_tool →
 call_integration_tool) costs ~3-5s of perceived latency per integration call
-because it's two LLM hops + two HTTP round-trips. A realtor with Gmail +
+because it's two LLM hops + two HTTP round-trips. A rep with Gmail +
 HubSpot + Slack + Calendar uses maybe 6 actions each = 24 tools, well under
 xAI's 200-tool ceiling. Pre-loading those skips the dispatcher hops for
 common actions while keeping the dispatcher as fallback for the long tail.
 
 Curation rules:
-- 4-8 slugs per toolkit, chosen by what a realtor *actually does* daily.
+- 4-8 slugs per toolkit, chosen by what a rep *actually does* daily.
 - Every slug verified against docs.composio.dev/toolkits/{toolkit} on
   2026-05-24. A guessed slug that 404s at execute time would burn a turn
   and a token budget; correctness here is non-negotiable.
@@ -16,7 +16,7 @@ Curation rules:
   docs at audit time) are OMITTED — they fall back to the dispatcher.
   Better to ship 8 right than 12 with two wrong.
 - Read-shaped actions (LIST, FETCH, GET) over write-shaped where both fit
-  the realtor's verb. Writes still go through the approval-gated draft
+  the rep's verb. Writes still go through the approval-gated draft
   pipeline; the curated set is mostly about killing latency on reads.
 
 Format: { toolkit_slug: [SLUG, SLUG, ...] } — flat lists, uppercase, no
@@ -30,14 +30,14 @@ worst-case of a stale entry is degraded latency, not broken chat.
 """
 from __future__ import annotations
 
-# Order within each list is the realtor's likely frequency-of-use,
+# Order within each list is the rep's likely frequency-of-use,
 # highest first. The dispatch loop in integrations.py preserves the
 # order when materializing FunctionTools — useful only as documentation
 # of intent; the model doesn't prioritize by list order.
 CURATED_ACTIONS: dict[str, list[str]] = {
     # ── Email ────────────────────────────────────────────────────────────
     # Read-then-reply is the bread-and-butter loop. Draft creation is here
-    # because realtors often want Chippi to PREP a Gmail draft they'll then
+    # because reps often want Koala to PREP a Gmail draft they'll then
     # tweak — distinct from the native draft_message pipeline (which is
     # CRM-Contact-shaped and awaits approval). Both coexist.
     "gmail": [
@@ -58,8 +58,8 @@ CURATED_ACTIONS: dict[str, list[str]] = {
     # ── Calendar ─────────────────────────────────────────────────────────
     # `EVENTS_LIST` is the canonical "list" slug on Composio's catalog
     # (NOT `LIST_EVENTS` — verified 2026-05-24). FIND_FREE_SLOTS is the
-    # availability-check the realtor wants when booking a tour outside
-    # the native book_tour flow.
+    # availability-check the rep wants when booking a demo outside
+    # the native book_demo flow.
     "googlecalendar": [
         "GOOGLECALENDAR_EVENTS_LIST",
         "GOOGLECALENDAR_CREATE_EVENT",
@@ -69,7 +69,7 @@ CURATED_ACTIONS: dict[str, list[str]] = {
         "GOOGLECALENDAR_QUICK_ADD",
     ],
     # ── Messaging (team) ─────────────────────────────────────────────────
-    # Slack is internal team comms — broker pings, deal updates, listing
+    # Slack is internal team comms — manager pings, deal updates, listing
     # alerts. `LIST_ALL_CHANNELS` and `LIST_ALL_USERS` are the canonical
     # slugs (not `LIST_CHANNELS`/`LIST_USERS` — verified). Thread reply
     # uses the FETCH_MESSAGE_THREAD action; Slack's outbound-thread-reply
@@ -82,10 +82,10 @@ CURATED_ACTIONS: dict[str, list[str]] = {
         "SLACK_FETCH_MESSAGE_THREAD_FROM_A_CONVERSATION",
     ],
     # ── CRM ──────────────────────────────────────────────────────────────
-    # HubSpot is the only CRM most realtors run alongside Chippi. The
+    # HubSpot is the only CRM most reps run alongside Koala. The
     # CREATE_*/UPDATE_* writes here ARE approval-relevant (they touch the
-    # realtor's external CRM), but Composio doesn't have a per-action
-    # approval flag; trust comes from Chippi's instruction prompt + the
+    # rep's external CRM), but Composio doesn't have a per-action
+    # approval flag; trust comes from Koala's instruction prompt + the
     # draft_message gate for outbound messaging.
     "hubspot": [
         "HUBSPOT_LIST_CONTACTS",
@@ -96,7 +96,7 @@ CURATED_ACTIONS: dict[str, list[str]] = {
         "HUBSPOT_LIST_EMAILS",
     ],
     # ── Social ───────────────────────────────────────────────────────────
-    # LinkedIn for realtors is mostly: read my profile, post a listing
+    # LinkedIn for reps is mostly: read my profile, post a listing
     # update, comment on a referral source's post. CREATE_LINKED_IN_POST
     # is the verified slug (the "LINKED_IN" with underscore is Composio's
     # canonicalization — yes, even though it reads weird; don't normalize
@@ -108,7 +108,7 @@ CURATED_ACTIONS: dict[str, list[str]] = {
         "LINKEDIN_CREATE_COMMENT_ON_POST",
         "LINKEDIN_CREATE_ARTICLE_OR_URL_SHARE",
     ],
-    # Instagram lead-gen for realtors: DMs from listing-post engagement,
+    # Instagram lead-gen for reps: DMs from listing-post engagement,
     # comments on open-house teasers. INSTAGRAM_* are Business Account
     # actions — the user must have an IG Business connected, not a
     # personal account. Composio surfaces both paths under the same slug;
@@ -135,9 +135,9 @@ CURATED_ACTIONS: dict[str, list[str]] = {
         "TWITTER_SEND_A_NEW_MESSAGE_TO_A_USER",
     ],
     # ── Productivity ─────────────────────────────────────────────────────
-    # Notion is where some realtors keep their per-deal note pages and
+    # Notion is where some reps keep their per-deal note pages and
     # transaction checklists. Search + read + write the three actions
-    # they'll hit; database row insert is for realtors who treat Notion
+    # they'll hit; database row insert is for reps who treat Notion
     # as a lightweight pipeline tracker alongside our CRM.
     "notion": [
         "NOTION_SEARCH_NOTION_PAGE",

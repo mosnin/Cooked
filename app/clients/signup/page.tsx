@@ -12,7 +12,7 @@ export default async function SignupPage() {
   return (
     <AuthShell
       title="Create your account"
-      subtitle="One login for every application and tour."
+      subtitle="One login for every application and demo."
       footer={
         <>
           Already have an account?{' '}

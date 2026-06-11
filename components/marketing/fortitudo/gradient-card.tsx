@@ -2,11 +2,11 @@
 
 /**
  * GradientCard: the premium 3D-tilt dark card with the studio's ASCII
- * signature and a Chippi-orange bottom glow. Ported from fortitudo; the only
- * change is the palette (#F97316 → Chippi #ff964f / pale amber). It is a
+ * signature and a Koala-orange bottom glow. Ported from fortitudo; the only
+ * change is the palette (#F97316 → Koala #ff964f / pale amber). It is a
  * deliberately DARK card, so it reads identically on both the light and dark
- * marketing canvas (same call as Chippi's existing black stats card). Reserved
- * for the home "what Chippi does" cards.
+ * marketing canvas (same call as Koala's existing black stats card). Reserved
+ * for the home "what Koala does" cards.
  */
 
 import type { ReactNode } from 'react';
@@ -17,7 +17,7 @@ import { ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { AsciiField } from './ascii-field';
 
-// Shared Chippi-orange / amber edge-glow.
+// Shared Koala-orange / amber edge-glow.
 const glow = {
   rest: '0 0 15px 3px rgba(255,150,79,0.7), 0 0 25px 5px rgba(255,150,79,0.5), 0 0 35px 7px rgba(255,201,148,0.35)',
   hover:

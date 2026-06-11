@@ -82,7 +82,7 @@ export const sendEmailTool = defineTool<typeof parameters, SendEmailResult>({
   name: 'send_email',
   riskLevel: 'high',
   description:
-    'Send an email to a person. Always prompts the user before sending. Use for follow-ups, tour confirmations, and check-ins.',
+    'Send an email to a person. Always prompts the user before sending. Use for follow-ups, demo confirmations, and check-ins.',
   parameters,
   requiresApproval: true,
   // 50 sends/hour/user caps accidental mass-blasts without throttling
@@ -107,7 +107,7 @@ export const sendEmailTool = defineTool<typeof parameters, SendEmailResult>({
         .select('id, email, name')
         .eq('id', args.contactId)
         .eq('spaceId', ctx.space.id)
-        .is('brokerageId', null)
+        .is('teamId', null)
         .maybeSingle();
       if (error) {
         return { summary: `Contact lookup failed: ${error.message}`, display: 'error' };
@@ -133,7 +133,7 @@ export const sendEmailTool = defineTool<typeof parameters, SendEmailResult>({
         .from('Contact')
         .select('id')
         .eq('spaceId', ctx.space.id)
-        .is('brokerageId', null)
+        .is('teamId', null)
         .eq('email', args.toEmail)
         .maybeSingle();
       resolvedContactId = maybeContact?.id ?? null;

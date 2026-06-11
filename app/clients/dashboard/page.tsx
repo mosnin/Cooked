@@ -8,7 +8,7 @@ import { LogoutButton } from '../portal-actions';
 import {
   StatusPill,
   PortalEmptyState,
-  formatTourDate,
+  formatDemoDate,
   formatDate,
 } from '../portal-ui';
 
@@ -19,15 +19,15 @@ export default async function DashboardPage() {
   if (!user) redirect('/clients/login');
   if (!user.emailVerifiedAt) redirect('/clients/verify');
 
-  const { applications, tours } = await getClientPortalData(user.email);
+  const { applications, demos } = await getClientPortalData(user.email);
 
   const firstName = (user.name ?? '').trim().split(/\s+/)[0] || null;
-  const total = applications.length + tours.length;
+  const total = applications.length + demos.length;
   const statusSentence =
     total === 0
       ? 'nothing in flight yet — it lands here the moment you apply or book.'
-      : `${applications.length} application${applications.length === 1 ? '' : 's'} and ${tours.length} tour${
-          tours.length === 1 ? '' : 's'
+      : `${applications.length} application${applications.length === 1 ? '' : 's'} and ${demos.length} demo${
+          demos.length === 1 ? '' : 's'
         } in motion.`;
 
   return (
@@ -46,7 +46,7 @@ export default async function DashboardPage() {
       {total === 0 && (
         <PortalEmptyState
           headline="Nothing here yet."
-          whatsNext="Apply or book a tour with a realtor using this email and it shows up here."
+          whatsNext="Apply or book a demo with a rep using this email and it shows up here."
         />
       )}
 
@@ -66,7 +66,7 @@ export default async function DashboardPage() {
                   <FileText size={15} className="shrink-0 text-muted-foreground" />
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-medium text-foreground">
-                      {app.realtorName ?? 'Your application'}
+                      {app.repName ?? 'Your application'}
                     </p>
                     <p className="text-[11px] tabular-nums text-muted-foreground">
                       {app.applicationRef ? `${app.applicationRef} · ` : ''}
@@ -82,33 +82,33 @@ export default async function DashboardPage() {
         </section>
       )}
 
-      {/* Tours */}
-      {tours.length > 0 && (
+      {/* Demos */}
+      {demos.length > 0 && (
         <section className="space-y-4">
           <h2 className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
-            Tours
+            Demos
           </h2>
           <ul className="divide-y divide-border/60 overflow-hidden rounded-xl border border-border/70 bg-card">
-            {tours.map((tour) => (
-              <li key={tour.id} className="flex items-center gap-3 px-4 py-3.5">
+            {demos.map((demo) => (
+              <li key={demo.id} className="flex items-center gap-3 px-4 py-3.5">
                 <CalendarCheck size={15} className="shrink-0 text-muted-foreground" />
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium text-foreground tabular-nums">
-                    {formatTourDate(tour.startsAt)}
+                    {formatDemoDate(demo.startsAt)}
                   </p>
                   <p className="truncate text-[11px] text-muted-foreground">
-                    {tour.propertyAddress ?? 'Address to be shared'}
-                    {tour.realtorName ? ` · ${tour.realtorName}` : ''}
+                    {demo.propertyAddress ?? 'Address to be shared'}
+                    {demo.repName ? ` · ${demo.repName}` : ''}
                   </p>
                 </div>
-                {tour.status && <StatusPill status={tour.status} />}
+                {demo.status && <StatusPill status={demo.status} />}
               </li>
             ))}
           </ul>
         </section>
       )}
 
-      {/* Book another tour — quiet entry point for engaged clients */}
+      {/* Book another demo — quiet entry point for engaged clients */}
       {applications.length > 0 && (
         <div>
           <Link
@@ -116,7 +116,7 @@ export default async function DashboardPage() {
             className="inline-flex h-9 items-center gap-1.5 rounded-full border border-border px-4 text-sm text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground"
           >
             <CalendarCheck size={14} />
-            Book a tour
+            Book a demo
           </Link>
         </div>
       )}

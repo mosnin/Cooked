@@ -23,10 +23,10 @@
  *
  * IMPORTANT — what this signal is and isn't: 'deal_advanced' is correlation,
  * not causation. Multiple drafts can fire near a single stage advance, and
- * the realtor can advance by hand. Read it as "drafts that lined up with deal
+ * the rep can advance by hand. Read it as "drafts that lined up with deal
  * progress" — useful as a relative ranking signal, not a hard scoreboard.
  *
- * Auth: Bearer ${CRON_SECRET} (matches agent-sweep, broker-weekly-report).
+ * Auth: Bearer ${CRON_SECRET} (matches agent-sweep, manager-weekly-report).
  * Disable: set CRON_OUTCOMES_DISABLED=1 to short-circuit.
  *
  * Never sends email or SMS. Read-mostly; only writes outcome_signal /

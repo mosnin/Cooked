@@ -3,7 +3,7 @@ import { isPlatformAdmin } from '@/lib/permissions';
 import { supabase } from '@/lib/supabase';
 import { SupportClient, type SupportTicket } from './support-client';
 
-export const metadata = { title: 'Support — Admin — Chippi' };
+export const metadata = { title: 'Support — Admin — Koala' };
 
 export default async function AdminSupportPage() {
   const ok = await isPlatformAdmin();
@@ -49,7 +49,7 @@ export default async function AdminSupportPage() {
           Support
         </h1>
         <p className="text-sm text-muted-foreground">
-          Help requests from realtors. {tickets.length} total.
+          Help requests from reps. {tickets.length} total.
         </p>
       </header>
       <SupportClient initialTickets={tickets} spaceMap={spaceMap} />

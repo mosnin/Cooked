@@ -13,8 +13,8 @@ import { MediaSlot } from './media-slot';
 
 const POSTS = [
   { tag: 'Product', title: 'Why an agent beats another CRM tab.', read: '5 min read' },
-  { tag: 'Playbook', title: 'The first hour: triaging leads with Chippi.', read: '4 min read' },
-  { tag: 'Brokerage', title: 'Running a floor without nagging for updates.', read: '6 min read' },
+  { tag: 'Playbook', title: 'The first hour: triaging leads with Koala.', read: '4 min read' },
+  { tag: 'Team', title: 'Running a floor without nagging for updates.', read: '6 min read' },
 ];
 
 export function BlogTeaser() {
@@ -24,7 +24,7 @@ export function BlogTeaser() {
         <div className="max-w-2xl">
           <Eyebrow>From the team</Eyebrow>
           <h2 className="mt-5 font-title text-[clamp(2rem,4.5vw,3.5rem)] font-normal leading-[1.04] tracking-[-0.018em] text-foreground">
-            Thinking on the business of real estate.
+            Thinking on the business of sales.
           </h2>
         </div>
         <Link

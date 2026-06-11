@@ -111,7 +111,7 @@ describe('briefing — the composer locks the design rules', () => {
         urgency: 1,
         confidence: 0.95,
         subject: { id: 'sarah', name: 'Sarah Chen', href: '/contacts/sarah' },
-        evidence: 'Chippi drafted an email. Approve or edit.',
+        evidence: 'Koala drafted an email. Approve or edit.',
       });
       const { cards } = selectCards(rankSignals([stuckDeal, draftReady]));
       expect(cards[0].subject.id).toBe('sarah');

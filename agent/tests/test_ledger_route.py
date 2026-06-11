@@ -25,7 +25,7 @@ if str(AGENT_DIR) not in sys.path:
     sys.path.insert(0, str(AGENT_DIR))
 
 # Stub the required-env vars Settings() checks for. Same pattern as
-# tests/test_broker_tools.py and tests/test_llm_caching.py — `pytest` runs
+# tests/test_manager_tools.py and tests/test_llm_caching.py — `pytest` runs
 # from anywhere without a .env so we set the minimum that lets `import
 # ledger` (which transitively imports config.settings) succeed.
 os.environ.setdefault("NEXT_PUBLIC_SUPABASE_URL", "stub")

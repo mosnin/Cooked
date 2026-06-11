@@ -1,5 +1,5 @@
 /**
- * Pure composition logic for the /chippi home story.
+ * Pure composition logic for the /axil home story.
  *
  * Lives separately from <MorningStory /> so the brand voice can be
  * snapshot-tested without spinning up React. The home is the deepest
@@ -100,7 +100,7 @@ export function countMorningCandidates(s: MorningSummary): number {
  *   7. Nothing pressing — calm, present-tense, declarative.
  *
  * Hot beats new because hot is *measured* intent (leadScore >= threshold),
- * and that intent rots if the realtor goes quiet. New is just an arrival —
+ * and that intent rots if the rep goes quiet. New is just an arrival —
  * no signal yet beyond the timestamp. When both are present, the right
  * morning move is the lead whose interest is actively cooling, not the
  * freshest face in the inbox.
@@ -115,10 +115,10 @@ export function countMorningCandidates(s: MorningSummary): number {
  * model with navigation. Empty/whitespace strings are ignored (treated as
  * "agent didn't produce anything").
  *
- * `opts.skip` (default 0): with 47 hot leads, the realtor would see the same
+ * `opts.skip` (default 0): with 47 hot leads, the rep would see the same
  * face every morning until they touch it — the single decision becomes
  * nagging. The home renders a "Next" pill that increments skip in-memory so
- * the realtor can cycle to the next-best subject in one tap. skip=0 picks
+ * the rep can cycle to the next-best subject in one tap. skip=0 picks
  * the top of the ladder (default behavior — non-interactive callers stay
  * unchanged). skip=1 picks the second-highest named subject. When skip
  * exceeds the available named candidates we fall through to the count-only

@@ -238,14 +238,14 @@ export async function POST(req: NextRequest) {
 
     if (action === 'create_space') {
       const {
-        slug, intakePageTitle, intakePageIntro, businessName, logoUrl, realtorPhotoUrl,
+        slug, intakePageTitle, intakePageIntro, businessName, logoUrl, repPhotoUrl,
         intakeAccentColor, intakeBorderRadius, intakeFont, intakeFooterLinks, bio, socialLinks,
         intakeDisabledSteps, intakeCustomQuestions, privacyPolicyHtml,
         intakeDarkMode, intakeHeaderBgColor, intakeHeaderGradient, intakeFaviconUrl,
         intakeVideoUrl, intakeThankYouTitle, intakeThankYouMessage,
         intakeConfirmationEmail, intakeDisclaimerText,
         // Enhanced onboarding fields (User record)
-        phone, websiteUrl, mlsId, brokerageAffiliation,
+        phone, websiteUrl, mlsId, teamAffiliation,
         preferredNotification, timezone, referralSource, biggestPainPoint,
       } = body as {
         slug: string;
@@ -253,7 +253,7 @@ export async function POST(req: NextRequest) {
         intakePageIntro: string;
         businessName: string;
         logoUrl?: string | null;
-        realtorPhotoUrl?: string | null;
+        repPhotoUrl?: string | null;
         intakeAccentColor?: string;
         intakeBorderRadius?: 'rounded' | 'sharp';
         intakeFont?: 'system' | 'serif' | 'mono';
@@ -275,7 +275,7 @@ export async function POST(req: NextRequest) {
         phone?: string;
         websiteUrl?: string;
         mlsId?: string;
-        brokerageAffiliation?: string;
+        teamAffiliation?: string;
         preferredNotification?: 'email' | 'sms' | 'both';
         timezone?: string;
         referralSource?: string;
@@ -313,7 +313,7 @@ export async function POST(req: NextRequest) {
       }
       if (websiteUrl) userUpdates.websiteUrl = String(websiteUrl).slice(0, 500);
       if (mlsId) userUpdates.mlsId = String(mlsId).slice(0, 50);
-      if (brokerageAffiliation) userUpdates.brokerageAffiliation = String(brokerageAffiliation).slice(0, 200);
+      if (teamAffiliation) userUpdates.teamAffiliation = String(teamAffiliation).slice(0, 200);
       if (preferredNotification) userUpdates.preferredNotification = preferredNotification;
       if (timezone) userUpdates.timezone = timezone;
       if (referralSource) userUpdates.referralSource = String(referralSource).slice(0, 100);
@@ -340,7 +340,7 @@ export async function POST(req: NextRequest) {
               intakePageIntro,
               businessName,
               ...(logoUrl !== undefined && { logoUrl }),
-              ...(realtorPhotoUrl !== undefined && { realtorPhotoUrl }),
+              ...(repPhotoUrl !== undefined && { repPhotoUrl }),
               ...(intakeAccentColor !== undefined && { intakeAccentColor }),
               ...(intakeBorderRadius !== undefined && { intakeBorderRadius }),
               ...(intakeFont !== undefined && { intakeFont }),
@@ -436,7 +436,7 @@ export async function POST(req: NextRequest) {
           intakePageIntro: intakePageIntro || "Share a few details so I can review your rental fit faster.",
           businessName: businessName || '',
           ...(logoUrl !== undefined && { logoUrl }),
-          ...(realtorPhotoUrl !== undefined && { realtorPhotoUrl }),
+          ...(repPhotoUrl !== undefined && { repPhotoUrl }),
           ...((preferredNotification === 'sms' || preferredNotification === 'both') && { smsNotifications: true }),
           ...(timezone && { timezone }),
         });
@@ -528,7 +528,7 @@ export async function POST(req: NextRequest) {
       // If already onboarded, still update accountType if provided (for re-setup)
       if (user.onboard) {
         const accountType = (body as { accountType?: string }).accountType;
-        if (accountType && ['realtor', 'broker_only', 'both'].includes(accountType)) {
+        if (accountType && ['rep', 'manager_only', 'both'].includes(accountType)) {
           const { error: acctErr } = await supabase.from('User').update({ accountType }).eq('id', user.id);
           if (acctErr) console.error('[onboarding] accountType update failed', acctErr);
         }
@@ -541,10 +541,10 @@ export async function POST(req: NextRequest) {
 
       // Determine account type from request body
       const accountType = (body as { accountType?: string }).accountType;
-      const isBrokerOnly = accountType === 'broker_only';
+      const isManagerOnly = accountType === 'manager_only';
 
-      // Broker-only users don't need a workspace
-      if (!space && !isBrokerOnly) {
+      // Manager-only users don't need a workspace
+      if (!space && !isManagerOnly) {
         return NextResponse.json(
           { error: 'Cannot complete onboarding without a workspace. Please create your workspace first.' },
           { status: 409 }
@@ -557,7 +557,7 @@ export async function POST(req: NextRequest) {
         onboardingCurrentStep: 7,
         onboardingCompletedAt: completedAt.toISOString(),
       };
-      if (accountType && ['realtor', 'broker_only', 'both'].includes(accountType)) {
+      if (accountType && ['rep', 'manager_only', 'both'].includes(accountType)) {
         updatePayload.accountType = accountType;
       }
 
@@ -577,8 +577,8 @@ export async function POST(req: NextRequest) {
         userId,
         payload: {
           slug: space?.slug ?? null,
-          accountType: (updatePayload.accountType as string | undefined) ?? user.accountType ?? 'realtor',
-          isBrokerOnly,
+          accountType: (updatePayload.accountType as string | undefined) ?? user.accountType ?? 'rep',
+          isManagerOnly,
         },
       });
 
@@ -595,8 +595,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: true, onboard: true, onboardingCompletedAt: completedAt.toISOString() });
     }
 
-    if (action === 'save_realtor_profile') {
-      // Persist the realtor's onboarding answers into AIUserProfile. Requires
+    if (action === 'save_rep_profile') {
+      // Persist the rep's onboarding answers into AIUserProfile. Requires
       // a Space — the new flow creates the space first, then upserts this row.
       if (!space) {
         return NextResponse.json({ error: 'Workspace must exist first' }, { status: 409 });
@@ -615,7 +615,7 @@ export async function POST(req: NextRequest) {
         leadSources?: string[];
       };
 
-      const ALLOWED_ROLES = ['solo', 'team_lead', 'brokerage_owner'];
+      const ALLOWED_ROLES = ['solo', 'team_lead', 'team_owner'];
       const ALLOWED_TONES = ['warm', 'direct', 'formal', 'casual'];
 
       // Whitelist enum-style fields; truncate strings; coerce arrays to plain

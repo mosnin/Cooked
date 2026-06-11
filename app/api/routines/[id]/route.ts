@@ -70,7 +70,7 @@ export async function PATCH(
     const trimmed = body.instruction.trim();
     if (trimmed.length < MIN_INSTRUCTION) {
       return NextResponse.json(
-        { error: 'Write a full sentence — what should Chippi do?' },
+        { error: 'Write a full sentence — what should Koala do?' },
         { status: 400 },
       );
     }
@@ -179,7 +179,7 @@ export async function POST(
     .eq('id', id)
     .eq('spaceId', space.id);
 
-  // Pass the caller's own Clerk userId — this is "Run now" from the realtor's
+  // Pass the caller's own Clerk userId — this is "Run now" from the rep's
   // own session, so they're the entity whose Composio connections we use.
   // Mirrors the cron path which threads the owner's clerkId in the same way.
   after(async () => {

@@ -1,14 +1,14 @@
 'use client';
 
 /**
- * Usage — how much of Chippi's daily budget is spent, and how much of
- * Chippi's input is being served from the provider prompt cache.
+ * Usage — how much of Koala's daily budget is spent, and how much of
+ * Koala's input is being served from the provider prompt cache.
  *
- * Two questions the realtor cares about:
+ * Two questions the rep cares about:
  *   1. Do I have room left today?  → today's % of the daily budget
- *   2. Is Chippi caching well?     → 7-day cache hit rate + per-provider chips
+ *   2. Is Koala caching well?     → 7-day cache hit rate + per-provider chips
  *
- * No cost dollar amount, no per-tool breakdown. If the realtor needs the
+ * No cost dollar amount, no per-tool breakdown. If the rep needs the
  * deeper picture they can go to Developer → Usage. This is the calm view.
  *
  * Reads /api/agent/usage.
@@ -52,10 +52,10 @@ function providerLabel(prefix: string): string {
 }
 
 /**
- * Returns the Chippi-voice nudge when a CACHING-capable provider is below
+ * Returns the Koala-voice nudge when a CACHING-capable provider is below
  * 30% hit rate — implies the prefix isn't stabilizing yet (fresh workspace,
  * model just switched, prompt drift). Returns null when every cache-
- * capable provider is above the threshold OR the realtor only uses non-
+ * capable provider is above the threshold OR the rep only uses non-
  * caching providers (no point nudging about a cache the provider doesn't
  * offer).
  */
@@ -97,7 +97,7 @@ export function UsageSection() {
 
   return (
     <div className="space-y-6">
-      <p className={BODY_MUTED}>How much of Chippi&apos;s daily budget is spent.</p>
+      <p className={BODY_MUTED}>How much of Koala&apos;s daily budget is spent.</p>
 
       {state === 'loading' && <p className={CAPTION}>Checking usage…</p>}
 

@@ -79,7 +79,7 @@ describe('briefing.hubspot — cross-walk helpers', () => {
   });
 
   describe('isAlreadyClosing', () => {
-    it('true only when the Chippi stage kind is exactly closing', () => {
+    it('true only when the Koala stage kind is exactly closing', () => {
       expect(isAlreadyClosing(deal({ DealStage: { kind: 'closing', position: 5 } }))).toBe(true);
       expect(isAlreadyClosing(deal({ DealStage: { kind: 'active', position: 2 } }))).toBe(false);
       expect(isAlreadyClosing(deal({ DealStage: { kind: 'closed', position: 6 } }))).toBe(false);

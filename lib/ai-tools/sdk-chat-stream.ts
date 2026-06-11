@@ -12,7 +12,7 @@
  *   When the agent run finishes with `result.interruptions` non-empty,
  *   we serialize `result.state`, write a row to AgentPausedRun, and emit
  *   a `permission_required` event whose requestId is the new row id.
- *   The realtor's UI POSTs the decision to
+ *   The rep's UI POSTs the decision to
  *   /api/ai/task/resume/[pausedRunId] which re-enters via `resumeChatTurn`.
  */
 
@@ -24,7 +24,7 @@ import { createSeqCounter, encodeEvent } from '@/lib/ai-tools/events';
 import { saveAssistantMessage } from '@/lib/ai-tools/persistence';
 import type { ToolContext } from '@/lib/ai-tools/types';
 import type { MessageBlock } from '@/lib/ai-tools/blocks';
-import { chippiErrorMessage } from '@/lib/ai-tools/chippi-voice';
+import { koalaErrorMessage } from '@/lib/ai-tools/koala-voice';
 import { runChatTurn, resumeChatTurn } from '@/lib/ai-tools/sdk-chat';
 import { mapSdkEvent, type SdkStreamEventLike } from '@/lib/ai-tools/sdk-event-mapper';
 import {
@@ -267,7 +267,7 @@ function buildSseStream(input: BuildStreamInput): ReadableStream<Uint8Array> {
 
       // Track the assistant text that's accumulated since the last tool
       // call landed. This is the "reasoning" we pin to the next tool
-      // call's telemetry — the sentence the realtor sees before the
+      // call's telemetry — the sentence the rep sees before the
       // approval prompt. Reset on every tool_call_start.
       let reasoningBuffer = '';
 
@@ -359,7 +359,7 @@ function buildSseStream(input: BuildStreamInput): ReadableStream<Uint8Array> {
           }
 
           // delegate_task landed → lift the SwarmRun id out of the summary
-          // marker, strip the marker so the realtor sees clean text, push a
+          // marker, strip the marker so the rep sees clean text, push a
           // persistable subagent_task block, and emit subagent_spawned so the
           // client mounts the live task card.
           const toolName = callIdToToolName.get(event.callId);
@@ -403,7 +403,7 @@ function buildSseStream(input: BuildStreamInput): ReadableStream<Uint8Array> {
           logger.error('[ai/task ts] start failed', { conversationId: input.conversationId }, err);
           pushEvent({
             type: 'error',
-            message: chippiErrorMessage('internal'),
+            message: koalaErrorMessage('internal'),
             code: 'internal',
           });
         }
@@ -500,7 +500,7 @@ function buildSseStream(input: BuildStreamInput): ReadableStream<Uint8Array> {
           logger.error('[ai/task ts] stream pump crashed', { conversationId: input.conversationId }, err);
           pushEvent({
             type: 'error',
-            message: chippiErrorMessage('internal'),
+            message: koalaErrorMessage('internal'),
             code: 'internal',
           });
         }
@@ -510,13 +510,13 @@ function buildSseStream(input: BuildStreamInput): ReadableStream<Uint8Array> {
         // handles the empty-text case with a placeholder.
         //
         // Retry-with-backoff. The stream has already emitted `turn_complete`
-        // to the browser, so the realtor SAW the reply. If we just log and
+        // to the browser, so the rep SAW the reply. If we just log and
         // continue (the old behaviour), the assistant's whole turn vanishes
         // from history on the next page load — and the next turn the model
         // has no idea what it just said. A Supabase blip becomes silent
         // data loss with no UI indication. Three attempts with exponential
         // backoff cover the transient-network failure mode; a permanent
-        // failure surfaces as an error event so the realtor knows the
+        // failure surfaces as an error event so the rep knows the
         // history is stale and can copy what they need before refreshing.
         if (textBuffer.trim() || subagentBlocks.length > 0) {
           // Order: the assistant's prose first, then any delegated task cards
@@ -558,7 +558,7 @@ function buildSseStream(input: BuildStreamInput): ReadableStream<Uint8Array> {
             // it. Refreshing now would lose the context.
             pushEvent({
               type: 'error',
-              message: chippiErrorMessage('persistence'),
+              message: koalaErrorMessage('persistence'),
               code: 'persistence',
             });
           }
@@ -583,7 +583,7 @@ interface PersistPausedInput {
 
 /**
  * Insert one AgentPausedRun row carrying the SDK's serialized state plus
- * the realtor-facing approval prompts. Returns the new row id, or null
+ * the rep-facing approval prompts. Returns the new row id, or null
  * on failure (the route still emits the event keyed by callId so the UI
  * isn't completely silent).
  */

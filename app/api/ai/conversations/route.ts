@@ -37,9 +37,9 @@ export async function GET(req: NextRequest) {
       .from('Conversation')
       .select('*')
       .eq('spaceId', space.id)
-      // Reserved broker/team prefixes are sourced from
-      // lib/chat/conversation-access so the realtor exclusion set lives in one
-      // place. The realtor surface never serves broker-Chippi or team chats.
+      // Reserved manager/team prefixes are sourced from
+      // lib/chat/conversation-access so the rep exclusion set lives in one
+      // place. The rep surface never serves manager-Koala or team chats.
       .not('title', 'like', RESERVED_TITLE_LIKE_PATTERNS[0])
       .not('title', 'like', RESERVED_TITLE_LIKE_PATTERNS[1])
       .order('updatedAt', { ascending: false });

@@ -6,7 +6,7 @@
  * lazy PDF/DOCX/XLSX extraction on demand; in the TS runtime we extract
  * at upload time (`/api/ai/attachments`) and inject `extractedText`
  * into the user message. This tool is the metadata-only readback path:
- * the realtor sees what was attached, the model sees enough to reference
+ * the rep sees what was attached, the model sees enough to reference
  * the file by name.
  *
  * Schema: Attachment table from migration 20260430120000_attachments.sql.

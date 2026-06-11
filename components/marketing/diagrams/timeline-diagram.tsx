@@ -4,8 +4,8 @@
  * `<TimelineDiagram />` — every touch, in order.
  *
  * One beat: a contact header, then four touches filling in chronologically
- * down a hairline rail, each 600ms apart. Chippi-authored touches wear the
- * small agent badge so the realtor sees who did what — exactly the contact
+ * down a hairline rail, each 600ms apart. Koala-authored touches wear the
+ * small agent badge so the rep sees who did what — exactly the contact
  * activity feed the product renders.
  *
  * Fluid-fit: the root fills the shell (`w-full h-full`), the rail is a
@@ -31,10 +31,10 @@ import { Mail, MessageSquare, CalendarCheck, FileText } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { EASE_APPLE } from '@/lib/motion';
 import {
-  ChippiDiagramShell,
-  DiagramChippiBadge,
+  KoalaDiagramShell,
+  DiagramKoalaBadge,
   useDiagramMotion,
-} from './chippi-diagram-shell';
+} from './koala-diagram-shell';
 
 interface TimelineDiagramProps {
   aspect?: 'video' | 'square' | 'wide' | 'tall';
@@ -46,7 +46,7 @@ interface Touch {
   label: string;
   detail: string;
   when: string;
-  byChippi?: boolean;
+  byKoala?: boolean;
 }
 
 const TOUCHES: Touch[] = [
@@ -61,11 +61,11 @@ const TOUCHES: Touch[] = [
     label: 'Emailed back',
     detail: 'sent comparable sales for the block.',
     when: 'Tue',
-    byChippi: true,
+    byKoala: true,
   },
   {
     icon: CalendarCheck,
-    label: 'Tour scheduled',
+    label: 'Demo scheduled',
     detail: '415 Lexington · Sat 2pm.',
     when: 'Wed',
   },
@@ -74,7 +74,7 @@ const TOUCHES: Touch[] = [
     label: 'Offer drafted',
     detail: '$475,000, 30-day close.',
     when: 'Fri',
-    byChippi: true,
+    byKoala: true,
   },
 ];
 
@@ -87,9 +87,9 @@ export function TimelineDiagram({
   className,
 }: TimelineDiagramProps) {
   return (
-    <ChippiDiagramShell aspect={aspect} pad={6} className={className}>
+    <KoalaDiagramShell aspect={aspect} pad={6} className={className}>
       <TimelineContent />
-    </ChippiDiagramShell>
+    </KoalaDiagramShell>
   );
 }
 
@@ -180,7 +180,7 @@ function TimelineContent() {
                   <p className="text-[12px] font-medium text-foreground leading-tight truncate">
                     {t.label}
                   </p>
-                  {t.byChippi && <DiagramChippiBadge label="Chippi" />}
+                  {t.byKoala && <DiagramKoalaBadge label="Koala" />}
                 </div>
                 <p className="text-[11px] text-muted-foreground mt-0.5 truncate">
                   {t.detail}

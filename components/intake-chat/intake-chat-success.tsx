@@ -69,7 +69,7 @@ export function IntakeChatSuccess({
 
       {/* Application ref — 6 chars uppercase. A 64-char hex dump means
           nothing to an applicant; a short code is something they can quote
-          on a phone call if the realtor asks for it. */}
+          on a phone call if the rep asks for it. */}
       {applicationRef && (
         <motion.p
           initial={{ opacity: 0 }}

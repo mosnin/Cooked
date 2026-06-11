@@ -32,8 +32,8 @@ function rangeBounds(rangeDays: number): { since: string; until: string } {
  *
  * Open rate = (seenAt IS NOT NULL) / total briefs in window.
  * Low rate (< 30%) signals one of: cron is delivering at wrong time;
- * realtors are turning off briefEnabled; the surface isn't being
- * rendered when realtors visit the workspace.
+ * reps are turning off briefEnabled; the surface isn't being
+ * rendered when reps visit the workspace.
  */
 export async function briefOpenRate(
   rangeDays = 7,

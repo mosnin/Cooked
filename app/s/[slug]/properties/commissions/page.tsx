@@ -110,7 +110,7 @@ export default async function PropertiesCommissionsPage({
 
   return (
     <div className={cn(PAGE_RHYTHM, 'max-w-5xl mx-auto pb-12')}>
-      {/* Header — H1 + Chippi-voiced subtitle naming the loudest money fact.
+      {/* Header — H1 + Koala-voiced subtitle naming the loudest money fact.
           The stat strip below is the supporting evidence. Commissions is its
           own destination now (the standalone Properties list has been cut),
           so no back-link — the sidebar is the way home. */}

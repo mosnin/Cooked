@@ -47,7 +47,7 @@ export async function PATCH(req: NextRequest) {
   // Re-verify the deal STILL belongs to this space immediately before the
   // RPC — closes the TOCTOU window between the lookup above and the RPC.
   // The RPC itself updates by id alone; without this check a between-
-  // check-and-write reassignment could let realtor A reorder realtor B's
+  // check-and-write reassignment could let rep A reorder rep B's
   // pipeline.
   const { data: dealStill } = await supabase
     .from('Deal')

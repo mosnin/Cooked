@@ -2,7 +2,7 @@
  * POST /api/public/intake-chat
  *
  * Public, unauthenticated endpoint that powers the AI chatbot intake form.
- * The AI interviews a prospective renter or buyer conversationally, collecting
+ * The AI interviews a prospect conversationally, collecting
  * the required lead fields one at a time. When all required fields are gathered
  * the stream ends with a special `__FIELDS__:{...}` line the client uses to
  * pre-populate and auto-submit the intake form.
@@ -165,7 +165,7 @@ Do NOT ask rent-vs-buy. Go directly to the rental questions below.`
       : `**Lead type is always "buyer" for this agent.**
 Do NOT ask rent-vs-buy. Go directly to the buyer questions below.`;
 
-  return `You are a friendly intake assistant for ${businessName}. Your job is to conduct a warm, professional intake interview with a prospective real estate client.
+  return `You are a friendly intake assistant for ${businessName}. Your job is to conduct a warm, professional intake interview with a prospective sales client.
 
 ## Core rules
 - Ask ONE question at a time. Never stack multiple questions in a single message.
@@ -309,26 +309,26 @@ export async function POST(req: NextRequest): Promise<Response> {
 
     const source = spaceSetting?.formConfigSource ?? 'legacy';
 
-    if (source === 'brokerage' && space.brokerageId) {
-      // Inherit form configs from brokerage template
+    if (source === 'team' && space.teamId) {
+      // Inherit form configs from team template
       try {
-        const { data: brokerage } = await supabase
-          .from('Brokerage')
-          .select('brokerageRentalFormConfig, brokerageBuyerFormConfig, brokerageFormConfig')
-          .eq('id', space.brokerageId)
+        const { data: team } = await supabase
+          .from('Team')
+          .select('teamRentalFormConfig, teamBuyerFormConfig, teamFormConfig')
+          .eq('id', space.teamId)
           .maybeSingle();
-        if (brokerage) {
-          rentalFormConfig = (brokerage.brokerageRentalFormConfig ?? null) as IntakeFormConfig | null;
-          buyerFormConfig = (brokerage.brokerageBuyerFormConfig ?? null) as IntakeFormConfig | null;
-          // Legacy single brokerage config — route by its leadType
-          if (!rentalFormConfig && !buyerFormConfig && brokerage.brokerageFormConfig) {
-            const legacy = brokerage.brokerageFormConfig as IntakeFormConfig;
+        if (team) {
+          rentalFormConfig = (team.teamRentalFormConfig ?? null) as IntakeFormConfig | null;
+          buyerFormConfig = (team.teamBuyerFormConfig ?? null) as IntakeFormConfig | null;
+          // Legacy single team config — route by its leadType
+          if (!rentalFormConfig && !buyerFormConfig && team.teamFormConfig) {
+            const legacy = team.teamFormConfig as IntakeFormConfig;
             if (legacy.leadType === 'buyer') buyerFormConfig = legacy;
             else rentalFormConfig = legacy;
           }
         }
       } catch (err) {
-        logger.warn('[intake-chat] brokerage form config fetch failed, using defaults', { spaceId: space.id }, err);
+        logger.warn('[intake-chat] team form config fetch failed, using defaults', { spaceId: space.id }, err);
       }
     } else if (source === 'custom' && spaceSetting) {
       rentalFormConfig = (spaceSetting.rentalFormConfig ?? null) as IntakeFormConfig | null;

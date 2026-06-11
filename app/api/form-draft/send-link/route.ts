@@ -79,7 +79,7 @@ export async function POST(req: NextRequest) {
       .maybeSingle();
 
     const businessName = settings?.businessName || space.name;
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://my.usechippi.com';
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://my.usekoala.com';
     const resumeUrl = `${appUrl}/apply/${space.slug}?resume=${draft.resumeToken}`;
 
     await sendDraftResumeEmail({

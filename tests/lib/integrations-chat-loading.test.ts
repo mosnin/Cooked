@@ -51,7 +51,7 @@ import type { ToolContext } from '@/lib/ai-tools/types';
 function makeCtx(): ToolContext {
   return {
     userId: 'user_clerk_123',
-    space: { id: 'space_1', slug: 'jane', name: 'Jane Realty', ownerId: 'u_db_1' },
+    space: { id: 'space_1', slug: 'jane', name: 'Jane Sales', ownerId: 'u_db_1' },
     signal: new AbortController().signal,
   };
 }
@@ -68,7 +68,7 @@ describe('loadIntegrationTools — short-circuit paths', () => {
   it('checks the DB even when Composio is not configured — connected toolkits must degrade loudly', async () => {
     // Old contract skipped the DB lookup entirely, so a deploy missing
     // COMPOSIO_API_KEY was indistinguishable from "nothing connected" and
-    // the model told realtors their integrations were gone. New contract:
+    // the model told reps their integrations were gone. New contract:
     // the (cheap) DB lookup runs; with no connections the result is still
     // empty and Composio is never touched.
     composioConfiguredMock.mockReturnValue(false);
@@ -79,7 +79,7 @@ describe('loadIntegrationTools — short-circuit paths', () => {
     expect(buildToolkitAgentToolsMock).not.toHaveBeenCalled();
   });
 
-  it('returns [] when the realtor has zero active toolkits — no Composio call', async () => {
+  it('returns [] when the rep has zero active toolkits — no Composio call', async () => {
     activeToolkitsMock.mockResolvedValue([]);
     const out = await loadIntegrationTools(makeCtx());
     expect(out).toEqual([]);
@@ -113,7 +113,7 @@ describe('loadIntegrationTools — happy path', () => {
     expect(out).toEqual([{ name: 'gmail.send' }, { name: 'slack.post' }]);
   });
 
-  it('uses the realtor\'s clerk userId as the entityId — Composio identity boundary', async () => {
+  it('uses the rep\'s clerk userId as the entityId — Composio identity boundary', async () => {
     activeToolkitsMock.mockResolvedValue(['gmail']);
     buildToolkitAgentToolsMock.mockResolvedValue([{ name: 'gmail.send' }]);
     await loadIntegrationTools(makeCtx());
@@ -157,7 +157,7 @@ describe('loadIntegrationTools — failure modes (chat must keep working)', () =
     expect(out).toEqual([{ name: 'slack.post' }]);
     expect(loggerWarnMock).toHaveBeenCalled();
     // Non-auth error → row is NOT marked expired. Transient errors
-    // shouldn't churn the realtor's row state.
+    // shouldn't churn the rep's row state.
     expect(markExpiredByToolkitMock).not.toHaveBeenCalled();
   });
 

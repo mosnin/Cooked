@@ -1,6 +1,6 @@
 export const metadata = {
-  title: 'Privacy Policy | Chippi',
-  description: 'Privacy Policy for Chippi, a B2B SaaS agentic OS for real estate agents and brokerages.',
+  title: 'Privacy Policy | Koala',
+  description: 'Privacy Policy for Koala, a B2B SaaS agentic OS for sales agents and teams.',
 };
 
 export default function PrivacyPolicyPage() {
@@ -13,8 +13,8 @@ export default function PrivacyPolicyPage() {
       </header>
 
       <p className="text-sm leading-6 text-muted-foreground">
-        This Privacy Policy describes how Chippi Inc. (&quot;Chippi,&quot; &quot;we,&quot; &quot;us,&quot; or &quot;our&quot;) collects, uses, and
-        protects information in connection with the Chippi platform available at usechippi.com and my.usechippi.com
+        This Privacy Policy describes how Koala Inc. (&quot;Koala,&quot; &quot;we,&quot; &quot;us,&quot; or &quot;our&quot;) collects, uses, and
+        protects information in connection with the Koala platform available at usekoala.com and my.usekoala.com
         (the &quot;Service&quot;). By using the Service, you agree to the practices described in this policy.
       </p>
 
@@ -22,9 +22,9 @@ export default function PrivacyPolicyPage() {
       <section>
         <h2 className="text-xl font-semibold">1. Who We Are</h2>
         <div className="mt-3 text-sm text-muted-foreground space-y-3 leading-6">
-          <p>1.1. Chippi Inc. operates a B2B SaaS agentic OS for real estate agents and brokerages. The platform combines an autonomous AI agent with intake forms, AI lead scoring, deal pipelines, tour scheduling, voice AI, MCP server integration, and brokerage team management.</p>
-          <p>1.2. With respect to Subscriber Data (including Applicant data), Chippi acts as a <strong className="text-foreground">Data Processor</strong>. We process data on behalf of our Subscribers (realtors and brokerages), who are the <strong className="text-foreground">Data Controllers</strong>.</p>
-          <p>1.3. For data we collect directly about Subscribers for account and billing purposes, Chippi acts as the Data Controller.</p>
+          <p>1.1. Koala Inc. operates a B2B SaaS agentic OS for sales agents and teams. The platform combines an autonomous AI agent with intake forms, AI lead scoring, deal pipelines, demo scheduling, voice AI, MCP server integration, and team team management.</p>
+          <p>1.2. With respect to Subscriber Data (including Applicant data), Koala acts as a <strong className="text-foreground">Data Processor</strong>. We process data on behalf of our Subscribers (reps and teams), who are the <strong className="text-foreground">Data Controllers</strong>.</p>
+          <p>1.3. For data we collect directly about Subscribers for account and billing purposes, Koala acts as the Data Controller.</p>
         </div>
       </section>
 
@@ -32,9 +32,9 @@ export default function PrivacyPolicyPage() {
       <section>
         <h2 className="text-xl font-semibold">2. Data Controller Clarification</h2>
         <div className="mt-3 text-sm text-muted-foreground space-y-3 leading-6">
-          <p>2.1. Realtors and brokerages who use the Service are the Data Controllers of the data they collect through intake forms, deal pipelines, and other Service features. They are responsible for how they use their own data.</p>
+          <p>2.1. Reps and teams who use the Service are the Data Controllers of the data they collect through intake forms, deal pipelines, and other Service features. They are responsible for how they use their own data.</p>
           <p>2.2. Subscribers are responsible for obtaining all necessary consents from Applicants and complying with applicable data protection laws.</p>
-          <p>2.3. Applicants who submit data through intake forms agree to both Chippi&apos;s Privacy Policy and the applicable Subscriber&apos;s (realtor/brokerage) privacy policy.</p>
+          <p>2.3. Applicants who submit data through intake forms agree to both Koala&apos;s Privacy Policy and the applicable Subscriber&apos;s (rep/team) privacy policy.</p>
           <p>2.4. For details on how we process data on behalf of Subscribers, please refer to our <a href="/legal/dpa" className="underline hover:text-foreground">Data Processing Agreement</a>.</p>
         </div>
       </section>
@@ -43,10 +43,10 @@ export default function PrivacyPolicyPage() {
       <section>
         <h2 className="text-xl font-semibold">3. Information Collected from Subscribers</h2>
         <div className="mt-3 text-sm text-muted-foreground space-y-3 leading-6">
-          <p>3.1. <strong className="text-foreground">Account Information.</strong> When you create an account, we collect your name, email address, phone number, brokerage or company name, and login credentials (managed via Clerk).</p>
-          <p>3.2. <strong className="text-foreground">Billing Information.</strong> Payment details including credit card information, billing address, and transaction history are collected and processed by Stripe. Chippi does not store full payment card numbers.</p>
+          <p>3.1. <strong className="text-foreground">Account Information.</strong> When you create an account, we collect your name, email address, phone number, team or company name, and login credentials (managed via Clerk).</p>
+          <p>3.2. <strong className="text-foreground">Billing Information.</strong> Payment details including credit card information, billing address, and transaction history are collected and processed by Stripe. Koala does not store full payment card numbers.</p>
           <p>3.3. <strong className="text-foreground">Usage Information.</strong> We collect data about how you interact with the Service, including pages visited, features used, session duration, device and browser information, IP address, and referral sources.</p>
-          <p>3.4. <strong className="text-foreground">Team Information.</strong> If you manage a brokerage team, we collect information about team members you invite, including their names and email addresses.</p>
+          <p>3.4. <strong className="text-foreground">Team Information.</strong> If you manage a team team, we collect information about team members you invite, including their names and email addresses.</p>
         </div>
       </section>
 
@@ -62,7 +62,7 @@ export default function PrivacyPolicyPage() {
             <li>Any other information the Subscriber&apos;s intake form requests.</li>
           </ul>
           <p>4.2. Applicant data is processed solely for the purpose of providing the Service to the Subscriber. The Subscriber determines what data is collected through their intake forms.</p>
-          <p>4.3. Applicants with questions about how their data is used should contact the Subscriber (realtor/brokerage) who collected their information.</p>
+          <p>4.3. Applicants with questions about how their data is used should contact the Subscriber (rep/team) who collected their information.</p>
         </div>
       </section>
 
@@ -70,9 +70,9 @@ export default function PrivacyPolicyPage() {
       <section>
         <h2 className="text-xl font-semibold">5. How We Use Information</h2>
         <div className="mt-3 text-sm text-muted-foreground space-y-3 leading-6">
-          <p>5.1. <strong className="text-foreground">Provide the Service.</strong> Operate and maintain the platform, including intake forms, deal pipelines, tour scheduling, brokerage team management, and MCP server integration.</p>
+          <p>5.1. <strong className="text-foreground">Provide the Service.</strong> Operate and maintain the platform, including intake forms, deal pipelines, demo scheduling, team team management, and MCP server integration.</p>
           <p>5.2. <strong className="text-foreground">AI Scoring.</strong> Process Applicant data through AI lead scoring features to provide Subscribers with advisory insights. AI scoring is performed solely to deliver the Service, not for any other purpose.</p>
-          <p>5.3. <strong className="text-foreground">Notifications.</strong> Send transactional notifications such as new lead alerts, tour reminders, deal updates, and account-related communications via email (Resend) and SMS (Telnyx).</p>
+          <p>5.3. <strong className="text-foreground">Notifications.</strong> Send transactional notifications such as new lead alerts, demo reminders, deal updates, and account-related communications via email (Resend) and SMS (Telnyx).</p>
           <p>5.4. <strong className="text-foreground">Analytics.</strong> Analyze aggregate usage patterns to improve the performance, reliability, and features of the Service.</p>
           <p>5.5. <strong className="text-foreground">Billing.</strong> Process subscription payments and manage billing through Stripe.</p>
           <p>5.6. <strong className="text-foreground">Security.</strong> Detect, prevent, and address fraud, abuse, and security issues.</p>
@@ -139,7 +139,7 @@ export default function PrivacyPolicyPage() {
           <ul className="list-disc pl-5 space-y-1">
             <li>Encryption of data in transit (TLS/SSL) and at rest.</li>
             <li>Secure authentication through Clerk with support for multi-factor authentication.</li>
-            <li>Role-based access controls for brokerage team management.</li>
+            <li>Role-based access controls for team team management.</li>
             <li>Regular security assessments and monitoring.</li>
             <li>Secure infrastructure provided by our hosting partners.</li>
           </ul>
@@ -159,8 +159,8 @@ export default function PrivacyPolicyPage() {
             <li><strong className="text-foreground">Portability.</strong> Request your data in a structured, commonly used, machine-readable format.</li>
             <li><strong className="text-foreground">Opt-Out.</strong> Opt out of non-essential communications at any time.</li>
           </ul>
-          <p>11.2. <strong className="text-foreground">For Subscribers:</strong> You can exercise these rights by contacting us at <a href="mailto:help@usechippi.com" className="underline hover:text-foreground">help@usechippi.com</a> or through your account settings.</p>
-          <p>11.3. <strong className="text-foreground">For Applicants:</strong> Because Subscribers are the Data Controllers of Applicant data, Applicants should first contact the realtor or brokerage that collected their information. If you are unable to reach the Subscriber, you may contact us at <a href="mailto:help@usechippi.com" className="underline hover:text-foreground">help@usechippi.com</a> and we will assist in forwarding your request.</p>
+          <p>11.2. <strong className="text-foreground">For Subscribers:</strong> You can exercise these rights by contacting us at <a href="mailto:help@usekoala.com" className="underline hover:text-foreground">help@usekoala.com</a> or through your account settings.</p>
+          <p>11.3. <strong className="text-foreground">For Applicants:</strong> Because Subscribers are the Data Controllers of Applicant data, Applicants should first contact the rep or team that collected their information. If you are unable to reach the Subscriber, you may contact us at <a href="mailto:help@usekoala.com" className="underline hover:text-foreground">help@usekoala.com</a> and we will assist in forwarding your request.</p>
           <p>11.4. We will respond to data rights requests within 30 days.</p>
         </div>
       </section>
@@ -171,7 +171,7 @@ export default function PrivacyPolicyPage() {
         <div className="mt-3 text-sm text-muted-foreground space-y-3 leading-6">
           <p>12.1. The Service is not intended for individuals under the age of 18. We do not knowingly collect personal information from children under 18.</p>
           <p>12.2. If we become aware that we have collected personal data from a child under 18, we will take steps to delete that information promptly.</p>
-          <p>12.3. If you believe a child under 18 has provided us with personal data, please contact us at <a href="mailto:help@usechippi.com" className="underline hover:text-foreground">help@usechippi.com</a>.</p>
+          <p>12.3. If you believe a child under 18 has provided us with personal data, please contact us at <a href="mailto:help@usekoala.com" className="underline hover:text-foreground">help@usekoala.com</a>.</p>
         </div>
       </section>
 
@@ -198,9 +198,9 @@ export default function PrivacyPolicyPage() {
       <section>
         <h2 className="text-xl font-semibold">14A. Subscriber Tracking Technologies</h2>
         <div className="mt-3 text-sm text-muted-foreground space-y-3 leading-6">
-          <p>14A.1. Subscribers (realtors and brokerages) may configure third-party tracking pixels on their public-facing intake forms and tour booking pages. These tracking technologies may include pixels and scripts from platforms such as Meta/Facebook, Google Analytics, Google Ads, TikTok, Twitter/X, LinkedIn, and Snapchat.</p>
+          <p>14A.1. Subscribers (reps and teams) may configure third-party tracking pixels on their public-facing intake forms and demo booking pages. These tracking technologies may include pixels and scripts from platforms such as Meta/Facebook, Google Analytics, Google Ads, TikTok, Twitter/X, LinkedIn, and Snapchat.</p>
           <p>14A.2. These technologies may collect information such as IP addresses, browser type, device information, pages visited, and actions taken (such as form submissions). This data is sent directly from the Applicant&apos;s browser to the respective third-party platform.</p>
-          <p>14A.3. <strong className="text-foreground">Chippi acts as a Data Processor</strong> with respect to Subscriber-configured tracking pixels. The Subscriber (Data Controller) is responsible for disclosing the use of these technologies in their own privacy policy and obtaining any required consents.</p>
+          <p>14A.3. <strong className="text-foreground">Koala acts as a Data Processor</strong> with respect to Subscriber-configured tracking pixels. The Subscriber (Data Controller) is responsible for disclosing the use of these technologies in their own privacy policy and obtaining any required consents.</p>
           <p>14A.4. Applicants may opt out of third-party tracking by adjusting their browser settings, using browser extensions that block tracking scripts, or visiting the <a href="https://optout.aboutads.info/" className="underline hover:text-foreground" target="_blank" rel="noopener noreferrer">Digital Advertising Alliance&apos;s opt-out page</a>.</p>
         </div>
       </section>
@@ -221,9 +221,9 @@ export default function PrivacyPolicyPage() {
         <div className="mt-3 text-sm text-muted-foreground space-y-3 leading-6">
           <p>If you have questions about this Privacy Policy or our data practices, please contact us:</p>
           <p>
-            Chippi Inc.<br />
-            Email: <a href="mailto:help@usechippi.com" className="underline hover:text-foreground">help@usechippi.com</a><br />
-            Website: <a href="https://usechippi.com" className="underline hover:text-foreground">usechippi.com</a>
+            Koala Inc.<br />
+            Email: <a href="mailto:help@usekoala.com" className="underline hover:text-foreground">help@usekoala.com</a><br />
+            Website: <a href="https://usekoala.com" className="underline hover:text-foreground">usekoala.com</a>
           </p>
         </div>
       </section>

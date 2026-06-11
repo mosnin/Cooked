@@ -6,7 +6,7 @@
  * vanilla `Date` math. Lighter bundle, one less dep to update, and the
  * logic is right here for the next person to debug.
  *
- * All helpers operate in the realtor's LOCAL timezone — the calendar grid
+ * All helpers operate in the rep's LOCAL timezone — the calendar grid
  * shows wall-clock days/hours, matching how Google Calendar renders.
  */
 
@@ -81,9 +81,9 @@ function pad(n: number): string {
 }
 
 /**
- * Build an ISO 8601 timestamp WITH the realtor's local timezone offset.
+ * Build an ISO 8601 timestamp WITH the rep's local timezone offset.
  * Used when posting to Google Calendar — Google needs the offset so the
- * event lands on the wall-clock the realtor picked, not UTC midnight.
+ * event lands on the wall-clock the rep picked, not UTC midnight.
  *
  * Inputs are the form's raw "YYYY-MM-DD" and "HH:MM" strings.
  */

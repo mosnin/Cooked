@@ -16,7 +16,7 @@ import { CollapsedTooltip } from '@/components/dashboard/sidebar-collapse';
 //
 // Behaviour contract:
 //   - Parents WITH children: the row's label + icon link to the parent
-//     route (Chippi → /chippi, Properties → /properties); a separate
+//     route (Koala → /axil, Properties → /properties); a separate
 //     chevron button at the right edge toggles expansion. Tap the label
 //     to navigate (auto-expands on first navigate). Tap the chevron to
 //     collapse without leaving the page.
@@ -172,7 +172,7 @@ export function SidebarNavItem({
           // Parent without children (or collapsed rail) → plain navigation.
           // Rail-mode parents with children also fall here: the icon links
           // to the parent route so a single click from the rail still gets
-          // the realtor somewhere useful (children can't render in the rail).
+          // the rep somewhere useful (children can't render in the rail).
           <Link href={href} onClick={onNavigate} className={rowClasses}>
             {rowContent}
           </Link>

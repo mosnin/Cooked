@@ -11,7 +11,7 @@
  * "Unsubscribe" affordance (paired with the List-Unsubscribe-Post:
  * List-Unsubscribe=One-Click header in the email).
  *
- * The realtor's master `notifications` toggle is NOT touched. Brief
+ * The rep's master `notifications` toggle is NOT touched. Brief
  * unsubscribe is narrow — they keep new-lead alerts.
  */
 
@@ -67,7 +67,7 @@ function htmlResponse(message: string): NextResponse {
 <html>
 <head><meta charset="utf-8"><title>Unsubscribed</title></head>
 <body style="font-family:-apple-system,sans-serif;text-align:center;padding:48px 16px;color:#111827">
-  <p style="font-size:14px;color:#6b7280;margin:0 0 12px">Chippi</p>
+  <p style="font-size:14px;color:#6b7280;margin:0 0 12px">Koala</p>
   <p style="font-size:18px;margin:0">${message}</p>
 </body>
 </html>`;

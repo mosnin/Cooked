@@ -1,0 +1,8 @@
+{
+  "name": "axil-demo-assistant",
+  "description": "Prepare for product demos with your Koala data. Get demo schedules, prep sheets, and post-demo follow-up guidance.",
+  "version": "1.0.0",
+  "author": { "name": "Koala", "url": "https://usekoala.com" },
+  "homepage": "https://usekoala.com",
+  "keywords": ["crm", "demos", "sales", "koala"]
+}

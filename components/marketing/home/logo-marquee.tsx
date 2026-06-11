@@ -3,7 +3,7 @@
 /**
  * LogoMarquee — a quiet, infinite-scrolling proof strip under the hero.
  *
- * Real brokerage marks, rendered as uniform monochrome silhouettes (black on
+ * Real team marks, rendered as uniform monochrome silhouettes (black on
  * light, white on dark). Several of the source logos ship in different colors
  * (and a few are white-on-transparent), so forcing one calm tone is what makes
  * them read as a single proof strip instead of a clashing color jumble.
@@ -22,10 +22,10 @@ type Logo = { src: string; alt: string };
 const LOGOS: Logo[] = [
   { src: '/marketing/logos/lpt.png', alt: 'Luxe Properties' },
   { src: '/marketing/logos/compass.png', alt: 'Compass' },
-  { src: '/marketing/logos/exit.svg', alt: 'EXIT Realty' },
+  { src: '/marketing/logos/exit.svg', alt: 'EXIT Sales' },
   { src: '/marketing/logos/remax.png', alt: 'RE/MAX' },
-  { src: '/marketing/logos/source.png', alt: 'The Source Realty' },
-  { src: '/marketing/logos/brokerage4.png', alt: 'Zander Realty Group' },
+  { src: '/marketing/logos/source.png', alt: 'The Source Sales' },
+  { src: '/marketing/logos/team4.png', alt: 'Zander Sales Group' },
 ];
 
 export function LogoMarquee() {

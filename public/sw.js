@@ -1,8 +1,8 @@
-/* Chippi service worker — web push only.
+/* Koala service worker — web push only.
  *
  * Dependency-free and deliberately minimal. Two responsibilities:
  *   1. push           — show the notification the server sent.
- *   2. notificationclick — focus an open Chippi tab, or open the target URL.
+ *   2. notificationclick — focus an open Koala tab, or open the target URL.
  *
  * The payload is JSON: { title, body, url }. We defend against a missing or
  * malformed payload so a bad push never throws inside the SW (which on iOS can
@@ -15,11 +15,11 @@ self.addEventListener('push', function (event) {
     try {
       data = event.data.json();
     } catch (e) {
-      data = { title: 'Chippi', body: event.data.text() };
+      data = { title: 'Koala', body: event.data.text() };
     }
   }
 
-  const title = data.title || 'Chippi';
+  const title = data.title || 'Koala';
   const options = {
     body: data.body || '',
     icon: '/chip-avatar.png',
@@ -39,7 +39,7 @@ self.addEventListener('notificationclick', function (event) {
     self.clients
       .matchAll({ type: 'window', includeUncontrolled: true })
       .then(function (clientList) {
-        // Focus an existing Chippi tab if one is open.
+        // Focus an existing Koala tab if one is open.
         for (let i = 0; i < clientList.length; i++) {
           const client = clientList[i];
           if ('focus' in client) {

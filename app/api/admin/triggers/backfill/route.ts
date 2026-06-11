@@ -5,14 +5,14 @@
  * existing active IntegrationConnection that doesn't already have them.
  *
  * Why this exists: the OAuth callback registers triggers at connect-
- * time, but realtors who connected BEFORE the triggers feature shipped
+ * time, but reps who connected BEFORE the triggers feature shipped
  * have active connections with zero IntegrationTrigger rows. Without
- * this, their Chippi never notices anything until they reconnect.
+ * this, their Koala never notices anything until they reconnect.
  *
  * Auth: Bearer ${CRON_SECRET}. Same gate as our scheduled cron routes —
  * the secret is server-only, so this is operator-callable, not user-
- * facing. (If we ever want to expose it to brokers as a manual "rewire
- * my Chippi" button, that's a separate route with Clerk auth.)
+ * facing. (If we ever want to expose it to managers as a manual "rewire
+ * my Koala" button, that's a separate route with Clerk auth.)
  *
  * Idempotent by design: skips connections that already have any
  * IntegrationTrigger row. A second invocation does nothing useful. If
@@ -73,7 +73,7 @@ export async function POST(req: NextRequest) {
 
   const force = new URL(req.url).searchParams.get('force') === '1';
 
-  // Only ACTIVE connections — expired/revoked rows mean the realtor
+  // Only ACTIVE connections — expired/revoked rows mean the rep
   // can't be helped until they reconnect, so registering triggers for
   // them would just stack failed rows.
   const { data: rows, error } = await supabase

@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * `<MarketingScrollNarrative>` — sequenced "what your week with Chippi looks
+ * `<MarketingScrollNarrative>` — sequenced "what your week with Koala looks
  * like" story used on the homepage and feature pages.
  *
  * Apple-discipline:

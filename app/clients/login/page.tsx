@@ -12,7 +12,7 @@ export default async function LoginPage() {
   return (
     <AuthShell
       title="Welcome back"
-      subtitle="Sign in to see your applications and tours."
+      subtitle="Sign in to see your applications and demos."
       footer={
         <>
           New here?{' '}

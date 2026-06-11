@@ -2,7 +2,7 @@
  * Fire-and-forget telemetry emitter.
  *
  * Phase 2 product analytics: we need first-value events
- * (`signup_completed`, `chippi_first_message`, `agent_first_action_completed`)
+ * (`signup_completed`, `koala_first_message`, `agent_first_action_completed`)
  * so the team can measure time-from-signup-to-first-useful-agent-action.
  * Until those land every conversion hypothesis is fiction.
  *
@@ -23,7 +23,7 @@ import { logger } from '@/lib/logger';
 
 export type TelemetryEventName =
   | 'signup_completed'
-  | 'chippi_first_message'
+  | 'koala_first_message'
   | 'agent_first_action_completed'
   // Per-tool-call observability for the chat agent. Payload carries the
   // tool name + reasoning sentence (the assistant text immediately
@@ -62,7 +62,7 @@ export async function emit(args: EmitArgs): Promise<void> {
 
 /**
  * Has this space already recorded a given first-time event? Used to gate
- * `chippi_first_message` and `agent_first_action_completed` so they fire
+ * `koala_first_message` and `agent_first_action_completed` so they fire
  * exactly once per space. Errors are swallowed and treated as "not emitted"
  * — a duplicate emit is cheaper than a missed first-value signal.
  */
@@ -122,7 +122,7 @@ export function secondsBetween(from: Date | null, to: Date): number | null {
 }
 
 /**
- * Tool names that produce a real side effect on the realtor's behalf —
+ * Tool names that produce a real side effect on the rep's behalf —
  * a row was written, a message dispatched, a follow-up scheduled. A
  * successful call to one of these is what we count as the agent's "first
  * useful action" in the activation funnel.
@@ -141,7 +141,7 @@ export const SIDE_EFFECTING_TOOLS: ReadonlySet<string> = new Set([
   'advance_deal_stage',
   'move_deal_stage',
   'create_deal',
-  'schedule_tour',
+  'schedule_demo',
   'send_email',
   'send_sms',
   'update_contact',
@@ -182,7 +182,7 @@ export async function maybeEmitFirstAction(input: {
     if (await hasEmitted(spaceId, 'agent_first_action_completed')) return;
     const [signupAt, firstMsgAt] = await Promise.all([
       getFirstEmittedAt(spaceId, 'signup_completed'),
-      getFirstEmittedAt(spaceId, 'chippi_first_message'),
+      getFirstEmittedAt(spaceId, 'koala_first_message'),
     ]);
     const now = new Date();
     await emit({

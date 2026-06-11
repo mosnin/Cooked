@@ -3,14 +3,14 @@
 /**
  * /s/[slug]/cma — Comparative market analysis.
  *
- * One intent: a realtor builds a CMA from a subject property and the comps
+ * One intent: a rep builds a CMA from a subject property and the comps
  * already in their CRM, then hands a seller a public link. The builder is the
  * focal element; past reports sit below with a copy-link action.
  *
  * Design (Jobs lens): paper-flat, serif h1 + status sentence, one builder card,
  * a calm preview of the auto-selected comps + the computed range, a hairline-
- * divided list of past reports. No MLS, no external lookups — comps come from
- * the realtor's own Property rows.
+ * divided list of past reports. No CRM, no external lookups — comps come from
+ * the rep's own Property rows.
  *
  * Build pass (Musk lens): the heavy lifting (comp selection, stats) lives in
  * lib/cma.ts and runs server-side on save. The client just collects the subject,
@@ -131,7 +131,7 @@ export function CmaView({ slug }: { slug: string }) {
       const data = (await res.json()) as PropertyOption[];
       setProperties(Array.isArray(data) ? data : []);
     } catch {
-      // Non-fatal: the realtor can still type a subject by hand.
+      // Non-fatal: the rep can still type a subject by hand.
     }
   }, [slug]);
 
@@ -265,7 +265,7 @@ export function CmaView({ slug }: { slug: string }) {
           Price a home.
         </h1>
         <p className={cn(BODY_MUTED)}>
-          Pick a subject, and Chippi pulls comps from your CRM and computes a range.
+          Pick a subject, and Koala pulls comps from your CRM and computes a range.
         </p>
       </header>
 

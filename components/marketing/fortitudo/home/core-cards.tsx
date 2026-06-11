@@ -1,9 +1,9 @@
 'use client';
 
 /**
- * Core cards: fortitudo's services grid rebuilt as the five things Chippi does,
- * each a premium GradientCard (3D tilt, ASCII signature, Chippi-orange glow).
- * Copy is Chippi's real-estate-CRM substance, lifted from the existing home.
+ * Core cards: fortitudo's services grid rebuilt as the five things Koala does,
+ * each a premium GradientCard (3D tilt, ASCII signature, Koala-orange glow).
+ * Copy is Koala's sales-CRM substance, lifted from the existing home.
  */
 
 import { motion } from 'motion/react';
@@ -13,30 +13,30 @@ const cards = [
   {
     title: 'Reads your inbox',
     description:
-      'Gmail and Outlook plug in. Chippi reads every inbound, weighs it against your live deals, and quietly lifts the one to look at first.',
+      'Gmail and Outlook plug in. Koala reads every inbound, weighs it against your live deals, and quietly lifts the one to look at first.',
     cta: 'See the inbox',
-    href: '/realtors#the-inbox',
+    href: '/reps#the-inbox',
   },
   {
     title: 'Drafts in your voice',
     description:
       "Every reply written before you open the thread. Read it, edit it, send it. Or don't. Nothing leaves without your tap.",
-    cta: 'Meet Chippi',
-    href: '/realtors#the-reply',
+    cta: 'Meet Koala',
+    href: '/reps#the-reply',
   },
   {
     title: 'Knows who to call first',
     description:
       'Every lead scored against your deals, the hottest one rising out of the noise, so your morning starts with the right call.',
     cta: 'See scoring',
-    href: '/realtors#first-call',
+    href: '/reps#first-call',
   },
   {
-    title: 'Books the tour',
+    title: 'Books the demo',
     description:
-      'Reply with a time; Chippi checks your calendar, books it, sends the confirmation, and writes it back to the deal.',
+      'Reply with a time; Koala checks your calendar, books it, sends the confirmation, and writes it back to the deal.',
     cta: 'See the calendar',
-    href: '/realtors#in-the-field',
+    href: '/reps#in-the-field',
   },
 ];
 
@@ -45,7 +45,7 @@ export function CoreCards() {
     <section id="services" className="relative scroll-mt-24 bg-background py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
-          <p className="font-brand text-xs uppercase tracking-[0.25em] text-brand">What Chippi does</p>
+          <p className="font-brand text-xs uppercase tracking-[0.25em] text-brand">What Koala does</p>
           <h2 className="font-brand mt-3 text-3xl text-foreground sm:text-4xl lg:text-5xl">
             The busywork, <span className="text-gradient-brand">handled.</span>
           </h2>

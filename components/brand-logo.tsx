@@ -5,7 +5,7 @@ interface BrandLogoProps {
   alt?: string;
 }
 
-export function BrandLogo({ className, alt = 'Chippi logo' }: BrandLogoProps) {
+export function BrandLogo({ className, alt = 'Koala logo' }: BrandLogoProps) {
   return (
     <span className={cn('relative inline-flex items-center', className)}>
       <img src="/logo-black.png" alt={alt} width={512} height={171} loading="eager" decoding="async" className="block h-full w-auto dark:hidden" />

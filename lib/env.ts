@@ -32,7 +32,7 @@ const requiredSchema = z.object({
   // OpenAI (powers every interactive chat turn + embeddings)
   OPENAI_API_KEY: z.string().min(1),
 
-  // Clerk (realtor authentication — no request is served without it)
+  // Clerk (rep authentication — no request is served without it)
   CLERK_SECRET_KEY: z.string().min(1),
   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().min(1),
 });
@@ -62,7 +62,7 @@ const optionalSchema = z.object({
   STRIPE_PRICE_TOPUP_STARTER: z.string().optional(),
   STRIPE_PRICE_TOPUP_GROWTH: z.string().optional(),
   STRIPE_PRICE_TOPUP_POWER: z.string().optional(),
-  // Legacy brokerage tier prices still read by the brokerage checkout path.
+  // Legacy team tier prices still read by the team checkout path.
   STRIPE_PRICE_STARTER: z.string().optional(),
   STRIPE_PRICE_ENTERPRISE: z.string().optional(),
 
@@ -75,8 +75,13 @@ const optionalSchema = z.object({
   // Email / SMS
   RESEND_API_KEY: z.string().optional(),
   RESEND_FROM_EMAIL: z.string().optional(),
-  TELNYX_API_KEY: z.string().optional(),
-  TELNYX_FROM_NUMBER: z.string().optional(),
+  TELNYX_API_KEY: z.string().optional(),      // lib/sms.ts (SMS only — voice runs on Twilio)
+  TELNYX_FROM_NUMBER: z.string().optional(),  // lib/sms.ts (SMS only — voice runs on Twilio)
+
+  // Twilio voice — outbound click-to-call, recording, and call transcription.
+  TWILIO_ACCOUNT_SID: z.string().optional(),  // lib/twilio.ts
+  TWILIO_AUTH_TOKEN: z.string().optional(),   // lib/twilio.ts (also signs webhook validation)
+  TWILIO_PHONE_NUMBER: z.string().optional(), // lib/twilio.ts (caller id calls are placed FROM)
 
   // Object storage (Wasabi S3)
   WASABI_ACCESS_KEY_ID: z.string().optional(),
@@ -101,7 +106,7 @@ const optionalSchema = z.object({
   MODAL_SWARM_URL: z.string().optional(),
   AGENT_INTERNAL_SECRET: z.string().optional(),
   AGENT_IMMEDIATE_EVENTS: z.string().optional(),
-  CHIPPI_CHAT_RUNTIME: z.string().optional(),
+  KOALA_CHAT_RUNTIME: z.string().optional(),
 
   // Composio integrations
   COMPOSIO_API_KEY: z.string().optional(),
@@ -143,11 +148,12 @@ const optionalSchema = z.object({
   // Webhook signing secrets
   CLERK_WEBHOOK_SECRET: z.string().optional(),       // app/api/webhooks/clerk
   COMPOSIO_WEBHOOK_SECRET: z.string().optional(),    // app/api/webhooks/composio
-  TELNYX_WEBHOOK_SECRET: z.string().optional(),      // app/api/webhooks/telnyx-voice
+  // Twilio webhooks are validated with the X-Twilio-Signature scheme keyed by
+  // TWILIO_AUTH_TOKEN (above) — no separate webhook secret to set.
 
-  // Telnyx voice
-  TELNYX_AGENT_NUMBER: z.string().optional(),        // app/api/calls
-  TELNYX_VOICE_CONNECTION_ID: z.string().optional(), // lib/voice.ts
+  // Twilio voice — the rep's own number Twilio rings first (deploy-wide fallback
+  // when a space hasn't set SpaceSetting.phoneNumber).
+  TWILIO_AGENT_NUMBER: z.string().optional(),        // app/api/calls
 
   // Crypto / token signing (each falls back to CLERK_SECRET_KEY if unset)
   ENCRYPTION_KEY: z.string().optional(),             // lib/crypto.ts
@@ -191,7 +197,7 @@ const warnGroups: Array<{ label: string; keys: Array<keyof Env> }> = [
   // Cutover-critical secrets that boot GREEN when missing but then fail
   // silently: without CRON_SECRET every cron route 401s (sweeps / briefings /
   // SLA stop); without AGENT_INTERNAL_SECRET the Modal agent's callbacks 503
-  // (Chippi goes dark). Kept optional so CI/preview boot without them, but
+  // (Koala goes dark). Kept optional so CI/preview boot without them, but
   // warned individually so a real deploy notices.
   { label: 'Cron auth — cron routes 401 without CRON_SECRET', keys: ['CRON_SECRET'] },
   {

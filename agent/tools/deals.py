@@ -535,9 +535,9 @@ async def request_deal_review(
     deal_id: str,
     reason: str,
 ) -> dict[str, Any]:
-    """Flag a deal up to the brokerage for human review."""
-    # reason: required, 10+ chars, surfaces verbatim to the broker.
-    # Brokerage-only; solo realtors get an error.
+    """Flag a deal up to the team for human review."""
+    # reason: required, 10+ chars, surfaces verbatim to the manager.
+    # Team-only; solo reps get an error.
     if not reason or len(reason.strip()) < 10:
         agent_err = from_supabase_error({"message": "reason must be at least 10 characters", "code": None})
         return {"error": agent_err.message, "code": agent_err.code, "retryable": agent_err.retryable}
@@ -560,13 +560,13 @@ async def request_deal_review(
 
     space_check = await (
         db.table("Space")
-        .select("id,ownerId,brokerageId")
+        .select("id,ownerId,teamId")
         .eq("id", space_id)
         .maybe_single()
         .execute()
     )
-    if not space_check.data or not space_check.data.get("brokerageId"):
-        agent_err = from_supabase_error({"message": "Space is not part of a brokerage — review requests need a broker", "code": None})
+    if not space_check.data or not space_check.data.get("teamId"):
+        agent_err = from_supabase_error({"message": "Space is not part of a team — review requests need a manager", "code": None})
         return {"error": agent_err.message, "code": agent_err.code, "retryable": agent_err.retryable}
 
     review_id = str(uuid.uuid4())
@@ -575,7 +575,7 @@ async def request_deal_review(
             "id": review_id,
             "dealId": deal_id,
             "requestingUserId": space_check.data["ownerId"],
-            "brokerageId": space_check.data["brokerageId"],
+            "teamId": space_check.data["teamId"],
             "status": "open",
             "reason": reason.strip(),
         }).execute()

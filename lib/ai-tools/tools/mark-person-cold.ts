@@ -49,7 +49,7 @@ export const markPersonColdTool = defineTool<typeof parameters, MarkColdResult>(
       .select('id, name, leadScore')
       .eq('id', args.personId)
       .eq('spaceId', ctx.space.id)
-      .is('brokerageId', null)
+      .is('teamId', null)
       .maybeSingle();
     if (lookupErr) {
       return { summary: `Contact lookup failed: ${lookupErr.message}`, display: 'error' };

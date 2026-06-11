@@ -1,7 +1,7 @@
 """App knowledge base — full-text search over AppKnowledgeDoc.
 
 Loaded on demand. Never included in the base context.
-Call when the realtor asks how to use a feature, why something isn't
+Call when the rep asks how to use a feature, why something isn't
 working, or where to find something in the app.
 """
 
@@ -23,7 +23,7 @@ async def recall_docs(
 ) -> list[dict[str, Any]]:
     """Search the app knowledge base for help and how-to documentation."""
     # query: natural-language question or keywords.
-    # category: contacts|deals|properties|tours|calendar|chippi|settings|troubleshooting.
+    # category: contacts|deals|properties|demos|calendar|koala|settings|troubleshooting.
     # Returns up to 5 docs. Only for how-to/troubleshooting, not routine CRM tasks.
     clean_query = query.strip()[:500] if query else ""
     if not clean_query:

@@ -22,9 +22,9 @@ const IMG = {
 };
 const JPG = {
   id: 'a2',
-  filename: 'mls.jpg',
+  filename: 'deck.jpg',
   mimeType: 'image/jpeg',
-  url: 'https://example.com/mls.jpg',
+  url: 'https://example.com/deck.jpg',
 };
 const PDF = {
   id: 'a3',

@@ -7,7 +7,7 @@ import { getSpaceForUser, getSpaceFromSlug } from '@/lib/space';
  * GET /api/cards/contact/[id]?slug=<workspace-slug>
  *
  * Lightweight card payload for the inline expandable contact card in the
- * Chippi chat. Returns only what the card renders — no dead weight.
+ * Koala chat. Returns only what the card renders — no dead weight.
  *
  * Auth: Clerk session. Space resolved via slug query param (from URL) or
  * via the authenticated user's own space when slug is absent.

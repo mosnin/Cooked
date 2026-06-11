@@ -41,10 +41,10 @@ const mockGetSpaceForUser = vi.mocked(getSpaceForUser);
 const SPACE = {
   id: 'space_1',
   slug: 'jane',
-  name: 'Jane Realty',
+  name: 'Jane Sales',
   emoji: null,
   ownerId: 'user_db_1',
-  brokerageId: null,
+  teamId: null,
   createdAt: '2026-04-01T00:00:00.000Z',
   stripeSubscriptionStatus: 'active',
 } as unknown as NonNullable<Awaited<ReturnType<typeof getSpaceForUser>>>;

@@ -18,12 +18,12 @@ import {
 interface IntakeTrustSignalsFormProps {
   slug: string;
   licenseNumber: string;
-  fairHousingNotice: string;
-  showEqualHousingMark: boolean;
+  complianceNotice: string;
+  showComplianceMark: boolean;
 }
 
-const FAIR_HOUSING_PLACEHOLDER =
-  'Equal Housing Opportunity. We do not discriminate on the basis of race, color, religion, national origin, sex, familial status, or disability.';
+const COMPLIANCE_PLACEHOLDER =
+  'All calls and texts are consent-based and TCPA-compliant. Reply STOP any time to opt out — opt-outs are honored immediately.';
 
 /**
  * Compliance & trust signals — three optional fields rendered in the public
@@ -33,13 +33,13 @@ const FAIR_HOUSING_PLACEHOLDER =
 export function IntakeTrustSignalsForm({
   slug,
   licenseNumber: initialLicense,
-  fairHousingNotice: initialNotice,
-  showEqualHousingMark: initialShow,
+  complianceNotice: initialNotice,
+  showComplianceMark: initialShow,
 }: IntakeTrustSignalsFormProps) {
   const router = useRouter();
   const [licenseNumber, setLicenseNumber] = useState(initialLicense);
-  const [fairHousingNotice, setFairHousingNotice] = useState(initialNotice);
-  const [showEqualHousingMark, setShowEqualHousingMark] = useState(initialShow);
+  const [complianceNotice, setComplianceNotice] = useState(initialNotice);
+  const [showComplianceMark, setShowComplianceMark] = useState(initialShow);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [saveError, setSaveError] = useState('');
@@ -55,8 +55,8 @@ export function IntakeTrustSignalsForm({
         body: JSON.stringify({
           slug,
           intakeLicenseNumber: licenseNumber.trim(),
-          intakeFairHousingNotice: fairHousingNotice,
-          intakeShowEqualHousingMark: showEqualHousingMark,
+          intakeComplianceNotice: complianceNotice,
+          intakeShowComplianceMark: showComplianceMark,
         }),
       });
       if (!res.ok) {
@@ -92,18 +92,18 @@ export function IntakeTrustSignalsForm({
             placeholder="TX-RE-12345"
             maxLength={120}
           />
-          <p className={CAPTION}>Your real-estate license number, shown verbatim in the footer.</p>
+          <p className={CAPTION}>Your sales license number, shown verbatim in the footer.</p>
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor="intakeFairHousingNotice" className="text-[12.5px] font-medium text-foreground">
-            Fair Housing notice
+          <Label htmlFor="intakeComplianceNotice" className="text-[12.5px] font-medium text-foreground">
+            Compliance notice
           </Label>
           <Textarea
-            id="intakeFairHousingNotice"
-            value={fairHousingNotice}
-            onChange={(e) => setFairHousingNotice(e.target.value)}
-            placeholder={FAIR_HOUSING_PLACEHOLDER}
+            id="intakeComplianceNotice"
+            value={complianceNotice}
+            onChange={(e) => setComplianceNotice(e.target.value)}
+            placeholder={COMPLIANCE_PLACEHOLDER}
             rows={4}
             maxLength={2000}
           />
@@ -112,15 +112,15 @@ export function IntakeTrustSignalsForm({
 
         <div className="flex items-start gap-3 pt-1">
           <Switch
-            id="intakeShowEqualHousingMark"
-            checked={showEqualHousingMark}
-            onCheckedChange={setShowEqualHousingMark}
+            id="intakeShowComplianceMark"
+            checked={showComplianceMark}
+            onCheckedChange={setShowComplianceMark}
           />
           <div className="space-y-0.5">
-            <Label htmlFor="intakeShowEqualHousingMark" className="text-[12.5px] font-medium text-foreground cursor-pointer">
-              Show Equal Housing mark
+            <Label htmlFor="intakeShowComplianceMark" className="text-[12.5px] font-medium text-foreground cursor-pointer">
+              Show compliance mark
             </Label>
-            <p className={CAPTION}>Displays the standard Equal Housing Opportunity logo next to the notice.</p>
+            <p className={CAPTION}>Displays a compliance badge next to the notice.</p>
           </div>
         </div>
       </div>

@@ -8,7 +8,7 @@ import {
 import { SECTION_LABEL } from '@/lib/typography';
 
 /**
- * Realtor performance strip — the three pipeline numbers that move output:
+ * Rep performance strip — the three pipeline numbers that move output:
  * average time-to-close, conversion rate, and where deals stall (the current
  * bottleneck stage). Pure presentation over already-fetched rows; the page
  * owns the (read-only) query and hands the math to lib/deal-metrics.ts.

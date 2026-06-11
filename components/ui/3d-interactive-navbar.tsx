@@ -1,10 +1,10 @@
 'use client';
 
 /**
- * Chippi marketing nav — a floating, Apple-grade PILL nav.
+ * Koala marketing nav — a floating, Apple-grade PILL nav.
  *
  * A translucent, theme-aware pill, sticky at the top, centered. It adapts to
- * light and dark via semantic tokens. Left: the theme-aware Chippi logo.
+ * light and dark via semantic tokens. Left: the theme-aware Koala logo.
  * Center: the marketing links, each (except Pricing) a dropdown that jumps to
  * real, anchored sections of its page. Right: Log in + a foreground-filled
  * Start free pill.
@@ -55,8 +55,8 @@ interface NavLink {
 
 const NAV_LINKS: NavLink[] = [
   {
-    label: 'Realtors',
-    href: '/realtors',
+    label: 'Reps',
+    href: '/reps',
     sections: [
       {
         label: 'In the field',
@@ -86,8 +86,8 @@ const NAV_LINKS: NavLink[] = [
     ],
   },
   {
-    label: 'Brokerages',
-    href: '/brokerages',
+    label: 'Teams',
+    href: '/teams',
     sections: [
       {
         label: 'Empower the floor',
@@ -96,7 +96,7 @@ const NAV_LINKS: NavLink[] = [
       },
       {
         label: 'Lead distribution',
-        desc: 'every lead routed to the right realtor.',
+        desc: 'every lead routed to the right rep.',
         to: 'lead-distribution',
       },
       {
@@ -111,7 +111,7 @@ const NAV_LINKS: NavLink[] = [
       },
       {
         label: 'Team chat',
-        desc: 'talk shop on the same page, mention Chippi in channel.',
+        desc: 'talk shop on the same page, mention Koala in channel.',
         to: 'team-chat',
       },
     ],
@@ -122,12 +122,12 @@ const NAV_LINKS: NavLink[] = [
     sections: [
       {
         label: 'How it works',
-        desc: 'connect once, Chippi does the reaching.',
+        desc: 'connect once, Koala does the reaching.',
         to: 'how-it-works',
       },
       {
         label: 'The catalog',
-        desc: 'every app Chippi can work inside.',
+        desc: 'every app Koala can work inside.',
         to: 'the-catalog',
       },
       {
@@ -454,14 +454,14 @@ function MobileSheet({
             ))}
             <div className="mt-2 flex flex-col gap-2 border-t border-border/60 p-2 pt-3">
               <Link
-                href="/login/realtor"
+                href="/login/rep"
                 onClick={onClose}
                 className="flex h-11 items-center justify-center rounded-full text-[15px] font-medium text-foreground/80 ring-1 ring-border transition-colors active:bg-foreground/[0.04]"
               >
                 Log in
               </Link>
               <Link
-                href="/login/realtor?intent=signup"
+                href="/login/rep?intent=signup"
                 onClick={onClose}
                 className="flex h-11 items-center justify-center rounded-full bg-foreground text-[15px] font-medium text-background transition-transform active:scale-[0.98]"
               >
@@ -488,8 +488,8 @@ export function Navbar() {
       <div className="mx-auto max-w-5xl px-3 pt-3 md:px-4">
         <div className="relative flex h-14 items-center justify-between rounded-full border border-border/70 bg-background/80 pl-5 pr-2.5 shadow-[0_8px_30px_rgba(0,0,0,0.12)] backdrop-blur-xl">
           {/* Left: logo — theme-aware, flips with light/dark */}
-          <Link href="/" aria-label="Chippi home" className="flex shrink-0 items-center">
-            <BrandLogo className="h-5 w-auto" alt="Chippi" />
+          <Link href="/" aria-label="Koala home" className="flex shrink-0 items-center">
+            <BrandLogo className="h-5 w-auto" alt="Koala" />
           </Link>
 
           {/* Center: nav links + dropdowns */}
@@ -500,13 +500,13 @@ export function Navbar() {
           {/* Right: auth */}
           <div className="flex items-center gap-1">
             <Link
-              href="/login/realtor"
+              href="/login/rep"
               className="hidden h-9 items-center rounded-full px-3.5 text-[13.5px] font-medium text-foreground/70 transition-colors hover:text-foreground md:inline-flex"
             >
               Log in
             </Link>
             <Link
-              href="/login/realtor?intent=signup"
+              href="/login/rep?intent=signup"
               className="hidden h-9 items-center rounded-full bg-foreground px-4 text-[13.5px] font-medium text-background transition-transform duration-150 hover:opacity-90 active:scale-[0.98] md:inline-flex"
             >
               Start free

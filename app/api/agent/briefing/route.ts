@@ -1,13 +1,13 @@
 /**
  * GET /api/agent/briefing
  *
- * Read today's brief for the authenticated realtor's space. The cron at
+ * Read today's brief for the authenticated rep's space. The cron at
  * /api/cron/daily-briefing pre-generates the row at 7am UTC; this route
  * is the read path the workspace surface calls.
  *
- * Behavior when no brief exists yet (cron hasn't run, or this realtor's
+ * Behavior when no brief exists yet (cron hasn't run, or this rep's
  * row was missed by the last tick): compose on demand and persist. The
- * realtor opening Chippi at 8am before the cron caught up still sees
+ * rep opening Koala at 8am before the cron caught up still sees
  * their brief; they just paid the latency.
  *
  * PATCH is the seen / acted lifecycle — the workspace marks the brief
@@ -25,9 +25,9 @@ import type { Brief, BriefCardTap, SignalKind, SignalSource } from '@/lib/briefi
 const DEFAULT_TIMEZONE = 'America/New_York';
 
 /**
- * The brief's `forDate` is the realtor's LOCAL date — the date they see
- * on their phone when they open Chippi — not the server's UTC date.
- * Otherwise the late-night Pacific realtor opening the app at 11:30 PM
+ * The brief's `forDate` is the rep's LOCAL date — the date they see
+ * on their phone when they open Koala — not the server's UTC date.
+ * Otherwise the late-night Pacific rep opening the app at 11:30 PM
  * would already see "tomorrow's brief" because UTC has rolled over.
  */
 async function todayLocalDate(spaceId: string): Promise<string> {
@@ -93,7 +93,7 @@ export async function GET(req: NextRequest) {
   const forDate = await todayLocalDate(space.id);
 
   // Whether to show the one-line intro on this brief. Null means the
-  // realtor has never seen a brief — the intro renders. Once 'seen'
+  // rep has never seen a brief — the intro renders. Once 'seen'
   // PATCH fires the column gets stamped and the intro never returns.
   const { data: setting } = await supabase
     .from('SpaceSetting')
@@ -121,7 +121,7 @@ export async function GET(req: NextRequest) {
     });
   }
 
-  // No row yet — compose on demand and persist. The realtor sees their
+  // No row yet — compose on demand and persist. The rep sees their
   // brief; tomorrow's cron tick fills the gap for everyone systematically.
   const { brief, cardMeta } = await composeBrief(space.id);
   const { data: created, error } = await supabase
@@ -172,7 +172,7 @@ export async function GET(req: NextRequest) {
  * 'acted' → set actedAt + flip status to 'acted' (once) + append the
  *           tap event to Brief.cardTaps. The cardIndex/source/kind
  *           triple identifies WHICH card was tapped so analytics can
- *           answer "which sources move realtors" without DOM scraping.
+ *           answer "which sources move reps" without DOM scraping.
  *
  * Both are idempotent and additive — re-firing 'seen' doesn't overwrite
  * the earlier timestamp; re-firing 'acted' with the same

@@ -11,19 +11,19 @@ export default async function JoinWithCodePage({ params }: Params) {
 
   const { userId } = await auth();
   if (!userId) {
-    redirect(`/login/realtor?redirect_url=/join/${code}`);
+    redirect(`/login/rep?redirect_url=/join/${code}`);
   }
 
   const normalizedCode = code.trim().toUpperCase();
 
-  const { data: brokerage } = await supabase
-    .from('Brokerage')
+  const { data: team } = await supabase
+    .from('Team')
     .select('id, name, status, logoUrl')
     .eq('joinCode', normalizedCode)
     .maybeSingle();
 
-  const isInvalid = !brokerage;
-  const isSuspended = brokerage?.status === 'suspended';
+  const isInvalid = !team;
+  const isSuspended = team?.status === 'suspended';
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4">
@@ -31,39 +31,39 @@ export default async function JoinWithCodePage({ params }: Params) {
         <div className="rounded-2xl border border-border bg-card shadow-sm overflow-hidden">
           <div className="bg-foreground px-6 py-5">
             <div className="flex items-center gap-2.5">
-              {brokerage?.logoUrl ? (
-                <img src={brokerage.logoUrl} alt="" className="h-6 max-w-[80px] object-contain rounded" />
+              {team?.logoUrl ? (
+                <img src={team.logoUrl} alt="" className="h-6 max-w-[80px] object-contain rounded" />
               ) : (
                 <Building2 size={20} className="text-background/70" />
               )}
               <p className="text-background font-semibold text-base">
-                {brokerage?.name ?? 'Chippi'}
+                {team?.name ?? 'Koala'}
               </p>
             </div>
-            <p className="mt-1 text-background/60 text-sm">Brokerage invite code</p>
+            <p className="mt-1 text-background/60 text-sm">Team invite code</p>
           </div>
 
           <div className="px-6 py-6 space-y-4">
             {isInvalid ? (
               <div className="flex items-start gap-3 p-3 rounded-lg bg-destructive/10 text-destructive">
                 <AlertTriangle size={16} className="flex-shrink-0 mt-0.5" />
-                <p className="text-sm">This invite code is invalid or has been revoked. Ask your broker for a new one.</p>
+                <p className="text-sm">This invite code is invalid or has been revoked. Ask your manager for a new one.</p>
               </div>
             ) : isSuspended ? (
               <div className="flex items-start gap-3 p-3 rounded-lg bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400">
                 <AlertTriangle size={16} className="flex-shrink-0 mt-0.5" />
-                <p className="text-sm">This brokerage is currently suspended and not accepting new members.</p>
+                <p className="text-sm">This team is currently suspended and not accepting new members.</p>
               </div>
             ) : (
               <>
                 <div>
                   <p className="text-sm text-foreground leading-relaxed">
                     You&apos;ve been invited to join{' '}
-                    <span className="font-semibold">{brokerage.name}</span> as a{' '}
-                    <span className="font-semibold">Realtor Member</span>.
+                    <span className="font-semibold">{team.name}</span> as a{' '}
+                    <span className="font-semibold">Rep Member</span>.
                   </p>
                   <p className="text-xs text-muted-foreground mt-2">
-                    You&apos;ll keep your own workspace, leads, and pipeline — this just adds you to the brokerage network.
+                    You&apos;ll keep your own workspace, leads, and pipeline — this just adds you to the team network.
                   </p>
                 </div>
                 <JoinCodeAcceptButton code={normalizedCode} />

@@ -1,7 +1,7 @@
 -- Phase 7 of the deals redesign: three small-but-daily quality-of-life wins.
 --
 -- 1. MessageTemplate: canned SMS/email/note bodies with simple {{placeholder}}
---    variables, owned by a space. Realtors write the 10-12 canonical messages
+--    variables, owned by a space. Reps write the 10-12 canonical messages
 --    they send every week once, then fire them per deal/contact.
 --
 -- 2. Contact.snoozedUntil: hide a contact from the main People view until a
@@ -9,7 +9,7 @@
 --    inbox" anxiety without deleting real data.
 --
 -- 3. Contact.referralSource: who sent this lead? Free-form string because
---    sources vary wildly (Jane Doe, Zillow, open house, prior client). Later
+--    sources vary wildly (Jane Doe, LinkedIn, webinar, prior client). Later
 --    phases can use this for commission-referral tracking.
 
 CREATE TABLE IF NOT EXISTS "MessageTemplate" (

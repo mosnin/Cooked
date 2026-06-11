@@ -16,7 +16,7 @@ import { cn } from '@/lib/utils';
 import { timeAgo } from '@/lib/formatting';
 
 // One muted neutral for every activity icon. Differentiation is the icon
-// shape — not color. Brand orange is sacred (logo, Chippi cues, agent
+// shape — not color. Brand orange is sacred (logo, Koala cues, agent
 // output, lead-warm) and does not appear on generic timeline chrome.
 const ACTIVITY_META: Record<string, { label: string; icon: React.ElementType }> = {
   note: { label: 'Note', icon: FileText },

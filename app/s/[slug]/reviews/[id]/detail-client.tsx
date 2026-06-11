@@ -83,12 +83,12 @@ export function DetailClient({ slug, review, comments: initialComments }: Props)
 
   const isResolved = review.status !== 'open';
   const dealHref = `/s/${slug}/deals/${review.deal.id}`;
-  const resolvedByName = review.resolvedByUser?.name ?? 'your broker';
+  const resolvedByName = review.resolvedByUser?.name ?? 'your manager';
 
-  // POST comments through the existing broker route — its dual-auth permits
-  // the requesting agent (verified in /api/broker/reviews/[id]/comments). We
+  // POST comments through the existing manager route — its dual-auth permits
+  // the requesting agent (verified in /api/manager/reviews/[id]/comments). We
   // do NOT add a new comments route; re-using the existing one guarantees
-  // the broker and realtor threads stay in sync.
+  // the manager and rep threads stay in sync.
   const submitComment = async () => {
     const body = commentBody.trim();
     if (!body) return;
@@ -98,17 +98,17 @@ export function DetailClient({ slug, review, comments: initialComments }: Props)
     }
     setPostingComment(true);
     try {
-      const res = await fetch(`/api/broker/reviews/${review.id}/comments`, {
+      const res = await fetch(`/api/manager/reviews/${review.id}/comments`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ body }),
       });
       if (!res.ok) {
         // Server now rejects posts to resolved reviews with 409 (audit
-        // follow-up). Surface the specific reason so the realtor knows
+        // follow-up). Surface the specific reason so the rep knows
         // to refresh rather than retry blindly.
         if (res.status === 409) {
-          toast.error('This review was just resolved. Refresh to see your broker\'s decision.');
+          toast.error('This review was just resolved. Refresh to see your manager\'s decision.');
           return;
         }
         throw new Error(`Failed to post comment (${res.status})`);
@@ -187,7 +187,7 @@ export function DetailClient({ slug, review, comments: initialComments }: Props)
         </Card>
       )}
 
-      {/* Comment thread — realtor's own comments included, no gating. */}
+      {/* Comment thread — rep's own comments included, no gating. */}
       <div className="space-y-2">
         <h2 className="text-sm font-semibold">Comments</h2>
         {comments.length === 0 ? (
@@ -236,7 +236,7 @@ export function DetailClient({ slug, review, comments: initialComments }: Props)
             <Textarea
               value={commentBody}
               onChange={(e) => setCommentBody(e.target.value.slice(0, MAX_COMMENT_LEN))}
-              placeholder="Reply to your broker…"
+              placeholder="Reply to your manager…"
               maxLength={MAX_COMMENT_LEN}
               aria-label="New comment"
             />

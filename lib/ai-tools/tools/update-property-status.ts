@@ -3,7 +3,7 @@
  *
  * Approval-gated: the listing status drives the property card label and
  * filters across the property index — a wrong flip ("sold" instead of
- * "pending") is visible immediately to the realtor and to anyone with
+ * "pending") is visible immediately to the rep and to anyone with
  * a share link.
  *
  * Allowed statuses come from the DB CHECK constraint on

@@ -7,10 +7,10 @@ import { PerformanceStrip } from '@/components/contacts/performance-strip';
 import type { DealMetricRow, StageMetricRow } from '@/lib/deal-metrics';
 
 /**
- * Read-only fetch of the realtor's own deals + stages for the performance
+ * Read-only fetch of the rep's own deals + stages for the performance
  * strip. Mirrors the deals page query (Deal/DealStage scoped to spaceId) but
  * pulls the whole book — every stage, every deal — because this strip reports
- * the realtor's overall output, not a single pipeline. Never writes.
+ * the rep's overall output, not a single pipeline. Never writes.
  *
  * Failures are non-fatal: a throw returns empty arrays, the metric functions
  * return null, and the strip renders calm empty states instead of breaking
@@ -49,7 +49,7 @@ export default async function ContactsPage({
 }) {
   // Middleware only requires login; ownership of /s/[slug] is enforced here.
   const { userId } = await auth();
-  if (!userId) redirect('/login/realtor');
+  if (!userId) redirect('/login/rep');
 
   const { slug } = await params;
   const space = await getSpaceFromSlug(slug);
@@ -64,7 +64,7 @@ export default async function ContactsPage({
   // component, one source of truth for the surface. The New/All tab strip
   // that used to sit above is gone: the stage filter already cuts state,
   // and stacking two state-cuts on top of each other was the chief source
-  // of the "messy top" the realtor flagged.
+  // of the "messy top" the rep flagged.
   //
   // The performance strip sits above the table: the three numbers that move
   // output (time-to-close, conversion, bottleneck) read first, then the book.

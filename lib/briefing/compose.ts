@@ -8,7 +8,7 @@
  * The right to say nothing is the central rule. When fewer than one signal
  * beats the confidence floor, the composer returns a Brief with empty
  * cards and an `emptyState` invitation — *never* a brief padded with
- * filler that teaches the realtor to ignore tomorrow's edition.
+ * filler that teaches the rep to ignore tomorrow's edition.
  */
 
 import {
@@ -36,7 +36,7 @@ import { composeTomorrow } from './tomorrow';
 import { pickBestTip, tipToCard } from './tips/tips-source';
 
 /**
- * The active source list. Phase A shipped three internal Chippi-DB
+ * The active source list. Phase A shipped three internal Koala-DB
  * sources. Phase B layers more on — `drafts` surfaces the autonomous
  * agent's pending AgentDraft rows; `calendar_google` (Phase D2) pulls
  * external Calendar; `gmail` (Phase D3) catches quiet sent threads and
@@ -70,7 +70,7 @@ function rankSignals(signals: Signal[]): Signal[] {
 /**
  * Pick the top N, deduplicating by subject.id. A single contact / deal
  * can produce signals from multiple sources (Gmail thread + overdue
- * follow-up from leads source for the same person); the realtor sees
+ * follow-up from leads source for the same person); the rep sees
  * one card per subject, leading with the highest-ranked angle.
  *
  * Returns BOTH the surface-facing cards AND the server-only meta
@@ -134,7 +134,7 @@ function headlineForCard(card: BriefCard): string {
       // Pipeline review — usually a stuck deal.
       return `${subject.name}: ${evidence.toLowerCase()}.`;
     case 'prep':
-      // Upcoming tour — "Reynolds tour at 10:00 AM."
+      // Upcoming demo — "Reynolds demo at 10:00 AM."
       return `${subject.name} — ${evidence}.`;
     case 'call':
       return `Call ${subject.name}. ${evidence}`;
@@ -150,7 +150,7 @@ function headlineForCard(card: BriefCard): string {
 }
 
 /**
- * What Chippi says when the realtor has nothing on fire. The right to
+ * What Koala says when the rep has nothing on fire. The right to
  * say nothing is the central design rule; this is its prose.
  */
 function composeEmptyState(): { invitation: string } {

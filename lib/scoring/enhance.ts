@@ -1,5 +1,5 @@
 /**
- * AI Enhancement Layer for Chippi Lead Scoring
+ * AI Enhancement Layer for Koala Lead Scoring
  *
  * Adds qualitative analysis on top of the deterministic engine score.
  * The AI does NOT determine the score — it explains it and recommends actions.
@@ -85,7 +85,7 @@ export async function enhanceWithAI(
 
     const systemPrompt = isBuyer
       ? [
-          'You summarize pre-computed lead scoring results for a real estate CRM (BUYER leads).',
+          'You summarize pre-computed lead scoring results for a sales CRM (BUYER leads).',
           'You do NOT compute scores. The score is already determined.',
           'Your job: write a concise summary (under 200 chars), 2-4 explanation tags,',
           'a specific recommended next action, and classify the lead state.',
@@ -93,7 +93,7 @@ export async function enhanceWithAI(
           'Be direct and actionable. Tags should be 2-3 words each (e.g., "Pre-approved", "Low budget", "ASAP timeline").',
         ].join(' ')
       : [
-          'You summarize pre-computed lead scoring results for a real estate CRM (RENTAL leads).',
+          'You summarize pre-computed lead scoring results for a sales CRM (RENTAL leads).',
           'You do NOT compute scores. The score is already determined.',
           'Your job: write a concise summary (under 200 chars), 2-4 explanation tags,',
           'a specific recommended next action, and classify the lead state.',
@@ -189,7 +189,7 @@ function buildRentalContext(app: ApplicationData | null): string {
   if (app.additionalIncome) lines.push(`Additional income: $${app.additionalIncome}/mo`);
   if (app.creditScore) lines.push(`Credit score: ${app.creditScore}`);
   if (app.currentHousingStatus) lines.push(`Current housing: ${app.currentHousingStatus}`);
-  if (app.currentLandlordName) lines.push(`Current landlord: ${app.currentLandlordName}`);
+  if (app.currentProviderName) lines.push(`Current provider: ${app.currentProviderName}`);
   if (app.latePayments != null) lines.push(`Late payments: ${app.latePayments ? 'yes' : 'no'}`);
   if (app.leaseViolations != null) lines.push(`Lease violations: ${app.leaseViolations ? 'yes' : 'no'}`);
   if (app.priorEvictions != null) lines.push(`Prior evictions: ${app.priorEvictions ? 'yes' : 'no'}`);

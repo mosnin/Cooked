@@ -1,8 +1,8 @@
-"""Agent guardrails — pre-run safety checks for Chippi.
+"""Agent guardrails — pre-run safety checks for Koala.
 
 Input guardrail (fires before the first LLM call):
-  pending_drafts_guardrail — blocks the run if the realtor already has
-  ≥10 unreviewed drafts. Prevents the agent from burying the realtor in
+  pending_drafts_guardrail — blocks the run if the rep already has
+  ≥10 unreviewed drafts. Prevents the agent from burying the rep in
   drafts they haven't had time to review.
 """
 
@@ -27,7 +27,7 @@ async def pending_drafts_guardrail(
 ) -> GuardrailFunctionOutput:
     """Block the agent run when the space already has too many unreviewed drafts.
 
-    If the realtor hasn't reviewed 10+ drafts from previous runs, creating
+    If the rep hasn't reviewed 10+ drafts from previous runs, creating
     more will overwhelm them and devalue every suggestion. Wait until the
     inbox is cleared.
     """

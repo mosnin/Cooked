@@ -13,7 +13,7 @@ import { logger } from '@/lib/logger';
 export const runtime = 'nodejs';
 
 const CALL_COLUMNS =
-  'id, spaceId, contactId, direction, fromNumber, toNumber, telnyxCallId, status, recordingUrl, transcript, summary, durationSec, createdAt, updatedAt';
+  'id, spaceId, contactId, direction, fromNumber, toNumber, twilioCallSid, status, recordingUrl, recordingSid, transcript, transcriptStatus, summary, durationSec, createdAt, updatedAt';
 
 export async function GET(
   req: NextRequest,

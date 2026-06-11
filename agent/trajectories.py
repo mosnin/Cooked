@@ -10,8 +10,8 @@ Why a dedicated table instead of joining at query time:
   - The pieces have different lifetimes (tool-call logs trim, the SSE
     Redis stream expires in 2h). A single row at end-of-run preserves the
     trajectory permanently.
-  - Cross-run queries ("every run where schedule_tour fired after
-    tour_completed and the draft was approved") become a single SELECT
+  - Cross-run queries ("every run where schedule_demo fired after
+    demo_completed and the draft was approved") become a single SELECT
     with a JSONB filter — fast with the GIN index.
   - The (trajectory, outcome) pair becomes the natural unit for offline
     eval today and RL training data in 12 months.
@@ -33,7 +33,7 @@ from db import get_pool
 logger = logging.getLogger(__name__)
 
 # Cap stored args/summaries so a pathological tool call can't blow up the
-# table. The realtor-facing live stream truncates at the same boundaries
+# table. The rep-facing live stream truncates at the same boundaries
 # (see _translate_tool_event in orchestrator.py).
 _MAX_ARGS_CHARS = 500
 _MAX_SUMMARY_CHARS = 1000

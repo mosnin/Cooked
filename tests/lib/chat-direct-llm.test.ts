@@ -24,7 +24,7 @@ vi.mock('@/lib/llm', async () => {
   };
 });
 
-import { runDirectChat, CHIPPI_INSTRUCTIONS_LITE } from '@/lib/chat/direct-llm';
+import { runDirectChat, KOALA_INSTRUCTIONS_LITE } from '@/lib/chat/direct-llm';
 
 function happyResponse(text: string, usage?: {
   prompt_tokens?: number;
@@ -139,16 +139,16 @@ describe('runDirectChat — wiring', () => {
   });
 });
 
-describe('CHIPPI_INSTRUCTIONS_LITE', () => {
-  it('is significantly smaller than the full Chippi instructions', () => {
+describe('KOALA_INSTRUCTIONS_LITE', () => {
+  it('is significantly smaller than the full Koala instructions', () => {
     // ~300 token budget — assert a hard char ceiling that catches any
     // accidental bloat. ~4 chars/token → 1500 chars is the soft cap.
-    expect(CHIPPI_INSTRUCTIONS_LITE.length).toBeLessThan(1500);
-    expect(CHIPPI_INSTRUCTIONS_LITE).toMatch(/Chippi/);
-    expect(CHIPPI_INSTRUCTIONS_LITE).toMatch(/answer/i);
+    expect(KOALA_INSTRUCTIONS_LITE.length).toBeLessThan(1500);
+    expect(KOALA_INSTRUCTIONS_LITE).toMatch(/Koala/);
+    expect(KOALA_INSTRUCTIONS_LITE).toMatch(/answer/i);
   });
 
   it('makes it clear there are no tools on this path', () => {
-    expect(CHIPPI_INSTRUCTIONS_LITE.toLowerCase()).toMatch(/no.*action|do not take action|action path/);
+    expect(KOALA_INSTRUCTIONS_LITE.toLowerCase()).toMatch(/no.*action|do not take action|action path/);
   });
 });

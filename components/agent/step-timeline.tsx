@@ -35,7 +35,7 @@ function truncate(str: string | undefined, max: number): string {
 }
 
 /** snake_case tool/step name → readable label. The step timeline renders the
- *  same names the model sees ("send_email", "schedule_tour"), and dumping
+ *  same names the model sees ("send_email", "schedule_demo"), and dumping
  *  raw snake_case into chrome makes the page read like a backend log. */
 function humanizeStepName(name: string): string {
   const trimmed = name?.trim();

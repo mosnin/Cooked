@@ -28,7 +28,7 @@ export default async function AuthorizePage({
   if (!userId) {
     // Redirect to login, then back here
     const currentUrl = `/authorize?${new URLSearchParams(params as Record<string, string>).toString()}`;
-    redirect(`/login/realtor?redirect_url=${encodeURIComponent(currentUrl)}`);
+    redirect(`/login/rep?redirect_url=${encodeURIComponent(currentUrl)}`);
   }
 
   // Validate required params

@@ -127,27 +127,27 @@ export function newLeadSMS(p: { spaceName: string; leadName: string; leadPhone?:
   };
 }
 
-export function newTourSMS(p: { spaceName: string; guestName: string; date: string; time: string; property?: string | null; phone: string }): SendSMSParams {
+export function newDemoSMS(p: { spaceName: string; guestName: string; date: string; time: string; property?: string | null; phone: string }): SendSMSParams {
   const prop = p.property ? ` at ${p.property}` : '';
   return {
     to: p.phone,
-    body: `[${p.spaceName}] New tour booked: ${p.guestName}${prop} on ${p.date} at ${p.time}. Check your dashboard for details.`,
+    body: `[${p.spaceName}] New demo booked: ${p.guestName}${prop} on ${p.date} at ${p.time}. Check your dashboard for details.`,
   };
 }
 
-export function tourConfirmationSMS(p: { guestName: string; guestPhone: string; businessName: string; date: string; time: string; property?: string | null }): SendSMSParams {
+export function demoConfirmationSMS(p: { guestName: string; guestPhone: string; businessName: string; date: string; time: string; property?: string | null }): SendSMSParams {
   const prop = p.property ? ` at ${p.property}` : '';
   return {
     to: p.guestPhone,
-    body: `Hi ${p.guestName}! Your tour with ${p.businessName}${prop} is confirmed for ${p.date} at ${p.time}. Contact your agent if you need to reschedule.`,
+    body: `Hi ${p.guestName}! Your demo with ${p.businessName}${prop} is confirmed for ${p.date} at ${p.time}. Contact your agent if you need to reschedule.`,
   };
 }
 
-export function tourReminderSMS(p: { guestName: string; guestPhone: string; businessName: string; time: string; property?: string | null }): SendSMSParams {
+export function demoReminderSMS(p: { guestName: string; guestPhone: string; businessName: string; time: string; property?: string | null }): SendSMSParams {
   const prop = p.property ? ` at ${p.property}` : '';
   return {
     to: p.guestPhone,
-    body: `Hi ${p.guestName}, reminder: your tour with ${p.businessName}${prop} is tomorrow at ${p.time}. See you there!`,
+    body: `Hi ${p.guestName}, reminder: your demo with ${p.businessName}${prop} is tomorrow at ${p.time}. See you there!`,
   };
 }
 

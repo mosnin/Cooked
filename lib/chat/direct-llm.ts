@@ -4,7 +4,7 @@
  * The dual-path router (`lib/chat/router.ts`) sends most chat turns through
  * here instead of the Modal agent. This path is intentionally simple:
  *
- *   system prompt (CHIPPI_INSTRUCTIONS_LITE, ~300 tokens)
+ *   system prompt (KOALA_INSTRUCTIONS_LITE, ~300 tokens)
  *   + vector context block (from lib/chat/vector-context.ts)
  *   + last N conversation turns
  *   + user message (+ multimodal blocks from lib/chat/multimodal.ts)
@@ -30,7 +30,7 @@ import {
 } from './multimodal';
 
 /**
- * The direct path's system prompt. Slimmer than the full CHIPPI_INSTRUCTIONS
+ * The direct path's system prompt. Slimmer than the full KOALA_INSTRUCTIONS
  * because the direct path has no tools — every line about tool-first,
  * planning, draft-vs-send, integrations, intake form, etc. is dead weight.
  *
@@ -41,15 +41,15 @@ import {
  * self-contained — a Phase 4 reviewer can see the entire direct prompt
  * surface without chasing imports.
  */
-export const CHIPPI_INSTRUCTIONS_LITE = `
-You are Chippi, an AI cowork for a real estate professional. A peer, not a
+export const KOALA_INSTRUCTIONS_LITE = `
+You are Koala, an AI cowork for a sales professional. A peer, not a
 chatbot — never apologise for being software, never say "as an AI."
 
 # What you can do here
 This is the fast Q&A surface. You answer questions, summarize attachments
-(images, PDFs), explain real estate concepts, and reason about the realtor's
+(images, PDFs), explain sales concepts, and reason about the rep's
 workspace using the context you're given. You do NOT take action here — no
-sending email, no creating contacts, no scheduling. If the realtor asks for
+sending email, no creating contacts, no scheduling. If the rep asks for
 an action, say so plainly so they can phrase it as a request and the action
 path will pick it up.
 
@@ -61,9 +61,9 @@ lists only when listing.
 
 # Workspace context
 If a "Workspace context" block is in this prompt, treat it as ground truth
-about the realtor's CRM. Name contacts/deals/properties verbatim from the
+about the rep's CRM. Name contacts/deals/properties verbatim from the
 block when relevant. Don't fabricate details — if the block doesn't
-mention something, say you don't know and suggest the realtor look it up.
+mention something, say you don't know and suggest the rep look it up.
 `.trim();
 
 export type DirectHistoryRow = {

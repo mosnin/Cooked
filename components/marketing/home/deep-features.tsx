@@ -26,17 +26,17 @@ const FEATURES = [
   {
     icon: FolderOpen,
     title: 'Files that belong to the deal.',
-    body: 'Contracts, photos, signed PDFs, filed per deal, searchable, versioned. Chippi files them for you.',
+    body: 'Contracts, photos, signed PDFs, filed per deal, searchable, versioned. Koala files them for you.',
   },
   {
     icon: Users,
-    title: 'A team layer brokers actually open.',
-    body: 'Route leads, share templates, see what the floor is closing, while every realtor keeps their own workspace.',
+    title: 'A team layer managers actually open.',
+    body: 'Route leads, share templates, see what the floor is closing, while every rep keeps their own workspace.',
   },
   {
     icon: ShieldCheck,
     title: 'Approval-first, always.',
-    body: 'Chippi never sends, books, or changes a record without your tap. Grant per-task autonomy when you trust it.',
+    body: 'Koala never sends, books, or changes a record without your tap. Grant per-task autonomy when you trust it.',
   },
 ];
 
@@ -53,11 +53,11 @@ export function DeepFeatures() {
             One agent. Every corner of the job.
           </h2>
           <p className="mt-4 max-w-md text-lg leading-relaxed text-foreground/55">
-            The inbox is where it starts. Chippi reaches everywhere the work
+            The inbox is where it starts. Koala reaches everywhere the work
             lives, so you never leave to get something done.
           </p>
           <Link
-            href="/login/realtor?intent=signup"
+            href="/login/rep?intent=signup"
             className="mt-7 inline-flex h-11 items-center gap-2 rounded-full bg-foreground px-6 text-[15px] font-medium text-background transition-transform duration-150 active:scale-[0.98]"
           >
             Get started <ArrowRight size={16} />

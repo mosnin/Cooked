@@ -11,6 +11,6 @@ ALTER TABLE "SpaceSetting" ADD COLUMN IF NOT EXISTS "intakeThankYouMessage"  tex
 ALTER TABLE "SpaceSetting" ADD COLUMN IF NOT EXISTS "intakeConfirmationEmail" text;
 ALTER TABLE "SpaceSetting" ADD COLUMN IF NOT EXISTS "intakeDisclaimerText"   text;
 ALTER TABLE "SpaceSetting" ADD COLUMN IF NOT EXISTS "logoUrl"               text;
-ALTER TABLE "SpaceSetting" ADD COLUMN IF NOT EXISTS "realtorPhotoUrl"       text;
+ALTER TABLE "SpaceSetting" ADD COLUMN IF NOT EXISTS "repPhotoUrl"       text;
 ALTER TABLE "SpaceSetting" ADD COLUMN IF NOT EXISTS "intakeDisabledSteps"   jsonb;
 ALTER TABLE "SpaceSetting" ADD COLUMN IF NOT EXISTS "intakeCustomQuestions"  jsonb;

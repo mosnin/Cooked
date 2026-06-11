@@ -27,15 +27,15 @@ export interface AuthPageLayoutProps {
   children: React.ReactNode;
   heading: string;
   subheading?: string;
-  variant?: 'realtor' | 'broker';
+  variant?: 'rep' | 'manager';
 }
 
 export function AuthPageLayout({ children, heading, subheading, variant: _variant }: AuthPageLayoutProps) {
   const pathname = usePathname();
 
-  const isBrokerLogin = pathname.startsWith('/login/broker');
-  const isRealtorLogin = pathname.startsWith('/login/realtor');
-  const showRoleSwitcher = isBrokerLogin || isRealtorLogin;
+  const isManagerLogin = pathname.startsWith('/login/manager');
+  const isRepLogin = pathname.startsWith('/login/rep');
+  const showRoleSwitcher = isManagerLogin || isRepLogin;
 
   return (
     <main className="relative grid min-h-screen bg-background lg:grid-cols-2">
@@ -44,19 +44,19 @@ export function AuthPageLayout({ children, heading, subheading, variant: _varian
         <AsciiField className="absolute inset-0 h-full w-full opacity-40" />
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_30%_30%,rgba(255,150,79,0.18),transparent_60%)]" />
 
-        <Link href="/" className="relative z-10 flex items-center gap-2" aria-label="Chippi home">
-          <BrandLogo className="h-7" alt="Chippi" />
+        <Link href="/" className="relative z-10 flex items-center gap-2" aria-label="Koala home">
+          <BrandLogo className="h-7" alt="Koala" />
         </Link>
 
         <div className="relative z-10">
           <p className="font-brand text-xs uppercase tracking-[0.25em] text-brand">
-            The agentic OS for real estate
+            The agentic OS for sales
           </p>
           <h2 className="font-brand mt-4 text-4xl leading-tight tracking-tight text-foreground">
             I keep your day moving, so you don&apos;t have to.
           </h2>
           <p className="mt-4 text-sm text-muted-foreground">
-            Drafts · Scoring · Tours · Pipeline
+            Drafts · Scoring · Demos · Pipeline
           </p>
         </div>
       </div>
@@ -71,7 +71,7 @@ export function AuthPageLayout({ children, heading, subheading, variant: _varian
 
         {/* Logo (mobile + as the panel's top mark). */}
         <div className="relative z-10 shrink-0 lg:hidden">
-          <BrandLogo className="h-6 sm:h-7" alt="Chippi" />
+          <BrandLogo className="h-6 sm:h-7" alt="Koala" />
         </div>
 
         {/* Form area. */}
@@ -86,32 +86,32 @@ export function AuthPageLayout({ children, heading, subheading, variant: _varian
             {showRoleSwitcher && (
               <div role="tablist" aria-label="Account type" className="mb-6 flex rounded-full bg-foreground/[0.04] p-1">
                 <Link
-                  href="/login/realtor"
+                  href="/login/rep"
                   role="tab"
-                  aria-selected={isRealtorLogin}
+                  aria-selected={isRepLogin}
                   className={cn(
                     'flex flex-1 items-center justify-center gap-2 rounded-full px-3 py-2.5 text-sm font-medium transition-all sm:py-2',
-                    isRealtorLogin
+                    isRepLogin
                       ? 'border border-border/70 bg-background text-foreground'
                       : 'text-muted-foreground hover:text-foreground',
                   )}
                 >
                   <User size={16} className="shrink-0 sm:size-[14px]" />
-                  Realtor
+                  Rep
                 </Link>
                 <Link
-                  href="/login/broker"
+                  href="/login/manager"
                   role="tab"
-                  aria-selected={isBrokerLogin}
+                  aria-selected={isManagerLogin}
                   className={cn(
                     'flex flex-1 items-center justify-center gap-2 rounded-full px-3 py-2.5 text-sm font-medium transition-all sm:py-2',
-                    isBrokerLogin
+                    isManagerLogin
                       ? 'border border-border/70 bg-background text-foreground'
                       : 'text-muted-foreground hover:text-foreground',
                   )}
                 >
                   <Building2 size={16} className="shrink-0 sm:size-[14px]" />
-                  Broker
+                  Manager
                 </Link>
               </div>
             )}

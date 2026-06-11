@@ -3,10 +3,10 @@
 /**
  * IntegrationsBeam — the payoff, rebuilt with MagicUI's AnimatedBeam.
  *
- * The realtor's whole world — inbox, calendar, and the surfaces they hand to
- * clients (intake link, tours page, public page) — beams into one agent at
+ * The rep's whole world — inbox, calendar, and the surfaces they hand to
+ * clients (intake link, demos page, public page) — beams into one agent at
  * the center. Brand-orange beams flow along each path; the hub wears the real
- * Chippi mark. On a clean Chippi canvas (not a foreign dark slab), so it sits
+ * Koala mark. On a clean Koala canvas (not a foreign dark slab), so it sits
  * inside the brand instead of next to it.
  */
 
@@ -44,7 +44,7 @@ export function IntegrationsBeam() {
   const emailRef = useRef<HTMLDivElement>(null);
   const calendarRef = useRef<HTMLDivElement>(null);
   const intakeRef = useRef<HTMLDivElement>(null);
-  const toursRef = useRef<HTMLDivElement>(null);
+  const demosRef = useRef<HTMLDivElement>(null);
   const publicRef = useRef<HTMLDivElement>(null);
 
   const BEAM = {
@@ -64,7 +64,7 @@ export function IntegrationsBeam() {
           Your whole world, wired into one agent.
         </h2>
         <p className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-muted-foreground">
-          Your inbox and calendar feed Chippi. Your intake link, tours page, and
+          Your inbox and calendar feed Koala. Your intake link, demos page, and
           public page route straight back to it. Every lead, every reply, every
           booking. one current, flowing through the center.
         </p>
@@ -74,7 +74,7 @@ export function IntegrationsBeam() {
         ref={containerRef}
         className="relative mx-auto mt-16 flex h-[420px] w-full max-w-4xl items-stretch justify-between px-2 md:px-10"
       >
-        {/* left column — the systems Chippi reads */}
+        {/* left column — the systems Koala reads */}
         <div className="flex flex-col justify-center gap-8">
           <Node ref={inboxRef} icon={Inbox} label="Inbox" />
           <Node ref={emailRef} icon={Mail} label="Email" />
@@ -91,14 +91,14 @@ export function IntegrationsBeam() {
               aria-hidden
               className="absolute inset-0 rounded-full bg-brand/5 ring-1 ring-brand/20"
             />
-            <BrandLogo className="relative h-7" alt="Chippi" />
+            <BrandLogo className="relative h-7" alt="Koala" />
           </div>
         </div>
 
-        {/* right column — the surfaces the realtor hands to clients */}
+        {/* right column — the surfaces the rep hands to clients */}
         <div className="flex flex-col justify-center gap-8">
           <Node ref={intakeRef} icon={ClipboardList} label="Intake link" />
-          <Node ref={toursRef} icon={Route} label="Tours page" />
+          <Node ref={demosRef} icon={Route} label="Demos page" />
           <Node ref={publicRef} icon={Globe} label="Public page" />
         </div>
 
@@ -107,7 +107,7 @@ export function IntegrationsBeam() {
         <AnimatedBeam containerRef={containerRef} fromRef={emailRef} toRef={hubRef} {...BEAM} delay={0.45} />
         <AnimatedBeam containerRef={containerRef} fromRef={calendarRef} toRef={hubRef} {...BEAM} delay={0.7} />
         <AnimatedBeam containerRef={containerRef} fromRef={intakeRef} toRef={hubRef} {...BEAM} delay={0.4} reverse />
-        <AnimatedBeam containerRef={containerRef} fromRef={toursRef} toRef={hubRef} {...BEAM} delay={0.9} reverse />
+        <AnimatedBeam containerRef={containerRef} fromRef={demosRef} toRef={hubRef} {...BEAM} delay={0.9} reverse />
         <AnimatedBeam containerRef={containerRef} fromRef={publicRef} toRef={hubRef} {...BEAM} delay={1.3} reverse />
       </div>
     </section>

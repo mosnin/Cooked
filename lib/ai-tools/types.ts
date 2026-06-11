@@ -14,7 +14,7 @@
  *
  * The contract is enforced at the type level, not by markdown:
  *   - `requiresApproval: true | 'maybe'` REQUIRES `summariseCall` and
- *     `rateLimit`. The realtor sees that summary in the prompt; without it
+ *     `rateLimit`. The rep sees that summary in the prompt; without it
  *     they're approving an opaque verb. The rate limit is the blast-radius
  *     cap. Both are non-optional for any tool that mutates state.
  *   - `requiresApproval: false` makes both optional — read tools are cheap.
@@ -49,7 +49,7 @@ export type RiskLevel = 'safe' | 'low' | 'high' | 'destructive';
 export interface ToolContext {
   /** Clerk userId of the caller. */
   userId: string;
-  /** The Chippi space the caller owns (or manages via broker role). */
+  /** The Koala space the caller owns (or manages via manager role). */
   space: {
     id: string;
     slug: string;
@@ -77,13 +77,13 @@ export interface ToolResult<TData = unknown> {
    * - `success`  → green: the mutation landed cleanly.
    * - `error`    → red:   the handler failed (but turn is still alive).
    * - `warning`  → amber: the tool finished but with an important caveat.
-   * - `contacts` / `deals` / `tours` / `notes` / `plain` — neutral hints
+   * - `contacts` / `deals` / `demos` / `notes` / `plain` — neutral hints
    *   for rich inline cards.
    */
   display?:
     | 'contacts'
     | 'deals'
-    | 'tours'
+    | 'demos'
     | 'notes'
     | 'properties'
     | 'availability-picker'
@@ -127,7 +127,7 @@ export interface ReadOnlyToolDefinition<TArgs = unknown, TData = unknown>
 
 /**
  * Mutating tool — pauses for user approval. `summariseCall` is REQUIRED so
- * the realtor sees what they're saying yes to. `rateLimit` is REQUIRED so
+ * the rep sees what they're saying yes to. `rateLimit` is REQUIRED so
  * we cap blast radius even if the model goes wild.
  */
 export interface MutatingToolDefinition<TArgs = unknown, TData = unknown>
@@ -136,7 +136,7 @@ export interface MutatingToolDefinition<TArgs = unknown, TData = unknown>
   /** Resolver for `'maybe'` — inspect args and decide approval inline. */
   shouldApprove?: (args: TArgs, ctx: ToolContext) => boolean;
   /**
-   * "What will happen if you approve?" Required because the realtor reads
+   * "What will happen if you approve?" Required because the rep reads
    * this line in the PermissionPromptView. A generic "Run mark_person_hot"
    * is not acceptable — the contract is domain-specific.
    */

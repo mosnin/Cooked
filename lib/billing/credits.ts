@@ -8,7 +8,7 @@
  *
  * The actual spend/grant run inside atomic Postgres functions (`spend_credits`,
  * `grant_credits`, `refund_credit_txn`) with row locking — the same race-safe
- * RPC pattern as `book_tour_atomic` / `reorder_deal`. The pure helpers below
+ * RPC pattern as `book_demo_atomic` / `reorder_deal`. The pure helpers below
  * (`availableBalance`, `planDebit`) mirror the FIFO rule for read-only balance
  * display and are unit-tested so the algorithm can't drift from the SQL.
  *

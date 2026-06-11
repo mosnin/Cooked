@@ -4,8 +4,8 @@
 -- Background: the orchestrator already records pieces of every run
 -- (AgentActivityLog rows, tool-call logger entries, cost-tracker rows,
 -- AgentDraft outcomes, the SSE event stream in Redis). The pieces don't
--- meet anywhere — answering "show me every run where schedule_tour was
--- called after tour_completed and the draft was approved" requires a
+-- meet anywhere — answering "show me every run where schedule_demo was
+-- called after demo_completed and the draft was approved" requires a
 -- multi-table join across systems with different lifetimes.
 --
 -- This table materializes the trajectory at end-of-run. Read by SQL today
@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS "AgentTrajectory" (
   "toolCalls" JSONB NOT NULL DEFAULT '[]'::jsonb,
 
   -- First 280 chars of the agent's final_output. Useful for human grep
-  -- when triaging "what did Chippi actually decide on this run."
+  -- when triaging "what did Koala actually decide on this run."
   "finalSummary" TEXT,
 
   -- Escape hatch for orchestrator-side context that doesn't fit the
@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS "AgentTrajectory" (
   "createdAt" TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- Time-window queries per realtor: "show me the last 50 runs for this space"
+-- Time-window queries per rep: "show me the last 50 runs for this space"
 CREATE INDEX IF NOT EXISTS "AgentTrajectory_spaceId_startedAt_idx"
   ON "AgentTrajectory"("spaceId", "startedAt" DESC);
 

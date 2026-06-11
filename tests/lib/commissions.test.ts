@@ -28,7 +28,7 @@ describe('computeCommission', () => {
 
   it('subtracts outgoing splits from net', () => {
     const r = computeCommission(500_000, 3, [
-      { party: 'brokerage', basis: 'percent', percentOfGci: 30, flatAmount: null, paidAt: null },
+      { party: 'team', basis: 'percent', percentOfGci: 30, flatAmount: null, paidAt: null },
       { party: 'co_agent',  basis: 'percent', percentOfGci: 20, flatAmount: null, paidAt: null },
     ]);
     // gci=15k, outgoing = 30%+20% = 50% = 7.5k, net = 7.5k
@@ -39,7 +39,7 @@ describe('computeCommission', () => {
 
   it('flat-amount splits work alongside percent ones', () => {
     const r = computeCommission(500_000, 3, [
-      { party: 'brokerage',    basis: 'percent', percentOfGci: 30, flatAmount: null, paidAt: null },
+      { party: 'team',    basis: 'percent', percentOfGci: 30, flatAmount: null, paidAt: null },
       { party: 'referral_out', basis: 'flat',    percentOfGci: null, flatAmount: 750, paidAt: null },
     ]);
     // gci=15k, outgoing = 4500 + 750 = 5250
@@ -48,7 +48,7 @@ describe('computeCommission', () => {
 
   it('treats me / referral_in as additive to net (not subtracted)', () => {
     const r = computeCommission(500_000, 3, [
-      { party: 'brokerage',   basis: 'percent', percentOfGci: 30, flatAmount: null, paidAt: null },
+      { party: 'team',   basis: 'percent', percentOfGci: 30, flatAmount: null, paidAt: null },
       { party: 'referral_in', basis: 'flat',    percentOfGci: null, flatAmount: 1_000, paidAt: null },
     ]);
     // gci=15k, outgoing=4500, mine=1000, net = gci - outgoing + mine = 15000-4500+1000 = 11500
@@ -57,7 +57,7 @@ describe('computeCommission', () => {
 
   it('tracks paid vs unpaid outgoing separately', () => {
     const r = computeCommission(500_000, 3, [
-      { party: 'brokerage', basis: 'percent', percentOfGci: 30, flatAmount: null, paidAt: new Date().toISOString() },
+      { party: 'team', basis: 'percent', percentOfGci: 30, flatAmount: null, paidAt: new Date().toISOString() },
       { party: 'co_agent',  basis: 'percent', percentOfGci: 20, flatAmount: null, paidAt: null },
     ]);
     expect(r.outgoingPaid).toBeCloseTo(4_500);

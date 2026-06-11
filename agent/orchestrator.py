@@ -5,14 +5,14 @@ An autonomous run is kicked off three ways, all landing in
   - the 4-hour cron sweep (`vercel.json` → `/api/cron/agent-sweep`),
   - the "Run now" button,
   - an event trigger drained from the Redis list (`/api/agent/trigger`
-    pushes a new lead, a tour completed, a deal stage changed, etc.).
+    pushes a new lead, a demo completed, a deal stage changed, etc.).
 
-When the trigger list is empty the prompt puts Chippi in sweep mode — look
+When the trigger list is empty the prompt puts Koala in sweep mode — look
 for stale leads / stalled deals on its own.
 
 Runs are skipped when the agent is disabled for the space or its daily
 token budget is exhausted. Every contact-facing action drafts; nothing is
-sent without the realtor's approval — that draft-only boundary is the
+sent without the rep's approval — that draft-only boundary is the
 trust model, so there is no separate pre-run approval gate.
 
 Security: spaceId is set once in AgentContext and flows through
@@ -37,7 +37,7 @@ from memory.store import format_memories_for_prompt, load_memories, prune_expire
 from schemas import AgentSettings, Space
 from security.budget import acquire_run_lock, check_budget, record_usage, release_run_lock
 from security.context import AgentContext
-from chippi import load_ai_profile, make_chippi_agent
+from axil import load_ai_profile, make_axil_agent
 from llm import (
     decide_reasoning_effort,
     extract_usage_with_cache,
@@ -65,7 +65,7 @@ logger = structlog.get_logger(__name__)
 # instead of yielding SSE we hand the caller a {message, metadata} dict so
 # the autonomous runner can publish each tool call/result to Redis. This is
 # the legibility lift: the previous autonomous path logged the whole run as
-# one opaque step, so a sweep that failed at the 4th tool gave the broker
+# one opaque step, so a sweep that failed at the 4th tool gave the manager
 # zero information about which tool failed.
 # ---------------------------------------------------------------------------
 
@@ -147,7 +147,7 @@ async def _run_with_fallback(
     # fallback would replay the whole run and re-fire them. Past that point
     # an error must surface, not retry.
     tools_ran = False
-    # Try the workspace's picked model first (whatever make_chippi_agent
+    # Try the workspace's picked model first (whatever make_axil_agent
     # built the agent with), then the OpenRouter fallback chain. The agent
     # was built with an OpenAIChatCompletionsModel object whose `.model`
     # attribute holds the original slug — fall back to the agent itself if
@@ -266,7 +266,7 @@ async def pop_triggers(space_id: str) -> list[dict]:
     except Exception as exc:
         # A Redis outage here is otherwise indistinguishable from "no
         # triggers" — the run would silently drop into sweep mode and
-        # never process the queued lead/tour/stage events. Log it.
+        # never process the queued lead/demo/stage events. Log it.
         logger.warning("pop_triggers_failed", space_id=space_id, error=str(exc)[:200])
         return []
 
@@ -276,7 +276,7 @@ async def requeue_triggers(
 ) -> None:
     """Push triggers back onto the queue when a run didn't process them.
 
-    A crashed run would otherwise drop the realtor's events silently. When
+    A crashed run would otherwise drop the rep's events silently. When
     `increment_attempts` is set (a genuine failure) a per-trigger counter
     caps retries — a poison trigger is dropped after 3 attempts rather than
     looping forever; a deferral (guardrail block) re-queues without counting.
@@ -316,7 +316,7 @@ def _build_opening_prompt(
     triggers: list[dict],
     instruction: str | None = None,
 ) -> str:
-    """Frame the autonomous run for Chippi.
+    """Frame the autonomous run for Koala.
 
     The opening message either carries a routine's standing instruction,
     lists the triggers to act on, or asks for a sweep when nothing fired.
@@ -325,7 +325,7 @@ def _build_opening_prompt(
 
     if instruction:
         triggers_block = (
-            "ROUTINE — a standing instruction the realtor saved for Chippi "
+            "ROUTINE — a standing instruction the rep saved for Koala "
             "to run on a schedule. This run exists to carry it out:\n\n"
             f'"{instruction}"\n\n'
             "Do what it asks, now. If it means reaching out to someone, "
@@ -335,7 +335,7 @@ def _build_opening_prompt(
     elif triggers:
         known = {
             "new_lead",
-            "tour_completed",
+            "demo_completed",
             "deal_stage_changed",
             "application_submitted",
             "inbound_message",
@@ -427,10 +427,10 @@ async def run_agent_for_space(
         Structured provenance for runs kicked by a Composio trigger. The
         TS dispatcher builds it and threads it through the Modal body;
         the drafts tool persists it on AgentDraft.triggerSource so the
-        inbox UI can render the "Chippi noticed because…" breadcrumb.
+        inbox UI can render the "Koala noticed because…" breadcrumb.
         None for chat / routine / sweep paths.
     """
-    # Respect the on/off switch. The realtor can pause Chippi from the
+    # Respect the on/off switch. The rep can pause Koala from the
     # header; an autonomous run must honour that.
     if not agent_settings.enabled:
         logger.bind(space_id=space.id, space_slug=space.slug).info("agent_run_skipped_disabled")
@@ -438,7 +438,7 @@ async def run_agent_for_space(
 
     # One autonomous run per space at a time. Two concurrent runs would both
     # sweep the same stale leads and draft the same follow-ups — duplicate
-    # drafts in the realtor's inbox — and would both pass the daily-budget
+    # drafts in the rep's inbox — and would both pass the daily-budget
     # check before either recorded usage, overspending the cap. The lock
     # closes both holes and auto-expires past Modal's timeout, so a crash
     # can't wedge the space.
@@ -525,7 +525,7 @@ async def _run_locked(
         ctx, "info",
         f"Starting run for '{space.name}'"
         + (" — routine" if instruction else f" — {len(triggers)} trigger(s)" if triggers else " — sweep"),
-        agent_type="chippi",
+        agent_type="koala",
     )
 
     # Load AI profile for personalization
@@ -534,7 +534,7 @@ async def _run_locked(
 
     # Autonomous runs have no "current user" — the workspace OWNER's
     # Clerk userId is the entity whose Composio connections we use.
-    # Solo realtors: this is them. Brokerages: it's the broker_owner.
+    # Solo reps: this is them. Teams: it's the manager_owner.
     # Empty list when owner has no integrations or Composio is down.
     integration_tools: list = []
     try:
@@ -544,7 +544,7 @@ async def _run_locked(
         log.warning("autonomous_load_integration_tools_failed", error=str(ie)[:200])
 
     # Workspace info — mirrors the chat path so autonomous drafts include
-    # the realtor's intake URL where it's useful.
+    # the rep's intake URL where it's useful.
     _app_url = (settings.app_url or "").rstrip("/")
     # A localhost app_url (NEXT_PUBLIC_APP_URL missing from the Modal secret)
     # must never become a customer-facing intake link in a drafted message.
@@ -561,7 +561,7 @@ async def _run_locked(
         " applying. Use the full URL verbatim; no shortening."
     ) if intake_url else None
 
-    chippi = make_chippi_agent(
+    axil = make_axil_agent(
         ai_profile_text=ai_profile,
         extra_tools=integration_tools,
         workspace_info=workspace_info,
@@ -598,12 +598,12 @@ async def _run_locked(
     final_summary: str | None = None
 
     # Per-tool stream emitter — publishes each tool call/result to Redis so
-    # the realtor's activity feed and the broker dashboard see what Chippi
+    # the rep's activity feed and the manager dashboard see what Koala
     # actually did, not just one opaque "I ran a sweep" summary. Fire-and-
     # forget so the HTTP round-trip never throttles the SDK loop.
     #
     # Also captures the tool call into the trajectory accumulator. The two
-    # paths share the same _translate_tool_event payload so the realtor's
+    # paths share the same _translate_tool_event payload so the rep's
     # live view and the offline trajectory record stay in lockstep.
     # Tasks are kept in `publish_tasks` and drained in the finally below — a
     # bare un-referenced create_task can be garbage-collected mid-flight, and
@@ -622,7 +622,7 @@ async def _run_locked(
                     "action",
                     payload["message"],
                     metadata=payload["metadata"],
-                    agent_type="chippi",
+                    agent_type="koala",
                 )
             )
         )
@@ -638,7 +638,7 @@ async def _run_locked(
         # Run with automatic fallback through cheaper models on a 429.
         # Streaming mode so on_event fires per tool call / result.
         result = await _run_with_fallback(
-            chippi,
+            axil,
             prompt,
             run_config,
             ctx,
@@ -653,11 +653,11 @@ async def _run_locked(
         if isinstance(final_output, str):
             final_summary = final_output[:280]
 
-        # `chippi.model` is an OpenAIChatCompletionsModel object (per the
+        # `axil.model` is an OpenAIChatCompletionsModel object (per the
         # x-ai/ prefix fix). Pull the slug back out for logging + trajectory
         # writes — asyncpg can't encode the SDK object into a TEXT column,
         # so every record_trajectory call silently failed before this fix.
-        model_slug = getattr(chippi.model, "model", str(chippi.model))
+        model_slug = getattr(axil.model, "model", str(axil.model))
         # Lazy import to keep llm's detect_provider in one place (and to
         # avoid pulling it at module import where the test stubs don't reach).
         from llm import detect_provider
@@ -680,7 +680,7 @@ async def _run_locked(
         await publish_event(
             ctx, "info",
             f"Run skipped — {pending} draft(s) awaiting review. Review your inbox first.",
-            agent_type="chippi",
+            agent_type="koala",
         )
         await record_trajectory(
             run_id=run_id,
@@ -699,11 +699,11 @@ async def _run_locked(
 
     except Exception as exc:
         log.exception("agent_run_failed")
-        # Re-queue so a crashed run doesn't silently drop the realtor's
+        # Re-queue so a crashed run doesn't silently drop the rep's
         # events; the per-trigger attempt cap stops a poison trigger looping.
         await requeue_triggers(space.id, triggers, increment_attempts=True)
-        await publish_event(ctx, "error", f"Agent error: {exc}", agent_type="chippi")
-        # Make the failure visible. A swallowed error leaves the realtor's
+        await publish_event(ctx, "error", f"Agent error: {exc}", agent_type="koala")
+        # Make the failure visible. A swallowed error leaves the rep's
         # activity feed blank with no signal that a run even happened.
         try:
             await save_memory(
@@ -735,7 +735,7 @@ async def _run_locked(
         )
         return
     finally:
-        # Drain the fire-and-forget publish tasks so the realtor's activity
+        # Drain the fire-and-forget publish tasks so the rep's activity
         # feed gets every tool event before the Modal container exits.
         if publish_tasks:
             await asyncio.gather(*publish_tasks, return_exceptions=True)

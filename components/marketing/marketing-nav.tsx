@@ -6,7 +6,7 @@
  * Apple-flat by design: hairline bottom border, backdrop-blurred background,
  * a row of plain-text nav links, ghost + primary pills on the right.
  *
- * The site consolidated to a handful of pages (Realtors, Brokerages,
+ * The site consolidated to a handful of pages (Reps, Teams,
  * Integrations, Pricing, Company), so the old Features/Teams hover mega-menu
  * was retired. The nav is now a flat link row — no panels, no grace timers,
  * no state machine. The best part is no part.
@@ -31,8 +31,8 @@ export function MarketingNav() {
     >
       <nav className="mx-auto max-w-7xl px-6 md:px-8 h-16 flex items-center justify-between">
         {/* Brand mark */}
-        <Link href="/" aria-label="Chippi home" className="flex items-center">
-          <BrandLogo className="h-5" alt="Chippi" />
+        <Link href="/" aria-label="Koala home" className="flex items-center">
+          <BrandLogo className="h-5" alt="Koala" />
         </Link>
 
         {/* Desktop nav row */}
@@ -56,14 +56,14 @@ export function MarketingNav() {
         {/* Right cluster — theme toggle + pills + mobile trigger */}
         <div className="flex items-center gap-2">
           <MarketingThemeToggle />
-          <Link href="/login/realtor" className={cn(GHOST_PILL, 'hidden sm:inline-flex')}>
+          <Link href="/login/rep" className={cn(GHOST_PILL, 'hidden sm:inline-flex')}>
             Log in
           </Link>
           <Link href="/demo" className={cn(GHOST_PILL, 'hidden lg:inline-flex')}>
             Book a demo
           </Link>
           <Link
-            href="/login/realtor?intent=signup"
+            href="/login/rep?intent=signup"
             className={cn(PRIMARY_PILL, 'hidden md:inline-flex')}
           >
             Start free trial

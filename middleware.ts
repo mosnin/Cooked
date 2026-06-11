@@ -7,7 +7,7 @@ const isProtectedRoute = createRouteMatcher([
   '/s/(.*)',
   '/setup(.*)',
   '/admin(.*)',
-  '/broker(.*)',
+  '/manager(.*)',
   '/invite/(.*)',
   '/join/(.*)',
   '/auth/(.*)',
@@ -56,21 +56,21 @@ const isFullyPublicRoute = createRouteMatcher([
   '/apply/(.*)',
   '/apply/b/(.*)',
   '/book/(.*)',
-  '/p/(.*)',                 // realtor public "link in bio" pages
+  '/p/(.*)',                 // rep public profile / "link in bio" pages
   '/status/(.*)',
-  '/cma/(.*)',               // tokenised CMA share pages (seller-facing report)
-  '/packet/(.*)',            // tokenised listing-packet share pages (Phase 11)
+  '/cma/(.*)',               // tokenised competitive-pricing-analysis share pages (prospect-facing report)
+  '/packet/(.*)',            // tokenised sales-packet share pages (Phase 11)
   '/api/packet/(.*)',        // token-scoped signed-URL endpoint for packet docs
   '/api/public/(.*)',
   '/api/webhooks/(.*)',
   '/api/mcp',
   '/api/mcp/oauth/token',
-  '/api/tours/book',
+  '/api/demos/book',
   '/.well-known/(.*)',
   '/invite/(.*)/sign-up(.*)',
   '/invite/(.*)/sign-in(.*)',
-  // Client portal — a fully separate end-user app (applicants / tour-bookers).
-  // Skips Clerk entirely (no ClerkProvider, no realtor session); the portal
+  // Client portal — a fully separate end-user app (applicants / demo-bookers).
+  // Skips Clerk entirely (no ClerkProvider, no rep session); the portal
   // enforces its OWN email+password session in app/clients/layout.tsx.
   '/clients',
   '/clients/(.*)',
@@ -78,7 +78,7 @@ const isFullyPublicRoute = createRouteMatcher([
   // Marketing site — every URL under app/(marketing)/ except `/` itself,
   // which keeps Clerk middleware so the homepage can detect auth users
   // and redirect them to their workspace (see `app/(marketing)/page.tsx`).
-  '/realtors',
+  '/reps',
   '/teams',
   '/teams/(.*)',
   '/features',
@@ -92,7 +92,7 @@ const isFullyPublicRoute = createRouteMatcher([
 
 // Routes that should NEVER be passed as redirect_url after login.
 // Only actual dashboard pages (/s/...) are valid post-login destinations.
-const SAFE_REDIRECT_PREFIXES = ['/s/', '/broker', '/admin', '/authorize', '/invite/', '/subscribe', '/billing-required'];
+const SAFE_REDIRECT_PREFIXES = ['/s/', '/manager', '/admin', '/authorize', '/invite/', '/subscribe', '/billing-required'];
 
 export default clerkMiddleware(async (auth, request) => {
   try {
@@ -114,15 +114,15 @@ export default clerkMiddleware(async (auth, request) => {
   // Unauth users fall through to `app/(marketing)/page.tsx` (the marketing
   // homepage). The page also re-checks auth as a fallback.
   if (pathname === '/' && session.userId) {
-    return NextResponse.redirect(new URL('/auth/redirect?intent=realtor', request.url));
+    return NextResponse.redirect(new URL('/auth/redirect?intent=rep', request.url));
   }
 
   // Authenticated users on auth pages → send to their dashboard.
   if (session.userId && (pathname.startsWith('/sign-in') || pathname.startsWith('/sign-up') || pathname.startsWith('/login'))) {
-    // Preserve intent from the page they're on (broker login → broker intent)
-    const isBrokerPath = pathname.startsWith('/login/broker');
-    const isBrokerIntent = request.nextUrl.searchParams.get('intent') === 'broker';
-    const intent = isBrokerPath || isBrokerIntent ? 'broker' : 'realtor';
+    // Preserve intent from the page they're on (manager login → manager intent)
+    const isManagerPath = pathname.startsWith('/login/manager');
+    const isManagerIntent = request.nextUrl.searchParams.get('intent') === 'manager';
+    const intent = isManagerPath || isManagerIntent ? 'manager' : 'rep';
     return NextResponse.redirect(new URL(`/auth/redirect?intent=${intent}`, request.url));
   }
 
@@ -133,7 +133,7 @@ export default clerkMiddleware(async (auth, request) => {
     const metadata = (session.sessionClaims?.publicMetadata ?? {}) as Record<string, unknown>;
     if (metadata.banned === true) {
       // Sign out banned users by redirecting to login with a message
-      const bannedUrl = new URL('/login/realtor', request.url);
+      const bannedUrl = new URL('/login/rep', request.url);
       bannedUrl.searchParams.set('reason', 'suspended');
       return NextResponse.redirect(bannedUrl);
     }
@@ -155,7 +155,7 @@ export default clerkMiddleware(async (auth, request) => {
             .eq('clerkId', session.userId)
             .maybeSingle<{ platformRole: string | null }>();
           if (dbUser?.platformRole === 'banned') {
-            const bannedUrl = new URL('/login/realtor', request.url);
+            const bannedUrl = new URL('/login/rep', request.url);
             bannedUrl.searchParams.set('reason', 'suspended');
             return NextResponse.redirect(bannedUrl);
           }
@@ -175,7 +175,7 @@ export default clerkMiddleware(async (auth, request) => {
       // redirect_url that skips the proper post-signup flow.
       // For invite pages, send to sign-up (invitees likely don't have accounts yet)
       const isInvitePath = pathname.startsWith('/invite/');
-      const authPage = isInvitePath ? '/sign-up' : '/login/realtor';
+      const authPage = isInvitePath ? '/sign-up' : '/login/rep';
       const authUrl = new URL(authPage, request.url);
       const isSafeRedirect = SAFE_REDIRECT_PREFIXES.some((p) => pathname.startsWith(p));
       if (isSafeRedirect) {
@@ -195,7 +195,7 @@ export default clerkMiddleware(async (auth, request) => {
       const metadata = (session.sessionClaims?.publicMetadata ?? {}) as Record<string, unknown>;
       const hasExplicitNonAdminRole = metadata.role !== undefined && metadata.role !== 'admin';
       if (hasExplicitNonAdminRole) {
-        return NextResponse.redirect(new URL('/auth/redirect?intent=realtor', request.url));
+        return NextResponse.redirect(new URL('/auth/redirect?intent=rep', request.url));
       }
     }
   }

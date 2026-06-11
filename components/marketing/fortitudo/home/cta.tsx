@@ -1,7 +1,7 @@
 'use client';
 
 /** CTA: fortitudo's ASCII-fielded closing card, dark base (reads on both light
- *  and dark). Chippi's locked primary action → start free trial. */
+ *  and dark). Koala's locked primary action → start free trial. */
 
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
@@ -15,7 +15,7 @@ export function HomeCTA() {
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,rgba(255,150,79,0.2),transparent_60%)]" />
         <div className="relative z-10">
           <h2 className="font-brand text-3xl text-white sm:text-4xl lg:text-5xl">
-            Bring your inbox. <span className="text-gradient-brand">Chippi does the rest.</span>
+            Bring your inbox. <span className="text-gradient-brand">Koala does the rest.</span>
           </h2>
           <p className="mx-auto mt-5 max-w-xl text-lg text-white/65">
             Seven days free, then your plan price. Connect your email and watch the busywork
@@ -23,7 +23,7 @@ export function HomeCTA() {
           </p>
           <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
             <Link
-              href="/login/realtor?intent=signup"
+              href="/login/rep?intent=signup"
               className="inline-flex items-center gap-2 rounded-full bg-brand px-8 py-3.5 text-base font-semibold text-brand-foreground shadow-lg shadow-brand/25 transition-all hover:brightness-105 hover:shadow-brand/40"
             >
               Start free trial

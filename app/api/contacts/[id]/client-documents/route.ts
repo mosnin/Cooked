@@ -6,9 +6,9 @@ import { getSignedDownloadUrl } from '@/lib/storage';
 export const runtime = 'nodejs';
 
 /**
- * GET /api/contacts/[id]/client-documents — realtor lists the documents a
+ * GET /api/contacts/[id]/client-documents — rep lists the documents a
  * client uploaded through their portal. With &id=… returns a short-lived
- * signed download URL. Realtor auth via requireContactAccess.
+ * signed download URL. Rep auth via requireContactAccess.
  */
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id: contactId } = await params;

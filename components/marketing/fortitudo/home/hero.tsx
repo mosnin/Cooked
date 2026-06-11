@@ -2,7 +2,7 @@
 
 /**
  * Home hero: fortitudo's centered ASCII hero with the rotating headline word
- * and the dot-flow status chip, carrying Chippi's copy. The ASCII drifts up on
+ * and the dot-flow status chip, carrying Koala's copy. The ASCII drifts up on
  * scroll; the content lifts + fades. Theme-aware: the hero sits on the page
  * background (white in light, near-black in dark) with the orange ASCII field
  * over it, so it reads on both modes.
@@ -88,7 +88,7 @@ export function HomeHero() {
       >
         <motion.div variants={container} initial="hidden" animate="show" className="flex flex-col items-center gap-7">
           <motion.p variants={item} className="font-brand text-xs uppercase tracking-[0.3em] text-brand">
-            Chippi // the agentic OS for real estate
+            Koala // the agentic OS for sales
           </motion.p>
 
           <motion.h1
@@ -96,7 +96,7 @@ export function HomeHero() {
             className="font-brand text-4xl leading-[1.05] tracking-tight text-foreground sm:text-6xl lg:text-7xl"
           >
             <span className="block">You close the deals.</span>
-            <span className="block">Chippi does the</span>
+            <span className="block">Koala does the</span>
             <span className="block">
               <RotatingWord
                 words={['drafting', 'scoring', 'booking', 'chasing', 'rest']}
@@ -106,14 +106,14 @@ export function HomeHero() {
           </motion.h1>
 
           <motion.p variants={item} className="max-w-2xl text-lg text-foreground/60 sm:text-xl">
-            Chippi reads your inbox, drafts replies in your voice, books the tours, and keeps
+            Koala reads your inbox, drafts replies in your voice, books the demos, and keeps
             every deal current. The busywork runs itself, and nothing leaves without your name
             on it.
           </motion.p>
 
           <motion.div variants={item} className="mt-1 flex flex-col items-center gap-4 sm:flex-row">
             <Link
-              href="/login/realtor?intent=signup"
+              href="/login/rep?intent=signup"
               className="inline-flex items-center gap-2 rounded-full bg-brand px-8 py-3.5 text-base font-semibold text-brand-foreground shadow-lg shadow-brand/25 transition-all hover:-translate-y-0.5 hover:brightness-105 hover:shadow-brand/40"
             >
               Start free trial

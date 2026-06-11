@@ -143,12 +143,12 @@ export interface PlanQuota {
 }
 
 /** Per-plan total storage quotas. Keyed by Plan.id ('free', 'pro',
- *  'premium', 'brokerage'). Unknown plan → free tier. */
+ *  'premium', 'team'). Unknown plan → free tier. */
 export const PLAN_QUOTAS: Record<string, PlanQuota> = {
   free: { totalBytes: 100 * MB, label: '100 MB' },
   pro: { totalBytes: 5 * GB, label: '5 GB' },
   premium: { totalBytes: 50 * GB, label: '50 GB' },
-  brokerage: { totalBytes: 500 * GB, label: '500 GB' },
+  team: { totalBytes: 500 * GB, label: '500 GB' },
 };
 
 export function quotaForPlan(planId: string | null | undefined): PlanQuota {

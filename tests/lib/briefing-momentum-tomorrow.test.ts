@@ -39,7 +39,7 @@ describe('tomorrow — the forward look', () => {
       renderForward({
         closingDeal: null,
         closingDealsCount: 0,
-        tourCount: 0,
+        demoCount: 0,
         followUpCount: 0,
       }),
     ).toBeNull();
@@ -49,7 +49,7 @@ describe('tomorrow — the forward look', () => {
     const line = renderForward({
       closingDeal: { name: 'Riverside' },
       closingDealsCount: 1,
-      tourCount: 0,
+      demoCount: 0,
       followUpCount: 0,
     });
     expect(line).toBe('Tomorrow: Riverside closes.');
@@ -59,41 +59,41 @@ describe('tomorrow — the forward look', () => {
     const line = renderForward({
       closingDeal: { name: 'Riverside' },
       closingDealsCount: 3,
-      tourCount: 0,
+      demoCount: 0,
       followUpCount: 0,
     });
     expect(line).toBe('Tomorrow: 3 deals close.');
   });
 
-  it('combines closing + tours under a two-piece cap', () => {
+  it('combines closing + demos under a two-piece cap', () => {
     const line = renderForward({
       closingDeal: { name: 'Riverside' },
       closingDealsCount: 1,
-      tourCount: 2,
+      demoCount: 2,
       followUpCount: 0,
     });
-    expect(line).toBe('Tomorrow: Riverside closes. 2 tours.');
+    expect(line).toBe('Tomorrow: Riverside closes. 2 demos.');
   });
 
-  it('drops follow-ups when the cap is hit — closings + tours win the slots', () => {
+  it('drops follow-ups when the cap is hit — closings + demos win the slots', () => {
     const line = renderForward({
       closingDeal: { name: 'Riverside' },
       closingDealsCount: 1,
-      tourCount: 2,
+      demoCount: 2,
       followUpCount: 5,
     });
     // Two pieces max — the follow-up count would push the sentence to three.
-    expect(line).toBe('Tomorrow: Riverside closes. 2 tours.');
+    expect(line).toBe('Tomorrow: Riverside closes. 2 demos.');
   });
 
-  it('singularizes tour + follow-up correctly', () => {
+  it('singularizes demo + follow-up correctly', () => {
     expect(
       renderForward({
         closingDeal: null,
         closingDealsCount: 0,
-        tourCount: 1,
+        demoCount: 1,
         followUpCount: 1,
       }),
-    ).toBe('Tomorrow: 1 tour. 1 follow-up due.');
+    ).toBe('Tomorrow: 1 demo. 1 follow-up due.');
   });
 });

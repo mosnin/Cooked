@@ -1,11 +1,11 @@
 /**
  * TypeScript in-process chat runtime — the PRIMARY chat backend.
  *
- * Runs the realtor-facing turn in-process on `@openai/agents` against the
+ * Runs the rep-facing turn in-process on `@openai/agents` against the
  * app-wide LLM client (`getLLMClient()`, OpenRouter-first) via chat
  * completions — no Modal cold start. This is the default; Modal is reached
  * only for deep / swarm work spawned via `delegate_task`, or when
- * `CHIPPI_CHAT_RUNTIME=modal` proxies the whole turn to the sandbox. See
+ * `KOALA_CHAT_RUNTIME=modal` proxies the whole turn to the sandbox. See
  * `runtime-flag.ts`.
  *
  * Two entry points:
@@ -14,7 +14,7 @@
  *     tools converted via `toSdkTool`, calls `run(agent, input, { stream:
  *     true })`, returns the SDK's stream + the result handle so the route
  *     can persist after the stream closes.
- *   - `resumeChatTurn` — load a paused run, apply the realtor's approval
+ *   - `resumeChatTurn` — load a paused run, apply the rep's approval
  *     decision, continue the run from where it paused.
  *
  * What we do NOT do here:
@@ -53,12 +53,12 @@ import { logger } from '@/lib/logger';
  * OpenRouter (and OpenAI direct) pre-charge against credit balance based
  * on MAX possible output, not actual usage. With maxTokens unset,
  * providers reserve the model's full ceiling (currently 65,536 for most
- * modern models). A realtor with modest credit can't make a single call
+ * modern models). A rep with modest credit can't make a single call
  * because the pre-charge alone exceeds it — exact symptom: HTTP 402
  * "requested up to 65536 tokens, but can only afford X."
  *
- * 4096 is ~4× the typical Chippi turn (~1k tokens) — headroom for
- * long-form drafts (offer letters, post-tour packets) while keeping the
+ * 4096 is ~4× the typical Koala turn (~1k tokens) — headroom for
+ * long-form drafts (offer letters, post-demo packets) while keeping the
  * pre-charge low enough that everyday usage stays under a cent per turn.
  */
 const DEFAULT_MAX_TOKENS = 4_096;
@@ -86,7 +86,7 @@ const MAX_TURNS_PER_TURN = 8;
  * produced the state for deserialization.
  *
  * Optional `integrationTools` carry the Composio-loaded SDK tools for
- * whichever third-party apps the realtor has connected. Loaded dynamically
+ * whichever third-party apps the rep has connected. Loaded dynamically
  * by `loadIntegrationTools` below; passed in here so this function stays
  * synchronous and pure for the resume path.
  */
@@ -102,7 +102,7 @@ export function buildChatAgent(
   const domainTools = ALL_TOOLS.map((t: ToolDefinition) => toSdkTool(t, ctx));
 
   // The model every agent in this turn runs on. Either an explicit override
-  // (tests / A-B), or the realtor's workspace model resolved to the active
+  // (tests / A-B), or the rep's workspace model resolved to the active
   // provider via getAgentModel(). One instance, shared by the top-level chat
   // agent AND the skill sub-agents below — so they all run on OpenRouter (or
   // the configured fallback), never the SDK's keyless default OpenAI client.
@@ -150,12 +150,12 @@ export function buildChatAgent(
     }),
   ];
 
-  // Personalized prompt is async — it loads a snapshot of the realtor's
+  // Personalized prompt is async — it loads a snapshot of the rep's
   // pipeline + connected apps. Callers that already awaited it pass it
   // through `opts.instructions`. The fallback path uses the synchronous
   // static prompt so resume / tests / failure modes still work.
   return new Agent({
-    name: 'Chippi',
+    name: 'Koala',
     instructions: opts.instructions ?? buildSystemPrompt(ctx),
     tools: [delegateTool, ...domainTools, ...skillTools, ...(opts.integrationTools ?? [])],
     model: agentModel,
@@ -169,7 +169,7 @@ export function buildChatAgent(
 }
 
 /**
- * Resolve the Composio tools the realtor's chat should see this turn.
+ * Resolve the Composio tools the rep's chat should see this turn.
  * Loaded fresh per request — connect/disconnect changes take effect on
  * the next message without any cache invalidation.
  *
@@ -185,11 +185,11 @@ export function buildChatAgent(
  * takes down all chat — wrong tradeoff.
  *
  * Reconcile-on-error: per-toolkit build so a single dead connection (the
- * realtor revoked our OAuth grant on the provider's side and our row is
+ * rep revoked our OAuth grant on the provider's side and our row is
  * still 'active') doesn't poison the entire batch. When the SDK throws a
  * `ComposioConnectedAccountNotFoundError` or an HTTP 401/403 on a
  * specific toolkit, we flip that row to 'expired' before continuing.
- * Next time the realtor opens /integrations, they see amber + Reconnect
+ * Next time the rep opens /integrations, they see amber + Reconnect
  * — no toast, no surprise, just truth on the page.
  */
 export async function loadIntegrationTools(ctx: ToolContext): Promise<SdkTool[]> {
@@ -203,12 +203,12 @@ export interface IntegrationLoadResult {
   tools: SdkTool[];
   /** Toolkits whose tools are attached THIS turn. */
   liveToolkits: string[];
-  /** Toolkits the realtor has connected but whose tools could not be
+  /** Toolkits the rep has connected but whose tools could not be
    *  loaded this turn for a TRANSIENT reason (Composio down, server key
    *  missing). Auth-dead connections are excluded — those flip to
    *  'expired' and stop being "connected". The prompt tells the model to
    *  describe these as temporarily unavailable, NOT as disconnected —
-   *  "I don't have your Gmail" to a realtor who connected Gmail is the
+   *  "I don't have your Gmail" to a rep who connected Gmail is the
    *  single most-reported integration bug. */
   unavailableToolkits: string[];
 }
@@ -229,9 +229,9 @@ export async function loadIntegrationToolsDetailed(
   }
   if (toolkits.length === 0) return { tools: [], liveToolkits: [], unavailableToolkits: [] };
 
-  // The realtor HAS connections but the server can't reach Composio at
+  // The rep HAS connections but the server can't reach Composio at
   // all (key unset). Silent-empty here is what made a misconfigured
-  // deploy read as "Chippi lost my integrations" — degrade loudly instead.
+  // deploy read as "Koala lost my integrations" — degrade loudly instead.
   if (!composioConfigured()) {
     logger.error(
       '[sdk-chat] COMPOSIO_API_KEY is not configured but this workspace has connected toolkits — integration tools are unavailable for every turn until it is set',
@@ -349,13 +349,13 @@ export interface RunChatTurnInput {
    * de-duping the just-saved user message before passing it in.
    *
    * The agent without history is the agent without memory of what the
-   * realtor just said — every turn becomes a fresh start. Passing history
+   * rep just said — every turn becomes a fresh start. Passing history
    * here is the difference between "Sam who?" and "right, Sam who you
    * mentioned two messages ago."
    */
   history?: ChatHistoryRow[];
   /**
-   * The realtor's workspace chat model slug (e.g. `x-ai/grok-4.3`). Resolved
+   * The rep's workspace chat model slug (e.g. `x-ai/grok-4.3`). Resolved
    * to the active provider via `getAgentModel()`. When omitted, the default
    * chat model is used.
    */
@@ -429,7 +429,7 @@ export interface ResumeChatTurnInput {
   ctx: ToolContext;
   /** Serialized RunState from `AgentPausedRun.runState`. */
   serializedState: string;
-  /** The realtor's decision for the pending approval. */
+  /** The rep's decision for the pending approval. */
   decision: ApprovalDecision;
   /**
    * The SDK approval-item identifier we apply the decision to. The chat

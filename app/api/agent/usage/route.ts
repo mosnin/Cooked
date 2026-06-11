@@ -11,7 +11,7 @@
  * The per-provider breakdown comes from the last 7 days of ChatUsage
  * rows — one day is too noisy (a single big turn distorts everything),
  * 30 days hides recent regressions. Seven days is the trailing window
- * the realtor mentally lives in.
+ * the rep mentally lives in.
  */
 
 import { NextResponse } from 'next/server';
@@ -100,7 +100,7 @@ export async function GET() {
       : 0;
     providers.push(r);
   }
-  // Largest spend first — the realtor's eye lands on what matters.
+  // Largest spend first — the rep's eye lands on what matters.
   providers.sort((a, b) => (b.inputTokens + b.outputTokens) - (a.inputTokens + a.outputTokens));
 
   const cacheHitRate = totalInput > 0

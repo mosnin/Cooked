@@ -1,4 +1,4 @@
--- Supabase schema for Real Estate CRM
+-- Supabase schema for Koala Sales CRM
 -- Run this in Supabase SQL Editor (Dashboard → SQL Editor → New query)
 
 -- ============================================================
@@ -25,10 +25,10 @@ CREATE TABLE IF NOT EXISTS "User" (
   "onboardingCompletedAt" timestamptz,
   onboard                 boolean NOT NULL DEFAULT false,
   "platformRole"          text NOT NULL DEFAULT 'user' CHECK ("platformRole" IN ('user', 'admin', 'banned')),
-  "accountType"           text NOT NULL DEFAULT 'realtor' CHECK ("accountType" IN ('realtor', 'broker_only', 'both'))
+  "accountType"           text NOT NULL DEFAULT 'rep' CHECK ("accountType" IN ('rep', 'manager_only', 'both'))
 );
 
-CREATE TABLE IF NOT EXISTS "Brokerage" (
+CREATE TABLE IF NOT EXISTS "Team" (
   id            text PRIMARY KEY DEFAULT gen_random_uuid()::text,
   name          text NOT NULL,
   "ownerId"     text NOT NULL REFERENCES "User"(id) ON DELETE RESTRICT,
@@ -36,11 +36,11 @@ CREATE TABLE IF NOT EXISTS "Brokerage" (
   "websiteUrl"  text,
   "logoUrl"     text,
   "joinCode"    text UNIQUE,
-  "brokerageFormConfig" jsonb DEFAULT NULL,
-  "brokerageRentalFormConfig" jsonb DEFAULT NULL,
-  "brokerageBuyerFormConfig" jsonb DEFAULT NULL,
-  "brokerageRentalScoringModel" jsonb DEFAULT NULL,
-  "brokerageBuyerScoringModel" jsonb DEFAULT NULL,
+  "teamFormConfig" jsonb DEFAULT NULL,
+  "teamRentalFormConfig" jsonb DEFAULT NULL,
+  "teamBuyerFormConfig" jsonb DEFAULT NULL,
+  "teamRentalScoringModel" jsonb DEFAULT NULL,
+  "teamBuyerScoringModel" jsonb DEFAULT NULL,
   "createdAt"   timestamptz NOT NULL DEFAULT now()
 );
 
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS "Space" (
   emoji         text NOT NULL DEFAULT '🏠',
   "createdAt"   timestamptz NOT NULL DEFAULT now(),
   "ownerId"     text UNIQUE NOT NULL REFERENCES "User"(id) ON DELETE CASCADE,
-  "brokerageId" text REFERENCES "Brokerage"(id) ON DELETE SET NULL,
+  "teamId" text REFERENCES "Team"(id) ON DELETE SET NULL,
   "stripeCustomerId"          text,
   "stripeSubscriptionId"      text,
   "stripeSubscriptionStatus"  text NOT NULL DEFAULT 'inactive'
@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS "SpaceSetting" (
   notifications       boolean NOT NULL DEFAULT true,
   "smsNotifications"  boolean NOT NULL DEFAULT false,
   "notifyNewLeads"    boolean NOT NULL DEFAULT true,
-  "notifyTourBookings" boolean NOT NULL DEFAULT true,
+  "notifyDemoBookings" boolean NOT NULL DEFAULT true,
   "notifyNewDeals"    boolean NOT NULL DEFAULT true,
   "notifyFollowUps"   boolean NOT NULL DEFAULT true,
   timezone            text NOT NULL DEFAULT 'America/New_York',
@@ -88,21 +88,21 @@ CREATE TABLE IF NOT EXISTS "SpaceSetting" (
   "intakeFont"        text DEFAULT 'system'
     CHECK ("intakeFont" IN ('system', 'serif', 'mono')),
   "intakeFooterLinks" jsonb DEFAULT '[]',
-  "tourDuration"         integer NOT NULL DEFAULT 30,
-  "tourStartHour"        integer NOT NULL DEFAULT 9,
-  "tourEndHour"          integer NOT NULL DEFAULT 17,
-  "tourDaysAvailable"    integer[] NOT NULL DEFAULT '{1,2,3,4,5}',
-  "tourBookingPageTitle" text,
-  "tourBookingPageIntro" text,
-  "tourBufferMinutes"    integer NOT NULL DEFAULT 0,
-  "tourBlockedDates"     text[] NOT NULL DEFAULT '{}',
+  "demoDuration"         integer NOT NULL DEFAULT 30,
+  "demoStartHour"        integer NOT NULL DEFAULT 9,
+  "demoEndHour"          integer NOT NULL DEFAULT 17,
+  "demoDaysAvailable"    integer[] NOT NULL DEFAULT '{1,2,3,4,5}',
+  "demoBookingPageTitle" text,
+  "demoBookingPageIntro" text,
+  "demoBufferMinutes"    integer NOT NULL DEFAULT 0,
+  "demoBlockedDates"     text[] NOT NULL DEFAULT '{}',
   "privacyPolicyUrl"     text,
   "consentCheckboxLabel" text,
   "formConfig"           jsonb DEFAULT NULL,
   "rentalFormConfig"     jsonb DEFAULT NULL,
   "buyerFormConfig"      jsonb DEFAULT NULL,
   "formConfigSource"     text NOT NULL DEFAULT 'legacy'
-    CHECK ("formConfigSource" IN ('custom', 'brokerage', 'legacy')),
+    CHECK ("formConfigSource" IN ('custom', 'team', 'legacy')),
   "rentalScoringModel"   jsonb DEFAULT NULL,
   "buyerScoringModel"    jsonb DEFAULT NULL,
   "trackingPixels"       jsonb
@@ -131,7 +131,7 @@ CREATE TABLE IF NOT EXISTS "Contact" (
   "followUpAt"            timestamptz,
   "lastContactedAt"       timestamptz,
   "sourceLabel"           text,
-  "brokerageId"           text REFERENCES "Brokerage"(id) ON DELETE SET NULL,
+  "teamId"           text REFERENCES "Team"(id) ON DELETE SET NULL,
   "stageChangedAt"        timestamptz,
   "applicationRef"        text,
   "applicationStatus"     text,
@@ -155,13 +155,13 @@ CREATE TABLE IF NOT EXISTS "DealStage" (
   position    integer NOT NULL DEFAULT 0
 );
 
--- TourPropertyProfile must be defined before Tour (Tour.propertyProfileId FK)
-CREATE TABLE IF NOT EXISTS "TourPropertyProfile" (
+-- DemoPropertyProfile must be defined before Demo (Demo.propertyProfileId FK)
+CREATE TABLE IF NOT EXISTS "DemoPropertyProfile" (
   id              text PRIMARY KEY DEFAULT gen_random_uuid()::text,
   "spaceId"       text NOT NULL REFERENCES "Space"(id) ON DELETE CASCADE,
   name            text NOT NULL,
   address         text,
-  "tourDuration"  integer NOT NULL DEFAULT 30,
+  "demoDuration"  integer NOT NULL DEFAULT 30,
   "startHour"     integer NOT NULL DEFAULT 9,
   "endHour"       integer NOT NULL DEFAULT 17,
   "daysAvailable" integer[] NOT NULL DEFAULT '{1,2,3,4,5}',
@@ -171,12 +171,12 @@ CREATE TABLE IF NOT EXISTS "TourPropertyProfile" (
   "updatedAt"     timestamptz NOT NULL DEFAULT now()
 );
 
--- Tour must be defined before Deal (Deal.sourceTourId FK)
-CREATE TABLE IF NOT EXISTS "Tour" (
+-- Demo must be defined before Deal (Deal.sourceDemoId FK)
+CREATE TABLE IF NOT EXISTS "Demo" (
   id              text PRIMARY KEY DEFAULT gen_random_uuid()::text,
   "spaceId"       text NOT NULL REFERENCES "Space"(id) ON DELETE CASCADE,
   "contactId"     text REFERENCES "Contact"(id) ON DELETE SET NULL,
-  "propertyProfileId" text REFERENCES "TourPropertyProfile"(id) ON DELETE SET NULL,
+  "propertyProfileId" text REFERENCES "DemoPropertyProfile"(id) ON DELETE SET NULL,
   "guestName"     text NOT NULL,
   "guestEmail"    text NOT NULL,
   "guestPhone"    text,
@@ -205,7 +205,7 @@ CREATE TABLE IF NOT EXISTS "Deal" (
   position    integer NOT NULL DEFAULT 0,
   status      text NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'won', 'lost', 'on_hold')),
   "followUpAt" timestamptz,
-  "sourceTourId" text REFERENCES "Tour"(id) ON DELETE SET NULL,
+  "sourceDemoId" text REFERENCES "Demo"(id) ON DELETE SET NULL,
   "commissionRate" NUMERIC(5,2) DEFAULT NULL,
   "probability"    INTEGER DEFAULT NULL CHECK ("probability" >= 0 AND "probability" <= 100),
   "milestones"     JSONB DEFAULT '[]'::jsonb,
@@ -240,33 +240,33 @@ CREATE TABLE IF NOT EXISTS "Message" (
   "createdAt"      timestamptz NOT NULL DEFAULT now()
 );
 
--- Broker Chippi conversations live in their OWN tables, keyed by brokerageId
--- (NOT spaceId), so brokerage-private chat is structurally isolated from the
--- realtor "Conversation"/"Message" tables. See migration
--- 20260616000000_broker_chat_separate_storage.sql.
-CREATE TABLE IF NOT EXISTS "BrokerConversation" (
+-- Manager Koala conversations live in their OWN tables, keyed by teamId
+-- (NOT spaceId), so team-private chat is structurally isolated from the
+-- rep "Conversation"/"Message" tables. See migration
+-- 20260616000000_manager_chat_separate_storage.sql.
+CREATE TABLE IF NOT EXISTS "ManagerConversation" (
   "id"          text PRIMARY KEY,
-  "brokerageId" text NOT NULL REFERENCES "Brokerage"(id) ON DELETE CASCADE,
+  "teamId" text NOT NULL REFERENCES "Team"(id) ON DELETE CASCADE,
   "title"       text NOT NULL DEFAULT 'New conversation',
   "createdAt"   timestamptz NOT NULL DEFAULT now(),
   "updatedAt"   timestamptz NOT NULL DEFAULT now()
 );
-CREATE INDEX IF NOT EXISTS "BrokerConversation_brokerageId_updatedAt_idx"
-  ON "BrokerConversation" ("brokerageId", "updatedAt" DESC);
+CREATE INDEX IF NOT EXISTS "ManagerConversation_teamId_updatedAt_idx"
+  ON "ManagerConversation" ("teamId", "updatedAt" DESC);
 
-CREATE TABLE IF NOT EXISTS "BrokerMessage" (
+CREATE TABLE IF NOT EXISTS "ManagerMessage" (
   "id"             text PRIMARY KEY,
-  "brokerageId"    text NOT NULL REFERENCES "Brokerage"(id) ON DELETE CASCADE,
-  "conversationId" text NOT NULL REFERENCES "BrokerConversation"(id) ON DELETE CASCADE,
+  "teamId"    text NOT NULL REFERENCES "Team"(id) ON DELETE CASCADE,
+  "conversationId" text NOT NULL REFERENCES "ManagerConversation"(id) ON DELETE CASCADE,
   "role"           text NOT NULL,
   "content"        text NOT NULL DEFAULT '',
   "blocks"         jsonb,
   "createdAt"      timestamptz NOT NULL DEFAULT now()
 );
-CREATE INDEX IF NOT EXISTS "BrokerMessage_conversationId_createdAt_idx"
-  ON "BrokerMessage" ("conversationId", "createdAt");
+CREATE INDEX IF NOT EXISTS "ManagerMessage_conversationId_createdAt_idx"
+  ON "ManagerMessage" ("conversationId", "createdAt");
 
--- Chat attachments: files the realtor uploads via the prompt box.
+-- Chat attachments: files the rep uploads via the prompt box.
 -- Owned by spaceId; the cowork agent reads them via the read_attachment tool.
 CREATE TABLE IF NOT EXISTS "Attachment" (
   id              text PRIMARY KEY,
@@ -289,33 +289,33 @@ CREATE INDEX IF NOT EXISTS "Attachment_conversationId_idx"
   ON "Attachment" ("conversationId")
   WHERE "conversationId" IS NOT NULL;
 
-CREATE TABLE IF NOT EXISTS "BrokerageMembership" (
+CREATE TABLE IF NOT EXISTS "TeamMembership" (
   id              text PRIMARY KEY DEFAULT gen_random_uuid()::text,
-  "brokerageId"   text NOT NULL REFERENCES "Brokerage"(id) ON DELETE CASCADE,
+  "teamId"   text NOT NULL REFERENCES "Team"(id) ON DELETE CASCADE,
   "userId"        text NOT NULL REFERENCES "User"(id) ON DELETE CASCADE,
-  role            text NOT NULL CHECK (role IN ('broker_owner', 'broker_admin', 'realtor_member')),
+  role            text NOT NULL CHECK (role IN ('manager_owner', 'manager_admin', 'rep_member')),
   "invitedById"   text REFERENCES "User"(id) ON DELETE SET NULL,
   "createdAt"     timestamptz NOT NULL DEFAULT now(),
-  -- Per-member broker profile (20260615000000). Owner/admin customize their
-  -- own profile within the brokerage; mirror of the realtor profile fields
+  -- Per-member manager profile (20260615000000). Owner/admin customize their
+  -- own profile within the team; mirror of the rep profile fields
   -- on SpaceSetting. Gated to the member themselves in the API layer.
   "displayName"   text,
   "title"         text,
   bio             text,
   "photoUrl"      text,
   phone           text,
-  UNIQUE ("brokerageId", "userId")
+  UNIQUE ("teamId", "userId")
 );
 
--- Brokerage-level integrations via Composio (20260615000000). The brokerage
+-- Team-level integrations via Composio (20260615000000). The team
 -- analogue of "IntegrationConnection": each owner/admin connects their OWN
--- third-party accounts at the brokerage level. Keyed on
--- (brokerageId, userId, toolkit). Owner/admin only — realtor_member is blocked
--- in the API layer (requireBroker / canEditSettings). Composio holds the OAuth
+-- third-party accounts at the team level. Keyed on
+-- (teamId, userId, toolkit). Owner/admin only — rep_member is blocked
+-- in the API layer (requireManager / canEditSettings). Composio holds the OAuth
 -- tokens; this table holds the pointer + status + audit.
-CREATE TABLE IF NOT EXISTS "BrokerageIntegrationConnection" (
+CREATE TABLE IF NOT EXISTS "TeamIntegrationConnection" (
   "id"                   text PRIMARY KEY DEFAULT gen_random_uuid()::text,
-  "brokerageId"          text NOT NULL REFERENCES "Brokerage"(id) ON DELETE CASCADE,
+  "teamId"          text NOT NULL REFERENCES "Team"(id) ON DELETE CASCADE,
   "userId"               text NOT NULL,                    -- Clerk userId of the admin/owner who connected
   "toolkit"              text NOT NULL,                    -- composio toolkit slug, e.g. 'gmail'
   "composioConnectionId" text NOT NULL,                    -- the connected-account id Composio returns
@@ -328,23 +328,23 @@ CREATE TABLE IF NOT EXISTS "BrokerageIntegrationConnection" (
   "updatedAt"            timestamptz NOT NULL DEFAULT now()
 );
 
-CREATE UNIQUE INDEX IF NOT EXISTS "BrokerageIntegrationConnection_active_unique"
-  ON "BrokerageIntegrationConnection" ("brokerageId", "userId", "toolkit")
+CREATE UNIQUE INDEX IF NOT EXISTS "TeamIntegrationConnection_active_unique"
+  ON "TeamIntegrationConnection" ("teamId", "userId", "toolkit")
   WHERE "status" = 'active';
 
-CREATE INDEX IF NOT EXISTS "BrokerageIntegrationConnection_brokerageId_idx"
-  ON "BrokerageIntegrationConnection" ("brokerageId", "status");
+CREATE INDEX IF NOT EXISTS "TeamIntegrationConnection_teamId_idx"
+  ON "TeamIntegrationConnection" ("teamId", "status");
 
-CREATE INDEX IF NOT EXISTS "BrokerageIntegrationConnection_userId_idx"
-  ON "BrokerageIntegrationConnection" ("userId");
+CREATE INDEX IF NOT EXISTS "TeamIntegrationConnection_userId_idx"
+  ON "TeamIntegrationConnection" ("userId");
 
-ALTER TABLE "BrokerageIntegrationConnection" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "TeamIntegrationConnection" ENABLE ROW LEVEL SECURITY;
 
 CREATE TABLE IF NOT EXISTS "Invitation" (
   id              text PRIMARY KEY DEFAULT gen_random_uuid()::text,
-  "brokerageId"   text NOT NULL REFERENCES "Brokerage"(id) ON DELETE CASCADE,
+  "teamId"   text NOT NULL REFERENCES "Team"(id) ON DELETE CASCADE,
   email           text NOT NULL,
-  "roleToAssign"  text NOT NULL CHECK ("roleToAssign" IN ('broker_admin', 'realtor_member')),
+  "roleToAssign"  text NOT NULL CHECK ("roleToAssign" IN ('manager_admin', 'rep_member')),
   token           text UNIQUE NOT NULL DEFAULT encode(gen_random_bytes(32), 'hex'),
   status          text NOT NULL DEFAULT 'pending'
                     CHECK (status IN ('pending', 'accepted', 'expired', 'cancelled')),
@@ -364,9 +364,9 @@ CREATE TABLE IF NOT EXISTS "GoogleCalendarToken" (
   "updatedAt"     timestamptz NOT NULL DEFAULT now()
 );
 
-CREATE TABLE IF NOT EXISTS "BrokerNotification" (
+CREATE TABLE IF NOT EXISTS "ManagerNotification" (
   id              text PRIMARY KEY DEFAULT gen_random_uuid()::text,
-  "brokerageId"   text NOT NULL REFERENCES "Brokerage"(id) ON DELETE CASCADE,
+  "teamId"   text NOT NULL REFERENCES "Team"(id) ON DELETE CASCADE,
   type            text NOT NULL,
   title           text NOT NULL,
   body            text,
@@ -388,10 +388,10 @@ CREATE TABLE IF NOT EXISTS "AuditLog" (
   "createdAt"   timestamptz NOT NULL DEFAULT now()
 );
 
-CREATE TABLE IF NOT EXISTS "TourAvailabilityOverride" (
+CREATE TABLE IF NOT EXISTS "DemoAvailabilityOverride" (
   id                  text PRIMARY KEY DEFAULT gen_random_uuid()::text,
   "spaceId"           text NOT NULL REFERENCES "Space"(id) ON DELETE CASCADE,
-  "propertyProfileId" text REFERENCES "TourPropertyProfile"(id) ON DELETE CASCADE,
+  "propertyProfileId" text REFERENCES "DemoPropertyProfile"(id) ON DELETE CASCADE,
   date                date NOT NULL,
   "isBlocked"         boolean NOT NULL DEFAULT false,
   "startHour"         integer,
@@ -403,10 +403,10 @@ CREATE TABLE IF NOT EXISTS "TourAvailabilityOverride" (
   "createdAt"         timestamptz NOT NULL DEFAULT now()
 );
 
-CREATE TABLE IF NOT EXISTS "TourWaitlist" (
+CREATE TABLE IF NOT EXISTS "DemoWaitlist" (
   id              text PRIMARY KEY DEFAULT gen_random_uuid()::text,
   "spaceId"       text NOT NULL REFERENCES "Space"(id) ON DELETE CASCADE,
-  "propertyProfileId" text REFERENCES "TourPropertyProfile"(id) ON DELETE SET NULL,
+  "propertyProfileId" text REFERENCES "DemoPropertyProfile"(id) ON DELETE SET NULL,
   "guestName"     text NOT NULL,
   "guestEmail"    text NOT NULL,
   "guestPhone"    text,
@@ -460,7 +460,7 @@ CREATE TABLE IF NOT EXISTS "ApplicationMessage" (
   id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   "contactId" text NOT NULL REFERENCES "Contact"(id) ON DELETE CASCADE,
   "spaceId"   text NOT NULL REFERENCES "Space"(id) ON DELETE CASCADE,
-  "senderType" text NOT NULL CHECK ("senderType" IN ('applicant', 'realtor')),
+  "senderType" text NOT NULL CHECK ("senderType" IN ('applicant', 'rep')),
   content     text NOT NULL CHECK (char_length(content) <= 2000),
   "readAt"    timestamptz,
   "createdAt" timestamptz NOT NULL DEFAULT now()
@@ -498,32 +498,32 @@ ALTER TABLE "Contact" ADD COLUMN IF NOT EXISTS "consentTimestamp"      timestamp
 ALTER TABLE "Contact" ADD COLUMN IF NOT EXISTS "consentIp"             text;
 ALTER TABLE "Contact" ADD COLUMN IF NOT EXISTS "consentPrivacyPolicyUrl" text;
 
-ALTER TABLE "Tour" ADD COLUMN IF NOT EXISTS "manageToken"       text;
-ALTER TABLE "Tour" ADD COLUMN IF NOT EXISTS "propertyProfileId" text REFERENCES "TourPropertyProfile"(id) ON DELETE SET NULL;
+ALTER TABLE "Demo" ADD COLUMN IF NOT EXISTS "manageToken"       text;
+ALTER TABLE "Demo" ADD COLUMN IF NOT EXISTS "propertyProfileId" text REFERENCES "DemoPropertyProfile"(id) ON DELETE SET NULL;
 
-ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "accountType" text NOT NULL DEFAULT 'realtor' CHECK ("accountType" IN ('realtor', 'broker_only', 'both'));
+ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "accountType" text NOT NULL DEFAULT 'rep' CHECK ("accountType" IN ('rep', 'manager_only', 'both'));
 
-ALTER TABLE "Space" ADD COLUMN IF NOT EXISTS "brokerageId" text REFERENCES "Brokerage"(id) ON DELETE SET NULL;
+ALTER TABLE "Space" ADD COLUMN IF NOT EXISTS "teamId" text REFERENCES "Team"(id) ON DELETE SET NULL;
 
-ALTER TABLE "Brokerage" ADD COLUMN IF NOT EXISTS "joinCode"   text UNIQUE;
-ALTER TABLE "Brokerage" ADD COLUMN IF NOT EXISTS "logoUrl"    text;
-ALTER TABLE "Brokerage" ADD COLUMN IF NOT EXISTS "websiteUrl" text;
+ALTER TABLE "Team" ADD COLUMN IF NOT EXISTS "joinCode"   text UNIQUE;
+ALTER TABLE "Team" ADD COLUMN IF NOT EXISTS "logoUrl"    text;
+ALTER TABLE "Team" ADD COLUMN IF NOT EXISTS "websiteUrl" text;
 
-ALTER TABLE "SpaceSetting" ADD COLUMN IF NOT EXISTS "tourDuration"         integer NOT NULL DEFAULT 30;
-ALTER TABLE "SpaceSetting" ADD COLUMN IF NOT EXISTS "tourStartHour"        integer NOT NULL DEFAULT 9;
-ALTER TABLE "SpaceSetting" ADD COLUMN IF NOT EXISTS "tourEndHour"          integer NOT NULL DEFAULT 17;
-ALTER TABLE "SpaceSetting" ADD COLUMN IF NOT EXISTS "tourDaysAvailable"    integer[] NOT NULL DEFAULT '{1,2,3,4,5}';
-ALTER TABLE "SpaceSetting" ADD COLUMN IF NOT EXISTS "tourBookingPageTitle" text;
-ALTER TABLE "SpaceSetting" ADD COLUMN IF NOT EXISTS "tourBookingPageIntro" text;
-ALTER TABLE "SpaceSetting" ADD COLUMN IF NOT EXISTS "tourBufferMinutes"    integer NOT NULL DEFAULT 0;
-ALTER TABLE "SpaceSetting" ADD COLUMN IF NOT EXISTS "tourBlockedDates"     text[] NOT NULL DEFAULT '{}';
+ALTER TABLE "SpaceSetting" ADD COLUMN IF NOT EXISTS "demoDuration"         integer NOT NULL DEFAULT 30;
+ALTER TABLE "SpaceSetting" ADD COLUMN IF NOT EXISTS "demoStartHour"        integer NOT NULL DEFAULT 9;
+ALTER TABLE "SpaceSetting" ADD COLUMN IF NOT EXISTS "demoEndHour"          integer NOT NULL DEFAULT 17;
+ALTER TABLE "SpaceSetting" ADD COLUMN IF NOT EXISTS "demoDaysAvailable"    integer[] NOT NULL DEFAULT '{1,2,3,4,5}';
+ALTER TABLE "SpaceSetting" ADD COLUMN IF NOT EXISTS "demoBookingPageTitle" text;
+ALTER TABLE "SpaceSetting" ADD COLUMN IF NOT EXISTS "demoBookingPageIntro" text;
+ALTER TABLE "SpaceSetting" ADD COLUMN IF NOT EXISTS "demoBufferMinutes"    integer NOT NULL DEFAULT 0;
+ALTER TABLE "SpaceSetting" ADD COLUMN IF NOT EXISTS "demoBlockedDates"     text[] NOT NULL DEFAULT '{}';
 ALTER TABLE "SpaceSetting" ADD COLUMN IF NOT EXISTS "anthropicApiKey"      text;
 ALTER TABLE "SpaceSetting" ADD COLUMN IF NOT EXISTS "businessName"         text;
 ALTER TABLE "SpaceSetting" ADD COLUMN IF NOT EXISTS "intakePageTitle"      text;
 ALTER TABLE "SpaceSetting" ADD COLUMN IF NOT EXISTS "intakePageIntro"      text;
 ALTER TABLE "SpaceSetting" ADD COLUMN IF NOT EXISTS "smsNotifications"    boolean NOT NULL DEFAULT false;
 ALTER TABLE "SpaceSetting" ADD COLUMN IF NOT EXISTS "notifyNewLeads"     boolean NOT NULL DEFAULT true;
-ALTER TABLE "SpaceSetting" ADD COLUMN IF NOT EXISTS "notifyTourBookings" boolean NOT NULL DEFAULT true;
+ALTER TABLE "SpaceSetting" ADD COLUMN IF NOT EXISTS "notifyDemoBookings" boolean NOT NULL DEFAULT true;
 ALTER TABLE "SpaceSetting" ADD COLUMN IF NOT EXISTS "notifyNewDeals"     boolean NOT NULL DEFAULT true;
 ALTER TABLE "SpaceSetting" ADD COLUMN IF NOT EXISTS "notifyFollowUps"    boolean NOT NULL DEFAULT true;
 ALTER TABLE "SpaceSetting" ADD COLUMN IF NOT EXISTS "privacyPolicyHtml"  text;
@@ -536,10 +536,10 @@ ALTER TABLE "SpaceSetting" ADD COLUMN IF NOT EXISTS "formConfigSource"     text 
 ALTER TABLE "SpaceSetting" ADD COLUMN IF NOT EXISTS "trackingPixels"       jsonb;
 ALTER TABLE "SpaceSetting" ADD COLUMN IF NOT EXISTS "isVerified"           boolean NOT NULL DEFAULT false;
 
-ALTER TABLE "Brokerage" ADD COLUMN IF NOT EXISTS "privacyPolicyHtml"    text;
-ALTER TABLE "Brokerage" ADD COLUMN IF NOT EXISTS "brokerageFormConfig"  jsonb DEFAULT NULL;
-ALTER TABLE "Brokerage" ADD COLUMN IF NOT EXISTS "brokerageRentalFormConfig" jsonb DEFAULT NULL;
-ALTER TABLE "Brokerage" ADD COLUMN IF NOT EXISTS "brokerageBuyerFormConfig"  jsonb DEFAULT NULL;
+ALTER TABLE "Team" ADD COLUMN IF NOT EXISTS "privacyPolicyHtml"    text;
+ALTER TABLE "Team" ADD COLUMN IF NOT EXISTS "teamFormConfig"  jsonb DEFAULT NULL;
+ALTER TABLE "Team" ADD COLUMN IF NOT EXISTS "teamRentalFormConfig" jsonb DEFAULT NULL;
+ALTER TABLE "Team" ADD COLUMN IF NOT EXISTS "teamBuyerFormConfig"  jsonb DEFAULT NULL;
 
 ALTER TABLE "Contact" ADD COLUMN IF NOT EXISTS "formConfigSnapshot"    jsonb DEFAULT NULL;
 ALTER TABLE "Contact" ADD COLUMN IF NOT EXISTS "formLeadType"         text;
@@ -555,22 +555,22 @@ ALTER TABLE "Deal" ADD COLUMN IF NOT EXISTS "milestones" JSONB DEFAULT '[]'::jso
 CREATE INDEX IF NOT EXISTS idx_user_clerk_id       ON "User"("clerkId");
 CREATE INDEX IF NOT EXISTS idx_space_owner_id      ON "Space"("ownerId");
 CREATE INDEX IF NOT EXISTS idx_space_slug          ON "Space"(slug);
-CREATE INDEX IF NOT EXISTS idx_space_brokerage     ON "Space"("brokerageId");
+CREATE INDEX IF NOT EXISTS idx_space_team     ON "Space"("teamId");
 CREATE INDEX IF NOT EXISTS idx_space_setting_sid   ON "SpaceSetting"("spaceId");
 CREATE INDEX IF NOT EXISTS idx_space_setting_form_config_source
   ON "SpaceSetting"("formConfigSource");
 CREATE INDEX IF NOT EXISTS idx_space_setting_form_config
   ON "SpaceSetting" USING gin("formConfig") WHERE "formConfig" IS NOT NULL;
-CREATE INDEX IF NOT EXISTS idx_brokerage_form_config
-  ON "Brokerage" USING gin("brokerageFormConfig") WHERE "brokerageFormConfig" IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_team_form_config
+  ON "Team" USING gin("teamFormConfig") WHERE "teamFormConfig" IS NOT NULL;
 CREATE INDEX IF NOT EXISTS idx_space_setting_rental_form_config
   ON "SpaceSetting" USING gin("rentalFormConfig") WHERE "rentalFormConfig" IS NOT NULL;
 CREATE INDEX IF NOT EXISTS idx_space_setting_buyer_form_config
   ON "SpaceSetting" USING gin("buyerFormConfig") WHERE "buyerFormConfig" IS NOT NULL;
-CREATE INDEX IF NOT EXISTS idx_brokerage_rental_form_config
-  ON "Brokerage" USING gin("brokerageRentalFormConfig") WHERE "brokerageRentalFormConfig" IS NOT NULL;
-CREATE INDEX IF NOT EXISTS idx_brokerage_buyer_form_config
-  ON "Brokerage" USING gin("brokerageBuyerFormConfig") WHERE "brokerageBuyerFormConfig" IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_team_rental_form_config
+  ON "Team" USING gin("teamRentalFormConfig") WHERE "teamRentalFormConfig" IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_team_buyer_form_config
+  ON "Team" USING gin("teamBuyerFormConfig") WHERE "teamBuyerFormConfig" IS NOT NULL;
 
 CREATE INDEX IF NOT EXISTS idx_contact_space_id    ON "Contact"("spaceId");
 CREATE INDEX IF NOT EXISTS idx_contact_tags        ON "Contact" USING gin(tags);
@@ -605,29 +605,29 @@ CREATE INDEX IF NOT EXISTS idx_message_conversation_created
   ON "Message" ("conversationId", "createdAt" ASC);
 CREATE INDEX IF NOT EXISTS idx_message_space_id    ON "Message"("spaceId");
 
-CREATE UNIQUE INDEX IF NOT EXISTS idx_brokerage_owner     ON "Brokerage"("ownerId");
-CREATE INDEX        IF NOT EXISTS idx_brokerage_status    ON "Brokerage"(status);
-CREATE UNIQUE INDEX IF NOT EXISTS idx_brokerage_join_code ON "Brokerage"("joinCode");
-CREATE INDEX IF NOT EXISTS idx_membership_brokerage       ON "BrokerageMembership"("brokerageId");
-CREATE INDEX IF NOT EXISTS idx_membership_user            ON "BrokerageMembership"("userId");
-CREATE INDEX IF NOT EXISTS idx_invitation_brokerage       ON "Invitation"("brokerageId");
+CREATE UNIQUE INDEX IF NOT EXISTS idx_team_owner     ON "Team"("ownerId");
+CREATE INDEX        IF NOT EXISTS idx_team_status    ON "Team"(status);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_team_join_code ON "Team"("joinCode");
+CREATE INDEX IF NOT EXISTS idx_membership_team       ON "TeamMembership"("teamId");
+CREATE INDEX IF NOT EXISTS idx_membership_user            ON "TeamMembership"("userId");
+CREATE INDEX IF NOT EXISTS idx_invitation_team       ON "Invitation"("teamId");
 CREATE INDEX IF NOT EXISTS idx_invitation_email           ON "Invitation"(email);
 -- token already has a UNIQUE constraint (implicit unique index)
 CREATE INDEX IF NOT EXISTS idx_invitation_status          ON "Invitation"(status);
 
-CREATE INDEX IF NOT EXISTS idx_tour_space_starts      ON "Tour"("spaceId", "startsAt" DESC);
-CREATE INDEX IF NOT EXISTS idx_tour_contact           ON "Tour"("contactId");
-CREATE INDEX IF NOT EXISTS idx_tour_status            ON "Tour"(status);
-CREATE INDEX IF NOT EXISTS idx_tour_manage_token      ON "Tour"("manageToken");
-CREATE INDEX IF NOT EXISTS idx_tour_property_profile  ON "Tour"("propertyProfileId");
+CREATE INDEX IF NOT EXISTS idx_demo_space_starts      ON "Demo"("spaceId", "startsAt" DESC);
+CREATE INDEX IF NOT EXISTS idx_demo_contact           ON "Demo"("contactId");
+CREATE INDEX IF NOT EXISTS idx_demo_status            ON "Demo"(status);
+CREATE INDEX IF NOT EXISTS idx_demo_manage_token      ON "Demo"("manageToken");
+CREATE INDEX IF NOT EXISTS idx_demo_property_profile  ON "Demo"("propertyProfileId");
 
 CREATE UNIQUE INDEX IF NOT EXISTS idx_override_space_date
-  ON "TourAvailabilityOverride"("spaceId", date);
+  ON "DemoAvailabilityOverride"("spaceId", date);
 
-CREATE INDEX IF NOT EXISTS idx_broker_notif_brokerage
-  ON "BrokerNotification"("brokerageId", "createdAt" DESC);
-CREATE INDEX IF NOT EXISTS idx_broker_notif_unread
-  ON "BrokerNotification"("brokerageId", read) WHERE read = false;
+CREATE INDEX IF NOT EXISTS idx_manager_notif_team
+  ON "ManagerNotification"("teamId", "createdAt" DESC);
+CREATE INDEX IF NOT EXISTS idx_manager_notif_unread
+  ON "ManagerNotification"("teamId", read) WHERE read = false;
 
 CREATE INDEX IF NOT EXISTS idx_audit_clerk_id   ON "AuditLog"("clerkId");
 CREATE INDEX IF NOT EXISTS idx_audit_resource   ON "AuditLog"(resource, "resourceId");
@@ -666,24 +666,24 @@ CREATE INDEX IF NOT EXISTS idx_form_draft_expires_at
 -- ============================================================
 
 ALTER TABLE "User"                    ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "Brokerage"               ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "Team"               ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "Space"                   ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "SpaceSetting"            ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "Contact"                 ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "DealStage"               ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "TourPropertyProfile"     ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "Tour"                    ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "DemoPropertyProfile"     ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "Demo"                    ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "Deal"                    ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "DealContact"             ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "Conversation"            ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "Message"                 ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "BrokerageMembership"     ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "TeamMembership"     ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "Invitation"              ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "GoogleCalendarToken"     ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "BrokerNotification"      ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "ManagerNotification"      ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "AuditLog"                ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "TourAvailabilityOverride" ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "TourWaitlist"            ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "DemoAvailabilityOverride" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "DemoWaitlist"            ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "FormAnalyticsEvent"      ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "FormDraft"               ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "DocumentEmbedding"       ENABLE ROW LEVEL SECURITY;

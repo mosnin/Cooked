@@ -60,17 +60,17 @@ function parseBudgetToNumber(val: unknown): number | null {
  * Fallback chain:
  *   1. Dual config: SpaceSetting.[rental|buyer]FormConfig (custom per-agent)
  *   2. Legacy single: SpaceSetting.formConfig (if leadType matches)
- *   3. Brokerage dual: Brokerage.[brokerage[Rental|Buyer]FormConfig]
- *   4. Brokerage legacy: Brokerage.brokerageFormConfig (if leadType matches)
+ *   3. Team dual: Team.[team[Rental|Buyer]FormConfig]
+ *   4. Team legacy: Team.teamFormConfig (if leadType matches)
  *   5. null (use legacy schema / default template)
  */
 async function fetchFormConfigForLeadType(
   spaceId: string,
-  brokerageId: string | null,
+  teamId: string | null,
   leadType: 'rental' | 'buyer',
 ): Promise<IntakeFormConfig | null> {
   try {
-    const dual = await getFormConfigs(spaceId, brokerageId);
+    const dual = await getFormConfigs(spaceId, teamId);
 
     const config = leadType === 'buyer'
       ? dual.buyer
@@ -100,16 +100,16 @@ async function fetchFormConfigForLeadType(
       }
     }
 
-    // Fall back to brokerage-level config
-    if (brokerageId) {
-      const { data: brokerage } = await supabase
-        .from('Brokerage')
-        .select('brokerageFormConfig')
-        .eq('id', brokerageId)
+    // Fall back to team-level config
+    if (teamId) {
+      const { data: team } = await supabase
+        .from('Team')
+        .select('teamFormConfig')
+        .eq('id', teamId)
         .maybeSingle();
 
-      if (brokerage?.brokerageFormConfig) {
-        const parsed = formConfigSchema.safeParse(brokerage.brokerageFormConfig);
+      if (team?.teamFormConfig) {
+        const parsed = formConfigSchema.safeParse(team.teamFormConfig);
         if (parsed.success) {
           const configLeadType = parsed.data.leadType;
           if (configLeadType === leadType || configLeadType === 'general') {
@@ -330,7 +330,7 @@ export async function POST(req: NextRequest) {
     // Fetch the CORRECT config based on leadType (rental vs buyer)
     let formConfig: IntakeFormConfig | null = null;
     try {
-      const rawConfig = await fetchFormConfigForLeadType(space.id, space.brokerageId, resolvedLeadType);
+      const rawConfig = await fetchFormConfigForLeadType(space.id, space.teamId, resolvedLeadType);
       if (rawConfig) {
         // Re-validate the stored config to guard against corrupt data
         formConfig = formConfigSchema.parse(rawConfig);
@@ -710,10 +710,10 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Send realtor notification + applicant confirmation email in parallel
+    // Send rep notification + applicant confirmation email in parallel
     const businessName = spaceBusinessName || space.name;
 
-    const realtorNotification = notifyNewLead({
+    const repNotification = notifyNewLead({
       spaceId: space.id,
       contactId: contact.id,
       name: contactName,
@@ -725,7 +725,7 @@ export async function POST(req: NextRequest) {
       scoreSummary: scoring.scoreSummary,
       applicationData,
     }).catch((notifyErr) => {
-      logger.error('[apply] realtor notification failed', { contactId: contact.id }, notifyErr);
+      logger.error('[apply] rep notification failed', { contactId: contact.id }, notifyErr);
     });
 
     const applicantConfirmation = contactEmail
@@ -743,11 +743,11 @@ export async function POST(req: NextRequest) {
         })
       : Promise.resolve();
 
-    await Promise.all([realtorNotification, applicantConfirmation]);
+    await Promise.all([repNotification, applicantConfirmation]);
     logger.debug('[apply] notifications dispatched', { contactId: contact.id });
 
-    // Fire the agent trigger so Chippi reacts to the new application in real
-    // time (drafts a follow-up, scores against the realtor's criteria, etc.)
+    // Fire the agent trigger so Koala reacts to the new application in real
+    // time (drafts a follow-up, scores against the rep's criteria, etc.)
     // instead of waiting for the 4-hour cron sweep.
     try {
       await fireAgentTrigger({

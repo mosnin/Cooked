@@ -57,10 +57,10 @@ async def find_integration_tool(
     query: str,
     limit: int = 10,
 ) -> str:
-    """Discover Composio actions across the realtor's connected toolkits."""
+    """Discover Composio actions across the rep's connected toolkits."""
     # query: short natural-language description of what you need to do.
     # limit: 1-30, default 10. Returns JSON {tools: [{slug, name, description, toolkit, parameters}]}.
-    # Pass slug to call_integration_tool. Don't loop searches — if first miss, tell the realtor.
+    # Pass slug to call_integration_tool. Don't loop searches — if first miss, tell the rep.
     proxy = _proxy_base()
     if proxy is None:
         return json.dumps({"tools": [], "error": "integration proxy not configured"})
@@ -73,7 +73,7 @@ async def find_integration_tool(
     if not user_id:
         return json.dumps({
             "tools": [],
-            "error": "no realtor identity on this run — integrations unavailable",
+            "error": "no rep identity on this run — integrations unavailable",
         })
 
     try:
@@ -127,8 +127,8 @@ async def call_integration_tool(
     """Execute one Composio action by slug (use after find_integration_tool)."""
     # slug: from find_integration_tool result (e.g. 'GMAIL_SEND_EMAIL').
     # arguments_json: JSON-encoded args matching the action's parameters schema; '{}' if none.
-    # Returns {ok, data?, error?}. Auth error -> tell realtor to reconnect at /settings.
-    # 4xx -> re-read schema and retry at most once before asking the realtor.
+    # Returns {ok, data?, error?}. Auth error -> tell rep to reconnect at /settings.
+    # 4xx -> re-read schema and retry at most once before asking the rep.
     proxy = _proxy_base()
     if proxy is None:
         return json.dumps({"ok": False, "error": "integration proxy not configured"})
@@ -147,7 +147,7 @@ async def call_integration_tool(
     if not user_id:
         return json.dumps({
             "ok": False,
-            "error": "no realtor identity on this run — integrations unavailable",
+            "error": "no rep identity on this run — integrations unavailable",
         })
 
     logger.info(
@@ -183,7 +183,7 @@ async def call_integration_tool(
         # Don't swallow the body on 5xx — the route's error envelope (with
         # Composio's code/statusCode/possibleFixes/requestId) is the model's
         # only chance to self-correct or surface the right thing to the
-        # realtor. Empty body is the only case where we synthesize.
+        # rep. Empty body is the only case where we synthesize.
         return body_text or json.dumps(
             {
                 "ok": False,

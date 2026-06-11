@@ -10,14 +10,14 @@ import { SECTION_LABEL } from '@/lib/typography';
 // one hard-coded message; the localStorage key is suffixed with a `v1` so
 // future releases that bump the version re-show the card.
 //
-// Storage shape: `chippi:sidebar:whatsnew:dismissed:v1` → `'true'`.
+// Storage shape: `koala:sidebar:whatsnew:dismissed:v1` → `'true'`.
 //
 // Reads on mount; renders nothing during SSR + the first paint to avoid a
 // flash for users who have dismissed.
 // ─────────────────────────────────────────────────────────────────────────────
 
 const CURRENT_VERSION = 'v1';
-const STORAGE_KEY = `chippi:sidebar:whatsnew:dismissed:${CURRENT_VERSION}`;
+const STORAGE_KEY = `koala:sidebar:whatsnew:dismissed:${CURRENT_VERSION}`;
 
 interface SidebarWhatsNewProps {
   /** Hide entirely (collapsed rail mode). */

@@ -8,14 +8,14 @@ import { Resend } from 'resend';
 import { logger } from '@/lib/logger';
 
 function fromAddress(): string {
-  const raw = process.env.RESEND_FROM_EMAIL ?? 'notifications@alerts.usechippi.com';
+  const raw = process.env.RESEND_FROM_EMAIL ?? 'notifications@alerts.usekoala.com';
   return raw.includes('@') ? raw : `notifications@${raw}`;
 }
 
 function portalUrl(): string {
   return (
     process.env.NEXT_PUBLIC_CLIENTS_URL ||
-    `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://my.usechippi.com'}/clients`
+    `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://my.usekoala.com'}/clients`
   );
 }
 
@@ -32,7 +32,7 @@ function shell(heading: string, bodyHtml: string): string {
     <div style="max-width:480px;margin:0 auto;padding:40px 24px">
       <h1 style="font-family:Tinos,Times,serif;font-size:22px;font-weight:600;margin:0 0 16px">${esc(heading)}</h1>
       ${bodyHtml}
-      <p style="color:#999;font-size:12px;margin-top:32px">Chippi · client portal</p>
+      <p style="color:#999;font-size:12px;margin-top:32px">Koala · client portal</p>
     </div>
   </body></html>`;
 }
@@ -72,7 +72,7 @@ export async function sendClientCode(params: {
   }
 }
 
-/** Generic portal notification (new message from realtor, info request, status change). */
+/** Generic portal notification (new message from rep, info request, status change). */
 export async function sendClientNotification(params: {
   to: string;
   subject: string;

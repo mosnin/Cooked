@@ -3,7 +3,7 @@ import { supabase } from '@/lib/supabase';
 import { requireSpaceOwner } from '@/lib/api-auth';
 import { checkRateLimit } from '@/lib/rate-limit';
 
-const VALID_TYPES = new Set(['QUALIFICATION', 'TOUR', 'APPLICATION']);
+const VALID_TYPES = new Set(['QUALIFICATION', 'DEMO', 'APPLICATION']);
 
 // 1 MB ceiling — 500 rows × generous per-row size is comfortably under this.
 // Cuts off pathological JSON bodies before parsing into memory.

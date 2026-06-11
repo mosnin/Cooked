@@ -43,7 +43,7 @@ import type { ToolContext } from '@/lib/ai-tools/types';
 function makeCtx(): ToolContext {
   return {
     userId: 'user_1',
-    space: { id: 'space_1', slug: 'jane', name: 'Jane Realty', ownerId: 'u1' },
+    space: { id: 'space_1', slug: 'jane', name: 'Jane Sales', ownerId: 'u1' },
     signal: new AbortController().signal,
   };
 }
@@ -96,12 +96,12 @@ describe('sendEmailTool handler — contactId path', () => {
       Contact: {
         single: { id: 'c_1', email: 'jane@example.com', name: 'Jane' },
       },
-      SpaceSetting: { single: { businessName: 'Jane Realty' } },
+      SpaceSetting: { single: { businessName: 'Jane Sales' } },
     };
     const result = await sendEmailTool.handler(
       {
         contactId: 'c_1',
-        subject: 'Tour Friday',
+        subject: 'Demo Friday',
         body: 'Looking forward to it.',
       },
       makeCtx(),
@@ -110,8 +110,8 @@ describe('sendEmailTool handler — contactId path', () => {
     expect(sendEmailFromCRMMock).toHaveBeenCalledTimes(1);
     expect((sendEmailFromCRMMock.mock.calls as unknown[][])[0][0]).toMatchObject({
       toEmail: 'jane@example.com',
-      fromName: 'Jane Realty',
-      subject: 'Tour Friday',
+      fromName: 'Jane Sales',
+      subject: 'Demo Friday',
     });
     expect(result.summary).toContain('jane@example.com');
     expect(result.display).toBe('success');
@@ -149,7 +149,7 @@ describe('sendEmailTool handler — toEmail path', () => {
   it('sends to a bare address even without a matching contact', async () => {
     mockByTable = {
       Contact: { single: null },
-      SpaceSetting: { single: { businessName: 'Jane Realty' } },
+      SpaceSetting: { single: { businessName: 'Jane Sales' } },
     };
     const result = await sendEmailTool.handler(
       { toEmail: 'stranger@elsewhere.com', subject: 'Hi', body: 'Hi.' },

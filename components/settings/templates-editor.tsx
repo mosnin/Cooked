@@ -171,7 +171,7 @@ export function TemplatesEditor({ initial }: Props) {
                 type="text"
                 value={draft.name ?? ''}
                 onChange={(e) => setDraft((d) => ({ ...d, name: e.target.value }))}
-                placeholder="Template name (e.g. Tour confirmation)"
+                placeholder="Template name (e.g. Demo confirmation)"
                 className="flex-1 text-sm font-semibold bg-transparent outline-none border-b border-border focus:border-foreground py-1"
                 maxLength={120}
               />
@@ -200,7 +200,7 @@ export function TemplatesEditor({ initial }: Props) {
             <textarea
               value={draft.body ?? ''}
               onChange={(e) => setDraft((d) => ({ ...d, body: e.target.value }))}
-              placeholder={"Hi {{contactFirstName}}, confirming our tour of {{propertyAddress}} on {{tourDate}} at {{tourTime}}. Reply to reschedule."}
+              placeholder={"Hi {{contactFirstName}}, confirming our demo of {{propertyAddress}} on {{demoDate}} at {{demoTime}}. Reply to reschedule."}
               className="w-full min-h-[180px] text-sm bg-transparent outline-none border border-border rounded px-3 py-2 font-mono"
               maxLength={5000}
             />

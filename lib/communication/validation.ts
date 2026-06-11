@@ -8,7 +8,7 @@
  *   - `channel: 'whatsapp'` → To (string, single phone) + Body. No
  *     Subject. No Cc/Bcc. Plain text only.
  *
- * One reason this exists: the UI lets the realtor enter a comma-
+ * One reason this exists: the UI lets the rep enter a comma-
  * separated string in the To/Cc/Bcc fields. The route handler shouldn't
  * have to deal with that — it should get a clean validated payload.
  * Bad shapes get rejected with a copy-ready error message, not a 500
@@ -51,7 +51,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 /**
  * Phone format check — loose. We require a leading + and 8-15 digits, the
  * E.164 range. The strict validation lives with the provider; this is a
- * "did the realtor type something that's plausibly a phone" gate.
+ * "did the rep type something that's plausibly a phone" gate.
  */
 const PHONE_RE = /^\+?[1-9]\d{7,14}$/;
 
@@ -74,7 +74,7 @@ function parseRecipients(value: unknown): string[] | null {
   } else if (Array.isArray(value)) {
     for (const v of value) {
       if (typeof v !== 'string') return null;
-      // Allow nested commas inside an array entry — realtors paste lists.
+      // Allow nested commas inside an array entry — reps paste lists.
       raw.push(...v.split(','));
     }
   } else {
@@ -96,7 +96,7 @@ function parseRecipients(value: unknown): string[] | null {
 /**
  * Pull the single phone number out of `to`. Accepts a bare string or a
  * one-element array (so the UI can normalise to one shape across both
- * channels). Strips spaces, hyphens, parens — realtors paste from
+ * channels). Strips spaces, hyphens, parens — reps paste from
  * contact cards.
  */
 function parsePhone(value: unknown): string | null {
@@ -176,7 +176,7 @@ export function validateSendPayload(
   }
 
   const bodyText = typeof body.body === 'string' ? body.body : '';
-  // Don't .trim() the body — realtors sometimes intentionally include
+  // Don't .trim() the body — reps sometimes intentionally include
   // leading/trailing whitespace for signatures and quoted replies.
   if (bodyText.trim().length === 0) {
     return { ok: false, error: 'Write something in the body.' };

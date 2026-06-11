@@ -28,8 +28,8 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
   const ctx = await resolve(userId, id);
   if (!ctx) return NextResponse.json({ error: 'Not found' }, { status: 404 });
 
-  // Include linked deals + tours so the detail page can show usage.
-  const [dealsResult, toursResult] = await Promise.all([
+  // Include linked deals + demos so the detail page can show usage.
+  const [dealsResult, demosResult] = await Promise.all([
     supabase
       .from('Deal')
       .select('id, title, status, value, closeDate, stageId')
@@ -38,7 +38,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
       .order('updatedAt', { ascending: false })
       .limit(20),
     supabase
-      .from('Tour')
+      .from('Demo')
       .select('id, guestName, startsAt, status')
       .eq('propertyId', id)
       .eq('spaceId', ctx.space.id)
@@ -49,7 +49,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
   return NextResponse.json({
     ...ctx.property,
     deals: dealsResult.data ?? [],
-    tours: toursResult.data ?? [],
+    demos: demosResult.data ?? [],
   });
 }
 
@@ -81,7 +81,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 
   if (error) {
     if ((error as { code?: string }).code === '23505') {
-      return NextResponse.json({ error: 'A property with that MLS number already exists' }, { status: 409 });
+      return NextResponse.json({ error: 'A property with that CRM number already exists' }, { status: 409 });
     }
     logger.error('[properties/PATCH] update failed', { propertyId: id }, error);
     return NextResponse.json({ error: 'Failed to update property' }, { status: 500 });
@@ -110,8 +110,8 @@ export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ 
     .map((u) => publicUrlToKey(u))
     .filter((k): k is string => Boolean(k));
 
-  // Linked deals/tours get ON DELETE SET NULL'd — the link vanishes, the
-  // deal/tour survives with its string address intact.
+  // Linked deals/demos get ON DELETE SET NULL'd — the link vanishes, the
+  // deal/demo survives with its string address intact.
   const { error } = await supabase
     .from('Property')
     .delete()

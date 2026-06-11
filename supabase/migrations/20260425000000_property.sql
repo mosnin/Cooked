@@ -1,24 +1,24 @@
 -- Phase 9 of the deals redesign: Property as a first-class entity.
 --
--- Motivation: Deal.address has always been a string, which means a realtor
--- re-types the same property across multiple deals (an original fell
--- through, re-listed; co-listing with another agent; separate buyer +
--- seller engagements on the same house). Having `Property` as a row unlocks:
---   * consistent display of beds/baths/sqft/list-price across cards + docs
---   * listing-packet share links (Phase 11)
---   * buyer wishlist matching (future)
+-- Motivation: Deal.address has always been a string, which means a rep
+-- re-types the same product/account across multiple deals (an original fell
+-- through, re-engaged; co-selling with another rep; separate prospect +
+-- account engagements on the same product). Having `Property` as a row unlocks:
+--   * consistent display of product specs and list price across cards + docs
+--   * product one-pager share links (Phase 11)
+--   * prospect preference matching (future)
 --
 -- Design decisions:
 --   * `address` stays on Deal as the display string so existing deals are
---     unaffected and realtors can quick-create a deal without going
---     through property creation first.
+--     unaffected and reps can quick-create a deal without going
+--     through product creation first.
 --   * Deal.propertyId is nullable. A deal can live without a linked
---     property, or get linked later.
+--     product, or get linked later.
 --   * photos stored as a JSONB array of URLs (consistent with existing
 --     Contact.properties). DealDocuments of kind='photo' are a separate,
 --     deal-scoped thing and we don't try to unify them here.
 --   * `listingStatus` is free-form-ish (active | pending | sold | off_market
---     | owned) so individual markets can use what fits — checked against a
+--     | owned) so individual teams can use what fits — checked against a
 --     short canonical list to catch typos.
 
 CREATE TABLE IF NOT EXISTS "Property" (
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS "Property" (
   "stateRegion"   TEXT,
   "postalCode"    TEXT,
   "mlsNumber"     TEXT,
-  "propertyType"  TEXT,                           -- 'single_family' | 'condo' | 'townhouse' | 'multi_family' | 'land' | 'other'
+  "propertyType"  TEXT,                           -- 'single_family' | 'condo' | 'townhouse' | 'multi_family' | 'land' | 'other' (legacy values; see propertyType check constraint)
   beds            NUMERIC(4,1),
   baths           NUMERIC(4,1),
   "squareFeet"    INTEGER,
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS "Property" (
   "yearBuilt"     INTEGER,
   "listPrice"     NUMERIC(14,2),
   "listingStatus" TEXT NOT NULL DEFAULT 'active', -- 'active'|'pending'|'sold'|'off_market'|'owned'
-  "listingUrl"    TEXT,                           -- optional link to the MLS / Zillow page
+  "listingUrl"    TEXT,                           -- optional link to the product page / CRM data source
   photos          JSONB NOT NULL DEFAULT '[]'::jsonb,  -- array of URLs
   notes           TEXT,
   "createdAt"     TIMESTAMPTZ  NOT NULL DEFAULT now(),
@@ -59,20 +59,20 @@ CREATE INDEX IF NOT EXISTS idx_property_space_updated
 CREATE INDEX IF NOT EXISTS idx_property_space_address
   ON "Property" ("spaceId", lower(address));
 
--- Unique MLS number per space (soft — a realtor working multiple MLSes could
--- still hit collisions; in that case they'll see a 409 and can decide).
+-- Unique product/listing reference number per space (soft — a rep working
+-- multiple systems could still hit collisions; in that case they'll see a 409 and can decide).
 CREATE UNIQUE INDEX IF NOT EXISTS idx_property_space_mls
   ON "Property" ("spaceId", "mlsNumber")
   WHERE "mlsNumber" IS NOT NULL;
 
 ALTER TABLE "Property" ENABLE ROW LEVEL SECURITY;
 
--- Link Deal + Tour to Property. Nullable: the entity is optional.
+-- Link Deal + Demo to Property. Nullable: the entity is optional.
 ALTER TABLE "Deal"
   ADD COLUMN IF NOT EXISTS "propertyId" TEXT REFERENCES "Property"(id) ON DELETE SET NULL;
 
-ALTER TABLE "Tour"
+ALTER TABLE "Demo"
   ADD COLUMN IF NOT EXISTS "propertyId" TEXT REFERENCES "Property"(id) ON DELETE SET NULL;
 
 CREATE INDEX IF NOT EXISTS idx_deal_property ON "Deal" ("propertyId") WHERE "propertyId" IS NOT NULL;
-CREATE INDEX IF NOT EXISTS idx_tour_property ON "Tour" ("propertyId") WHERE "propertyId" IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_demo_property ON "Demo" ("propertyId") WHERE "propertyId" IS NOT NULL;

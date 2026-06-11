@@ -18,7 +18,7 @@ interface BookingFormProps {
   timezone: string;
   accentColor?: string;
   /** When set, the confirmed-state renders an outbound link back to the
-   *  realtor's public page so the applicant has somewhere to go after
+   *  rep's public page so the applicant has somewhere to go after
    *  booking. Same dead-end fix the intake success card has. */
   profileHref?: string | null;
 }
@@ -32,7 +32,7 @@ interface PropertyProfile {
   id: string;
   name: string;
   address: string | null;
-  tourDuration: number;
+  demoDuration: number;
 }
 
 type Step = 'property' | 'date' | 'details' | 'confirmed';
@@ -84,7 +84,7 @@ export function BookingForm({ slug, duration: defaultDuration, businessName, tim
     setSelectedDate(null);
     setSelectedTime(null);
     try {
-      let url = `/api/tours/available?slug=${encodeURIComponent(slug)}`;
+      let url = `/api/demos/available?slug=${encodeURIComponent(slug)}`;
       if (propId) url += `&propertyId=${encodeURIComponent(propId)}`;
       const res = await fetch(url);
       if (res.ok) {
@@ -128,7 +128,7 @@ export function BookingForm({ slug, duration: defaultDuration, businessName, tim
     setError(null);
 
     try {
-      const res = await fetch('/api/tours/book', {
+      const res = await fetch('/api/demos/book', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -181,7 +181,7 @@ export function BookingForm({ slug, duration: defaultDuration, businessName, tim
     if (!waitlistName.trim() || !waitlistEmail.trim() || !waitlistDate) return;
     setWaitlistSubmitting(true);
     try {
-      const res = await fetch('/api/tours/waitlist', {
+      const res = await fetch('/api/demos/waitlist', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -236,7 +236,7 @@ export function BookingForm({ slug, duration: defaultDuration, businessName, tim
             Confirmed.
           </h2>
           <p className="text-base text-muted-foreground max-w-sm mx-auto">
-            Your tour is set for <span className="font-medium text-foreground">{dateLabel}</span>{' '}
+            Your demo is set for <span className="font-medium text-foreground">{dateLabel}</span>{' '}
             at <span className="font-medium text-foreground">{timeLabel}</span>.
             {` ${businessName} will reach out if anything changes.`}
           </p>
@@ -636,7 +636,7 @@ export function BookingForm({ slug, duration: defaultDuration, businessName, tim
               className="rounded-xl bg-background border border-border/70 p-6 text-center space-y-3"
             >
               <Loader2 size={20} className="animate-spin text-muted-foreground mx-auto" />
-              <p className="text-sm text-foreground">Booking your tour…</p>
+              <p className="text-sm text-foreground">Booking your demo…</p>
             </motion.div>
           </motion.div>
         )}

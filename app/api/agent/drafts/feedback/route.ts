@@ -10,9 +10,9 @@ import { LEVENSHTEIN_CAP } from '@/lib/draft-feedback';
  * The /[id] PATCH route handles the two cases that flip a draft's status —
  * 'approved' and 'dismissed'. Those carry feedback fields piggybacked.
  *
- * This endpoint exists for the third case: the realtor sees a draft, taps
+ * This endpoint exists for the third case: the rep sees a draft, taps
  * "Hold for later", and the draft stays pending. We still want the signal
- * — "this realtor wasn't ready to act on this" is data — but the draft's
+ * — "this rep wasn't ready to act on this" is data — but the draft's
  * lifecycle hasn't ended, so it shouldn't share the PATCH path.
  *
  * Scope: only 'held' is accepted here. 'approved' / 'edited_and_approved' /
@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
 
   if (!existing) return NextResponse.json({ error: 'Not found' }, { status: 404 });
   if (existing.status !== 'pending') {
-    // Idempotent no-op — the realtor held something we already terminated.
+    // Idempotent no-op — the rep held something we already terminated.
     return NextResponse.json({ ok: true, skipped: true });
   }
 

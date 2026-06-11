@@ -1,24 +1,24 @@
--- CalendarEventMirror — backup record of events Chippi writes to the
--- realtor's connected external calendar (Google Calendar first, more
+-- CalendarEventMirror — backup record of events Koala writes to the
+-- rep's connected external calendar (Google Calendar first, more
 -- providers later).
 --
 -- Why a new table instead of extending the legacy CalendarEvent:
 --   • Legacy `CalendarEvent` (date/time/color/description) still backs
---     check-availability, block-time, and propose-tour-times as a
---     busy-time signal. Those tools are not the Chippi calendar
+--     check-availability, block-time, and propose-demo-times as a
+--     busy-time signal. Those tools are not the Koala calendar
 --     surface (which is being deleted) — they're internal plumbing
 --     for the on-demand agent. Keeping the legacy table avoids
 --     breaking them and keeps the two concerns separate.
 --   • This table is a write-side backup, not a queryable view. The
---     source of truth for events is the realtor's external calendar
+--     source of truth for events is the rep's external calendar
 --     (read on demand from Composio); this row is forensics — if the
---     realtor swaps providers later we know what we put there.
+--     rep swaps providers later we know what we put there.
 --
--- One row per event Chippi writes through to an external calendar.
--- Tour rows still live in Tour; a tour booking will land here AND on
--- Google Calendar AND in Tour. Three places, same event, by design:
--- Tour is the booking primitive (manage tokens, conflict checks),
--- external calendar is the realtor's truth, this row is the audit.
+-- One row per event Koala writes through to an external calendar.
+-- Demo rows still live in Demo; a demo booking will land here AND on
+-- Google Calendar AND in Demo. Three places, same event, by design:
+-- Demo is the booking primitive (manage tokens, conflict checks),
+-- external calendar is the rep's truth, this row is the audit.
 
 CREATE TABLE IF NOT EXISTS "CalendarEventMirror" (
   "id"               TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
@@ -29,11 +29,11 @@ CREATE TABLE IF NOT EXISTS "CalendarEventMirror" (
   "start"            TIMESTAMPTZ NOT NULL,
   "end"              TIMESTAMPTZ NOT NULL,
   "attendees"        JSONB NOT NULL DEFAULT '[]'::jsonb,
-  "sourceTourId"     TEXT REFERENCES "Tour"(id) ON DELETE SET NULL,
-                                                    -- when this row mirrors a tour booking
+  "sourceDemoId"     TEXT REFERENCES "Demo"(id) ON DELETE SET NULL,
+                                                    -- when this row mirrors a demo booking
   "createdAt"        TIMESTAMPTZ NOT NULL DEFAULT now(),
   "createdBy"        TEXT NOT NULL DEFAULT 'agent'
-                       CHECK ("createdBy" IN ('agent', 'realtor'))
+                       CHECK ("createdBy" IN ('agent', 'rep'))
 );
 
 -- Hot index — the on-demand calendar surface filters by (space, start window).

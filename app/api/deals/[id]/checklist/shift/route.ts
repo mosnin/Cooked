@@ -7,7 +7,7 @@ import { logger } from '@/lib/logger';
 /**
  * Shift every unchecked, dated checklist item on a deal by N days.
  *
- * Used when the realtor moves the expected close date and wants the whole
+ * Used when the rep moves the expected close date and wants the whole
  * schedule (inspection deadline, appraisal, loan commitment, etc.) to ride
  * along. Completed items aren't touched — the history stays honest. Items
  * without a dueAt are left alone too, since there's nothing to shift.

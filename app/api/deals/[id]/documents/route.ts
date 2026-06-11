@@ -74,7 +74,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   // Two POST shapes share this route:
   //   - multipart/form-data → new upload (the original path)
   //   - application/json    → attach existing File rows by id, no re-upload
-  // The attach path lets the realtor pull from the Files library on the
+  // The attach path lets the rep pull from the Files library on the
   // documents tab without copying bytes. The DealDocument row's storagePath
   // points at the existing File's storageKey; on delete we skip the storage
   // unlink because the File row still owns those bytes.

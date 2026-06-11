@@ -97,7 +97,7 @@ describe('enrichContext — deal subject', () => {
     });
     setStage({ name: 'Application' });
     setActivities([
-      { type: 'email', content: 'tour confirmation', createdAt: '2026-04-29T15:00:00Z' },
+      { type: 'email', content: 'demo confirmation', createdAt: '2026-04-29T15:00:00Z' },
       { type: 'note', content: 'budget moved to $750k', createdAt: '2026-04-25T10:00:00Z' },
       { type: 'call', content: 'left voicemail', createdAt: '2026-04-20T09:00:00Z' },
     ]);
@@ -110,7 +110,7 @@ describe('enrichContext — deal subject', () => {
     expect(ctx!.status).toBe('active');
     expect(ctx!.daysSinceLastTouch).toBe(2); // Apr 29 → May 1
     expect(ctx!.lastActivities).toHaveLength(3);
-    expect(ctx!.lastActivities[0]).toBe('2026-04-29 — email: tour confirmation');
+    expect(ctx!.lastActivities[0]).toBe('2026-04-29 — email: demo confirmation');
     expect(ctx!.lastActivities[1]).toBe('2026-04-25 — note: budget moved to $750k');
   });
 
@@ -369,14 +369,14 @@ describe('renderEnrichedContextBlock', () => {
       subjectLabel: 'Maya Chen',
       scoreLabel: 'hot',
       leadScore: 88,
-      lastActivities: ['2026-04-29 — email: tour confirmation'],
+      lastActivities: ['2026-04-29 — email: demo confirmation'],
       daysSinceLastTouch: 3,
     });
     expect(text.startsWith('[SUBJECT CONTEXT]')).toBe(true);
     expect(text.endsWith('[/SUBJECT CONTEXT]')).toBe(true);
     expect(text).toContain('Subject: Maya Chen');
     expect(text).toContain('Score: hot (88)');
-    expect(text).toContain('- 2026-04-29 — email: tour confirmation');
+    expect(text).toContain('- 2026-04-29 — email: demo confirmation');
   });
 });
 
@@ -386,14 +386,14 @@ describe('renderEnrichedContext', () => {
       subjectLabel: 'Maya Chen',
       scoreLabel: 'hot',
       leadScore: 88,
-      lastActivities: ['2026-04-29 — email: tour confirmation'],
+      lastActivities: ['2026-04-29 — email: demo confirmation'],
       daysSinceLastTouch: 3,
     });
     expect(text).toContain('SUBJECT CONTEXT');
     expect(text).toContain('Subject: Maya Chen');
     expect(text).toContain('Score: hot (88)');
     expect(text).toContain('Days since last touch: 3');
-    expect(text).toContain('- 2026-04-29 — email: tour confirmation');
+    expect(text).toContain('- 2026-04-29 — email: demo confirmation');
   });
 
   it('says "none recorded" when there are no activities', () => {

@@ -1,8 +1,8 @@
 /**
- * `/company` — Chippi's founding story. Replaces the old `/about`.
+ * `/company` — Koala's founding story. Replaces the old `/about`.
  *
- * One idea: the world moved to AI; real estate didn't — so two people who'd
- * lived the gap built Chippi to close it. The page leads with the mission,
+ * One idea: the world moved to AI; sales didn't — so two people who'd
+ * lived the gap built Koala to close it. The page leads with the mission,
  * makes the problem feel inevitable, lets the founders stand as proof it's
  * built by people who know the work, folds the brand beliefs in as conviction,
  * and closes calmly.
@@ -10,7 +10,7 @@
  * Matches the rebuilt homepage aesthetic: AsciiBlob hero atmosphere with a
  * center-protect radial, serif section headlines on the home clamp, the home
  * kit's Reveal / Stagger / Eyebrow motion, light canvas. Brand orange stays a
- * signature (the blob, the serif "Chippi") — never on a button or link.
+ * signature (the blob, the serif "Koala") — never on a button or link.
  *
  * Auth users bounce to their workspace, mirroring the homepage.
  */
@@ -22,12 +22,12 @@ import { AsciiBlob } from '@/components/marketing/home/ascii-blob';
 import { Reveal, Eyebrow } from '@/components/marketing/home/home-kit';
 import { Founders } from '@/components/marketing/company/founders';
 
-export const metadata = { title: 'Company · Chippi' };
+export const metadata = { title: 'Company · Koala' };
 
 export default async function CompanyPage() {
   const { userId } = await auth();
   if (userId) {
-    redirect('/auth/redirect?intent=realtor');
+    redirect('/auth/redirect?intent=rep');
   }
 
   return (
@@ -54,12 +54,12 @@ export default async function CompanyPage() {
           </Reveal>
           <Reveal delay={0.06}>
             <h1 className="font-brand mx-auto mt-7 max-w-4xl text-[clamp(2.25rem,6vw,4.5rem)] leading-[1.05] tracking-tight text-foreground">
-              Real estate deserves to work the way the rest of the world already does.
+              Sales deserves to work the way the rest of the world already does.
             </h1>
           </Reveal>
           <Reveal delay={0.12}>
             <p className="mx-auto mt-7 max-w-2xl text-lg leading-relaxed text-foreground/60 md:text-xl">
-              We built Chippi because the tools agents and brokerages live in
+              We built Koala because the tools agents and teams live in
               were drawn for a slower era. The work shouldn’t be the chrome.
               The work should be the deals.
             </p>
@@ -86,11 +86,11 @@ export default async function CompanyPage() {
             </p>
             <p>
               Everywhere else, that other ninety percent has started to run
-              itself. In real estate it still doesn’t. The tools are stuck a
-              generation behind what’s now possible. Agents and brokerages are
+              itself. In sales it still doesn’t. The tools are stuck a
+              generation behind what’s now possible. Agents and teams are
               nowhere near the productivity the moment allows. That distance,
               between what could happen and what actually does, is the whole
-              reason Chippi exists.
+              reason Koala exists.
             </p>
           </div>
         </Reveal>
@@ -108,7 +108,7 @@ export default async function CompanyPage() {
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-lg leading-relaxed text-foreground/55">
             Orlando and Preston teamed up to solve the problem from both ends:
-            the agent’s day and the brokerage’s floor.
+            the agent’s day and the team’s floor.
           </p>
         </Reveal>
         <div className="mt-16">
@@ -116,7 +116,7 @@ export default async function CompanyPage() {
         </div>
       </section>
 
-      {/* 4. What Chippi believes — the conviction, carried from /about. */}
+      {/* 4. What Koala believes — the conviction, carried from /about. */}
       <section
         id="what-we-believe"
         className="relative mx-auto max-w-3xl px-6 py-24 scroll-mt-28 md:px-8 md:py-32"
@@ -149,15 +149,15 @@ export default async function CompanyPage() {
         <Reveal>
           <div className="mx-auto max-w-3xl text-center">
             <h2 className="font-title text-[clamp(2rem,4.8vw,3.5rem)] font-normal leading-[1.04] tracking-[-0.02em] text-foreground">
-              Come see what your day looks like with Chippi.
+              Come see what your day looks like with Koala.
             </h2>
             <p className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-foreground/55">
-              Seven days free, cancel anytime. Bring your inbox and let Chippi
+              Seven days free, cancel anytime. Bring your inbox and let Koala
               do the rest.
             </p>
             <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Link
-                href="/login/realtor?intent=signup"
+                href="/login/rep?intent=signup"
                 className="inline-flex h-12 items-center justify-center rounded-full bg-brand px-7 text-[15px] font-semibold text-brand-foreground shadow-lg shadow-brand/25 transition-all duration-150 hover:brightness-105 active:scale-[0.98]"
               >
                 Start free trial
@@ -183,11 +183,11 @@ const BELIEFS = [
   },
   {
     title: 'Nothing leaves without your name on it.',
-    body: 'Chippi drafts, books, and updates, but by default every move is yours to approve. You can grant per-task autonomy when you trust it. The default is you in the loop, and that’s where the trust lives.',
+    body: 'Koala drafts, books, and updates, but by default every move is yours to approve. You can grant per-task autonomy when you trust it. The default is you in the loop, and that’s where the trust lives.',
   },
   {
-    title: 'Chippi has one voice.',
-    body: 'Wherever Chippi shows up, on a draft card, a toast, an activity row, the same signature carries through. Nothing else does. It’s how you learn to trust the agent across every surface.',
+    title: 'Koala has one voice.',
+    body: 'Wherever Koala shows up, on a draft card, a toast, an activity row, the same signature carries through. Nothing else does. It’s how you learn to trust the agent across every surface.',
   },
   {
     title: 'No numbers we can’t defend.',

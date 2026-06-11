@@ -3,7 +3,7 @@ import { ThemedSignIn } from '@/components/auth/clerk-sign-in';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 
-export const metadata: Metadata = { title: 'Sign in to Accept Invite — Chippi' };
+export const metadata: Metadata = { title: 'Sign in to Accept Invite — Koala' };
 
 export default async function InviteSignInPage({
   params,
@@ -16,10 +16,10 @@ export default async function InviteSignInPage({
     <div className="min-h-screen bg-background flex items-center justify-center px-6 py-10">
       <div className="w-full max-w-sm space-y-6">
         <div className="text-center space-y-2">
-          <BrandLogo className="h-7 mx-auto" alt="Chippi" />
+          <BrandLogo className="h-7 mx-auto" alt="Koala" />
           <h1 className="text-xl font-bold mt-4">Sign in to accept invite</h1>
           <p className="text-sm text-muted-foreground">
-            Sign in to your existing account to accept the brokerage invitation.
+            Sign in to your existing account to accept the team invitation.
           </p>
         </div>
 

@@ -13,7 +13,7 @@ export function JoinCodeAcceptButton({ code }: { code: string }) {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch('/api/broker/join', {
+      const res = await fetch('/api/manager/join', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code }),
@@ -21,7 +21,7 @@ export function JoinCodeAcceptButton({ code }: { code: string }) {
       const data = await res.json();
       if (res.ok) {
         setDone(true);
-        // Redirect to setup which routes brokers to /broker and realtors to /s/slug
+        // Redirect to setup which routes managers to /manager and reps to /s/slug
         setTimeout(() => (window.location.href = '/setup'), 1500);
       } else {
         setError(data.error ?? 'Something went wrong.');
@@ -45,7 +45,7 @@ export function JoinCodeAcceptButton({ code }: { code: string }) {
   return (
     <div className="space-y-2">
       <Button onClick={handleJoin} disabled={loading} size="sm">
-        {loading ? 'Joining…' : 'Join brokerage'}
+        {loading ? 'Joining…' : 'Join team'}
       </Button>
       {error && <p className="text-xs text-destructive">{error}</p>}
     </div>

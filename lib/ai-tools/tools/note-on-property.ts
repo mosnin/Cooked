@@ -8,7 +8,7 @@
  * structured activity, that's a separate Property.notes → PropertyActivity
  * migration — not part of this tool.
  *
- * Approval-gated: notes ride along on the listing card; the realtor
+ * Approval-gated: notes ride along on the listing card; the rep
  * sees the text before it goes in.
  */
 

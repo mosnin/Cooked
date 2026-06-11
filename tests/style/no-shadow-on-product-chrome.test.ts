@@ -16,7 +16,7 @@
  *
  * Phase 1 (this commit): only `components/onboarding` is in the strict
  * zone. Subsequent phases promote `components/agent`, then
- * `components/chippi`, then the per-area dirs.
+ * `components/axil`, then the per-area dirs.
  *
  * Why a vitest test, not an ESLint rule. A focused fixture is faster
  * to maintain, runs in the same CI as everything else, and produces a
@@ -36,12 +36,12 @@ const ROOT = join(__dirname, '..', '..');
  */
 const STRICT_DIRS = [
   'components/onboarding',
-  // Phase 5: promoted after audit. agent/ had zero shadows; chippi/ had
+  // Phase 5: promoted after audit. agent/ had zero shadows; koala/ had
   // shadows only in the docked floating composer (allowlisted below).
   // These are the two most brand-heavy dirs — locking them paper-flat
   // is the highest-value strict promotion.
   'components/agent',
-  'components/chippi',
+  'components/axil',
 ];
 
 /**
@@ -56,7 +56,7 @@ const STRICT_DIRS_TODO = [
   'components/dashboard', // sidebar / header popovers — legitimate; needs allowlist
   'components/settings',
   'app/s',
-  'app/broker',
+  'app/manager',
 ];
 
 /**
@@ -74,10 +74,10 @@ const SHADOW_ALLOWLIST = new Set<string>([
   'components/ui/alert-dialog.tsx',
   // Chart tooltips — hover surfaces over data; need clear separation.
   'components/ui/chart.tsx',
-  // The docked Chippi composer/bar — a floating surface over page
+  // The docked Koala composer/bar — a floating surface over page
   // content (backdrop-blur + lift), same class as a toast/dialog.
   // The floating mic pill and recording state share the lift.
-  'components/chippi/chippi-bar.tsx',
+  'components/axil/axil-bar.tsx',
 ]);
 
 function collectFiles(dir: string): string[] {

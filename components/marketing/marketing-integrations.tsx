@@ -3,7 +3,7 @@
 /**
  * `<MarketingIntegrations>` — the integrations grid that lives on
  * /features/communication and /features/calendar (and any other page that
- * wants to enumerate Chippi's third-party connections).
+ * wants to enumerate Koala's third-party connections).
  *
  * Structure mirrors Apple's product-page "compatible with" grids: a left-
  * weighted heading block, optional media slot on the right, then a multi-

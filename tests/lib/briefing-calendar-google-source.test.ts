@@ -10,8 +10,8 @@
  *     misses meetings it should — both feel like the product is broken.
  *
  *   - Attendee → Contact crosswalk is case-insensitive on email and skips
- *     self-flagged attendees (the realtor's own account). Without these,
- *     the brief would either name nobody (cards drop) or name the realtor
+ *     self-flagged attendees (the rep's own account). Without these,
+ *     the brief would either name nobody (cards drop) or name the rep
  *     as the subject of their own card.
  *
  *   - Decline detection finds the matched-contact decliner; absent any
@@ -99,10 +99,10 @@ describe('calendar-google source — attendee crosswalk', () => {
     expect(match?.id).toBe('c-dani');
   });
 
-  it('skips the self-flagged attendee (the realtor themselves)', () => {
+  it('skips the self-flagged attendee (the rep themselves)', () => {
     const match = matchAttendeeToContact(
       [
-        { email: 'realtor@brokerage.com', self: true, responseStatus: 'accepted' },
+        { email: 'rep@team.com', self: true, responseStatus: 'accepted' },
         { email: 'dani@example.com', responseStatus: 'accepted' },
       ],
       contactsByEmail,
@@ -183,9 +183,9 @@ describe('calendar-google source — decline detection', () => {
     expect(declined).toBeNull();
   });
 
-  it('skips a self-flagged declining attendee (the realtor declined their own meeting)', () => {
+  it('skips a self-flagged declining attendee (the rep declined their own meeting)', () => {
     const declined = findDeclinedContact(
-      [{ email: 'realtor@brokerage.com', self: true, responseStatus: 'declined' }],
+      [{ email: 'rep@team.com', self: true, responseStatus: 'declined' }],
       contactsByEmail,
     );
     expect(declined).toBeNull();

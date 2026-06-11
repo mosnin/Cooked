@@ -49,8 +49,8 @@ describe('briefing — gmail signal source (pure helpers)', () => {
     it('surfaces a hot-tier thread quiet for 2+ days at urgency 1, 0.90', () => {
       const result = classifyQuietThread({
         leadScore: HOT_LEAD_THRESHOLD,
-        daysSinceLastRealtorMessage: 2,
-        lastRealtorMessageChars: 30, // hot tier doesn't need the >100 floor
+        daysSinceLastRepMessage: 2,
+        lastRepMessageChars: 30, // hot tier doesn't need the >100 floor
       });
       expect(result).toEqual({ urgency: 1, confidence: 0.9 });
     });
@@ -59,8 +59,8 @@ describe('briefing — gmail signal source (pure helpers)', () => {
       // The hot rule wins before the any-tier rule even has a chance.
       const result = classifyQuietThread({
         leadScore: HOT_LEAD_THRESHOLD + 5,
-        daysSinceLastRealtorMessage: 4,
-        lastRealtorMessageChars: 200,
+        daysSinceLastRepMessage: 4,
+        lastRepMessageChars: 200,
       });
       expect(result).toEqual({ urgency: 1, confidence: 0.9 });
     });
@@ -69,29 +69,29 @@ describe('briefing — gmail signal source (pure helpers)', () => {
       expect(
         classifyQuietThread({
           leadScore: HOT_LEAD_THRESHOLD,
-          daysSinceLastRealtorMessage: 1,
-          lastRealtorMessageChars: 250,
+          daysSinceLastRepMessage: 1,
+          lastRepMessageChars: 250,
         }),
       ).toBeNull();
     });
 
-    it('surfaces an any-tier thread quiet 4+ days with a >100-char realtor message at urgency 2, 0.85', () => {
+    it('surfaces an any-tier thread quiet 4+ days with a >100-char rep message at urgency 2, 0.85', () => {
       const result = classifyQuietThread({
         leadScore: HOT_LEAD_THRESHOLD - 30,
-        daysSinceLastRealtorMessage: 4,
-        lastRealtorMessageChars: 101,
+        daysSinceLastRepMessage: 4,
+        lastRepMessageChars: 101,
       });
       expect(result).toEqual({ urgency: 2, confidence: 0.85 });
     });
 
-    it('skips an any-tier thread when the last realtor message was a 99-char drive-by', () => {
+    it('skips an any-tier thread when the last rep message was a 99-char drive-by', () => {
       // The 100-char floor is the cheap proxy for "real touch vs trivia."
       // A "got it, thanks" doesn't earn a follow-up nag.
       expect(
         classifyQuietThread({
           leadScore: 20,
-          daysSinceLastRealtorMessage: 5,
-          lastRealtorMessageChars: 99,
+          daysSinceLastRepMessage: 5,
+          lastRepMessageChars: 99,
         }),
       ).toBeNull();
     });
@@ -100,8 +100,8 @@ describe('briefing — gmail signal source (pure helpers)', () => {
       expect(
         classifyQuietThread({
           leadScore: 20,
-          daysSinceLastRealtorMessage: 3,
-          lastRealtorMessageChars: 500,
+          daysSinceLastRepMessage: 3,
+          lastRepMessageChars: 500,
         }),
       ).toBeNull();
     });
@@ -111,15 +111,15 @@ describe('briefing — gmail signal source (pure helpers)', () => {
       expect(
         classifyQuietThread({
           leadScore: null,
-          daysSinceLastRealtorMessage: 4,
-          lastRealtorMessageChars: 150,
+          daysSinceLastRepMessage: 4,
+          lastRepMessageChars: 150,
         }),
       ).toEqual({ urgency: 2, confidence: 0.85 });
       expect(
         classifyQuietThread({
           leadScore: null,
-          daysSinceLastRealtorMessage: 2,
-          lastRealtorMessageChars: 150,
+          daysSinceLastRepMessage: 2,
+          lastRepMessageChars: 150,
         }),
       ).toBeNull();
     });
@@ -129,7 +129,7 @@ describe('briefing — gmail signal source (pure helpers)', () => {
     it('names the contact and the day — calm, no emoji', () => {
       const text = evidenceForQuiet({
         contactName: 'Sarah Chen',
-        daysSinceLastRealtorMessage: 4,
+        daysSinceLastRepMessage: 4,
         isHot: false,
       });
       expect(text).toContain('Sarah Chen');
@@ -141,7 +141,7 @@ describe('briefing — gmail signal source (pure helpers)', () => {
     it('adds the "Hot tier." tag when the contact is hot', () => {
       const text = evidenceForQuiet({
         contactName: 'Marco Reyes',
-        daysSinceLastRealtorMessage: 2,
+        daysSinceLastRepMessage: 2,
         isHot: true,
       });
       expect(text).toContain('Marco Reyes');
@@ -151,7 +151,7 @@ describe('briefing — gmail signal source (pure helpers)', () => {
     it('uses "yesterday" rather than "1 days ago"', () => {
       const text = evidenceForQuiet({
         contactName: 'Sam',
-        daysSinceLastRealtorMessage: 1,
+        daysSinceLastRepMessage: 1,
         isHot: false,
       });
       expect(text).toContain('yesterday');

@@ -12,13 +12,13 @@
  *
  * For PR 1 we surface text deltas, tool starts, tool outputs, and approval
  * requests. Handoffs are surfaced as a generic informational text delta
- * (matching what the Modal route does today) so the realtor sees the
+ * (matching what the Modal route does today) so the rep sees the
  * sub-agent transition without us having to add a new client event type
  * before the handoff-agent code lands in PR 2.
  *
  * We deliberately return `null` for everything we don't surface. The model's
  * intermediate reasoning, raw JSON arg streaming during a tool call, and
- * the per-step tool-search churn would only confuse the realtor — the
+ * the per-step tool-search churn would only confuse the rep — the
  * existing UI never showed any of it on the Modal path either.
  */
 
@@ -91,7 +91,7 @@ type SummariseSource = {
 /**
  * Map one SDK event to one (or zero) Pushable SSE events.
  *
- * The `registry` is the realtor-facing tool list — we use it ONLY to render
+ * The `registry` is the rep-facing tool list — we use it ONLY to render
  * the approval summary via `extractApprovals`. The chat route passes
  * `ALL_TOOLS` down so summaries match the model's actual catalog.
  */
@@ -159,7 +159,7 @@ function mapRunItemEvent(
     }
 
     case 'tool_approval_requested': {
-      // Reuse the bridge's extractor so the realtor-facing summary is the
+      // Reuse the bridge's extractor so the rep-facing summary is the
       // exact same text the existing UI already renders.
       const approvals = extractApprovals(
         { interruptions: [interruptionFrom(event.item)] },
@@ -195,7 +195,7 @@ function mapRunItemEvent(
       // PR 1 has no client event for sub-agent handoffs. Surface as a
       // text_delta annotation — same pattern the Modal route uses today
       // (lib/ai-tools/route.ts translate() handoff branch). Keeps the
-      // realtor informed without forcing a client-side change.
+      // rep informed without forcing a client-side change.
       const target = event.item.agent?.name ?? event.item.toolName ?? 'sub-agent';
       const verb = event.name === 'handoff_requested' ? 'Handing off to' : 'Handoff to';
       return { type: 'text_delta', delta: `\n\n_${verb} ${target}_\n\n` };

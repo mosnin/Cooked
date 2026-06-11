@@ -5,7 +5,7 @@ import { getSpaceForUser } from '@/lib/space';
 
 const VALID_GOAL_TYPES = [
   'follow_up_sequence',
-  'tour_booking',
+  'demo_booking',
   'offer_progress',
   'deal_close',
   'reengagement',

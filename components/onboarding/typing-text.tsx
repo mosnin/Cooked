@@ -2,12 +2,12 @@
 
 /**
  * `TypingText` - types a string out character-by-character so a line
- * of copy reads as if it's being written live, right now, by Chippi.
+ * of copy reads as if it's being written live, right now, by Koala.
  *
- * Built for the onboarding reveal (the first-touch draft Chippi
+ * Built for the onboarding reveal (the first-touch draft Koala
  * "writes" before the dashboard loads) and reused by the Phase 4
  * morning-story reveal. The whole emotional payload is the SENSE that
- * Chippi is working in front of you - so the animation is the point,
+ * Koala is working in front of you - so the animation is the point,
  * not decoration.
  *
  * Accessibility + restraint:

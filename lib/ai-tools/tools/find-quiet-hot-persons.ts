@@ -46,7 +46,7 @@ export const findQuietHotPersonsTool = defineTool<
       .from('Contact')
       .select('id, name, leadScore, lastContactedAt, updatedAt')
       .eq('spaceId', ctx.space.id)
-      .is('brokerageId', null)
+      .is('teamId', null)
       .eq('scoreLabel', 'hot')
       .order('leadScore', { ascending: false })
       .limit(40)

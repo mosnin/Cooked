@@ -6,7 +6,7 @@ export async function getSpaceFromSlug(inputSlug: string): Promise<Space | null>
   const slug = normalizeSlug(inputSlug);
   const { data, error } = await supabase
     .from('Space')
-    .select('id, slug, name, emoji, ownerId, brokerageId, createdAt, stripeSubscriptionStatus')
+    .select('id, slug, name, emoji, ownerId, teamId, createdAt, stripeSubscriptionStatus')
     .eq('slug', slug)
     .limit(1)
     .maybeSingle();
@@ -17,9 +17,9 @@ export async function getSpaceFromSlug(inputSlug: string): Promise<Space | null>
 export async function getSpaceByOwnerId(ownerId: string): Promise<Space | null> {
   // Space.ownerId is UNIQUE, so a user has at most one (producing) Space — the
   // .limit(1) is belt-and-suspenders, not a "pick one of many". Note that
-  // space.brokerageId is the intake-config owner, NOT a membership signal:
-  // membership lives in BrokerageMembership. Don't read brokerageId as "which
-  // brokerage this user belongs to."
+  // space.teamId is the intake-config owner, NOT a membership signal:
+  // membership lives in TeamMembership. Don't read teamId as "which
+  // team this user belongs to."
   const { data, error } = await supabase
     .from('Space')
     .select('*')
@@ -60,9 +60,9 @@ export async function getSpaceForUser(clerkUserId: string): Promise<Space | null
   // The SELECT mirrors getSpaceFromSlug exactly — stripeSubscriptionStatus
   // is critical: requireActiveSubscription reads it directly from this row.
   // Previously this query omitted the column, so `space.stripeSubscriptionStatus`
-  // came back undefined → coerced to 'inactive' → every paying realtor was
+  // came back undefined → coerced to 'inactive' → every paying rep was
   // blocked from any route that combined getSpaceForUser + requireActiveSubscription
-  // (Studio generate/edit are the live callers). Active+trialing realtors saw
+  // (Studio generate/edit are the live callers). Active+trialing reps saw
   // a 403 on a paid feature unless they happened to also be platform admins.
   // That's fiduciary harm — we were charging customers and locking them out.
   const { data: user, error: userErr } = await supabase
@@ -76,7 +76,7 @@ export async function getSpaceForUser(clerkUserId: string): Promise<Space | null
 
   const { data, error } = await supabase
     .from('Space')
-    .select('id, slug, name, emoji, ownerId, brokerageId, createdAt, stripeSubscriptionStatus')
+    .select('id, slug, name, emoji, ownerId, teamId, createdAt, stripeSubscriptionStatus')
     .eq('ownerId', user.id)
     .limit(1)
     .maybeSingle();

@@ -1,7 +1,7 @@
 # PRICING_V2_PLAN.md
 
-Implementation plan for the **Chippi V2 three-layer pricing model** (see the
-product spec: Free / Solo / Pro Performer / Team / Team Plus + brokerage
+Implementation plan for the **Koala V2 three-layer pricing model** (see the
+product spec: Free / Solo / Pro Performer / Team / Team Plus + team
 expansion + performance pricing, built on a per-workflow **credit** currency).
 
 > Status: **PLAN — not yet built.** This is the grounded blueprint. Every
@@ -18,17 +18,17 @@ expansion + performance pricing, built on a per-workflow **credit** currency).
 |---|---|---|
 | Stripe client | Optional, gated on `STRIPE_SECRET_KEY` | `lib/stripe.ts` |
 | Billing columns (Space) | `stripeCustomerId/SubscriptionId/Status/PeriodEnd`, `trialUsedAt` | `supabase/migrations/20260324300000_stripe_billing.sql`, `…_trial_tracking.sql` |
-| Billing columns (Brokerage) | same + `plan (starter\|team\|enterprise)`, `seatLimit (5\|15\|null)` | `supabase/migrations/20260509000000_brokerage_billing.sql` |
+| Billing columns (Team) | same + `plan (starter\|team\|enterprise)`, `seatLimit (5\|15\|null)` | `supabase/migrations/20260509000000_team_billing.sql` |
 | Checkout | One flat price per context; **`quantity: 1` hardcoded** | `app/api/billing/checkout/route.ts:151,312` |
 | Webhook | Updates status/plan/seatLimit; Redis idempotency; anti-poisoning guards | `app/api/webhooks/stripe/route.ts` |
-| Access gating | `status IN (active,trialing)` in both layouts | `app/s/[slug]/layout.tsx`, `app/broker/layout.tsx` |
-| Seat counting | members + non-expired pending invites; `checkSeatCapacity()` | `lib/brokerage-seats.ts` |
+| Access gating | `status IN (active,trialing)` in both layouts | `app/s/[slug]/layout.tsx`, `app/manager/layout.tsx` |
+| Seat counting | members + non-expired pending invites; `checkSeatCapacity()` | `lib/team-seats.ts` |
 | Usage metering | **Daily TOKEN budget for autonomous runs only** (Redis `agent:budget:{space}:{date}`) + `ChatUsage` token log | `agent/security/budget.py`, `lib/usage/today-token-usage.ts` |
 | Close → commission | Auto `CommissionLedger` row on `Deal.status='won'` (DB trigger) | `supabase/migrations/20260507000000_commission_ledger.sql` |
 
 **Verified gaps (the work):**
 - ❌ No **credit** currency, balance, ledger, allocation, rollover, or top-ups.
-- ❌ No per-account **plan tier** on `Space` (only `Brokerage.plan`). No Free tier.
+- ❌ No per-account **plan tier** on `Space` (only `Team.plan`). No Free tier.
 - ❌ No **seat/usage-based Stripe billing** — `quantity` is always 1, so Layer 2 auto-expand and Layer 3 metered closes are unbuilt.
 - ❌ No **attribution chain** (score → sequence → close). Only a weak `deal_advanced` correlation signal (`app/api/cron/draft-outcomes/route.ts`).
 - ❌ Three sold workflows **don't exist in code**: full pipeline audit (rescore-all), call prep, and *multi-touch sequences* (today `set_followup` schedules a single follow-up).
@@ -38,9 +38,9 @@ expansion + performance pricing, built on a per-workflow **credit** currency).
 ## 2. The model (from the spec)
 
 - **Layer 1 — Platform tiers:** Free $0 (1 user, **100 one-time** credits, no expiry), Solo $97 (1, 1,500/mo), Pro Performer $197 (1, 4,000/mo), Team $497 (5, 12,000/mo, +$79/user +1,500cr), Team Plus $897 (10, 25,000/mo, +$69/user +2,000cr).
-- **Layer 2 — Brokerage expansion:** auto-expanding per-agent price bands (10–24 → $69/mo, 25–49 → $59, 50–99 → $49, 100–199 → $39, 200+ custom; annual ≈ 18–20% less).
+- **Layer 2 — Team expansion:** auto-expanding per-agent price bands (10–24 → $69/mo, 25–49 → $59, 50–99 → $49, 100–199 → $39, 200+ custom; annual ≈ 18–20% less).
 - **Layer 3 — Performance pricing (100+ agents, on request):** base from $3,497/mo + **$49 per attributed close** (a lead Chip scored, sequenced, and the agent closed).
-- **Credits** are spent per premium workflow: audit 50, follow-up sequence 40, qualification 25, tour 15, briefing 10, call prep 3, score update 1. Paid-plan credits **roll over 30 days**; top-ups (1k/$29, 3k/$69, 8k/$149) are one-time, also 30-day rollover.
+- **Credits** are spent per premium workflow: audit 50, follow-up sequence 40, qualification 25, demo 15, briefing 10, call prep 3, score update 1. Paid-plan credits **roll over 30 days**; top-ups (1k/$29, 3k/$69, 8k/$149) are one-time, also 30-day rollover.
 
 ---
 
@@ -50,12 +50,12 @@ These were left to engineering judgment. They're now decided so nothing is
 blocked; each can be revisited with real production data, but the build proceeds
 on these defaults.
 
-1. **Pooling boundary — DECIDED.** Solo/Pro = per-`Space` balance. Team/Team Plus = pooled per-`Brokerage`. One resolver `resolveBillingAccount(spaceId)` owns the space-vs-brokerage choice; a broker_owner's personal solo space keeps its own balance unless that space is on a Team plan.
+1. **Pooling boundary — DECIDED.** Solo/Pro = per-`Space` balance. Team/Team Plus = pooled per-`Team`. One resolver `resolveBillingAccount(spaceId)` owns the space-vs-team choice; a manager_owner's personal solo space keeps its own balance unless that space is on a Team plan.
 2. **Rollover — DECIDED.** Per-lot `expiresAt = issuedAt + 30d`; balance = Σ `remaining` over non-expired lots; debit FIFO, oldest-expiring first (so granted credits are consumed before they lapse). Free-tier's 100 credits have `expiresAt = NULL` (never expire, per spec).
 3. **Refund-on-failure — DECIDED.** Debit happens just before execution; if the workflow throws, a compensating positive `CreditTxn` restores the lot. Net effect: you're only charged for work that completed.
 4. **Free-tier abuse — DECIDED (accept + monitor).** 100 non-expiring credits, bounded by Clerk account + the existing one-space-per-user rule. No card wall. Add an alert if a single IP/device spins up many free accounts; revisit only if abuse shows up.
 5. **Annual billing — DECIDED.** Annual Stripe price billed upfront; credits granted **monthly** by a cron (`app/api/cron/credit-grants`) keyed off the plan's anniversary day, not the (yearly) invoice event.
-6. **Migration of current subscribers — DECIDED.** `STRIPE_PRICE_ID` (current Solo, already **$97**) → new **Solo** (clean 1:1, just start the 1,500/mo grant). Brokerage `starter`→**Team**, `team`→**Team Plus**, `enterprise`→Layer-2 custom. Grandfather any price delta for one billing cycle; backfill `plan` + an initial credit lot on deploy.
+6. **Migration of current subscribers — DECIDED.** `STRIPE_PRICE_ID` (current Solo, already **$97**) → new **Solo** (clean 1:1, just start the 1,500/mo grant). Team `starter`→**Team**, `team`→**Team Plus**, `enterprise`→Layer-2 custom. Grandfather any price delta for one billing cycle; backfill `plan` + an initial credit lot on deploy.
 
 ### Unit economics (first pass — the number that governs the model)
 
@@ -72,7 +72,7 @@ actions already run on cheap models — scoring on `gpt-4.1-mini`):
 | Lead score update | 1 | $0.02–0.065 | ~$0.005–0.01 | healthy |
 | Call prep | 3 | $0.06–0.20 | ~$0.02–0.05 | healthy |
 | Daily briefing | 10 | $0.19–0.65 | ~$0.05–0.15 | healthy |
-| Tour booking | 15 | $0.28–0.98 | ~$0.05–0.15 | healthy |
+| Demo booking | 15 | $0.28–0.98 | ~$0.05–0.15 | healthy |
 | Lead qualification | 25 | $0.47–1.63 | ~$0.10–0.30 | healthy |
 | Follow-up sequence | 40 | $0.74–2.60 | ~$0.15–0.40 | healthy |
 | **Full pipeline audit** | 50 | $0.93–3.25 | **scales with pipeline size** | ⚠️ unbounded |
@@ -96,7 +96,7 @@ the plan price.
 ## 4. Architecture
 
 ### 4.1 Billing account abstraction
-Introduce a single concept: a **billing account** = the entity that owns a plan + credit balance. It is either a `Space` (Free/Solo/Pro) or a `Brokerage` (Team/Team Plus). One helper `lib/billing/account.ts → resolveBillingAccount(spaceId) → { type, id, plan }` so every debit/grant/gate goes through one resolver. This avoids scattering `space vs brokerage` branching across the metering call sites.
+Introduce a single concept: a **billing account** = the entity that owns a plan + credit balance. It is either a `Space` (Free/Solo/Pro) or a `Team` (Team/Team Plus). One helper `lib/billing/account.ts → resolveBillingAccount(spaceId) → { type, id, plan }` so every debit/grant/gate goes through one resolver. This avoids scattering `space vs team` branching across the metering call sites.
 
 ### 4.2 Plan tiers — `lib/plans.ts` (single source of truth)
 ```ts
@@ -109,8 +109,8 @@ export const PLANS = {
   team_plus: { stripePrice: env.STRIPE_PRICE_TEAM_PLUS,   includedUsers: 10, monthlyCredits: 25000, addUser: { price: 69, credits: 2000 } },
 } as const;
 ```
-- DB: add `plan text NOT NULL DEFAULT 'free'` to `Space` (CHECK `free|solo|pro`); extend `Brokerage.plan` CHECK to add `team|team_plus` (+ the expansion is Layer 2). Replace `seatLimit` semantics with `includedUsers` from `PLANS`.
-- `lib/env.ts`: add `STRIPE_PRICE_{SOLO,PRO,TEAM,TEAM_PLUS}` + the top-up + annual price IDs, with boot validation (today even the brokerage IDs are read raw from `process.env`).
+- DB: add `plan text NOT NULL DEFAULT 'free'` to `Space` (CHECK `free|solo|pro`); extend `Team.plan` CHECK to add `team|team_plus` (+ the expansion is Layer 2). Replace `seatLimit` semantics with `includedUsers` from `PLANS`.
+- `lib/env.ts`: add `STRIPE_PRICE_{SOLO,PRO,TEAM,TEAM_PLUS}` + the top-up + annual price IDs, with boot validation (today even the team IDs are read raw from `process.env`).
 - Checkout: pick price by requested tier; portal/cancel unchanged; webhook writes `plan` and fires the monthly credit grant.
 - Free tier: no Stripe sub. Gate features by `plan` + grant the one-time 100 credits on space creation.
 
@@ -119,7 +119,7 @@ export const PLANS = {
 ```sql
 CREATE TABLE "CreditLot" (              -- a grant or top-up that can expire
   id           text PRIMARY KEY DEFAULT gen_random_uuid()::text,
-  "accountType" text NOT NULL CHECK ("accountType" IN ('space','brokerage')),
+  "accountType" text NOT NULL CHECK ("accountType" IN ('space','team')),
   "accountId"   text NOT NULL,
   amount        integer NOT NULL,       -- credits granted in this lot
   remaining     integer NOT NULL,       -- decremented as spent (FIFO)
@@ -154,15 +154,15 @@ Build decision: **build the 3 missing workflows** so the credit menu isn't selli
 | Lead score update | 1 | ✅ exists | `app/api/contacts/[id]/rescore/route.ts`, `app/api/agent/rescore-contact/route.ts` |
 | Call prep | 3 | ❌ **build** | New agent tool `call_prep` + route; debit on generate |
 | Daily AI briefing | 10 | ✅ exists | `app/api/cron/daily-briefing/route.ts` (debit per brief composed) |
-| Tour booking | 15 | ✅ exists | `lib/ai-tools/tools/schedule-tour.ts` |
+| Demo booking | 15 | ✅ exists | `lib/ai-tools/tools/schedule-demo.ts` |
 | Lead qualification | 25 | ✅ exists (intake→score) | `app/api/public/apply/route.ts` scoring path / agent rescore |
 | Follow-up *sequence* | 40 | ⚠️ **build** (only single `set_followup` today) | extend `lib/ai-tools/tools/set-followup.ts` → multi-touch sequence; debit per sequence |
 | Full pipeline audit | 50 | ❌ **build** (no rescore-all) | New `pipeline_audit` tool + batch rescore + top-5 surfacing; debit per run |
 
 Each hook calls `spendCredits()` **before** doing the work (or debit→refund-on-fail). For agent tools, the debit lives in the tool handler (after approval, before execution).
 
-### 4.5 Layer 2 — brokerage auto-expand
-- Move brokerage subscription to **`quantity = active agent count`** (the count already exists in `lib/brokerage-seats.ts`) with a Stripe **graduated/tiered price** encoding the $69→$59→$49… bands. Adjust quantity (with proration) on member add/remove; reconcile in the webhook. Replaces the hard `seatLimit` caps with metered seats.
+### 4.5 Layer 2 — team auto-expand
+- Move team subscription to **`quantity = active agent count`** (the count already exists in `lib/team-seats.ts`) with a Stripe **graduated/tiered price** encoding the $69→$59→$49… bands. Adjust quantity (with proration) on member add/remove; reconcile in the webhook. Replaces the hard `seatLimit` caps with metered seats.
 - Annual: separate annual graduated price IDs.
 
 ### 4.6 Layer 3 — performance pricing (defer; manual first)
@@ -172,7 +172,7 @@ Each hook calls `spendCredits()` **before** doing the work (or debit→refund-on
 
 ## 5. Phased build order
 
-- **Phase 0 — Tiers + billing account.** `lib/plans.ts`, `Space.plan` migration, `Brokerage.plan` extension, env price IDs + validation, checkout/webhook tier routing, Free-tier gating. *(Stripe products must exist first.)*
+- **Phase 0 — Tiers + billing account.** `lib/plans.ts`, `Space.plan` migration, `Team.plan` extension, env price IDs + validation, checkout/webhook tier routing, Free-tier gating. *(Stripe products must exist first.)*
 - **Phase 1 — Credit ledger.** `CreditLot`/`CreditTxn` migration, `lib/billing/account.ts` + `lib/billing/credits.ts` (`grant/spend/refund/balance`), monthly grant on webhook + annual cron, balance UI (header/settings), top-up checkout. Wire `spendCredits()` into the **4 existing** workflows.
 - **Phase 2 — Missing workflows.** Build `pipeline_audit`, `call_prep`, multi-touch `followup_sequence`; meter each.
 - **Phase 3 — Layer 2 seat metering.** Stripe graduated price + quantity sync + proration; retire `seatLimit` caps.
@@ -181,7 +181,7 @@ Each hook calls `spendCredits()` **before** doing the work (or debit→refund-on
 Phases 0–1 are the foundation everything else needs; do them first.
 
 ## 6. Stripe setup checklist (owner, before Phase 0 ships)
-- Products + monthly **and** annual recurring prices: Solo, Pro, Team (+ per-seat add-on), Team Plus (+ add-on), brokerage graduated seat price (bands), Layer-3 base + metered-usage price.
+- Products + monthly **and** annual recurring prices: Solo, Pro, Team (+ per-seat add-on), Team Plus (+ add-on), team graduated seat price (bands), Layer-3 base + metered-usage price.
 - One-time prices: Starter/Growth/Power top-ups.
 - Set the resulting price IDs as `STRIPE_PRICE_*` env vars in Vercel + Modal secrets.
 

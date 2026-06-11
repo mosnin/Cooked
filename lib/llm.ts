@@ -18,7 +18,7 @@
  *   - **Audio only** — Whisper transcription, TTS, and the Realtime API —
  *     talks to the OpenAI API directly (`process.env.OPENAI_API_KEY`), because
  *     OpenRouter does not expose those endpoints. Those routes
- *     (`app/api/ai/transcribe|speak|realtime-session`, the Telnyx voice
+ *     (`app/api/ai/transcribe|speak|realtime-session`, the Twilio voice
  *     webhook) are the ONLY sanctioned direct-OpenAI callers. If you find a
  *     direct OpenAI client anywhere else doing text completion, it's a bug.
  *
@@ -98,7 +98,7 @@ export function hasLLMKey(): boolean {
  * Resolve a bare OpenAI model name to the slug the active provider wants —
  * vendor-prefixed (`openai/...`) for OpenRouter, bare for OpenAI direct.
  * Use for internal utility calls (embeddings, scoring, compaction). The
- * realtor-pickable chat models in CHAT_MODELS are already OpenRouter slugs.
+ * rep-pickable chat models in CHAT_MODELS are already OpenRouter slugs.
  */
 export function openaiModel(name: string): string {
   return isOpenRouterConfigured() ? `openai/${name}` : name;
@@ -191,7 +191,7 @@ export const PROVIDER_LABELS: Record<string, string> = {
 };
 
 /**
- * Providers where OpenRouter caches input tokens. The realtor should see
+ * Providers where OpenRouter caches input tokens. The rep should see
  * a meaningful hit rate over time on these. xAI / Moonshot / Qwen fall
  * back to Phase 1's prompt trim only, so a 0% rate there is correct —
  * not a bug worth surfacing. Google Gemini was added in Phase 3 once the

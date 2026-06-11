@@ -4,11 +4,11 @@
  * The endpoint is what the settings panel reads on every render. The
  * shape (`{ configured, connections: [{ id, toolkit, status, label,
  * lastError, createdAt }] }`) is bound by the panel's row component; a
- * silent rename here breaks every realtor's integrations screen.
+ * silent rename here breaks every rep's integrations screen.
  *
  * What we guard:
  *   - Auth + space gate (401, 403)
- *   - Revoked rows are filtered out — the audit trail is not realtor-facing
+ *   - Revoked rows are filtered out — the audit trail is not rep-facing
  *   - Field projection — extra columns must not leak into the response
  *   - The `configured` flag reflects the env truthiness
  */
@@ -66,10 +66,10 @@ const mockGetSpaceForUser = vi.mocked(getSpaceForUser);
 const SPACE = {
   id: 'space_1',
   slug: 'jane',
-  name: 'Jane Realty',
+  name: 'Jane Sales',
   emoji: null,
   ownerId: 'user_db_1',
-  brokerageId: null,
+  teamId: null,
   createdAt: '2026-04-01T00:00:00.000Z',
   stripeSubscriptionStatus: 'active',
 } as unknown as NonNullable<Awaited<ReturnType<typeof getSpaceForUser>>>;
@@ -152,14 +152,14 @@ describe('GET /api/integrations', () => {
 
     expect(res.status).toBe(200);
     expect(body.configured).toBe(true);
-    // Revoked row should NOT appear; expired row SHOULD appear (the realtor
+    // Revoked row should NOT appear; expired row SHOULD appear (the rep
     // gets a Reconnect affordance for it).
     const ids = (body.connections as Array<{ id: string }>).map((c) => c.id);
     expect(ids).toEqual(['a', 'c']);
     expect(ids).not.toContain('b');
   });
 
-  it('projects exactly the realtor-facing fields — no DB internals leak', async () => {
+  it('projects exactly the rep-facing fields — no DB internals leak', async () => {
     // The query helper hands us full rows including userId, spaceId,
     // composioConnectionId, updatedAt. The route must drop those before
     // they leave the server boundary — exposing composioConnectionId
@@ -207,9 +207,9 @@ describe('GET /api/integrations', () => {
   });
 
   it('reads connections scoped to the caller\'s space, not the userId', async () => {
-    // Privilege boundary: a realtor on a brokerage seat has a space.id;
+    // Privilege boundary: a rep on a team seat has a space.id;
     // the listConnections helper filters by spaceId. If the route
-    // accidentally passed userId or "all rows", the brokerage would
+    // accidentally passed userId or "all rows", the team would
     // see another agent's connections.
     await GET();
     expect(listConnectionsMock).toHaveBeenCalledTimes(1);

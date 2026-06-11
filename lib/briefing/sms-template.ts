@@ -5,21 +5,21 @@
  * HEADLINE on a word boundary with an ellipsis. Never split into two
  * segments — one brief, one SMS, one tap.
  *
- * Body shape:    "Chippi: {headline} {deepLink}"
+ * Body shape:    "Koala: {headline} {deepLink}"
  *
- * The "Chippi:" prefix gives the realtor instant recognition before
+ * The "Koala:" prefix gives the rep instant recognition before
  * they open the message — Telnyx long codes don't have alphanumeric
  * sender IDs.
  */
 
 const SMS_LIMIT = 160;
-const PREFIX = 'Chippi: ';
+const PREFIX = 'Koala: ';
 
 export interface BriefSmsParams {
   headline: string;
   spaceSlug: string;
   briefDate: string; // YYYY-MM-DD
-  appOrigin: string; // e.g. https://my.usechippi.com — no trailing slash
+  appOrigin: string; // e.g. https://my.usekoala.com — no trailing slash
 }
 
 /**
@@ -30,7 +30,7 @@ export interface BriefSmsParams {
  */
 export function buildBriefSms(params: BriefSmsParams): { body: string; truncated: boolean } {
   const { headline, spaceSlug, briefDate, appOrigin } = params;
-  const deepLink = `${appOrigin}/s/${spaceSlug}/chippi?brief=${briefDate}`;
+  const deepLink = `${appOrigin}/s/${spaceSlug}/axil?brief=${briefDate}`;
 
   // Sanitize headline: strip newlines / tabs, normalize whitespace
   const cleanHeadline = headline.replace(/\s+/g, ' ').trim();
@@ -67,7 +67,7 @@ export function buildBriefSms(params: BriefSmsParams): { body: string; truncated
 
 /**
  * The one-time opt-in disclosure SMS that precedes the FIRST brief SMS
- * a realtor ever receives. Telnyx A2P 10DLC convention.
+ * a rep ever receives. Telnyx A2P 10DLC convention.
  *
  * Sent as its own message immediately before the first real brief.
  * Persistence signal: SpaceSetting.briefSmsConsentSentAt would lock
@@ -75,4 +75,4 @@ export function buildBriefSms(params: BriefSmsParams): { body: string; truncated
  * row for that space as the proxy (first-ever brief send).
  */
 export const BRIEF_SMS_FIRST_DISCLOSURE =
-  'Chippi daily brief — reply STOP to opt out, HELP for help. Msg & data rates may apply.';
+  'Koala daily brief — reply STOP to opt out, HELP for help. Msg & data rates may apply.';

@@ -23,7 +23,7 @@ export interface PublishOutcome {
 interface PublishArgs {
   /** Composio toolkit slug — 'facebook' | 'instagram' | 'linkedin'. */
   toolkit: string;
-  /** The realtor's Clerk userId — Composio's entity id. */
+  /** The rep's Clerk userId — Composio's entity id. */
   entityId: string;
   /** A signed, fetchable URL to the post image. */
   imageUrl: string;

@@ -2,12 +2,12 @@
  * `block_time` — drop a "Blocked" entry on the calendar.
  *
  * Approval-gated: anything that lands on the calendar gets the same prompt
- * as schedule_tour.
+ * as schedule_demo.
  *
  * CalendarEvent's schema is (date, time) not (startsAt, endsAt). We split
  * the requested ISO range to date + HH:MM. Multi-day blocks land as a single
  * row keyed to the start date — that mirrors the existing manual UI; if the
- * realtor needs a multi-day block they create one per day. Honest with the
+ * rep needs a multi-day block they create one per day. Honest with the
  * model: returns the persisted shape so it knows what landed.
  */
 
@@ -25,7 +25,7 @@ const parameters = z
   .refine((v) => new Date(v.to) > new Date(v.from), {
     message: '`to` must be after `from`.',
   })
-  .describe('Block a window on the realtor\'s calendar.');
+  .describe('Block a window on the rep\'s calendar.');
 
 interface BlockTimeResult {
   eventId: string;
@@ -38,7 +38,7 @@ export const blockTimeTool = defineTool<typeof parameters, BlockTimeResult>({
   name: 'block_time',
   riskLevel: 'high',
   description:
-    'Block a window on the realtor\'s calendar with a CalendarEvent. Prompts for approval.',
+    'Block a window on the rep\'s calendar with a CalendarEvent. Prompts for approval.',
   parameters,
   requiresApproval: true,
   rateLimit: { max: 60, windowSeconds: 3600 },

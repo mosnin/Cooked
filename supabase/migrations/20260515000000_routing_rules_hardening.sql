@@ -5,9 +5,9 @@
 --
 --   1. DealRoutingRule was never RLS-enabled, so an attacker with direct
 --      PostgREST access (via the anon key + Clerk JWT) could in principle
---      read rules from every brokerage. The app already uses the service
+--      read rules from every team. The app already uses the service
 --      role key everywhere, but defence-in-depth says enable RLS with no
---      policies (same pattern the rest of the brokerage tables use — only
+--      policies (same pattern the rest of the team tables use — only
 --      service-role access gets through, anon/authenticated get nothing).
 --
 --   2. The FK `destinationUserId REFERENCES "User"(id) ON DELETE SET NULL`
@@ -16,12 +16,12 @@
 --      referenced by a rule is hard-deleted: destinationUserId gets nulled
 --      out, the other destination field is still NULL, the CHECK fires,
 --      and the whole User DELETE rolls back. Net effect: you can't delete
---      a user who's referenced as a routing target until the broker
+--      a user who's referenced as a routing target until the manager
 --      manually reassigns every rule.
 --
 -- Flipping to ON DELETE CASCADE means the rule dies with the user. A rule
 -- whose target is gone has no business continuing to match leads — the
--- broker can recreate it when they know who the replacement should be.
+-- manager can recreate it when they know who the replacement should be.
 -- Hard User deletes are rare (offboarding doesn't delete the row), so this
 -- is a low-frequency operation with a correct semantic outcome.
 -- ============================================================================

@@ -3,7 +3,7 @@
 /**
  * AsciiField: the studio's signature: a slow, calm field of ASCII characters
  * that flow like something being assembled. Ported from fortitudo and retinted
- * to Chippi orange (#ff964f → pale amber on the highlights). Rendered to canvas
+ * to Koala orange (#ff964f → pale amber on the highlights). Rendered to canvas
  * for performance; honors prefers-reduced-motion (draws a single static frame).
  *
  * Orange-on-transparent so it reads on BOTH light and dark: the page surface
@@ -67,7 +67,7 @@ export function AsciiField({
           const ch = ramp[idx];
           if (ch === ' ') continue;
           const a = 0.06 + v * 0.5;
-          // Chippi orange #ff964f, brightening to pale amber on the crests.
+          // Koala orange #ff964f, brightening to pale amber on the crests.
           ctx.fillStyle =
             v > 0.86
               ? `rgba(255,201,148,${a.toFixed(3)})`

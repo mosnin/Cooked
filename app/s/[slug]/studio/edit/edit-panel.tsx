@@ -42,7 +42,7 @@ export function EditPanel({
   // Library "Edit" affordance: hydrate the source picker from a stored
   // asset. We fetch the signed URL, then the bytes, then wrap them in a
   // File so the existing apply path treats it identically to a fresh
-  // upload. Failure is silent — the realtor can still upload manually.
+  // upload. Failure is silent — the rep can still upload manually.
   useEffect(() => {
     if (!initialFileId) return;
     let cancelled = false;
@@ -81,7 +81,7 @@ export function EditPanel({
   }, [initialFileId]);
 
   // Resume-on-mount. A refresh or nav while fal is transforming the image
-  // would otherwise drop the realtor's result on the floor.
+  // would otherwise drop the rep's result on the floor.
   const processingRef = useRef(false);
   useEffect(() => {
     processingRef.current = processing;

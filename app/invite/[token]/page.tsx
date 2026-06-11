@@ -12,12 +12,12 @@ interface InvitationDetail {
   email: string;
   roleToAssign: string;
   expiresAt: string;
-  brokerageName: string;
+  teamName: string;
   logoUrl: string | null;
 }
 
 const roleLabel = (role: string) =>
-  role === 'broker_admin' ? 'Brokerage Admin' : 'Realtor';
+  role === 'manager_admin' ? 'Team Admin' : 'Rep';
 
 export default async function AcceptInvitationPage({ params }: Params) {
   const { token } = await params;
@@ -38,7 +38,7 @@ export default async function AcceptInvitationPage({ params }: Params) {
   try {
     const { data, error } = await supabase
       .from('Invitation')
-      .select('id, status, email, roleToAssign, expiresAt, brokerageId, Brokerage(name, logoUrl)')
+      .select('id, status, email, roleToAssign, expiresAt, teamId, Team(name, logoUrl)')
       .eq('token', token)
       .maybeSingle();
 
@@ -48,15 +48,15 @@ export default async function AcceptInvitationPage({ params }: Params) {
     } else if (!data) {
       fetchError = 'Invitation not found or has expired.';
     } else {
-      const brokerage = data.Brokerage as unknown as { name: string; logoUrl: string | null } | null;
+      const team = data.Team as unknown as { name: string; logoUrl: string | null } | null;
       inv = {
         id: data.id,
         status: data.status,
         email: data.email,
         roleToAssign: data.roleToAssign,
         expiresAt: data.expiresAt,
-        brokerageName: brokerage?.name ?? '',
-        logoUrl: brokerage?.logoUrl ?? null,
+        teamName: team?.name ?? '',
+        logoUrl: team?.logoUrl ?? null,
       };
     }
   } catch (err) {
@@ -80,10 +80,10 @@ export default async function AcceptInvitationPage({ params }: Params) {
                 <Building2 size={20} className="text-background/70" />
               )}
               <p className="text-background font-semibold text-base">
-                {inv?.brokerageName ?? 'Chippi'}
+                {inv?.teamName ?? 'Koala'}
               </p>
             </div>
-            <p className="mt-1 text-background/60 text-sm">Brokerage invitation</p>
+            <p className="mt-1 text-background/60 text-sm">Team invitation</p>
           </div>
 
           <div className="px-6 py-6 space-y-4">
@@ -99,16 +99,16 @@ export default async function AcceptInvitationPage({ params }: Params) {
                   <p className="text-sm">This invitation has already been accepted.</p>
                 </div>
                 <a
-                  href="/broker"
+                  href="/manager"
                   className="block text-center text-sm font-medium text-primary hover:underline underline-offset-2"
                 >
-                  Go to broker dashboard →
+                  Go to manager dashboard →
                 </a>
               </>
             ) : isExpiredOrInvalid ? (
               <div className="flex items-start gap-3 p-3 rounded-lg bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400">
                 <AlertTriangle size={16} className="flex-shrink-0 mt-0.5" />
-                <p className="text-sm">This invitation is no longer valid. Ask your broker to send a new one.</p>
+                <p className="text-sm">This invitation is no longer valid. Ask your manager to send a new one.</p>
               </div>
             ) : inv ? (
               <>
@@ -123,13 +123,13 @@ export default async function AcceptInvitationPage({ params }: Params) {
                 <div>
                   <p className="text-sm text-foreground leading-relaxed">
                     You&apos;ve been invited to join{' '}
-                    <span className="font-semibold">{inv.brokerageName}</span> as a{' '}
+                    <span className="font-semibold">{inv.teamName}</span> as a{' '}
                     <span className="font-semibold">{roleLabel(inv.roleToAssign)}</span>.
                   </p>
                   <p className="text-xs text-muted-foreground mt-2">
-                    {inv.roleToAssign === 'broker_admin'
-                      ? 'You\'ll get access to the brokerage dashboard to help manage the team. No subscription required.'
-                      : 'You\'ll keep your own workspace, leads, and pipeline — this just adds you to the brokerage network.'}
+                    {inv.roleToAssign === 'manager_admin'
+                      ? 'You\'ll get access to the team dashboard to help manage the team. No subscription required.'
+                      : 'You\'ll keep your own workspace, leads, and pipeline — this just adds you to the team network.'}
                   </p>
                 </div>
                 <AcceptButton token={token} />

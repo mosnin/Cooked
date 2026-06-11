@@ -9,7 +9,7 @@
  *
  * The drawer's top edge carries the same warm wash gradient as the dashboard
  * mobile drawer. It's the one sanctioned brand-orange surface on marketing —
- * the realtor opening the nav from a phone touches the same vocabulary they'd
+ * the rep opening the nav from a phone touches the same vocabulary they'd
  * touch inside the product. Sanctioned in STYLESHEET.md §Color via the LOGO
  * context (onboarding/brand-wash surface family).
  */
@@ -96,10 +96,10 @@ export function MarketingNavMobile() {
               <Link
                 href="/"
                 onClick={close}
-                aria-label="Chippi home"
+                aria-label="Koala home"
                 className="flex items-center"
               >
-                <BrandLogo className="h-5" alt="Chippi" />
+                <BrandLogo className="h-5" alt="Koala" />
               </Link>
             </SheetTitle>
             <SheetClose asChild>
@@ -134,7 +134,7 @@ export function MarketingNavMobile() {
           {/* Bottom CTAs — full-width pair separated by a hairline */}
           <div className="border-t border-border/60 px-5 py-4 space-y-2.5">
             <Link
-              href="/login/realtor"
+              href="/login/rep"
               onClick={close}
               className={cn(
                 GHOST_PILL,
@@ -145,7 +145,7 @@ export function MarketingNavMobile() {
               Log in
             </Link>
             <Link
-              href="/login/realtor?intent=signup"
+              href="/login/rep?intent=signup"
               onClick={close}
               className={cn(PRIMARY_PILL, 'w-full justify-center h-11')}
             >

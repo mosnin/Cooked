@@ -1,5 +1,5 @@
 /**
- * `log_sms_sent` — record an SMS the realtor sent OUTSIDE Chippi.
+ * `log_sms_sent` — record an SMS the rep sent OUTSIDE Koala.
  *
  * Approval-gated. Mutating: inserts a ContactActivity of type 'note' with
  * metadata.kind='sms' — the type CHECK enum is
@@ -20,7 +20,7 @@ const parameters = z
     body: z.string().trim().min(1).max(2_000).describe('Message body.'),
     sentAt: z.string().datetime().optional().describe('Optional ISO timestamp; defaults to now.'),
   })
-  .describe('Log an SMS sent outside Chippi to a contact. Audit trail only.');
+  .describe('Log an SMS sent outside Koala to a contact. Audit trail only.');
 
 interface LogSmsResult {
   contactId: string;
@@ -32,7 +32,7 @@ export const logSmsSentTool = defineTool<typeof parameters, LogSmsResult>({
   name: 'log_sms_sent',
   riskLevel: 'low',
   description:
-    'Record an SMS the realtor sent OUTSIDE Chippi against a contact\'s timeline. Does NOT send anything.',
+    'Record an SMS the rep sent OUTSIDE Koala against a contact\'s timeline. Does NOT send anything.',
   parameters,
   requiresApproval: true,
   rateLimit: { max: 60, windowSeconds: 3600 },

@@ -1,6 +1,6 @@
 /**
- * Studio generation — the shared core used by both the realtor-facing route
- * (`/api/studio/generate`) and the internal route the Chippi agent calls
+ * Studio generation — the shared core used by both the rep-facing route
+ * (`/api/studio/generate`) and the internal route the Koala agent calls
  * (`/api/internal/studio/generate`). Keeps generation, storage, and cost
  * metering in one place — no second code path to drift.
  */
@@ -62,7 +62,7 @@ export async function runStudioGeneration(args: {
       : DEFAULT_IMAGE_MODEL;
   const model = STUDIO_MODELS[modelSlug];
 
-  // Brand kit — fold the realtor's palette into the prompt so output comes
+  // Brand kit — fold the rep's palette into the prompt so output comes
   // out on-brand. The original prompt is what gets logged; fal sees the augment.
   let effectivePrompt = prompt;
   const { data: brand } = await supabase
@@ -88,7 +88,7 @@ export async function runStudioGeneration(args: {
   });
   if (genErr) {
     logger.error('[studio.generate] log insert failed', { spaceId: args.spaceId }, genErr);
-    // Surface the underlying error so the realtor sees WHAT's wrong instead
+    // Surface the underlying error so the rep sees WHAT's wrong instead
     // of a generic message that requires log access to diagnose. The
     // common cause is the 20260606000005_studio_tables.sql migration not
     // being applied — without it the table doesn't exist and we get

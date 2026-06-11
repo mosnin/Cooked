@@ -8,7 +8,7 @@
  *   - notifications (master email toggle)
  *   - smsNotifications (master SMS toggle)
  *   - notifyNewLeads (per-event: new lead applications)
- *   - notifyTourBookings (per-event: new tour bookings)
+ *   - notifyDemoBookings (per-event: new demo bookings)
  *   - notifyNewDeals (per-event: new deals)
  *   - notifyFollowUps (per-event: follow-up reminders)
  *
@@ -18,8 +18,8 @@
 import { supabase } from '@/lib/supabase';
 import { sendNewLeadNotification } from '@/lib/email';
 import { sendNewDealNotification } from '@/lib/email';
-import { sendAgentNotification, type TourEmailData } from '@/lib/tour-emails';
-import { sendSMS, newLeadSMS, newTourSMS, newDealSMS } from '@/lib/sms';
+import { sendAgentNotification, type DemoEmailData } from '@/lib/demo-emails';
+import { sendSMS, newLeadSMS, newDemoSMS, newDealSMS } from '@/lib/sms';
 import { sendPushToSpace } from '@/lib/push';
 import { formatCompact } from '@/lib/formatting';
 import { logger } from '@/lib/logger';
@@ -34,7 +34,7 @@ interface SpaceOwnerInfo {
   smsEnabled: boolean;
   // Per-event toggles
   notifyNewLeads: boolean;
-  notifyTourBookings: boolean;
+  notifyDemoBookings: boolean;
   notifyNewDeals: boolean;
   notifyFollowUps: boolean;
   // Web push master toggle
@@ -51,7 +51,7 @@ async function getSpaceOwnerInfo(spaceId: string): Promise<SpaceOwnerInfo | null
       supabase.from('Space').select('ownerId, name, slug').eq('id', spaceId).maybeSingle(),
       supabase
         .from('SpaceSetting')
-        .select('notifications, smsNotifications, phoneNumber, notifyNewLeads, notifyTourBookings, notifyNewDeals, notifyFollowUps, notifyPush')
+        .select('notifications, smsNotifications, phoneNumber, notifyNewLeads, notifyDemoBookings, notifyNewDeals, notifyFollowUps, notifyPush')
         .eq('spaceId', spaceId)
         .maybeSingle(),
     ]);
@@ -81,7 +81,7 @@ async function getSpaceOwnerInfo(spaceId: string): Promise<SpaceOwnerInfo | null
       emailEnabled: settings?.notifications ?? true,
       smsEnabled,
       notifyNewLeads: settings?.notifyNewLeads ?? true,
-      notifyTourBookings: settings?.notifyTourBookings ?? true,
+      notifyDemoBookings: settings?.notifyDemoBookings ?? true,
       notifyNewDeals: settings?.notifyNewDeals ?? true,
       notifyFollowUps: settings?.notifyFollowUps ?? true,
       pushEnabled: settings?.notifyPush ?? true,
@@ -169,59 +169,59 @@ export async function notifyNewLead(params: NotifyNewLeadParams): Promise<void> 
   await Promise.allSettled(promises);
 }
 
-// ── New Tour Booked ──────────────────────────────────────────────────────
+// ── New Demo Booked ──────────────────────────────────────────────────────
 
-export interface NotifyNewTourParams {
+export interface NotifyNewDemoParams {
   spaceId: string;
-  tourData: TourEmailData;
+  demoData: DemoEmailData;
 }
 
 /**
- * Notify space owner about a new tour booking via email + SMS.
- * Respects both the channel toggles AND the notifyTourBookings event toggle.
+ * Notify space owner about a new demo booking via email + SMS.
+ * Respects both the channel toggles AND the notifyDemoBookings event toggle.
  */
-export async function notifyNewTour(params: NotifyNewTourParams): Promise<void> {
+export async function notifyNewDemo(params: NotifyNewDemoParams): Promise<void> {
   const info = await getSpaceOwnerInfo(params.spaceId);
-  if (!info || !info.notifyTourBookings) return;
+  if (!info || !info.notifyDemoBookings) return;
 
   const promises: Promise<unknown>[] = [];
 
   // Email notification to agent
   if (info.emailEnabled) {
     promises.push(
-      sendAgentNotification(info.ownerEmail, params.tourData)
-        .catch((err) => logger.error('[notify] tour email failed', { spaceId: params.spaceId }, err))
+      sendAgentNotification(info.ownerEmail, params.demoData)
+        .catch((err) => logger.error('[notify] demo email failed', { spaceId: params.spaceId }, err))
     );
   }
 
   // SMS notification to agent
   if (info.smsEnabled && info.ownerPhone) {
-    const d = new Date(params.tourData.startsAt);
+    const d = new Date(params.demoData.startsAt);
     promises.push(
       sendSMS(
-        newTourSMS({
+        newDemoSMS({
           spaceName: info.spaceName,
-          guestName: params.tourData.guestName,
+          guestName: params.demoData.guestName,
           date: d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
           time: d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }),
-          property: params.tourData.propertyAddress,
+          property: params.demoData.propertyAddress,
           phone: info.ownerPhone,
         })
-      ).catch((err) => logger.error('[notify] tour SMS failed', { spaceId: params.spaceId }, err))
+      ).catch((err) => logger.error('[notify] demo SMS failed', { spaceId: params.spaceId }, err))
     );
   }
 
   // Push notification
   if (info.pushEnabled) {
-    const d = new Date(params.tourData.startsAt);
+    const d = new Date(params.demoData.startsAt);
     const when = `${d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} at ${d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}`;
-    const prop = params.tourData.propertyAddress ? ` at ${params.tourData.propertyAddress}` : '';
+    const prop = params.demoData.propertyAddress ? ` at ${params.demoData.propertyAddress}` : '';
     promises.push(
       sendPushToSpace(params.spaceId, {
-        title: `New tour: ${params.tourData.guestName}`,
+        title: `New demo: ${params.demoData.guestName}`,
         body: `${when}${prop}.`,
         url: `/s/${info.spaceSlug}/calendar`,
-      }).catch((err) => logger.error('[notify] tour push failed', { spaceId: params.spaceId }, err))
+      }).catch((err) => logger.error('[notify] demo push failed', { spaceId: params.spaceId }, err))
     );
   }
 

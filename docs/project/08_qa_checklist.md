@@ -15,7 +15,7 @@
 - [ ] Authenticated user visiting /sign-in → redirected to /
 - [ ] Authenticated user visiting /sign-up → redirected to /
 - [ ] Non-admin visiting /admin → redirected to /dashboard
-- [ ] Broker-only user visiting /dashboard → redirected to /broker
+- [ ] Manager-only user visiting /dashboard → redirected to /manager
 - [ ] User visiting /s/[other-user-slug] → 404
 - [ ] Deep links preserve intended destination after login
 
@@ -28,13 +28,13 @@
 
 ## Dashboard
 - [ ] Loads with correct data for the current space
-- [ ] Summary metrics (new apps, total leads, clients, deals, tours, follow-ups) are accurate
+- [ ] Summary metrics (new apps, total leads, clients, deals, demos, follow-ups) are accurate
 - [ ] Intake link card shows correct URL with copy/preview
-- [ ] Tour booking link card shows correct URL with copy/preview
+- [ ] Demo booking link card shows correct URL with copy/preview
 - [ ] Recent applications list shows latest leads with score badges
 - [ ] Pipeline card shows stages with counts and values
 - [ ] Follow-up widget shows past-due contacts
-- [ ] Upcoming tours widget shows next tours
+- [ ] Upcoming demos widget shows next demos
 - [ ] Empty states show when no data exists
 - [ ] Loading skeleton appears while data fetches
 
@@ -61,15 +61,15 @@
 - [ ] Deal detail shows activities and linked contacts
 - [ ] Custom stage creation works (name, color, position)
 
-## Tours
+## Demos
 - [ ] Public booking page at /book/[slug] loads correctly
-- [ ] Available slots respect tour hours, days, and buffer
-- [ ] Booking creates Tour record with correct data
-- [ ] Tour status badges display correctly
+- [ ] Available slots respect demo hours, days, and buffer
+- [ ] Booking creates Demo record with correct data
+- [ ] Demo status badges display correctly
 - [ ] Blocked dates not shown as available
 - [ ] Availability overrides work
 - [ ] Waitlist captures when no slots available
-- [ ] Tour management via manage token works
+- [ ] Demo management via manage token works
 
 ## AI Assistant
 - [ ] Chat interface sends and receives messages
@@ -82,14 +82,14 @@
 - [ ] Workspace settings save with toast confirmation
 - [ ] Profile updates save correctly
 - [ ] Configure page: intake title/intro save
-- [ ] Configure page: tour settings save
+- [ ] Configure page: demo settings save
 - [ ] Billing page displays subscription status
 - [ ] Workspace settings restricted to space owner
 - [ ] Notification preferences persist across sessions
 - [ ] Security settings (password change via Clerk) work correctly
 
 ## Permissions
-- [ ] Each role (Platform Admin, Broker Owner, Broker Manager, Realtor Member, Solo Realtor) can only access their permitted routes
+- [ ] Each role (Platform Admin, Manager Owner, Manager Manager, Rep Member, Solo Rep) can only access their permitted routes
 - [ ] Sidebar hides links the user cannot access based on role
 - [ ] API endpoints enforce role checks (not just UI visibility)
 - [ ] Role changes take effect without requiring re-login
@@ -103,30 +103,30 @@
 - [ ] Invoice history accessible with download links
 - [ ] 7-day trial countdown displays correctly and converts on expiry
 
-## Broker Portal
-- [ ] Broker dashboard loads for broker_owner/broker_admin
-- [ ] Realtors list shows brokerage members
+## Manager Portal
+- [ ] Manager dashboard loads for manager_owner/manager_admin
+- [ ] Reps list shows team members
 - [ ] Invitation send works
 - [ ] Invitation accept via /invite/[token] works
 - [ ] Join via /join/[code] works
-- [ ] Non-brokers cannot access /broker
+- [ ] Non-managers cannot access /manager
 
 ## Admin
 - [ ] Admin panel only visible to platformRole='admin'
 - [ ] User list shows all users with details
-- [ ] Brokerage list shows all brokerages with details
+- [ ] Team list shows all teams with details
 - [ ] Individual user detail page works
-- [ ] Individual brokerage detail page works
+- [ ] Individual team detail page works
 - [ ] Non-admin redirected to /dashboard
 - [ ] Admin actions are logged to AuditLog
 - [ ] Admin cannot remove their own platform admin access
 
 ## Empty States
-- [ ] Dashboard empty state: intake link card always shown, prompts for no leads/deals/tours
+- [ ] Dashboard empty state: intake link card always shown, prompts for no leads/deals/demos
 - [ ] Leads: "No applications yet — share your intake link"
 - [ ] Contacts: "No contacts yet" with CTA
 - [ ] Deals: "No deals yet" with CTA
-- [ ] Tours: "No upcoming tours" with settings link
+- [ ] Demos: "No upcoming demos" with settings link
 - [ ] Analytics: "Not enough data yet"
 
 ## Error States

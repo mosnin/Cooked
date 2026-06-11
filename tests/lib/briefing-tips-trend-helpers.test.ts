@@ -5,7 +5,7 @@ import {
   isReplyRateSampleStable,
   replyRateConfidence,
   stageStagnationConfidence,
-  tourConversionConfidence,
+  demoConversionConfidence,
   median,
   interArrivalDays,
 } from '@/lib/briefing/tips/tip-categories';
@@ -66,11 +66,11 @@ describe('trend tips — confidence ladders match the spec', () => {
     expect(stageStagnationConfidence(10, 90)).toBe(0.92);
   });
 
-  it('tourConversionConfidence steps up at 6 tours', () => {
-    expect(tourConversionConfidence(4)).toBe(0.78);
-    expect(tourConversionConfidence(5)).toBe(0.78);
-    expect(tourConversionConfidence(6)).toBe(0.88);
-    expect(tourConversionConfidence(12)).toBe(0.88);
+  it('demoConversionConfidence steps up at 6 demos', () => {
+    expect(demoConversionConfidence(4)).toBe(0.78);
+    expect(demoConversionConfidence(5)).toBe(0.78);
+    expect(demoConversionConfidence(6)).toBe(0.88);
+    expect(demoConversionConfidence(12)).toBe(0.88);
   });
 });
 
@@ -111,21 +111,21 @@ describe('trend tips — cool-down policy', () => {
   it('all four C2 trend categories get a 14-day cool-down', () => {
     expect(coolDownDaysFor('reply_rate_decline', 'shown')).toBe(14);
     expect(coolDownDaysFor('stage_stagnation', 'shown')).toBe(14);
-    expect(coolDownDaysFor('tour_conversion_drop', 'shown')).toBe(14);
+    expect(coolDownDaysFor('demo_conversion_drop', 'shown')).toBe(14);
     expect(coolDownDaysFor('source_dry_spell', 'shown')).toBe(14);
   });
 
   it('C2 trend categories still get 60 days when dismissed', () => {
     expect(coolDownDaysFor('reply_rate_decline', 'dismissed')).toBe(60);
     expect(coolDownDaysFor('stage_stagnation', 'dismissed')).toBe(60);
-    expect(coolDownDaysFor('tour_conversion_drop', 'dismissed')).toBe(60);
+    expect(coolDownDaysFor('demo_conversion_drop', 'dismissed')).toBe(60);
     expect(coolDownDaysFor('source_dry_spell', 'dismissed')).toBe(60);
   });
 
   it('acted resets all trend cool-downs to 0 — fresh trigger fires again', () => {
     expect(coolDownDaysFor('reply_rate_decline', 'acted')).toBe(0);
     expect(coolDownDaysFor('stage_stagnation', 'acted')).toBe(0);
-    expect(coolDownDaysFor('tour_conversion_drop', 'acted')).toBe(0);
+    expect(coolDownDaysFor('demo_conversion_drop', 'acted')).toBe(0);
     expect(coolDownDaysFor('source_dry_spell', 'acted')).toBe(0);
   });
 });

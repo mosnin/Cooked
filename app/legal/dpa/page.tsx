@@ -1,6 +1,6 @@
 export const metadata = {
-  title: 'Data Processing Agreement | Chippi',
-  description: 'Data Processing Agreement for Chippi, a B2B SaaS agentic OS for real estate agents and brokerages.',
+  title: 'Data Processing Agreement | Koala',
+  description: 'Data Processing Agreement for Koala, a B2B SaaS agentic OS for sales agents and teams.',
 };
 
 export default function DataProcessingAgreementPage() {
@@ -14,9 +14,9 @@ export default function DataProcessingAgreementPage() {
 
       <p className="text-sm leading-6 text-muted-foreground">
         This Data Processing Agreement (&quot;DPA&quot;) forms part of the <a href="/legal/terms" className="underline hover:text-foreground">Terms of Service</a> between
-        Chippi Inc. (&quot;Processor,&quot; &quot;Chippi,&quot; &quot;we,&quot; &quot;us,&quot; or &quot;our&quot;) and the Subscriber (&quot;Controller,&quot; &quot;you,&quot;
-        or &quot;your&quot;) who has agreed to the Terms of Service for the Chippi platform available at usechippi.com
-        and my.usechippi.com (the &quot;Service&quot;). This DPA sets out the terms under which Chippi processes
+        Koala Inc. (&quot;Processor,&quot; &quot;Koala,&quot; &quot;we,&quot; &quot;us,&quot; or &quot;our&quot;) and the Subscriber (&quot;Controller,&quot; &quot;you,&quot;
+        or &quot;your&quot;) who has agreed to the Terms of Service for the Koala platform available at usekoala.com
+        and my.usekoala.com (the &quot;Service&quot;). This DPA sets out the terms under which Koala processes
         personal data on behalf of the Controller.
       </p>
 
@@ -26,8 +26,8 @@ export default function DataProcessingAgreementPage() {
         <div className="mt-3 text-sm text-muted-foreground space-y-3 leading-6">
           <p>1.1. In this DPA, the following terms have the meanings set out below:</p>
           <ul className="list-disc pl-5 space-y-2">
-            <li><strong className="text-foreground">&quot;Controller&quot;</strong> means the Subscriber (realtor, brokerage, or other entity) that determines the purposes and means of the processing of personal data through the Service. The Controller is the Data Controller with respect to all Applicant data and Subscriber Data processed through the Service.</li>
-            <li><strong className="text-foreground">&quot;Processor&quot;</strong> means Chippi Inc., which processes personal data on behalf of the Controller in connection with the provision of the Service.</li>
+            <li><strong className="text-foreground">&quot;Controller&quot;</strong> means the Subscriber (rep, team, or other entity) that determines the purposes and means of the processing of personal data through the Service. The Controller is the Data Controller with respect to all Applicant data and Subscriber Data processed through the Service.</li>
+            <li><strong className="text-foreground">&quot;Processor&quot;</strong> means Koala Inc., which processes personal data on behalf of the Controller in connection with the provision of the Service.</li>
             <li><strong className="text-foreground">&quot;Personal Data&quot;</strong> means any information relating to an identified or identifiable natural person that is processed by the Processor on behalf of the Controller through the Service.</li>
             <li><strong className="text-foreground">&quot;Data Subject&quot;</strong> means the identified or identifiable natural person to whom Personal Data relates, including Applicants who submit data through intake forms.</li>
             <li><strong className="text-foreground">&quot;Sub-Processor&quot;</strong> means any third party engaged by the Processor to process Personal Data on behalf of the Controller.</li>
@@ -48,10 +48,10 @@ export default function DataProcessingAgreementPage() {
             <li>Housing preferences and requirements submitted through intake forms.</li>
             <li>Employment and financial information (if collected by the Controller through intake forms).</li>
             <li>Lead scoring data and AI-generated advisory outputs.</li>
-            <li>Deal pipeline information and tour scheduling data.</li>
+            <li>Deal pipeline information and demo scheduling data.</li>
             <li>Communications sent through the Service (email and SMS).</li>
           </ul>
-          <p>2.3. The categories of Data Subjects include Applicants, prospective buyers, prospective renters, and other individuals whose data the Controller collects through the Service.</p>
+          <p>2.3. The categories of Data Subjects include Applicants, prospects, customers, and other individuals whose data the Controller collects through the Service.</p>
           <p>2.4. Processing activities include storage, retrieval, organization, AI scoring analysis, notification delivery (email and SMS), and deletion of Personal Data as necessary to provide the Service.</p>
         </div>
       </section>
@@ -228,9 +228,9 @@ export default function DataProcessingAgreementPage() {
         <div className="mt-3 text-sm text-muted-foreground space-y-3 leading-6">
           <p>For questions about this Data Processing Agreement, please contact us:</p>
           <p>
-            Chippi Inc.<br />
-            Email: <a href="mailto:help@usechippi.com" className="underline hover:text-foreground">help@usechippi.com</a><br />
-            Website: <a href="https://usechippi.com" className="underline hover:text-foreground">usechippi.com</a>
+            Koala Inc.<br />
+            Email: <a href="mailto:help@usekoala.com" className="underline hover:text-foreground">help@usekoala.com</a><br />
+            Website: <a href="https://usekoala.com" className="underline hover:text-foreground">usekoala.com</a>
           </p>
         </div>
       </section>

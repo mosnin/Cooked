@@ -1,7 +1,7 @@
 /**
  * `find_overdue_followups` — contacts whose followUpAt has passed.
  *
- * Read-only. The follow-up date is a realtor-set field; this is the simplest
+ * Read-only. The follow-up date is a rep-set field; this is the simplest
  * signal of "you said you'd circle back, you haven't."
  */
 
@@ -37,7 +37,7 @@ export const findOverdueFollowupsTool = defineTool<typeof parameters, FindOverdu
       .from('Contact')
       .select('id, name, followUpAt')
       .eq('spaceId', ctx.space.id)
-      .is('brokerageId', null)
+      .is('teamId', null)
       .not('followUpAt', 'is', null)
       .lte('followUpAt', nowIso)
       .order('followUpAt', { ascending: true })

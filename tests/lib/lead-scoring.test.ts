@@ -17,7 +17,7 @@ import type { ScoringModel } from '@/lib/scoring/scoring-model-types';
 
 describe('computeLeadScore — rental engine', () => {
   const strong = {
-    name: 'Strong Renter',
+    name: 'Strong Prospect',
     email: 'strong@example.com',
     phone: '5551234567',
     budget: null,
@@ -35,7 +35,7 @@ describe('computeLeadScore — rental engine', () => {
   };
 
   const middling = {
-    name: 'Middling Renter',
+    name: 'Middling Prospect',
     email: 'mid@example.com',
     phone: '5552223333',
     budget: null,
@@ -52,7 +52,7 @@ describe('computeLeadScore — rental engine', () => {
   };
 
   const weak = {
-    name: 'Weak Renter',
+    name: 'Weak Prospect',
     email: null,
     phone: '5559998888',
     budget: null,

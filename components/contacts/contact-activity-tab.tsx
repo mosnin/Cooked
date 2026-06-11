@@ -19,7 +19,7 @@ type ManualActivityType = 'note' | 'call' | 'email' | 'meeting' | 'follow_up';
 
 type TimelineEntry = {
   id: string;
-  kind: 'activity' | 'tour' | 'deal' | 'system';
+  kind: 'activity' | 'demo' | 'deal' | 'system';
   type: string;
   content: string | null;
   metadata: Record<string, unknown> | null;
@@ -29,14 +29,14 @@ type TimelineEntry = {
 const TYPE_META = ACTIVITY_META;
 const ACTIVITY_TYPES: ManualActivityType[] = ['note', 'call', 'email', 'meeting', 'follow_up'];
 
-// Meta for system/tour/deal events. One muted neutral for every icon —
+// Meta for system/demo/deal events. One muted neutral for every icon —
 // the icon shape carries the meaning. Mirrors ACTIVITY_META discipline.
 const SYSTEM_META: Record<string, { label: string; icon: typeof CalendarDays; color: string }> = {
-  tour_scheduled: { label: 'Tour scheduled', icon: CalendarDays, color: 'bg-muted text-muted-foreground' },
-  tour_confirmed: { label: 'Tour confirmed', icon: CalendarDays, color: 'bg-muted text-muted-foreground' },
-  tour_completed: { label: 'Tour completed', icon: CalendarDays, color: 'bg-muted text-muted-foreground' },
-  tour_cancelled: { label: 'Tour cancelled', icon: CalendarDays, color: 'bg-muted text-muted-foreground' },
-  tour_no_show: { label: 'No-show', icon: CalendarDays, color: 'bg-muted text-muted-foreground' },
+  demo_scheduled: { label: 'Demo scheduled', icon: CalendarDays, color: 'bg-muted text-muted-foreground' },
+  demo_confirmed: { label: 'Demo confirmed', icon: CalendarDays, color: 'bg-muted text-muted-foreground' },
+  demo_completed: { label: 'Demo completed', icon: CalendarDays, color: 'bg-muted text-muted-foreground' },
+  demo_cancelled: { label: 'Demo cancelled', icon: CalendarDays, color: 'bg-muted text-muted-foreground' },
+  demo_no_show: { label: 'No-show', icon: CalendarDays, color: 'bg-muted text-muted-foreground' },
   deal_created: { label: 'Deal created', icon: Briefcase, color: 'bg-muted text-muted-foreground' },
   contact_created: { label: 'Contact added', icon: UserPlus, color: 'bg-muted text-muted-foreground' },
   stage_change: { label: 'Stage change', icon: ArrowRight, color: 'bg-muted text-muted-foreground' },
@@ -61,7 +61,7 @@ export function ContactActivityTab({ contactId, contactCreatedAt }: { contactId:
   const fetchTimeline = useCallback(async () => {
     setLoading(true);
     try {
-      const [activitiesRes, toursRes] = await Promise.all([
+      const [activitiesRes, demosRes] = await Promise.all([
         fetch(`/api/contacts/${contactId}/activity`),
         fetch(`/api/contacts/${contactId}/timeline`),
       ]);
@@ -83,9 +83,9 @@ export function ContactActivityTab({ contactId, contactCreatedAt }: { contactId:
         }
       }
 
-      // Tour + deal events from timeline endpoint
-      if (toursRes.ok) {
-        const events = await toursRes.json();
+      // Demo + deal events from timeline endpoint
+      if (demosRes.ok) {
+        const events = await demosRes.json();
         for (const e of events) {
           entries.push(e);
         }

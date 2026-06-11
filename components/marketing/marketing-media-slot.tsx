@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * `<MarketingMediaSlot>` — explicit placeholder for media the realtor will
+ * `<MarketingMediaSlot>` — explicit placeholder for media the rep will
  * supply. We never ship royalty-free stock — the brand promise is "calm,
  * paper-flat, and quietly confident", and a stock photo of someone in a
  * suit pointing at a laptop breaks that promise on first impression.

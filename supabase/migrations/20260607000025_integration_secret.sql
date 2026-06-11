@@ -3,7 +3,7 @@
 -- some CRMs — Follow Up Boss is the first — authenticate with a user-issued
 -- API key over HTTP Basic, with no OAuth dance and no Composio toolkit.
 --
--- For those, the realtor pastes their API key once; we encrypt it at rest
+-- For those, the rep pastes their API key once; we encrypt it at rest
 -- (AES-256-GCM via lib/crypto.ts, same as the Google Calendar token) and
 -- store the ciphertext here. The row's composioConnectionId carries a
 -- 'native:<toolkit>' sentinel so the unique-active index keeps working and

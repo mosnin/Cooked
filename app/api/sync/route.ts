@@ -1,7 +1,7 @@
 /**
  * GET /api/sync?slug=<slug>
  *
- * Detects the realtor's connected CRM(s) and pulls records via Composio.
+ * Detects the rep's connected CRM(s) and pulls records via Composio.
  *
  * Unified contract:
  *   { connected: boolean, source: string | null, records: SyncRecord[] }

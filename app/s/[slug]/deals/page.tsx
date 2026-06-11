@@ -11,7 +11,7 @@ type StageWithDeals = DealStage & { deals: Deal[] };
  * Server-side fetch for pipelines + the default pipeline's stages-with-deals.
  *
  * Without this the deals page would render KPI cells at 0 until the client
- * round-trip finished — on a slow connection the realtor would see "0 active
+ * round-trip finished — on a slow connection the rep would see "0 active
  * deals" for a beat on every reload, which read as "I lost your data."
  * Pre-computing on the server makes the first paint truthful.
  *
@@ -35,7 +35,7 @@ async function loadInitialDealsData(spaceId: string): Promise<{
       return { pipelines, initialStages: [], initialPipelineId: null };
     }
 
-    // The client may override this with the realtor's localStorage pick after
+    // The client may override this with the rep's localStorage pick after
     // mount; the first paint uses the first pipeline so we always have
     // something to compute KPIs from.
     const firstPipelineId = pipelines[0].id;
@@ -86,7 +86,7 @@ export default async function DealsPage({
 
   // Middleware only requires login; ownership of /s/[slug] is enforced here.
   const { userId } = await auth();
-  if (!userId) redirect('/login/realtor');
+  if (!userId) redirect('/login/rep');
 
   let space;
   try {

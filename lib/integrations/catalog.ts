@@ -1,16 +1,16 @@
 /**
- * The catalog of third-party apps Chippi can connect to. One entry per app
- * the realtor sees in the integrations panel. Composio's catalog has 100+
- * toolkits — we curate the subset that matters for a real-estate workflow
+ * The catalog of third-party apps Koala can connect to. One entry per app
+ * the rep sees in the integrations panel. Composio's catalog has 100+
+ * toolkits — we curate the subset that matters for a sales workflow
  * and surface those by name. The rest are reachable but not promoted.
  *
  * Curation principles (Jobs lens):
- *   - Default-promote the apps a realtor would already pay for. No "browse
+ *   - Default-promote the apps a rep would already pay for. No "browse
  *     all 100" wall.
  *   - One entry per app, one connect button per entry. No multi-step
  *     wizards inside an entry.
  *   - Categories are guidance, not a filter dropdown — they help the
- *     realtor scan, not configure.
+ *     rep scan, not configure.
  *
  * The `toolkit` slug is what Composio knows the app as. We pass it
  * verbatim to `composio.toolkits.get(slug)` and to `composio.tools.list({
@@ -24,7 +24,7 @@ export type IntegrationCategory =
   | 'calendar'
   | 'docs'
   | 'crm'
-  | 'real-estate'
+  | 'sales'
   | 'social'
   | 'ads'
   | 'payments'
@@ -37,9 +37,9 @@ export type IntegrationCategory =
 export interface IntegrationApp {
   /** Composio toolkit slug — the canonical id we pass to the SDK. */
   toolkit: string;
-  /** Display name shown to the realtor. */
+  /** Display name shown to the rep. */
   name: string;
-  /** One-line description. Realtor language, no marketing fluff. */
+  /** One-line description. Rep language, no marketing fluff. */
   blurb: string;
   category: IntegrationCategory;
   /**
@@ -83,28 +83,28 @@ export const COMING_SOON_TOOLKITS = new Set<string>([
 ]);
 
 /**
- * Catalog ordering matters — this is the order the realtor sees them.
+ * Catalog ordering matters — this is the order the rep sees them.
  * Group within categories by use-frequency, not alphabetical.
  */
 export const INTEGRATIONS: IntegrationApp[] = [
   // ── Email ────────────────────────────────────────────────────────────
-  { toolkit: 'gmail', name: 'Gmail', blurb: 'Send drafts. Chippi notices replies and drafts an answer.', category: 'email', promoted: true, iconUrl: '/integrations/gmail.svg' },
+  { toolkit: 'gmail', name: 'Gmail', blurb: 'Send drafts. Koala notices replies and drafts an answer.', category: 'email', promoted: true, iconUrl: '/integrations/gmail.svg' },
   { toolkit: 'outlook', name: 'Outlook', blurb: 'Same, for Microsoft accounts.', category: 'email', promoted: true, iconUrl: '/integrations/outlook.svg' },
-  { toolkit: 'mailchimp', name: 'Mailchimp', blurb: 'Drip nurture, announcements. Chippi notices subscribes and unsubscribes.', category: 'email', promoted: true, iconUrl: '/integrations/mailchimp.svg' },
+  { toolkit: 'mailchimp', name: 'Mailchimp', blurb: 'Drip nurture, announcements. Koala notices subscribes and unsubscribes.', category: 'email', promoted: true, iconUrl: '/integrations/mailchimp.svg' },
 
   // ── Calendar ─────────────────────────────────────────────────────────
-  { toolkit: 'googlecalendar', name: 'Google Calendar', blurb: 'Schedule tours, block time. Chippi notices RSVPs and cancellations.', category: 'calendar', promoted: true, iconUrl: '/integrations/googlecalendar.svg' },
+  { toolkit: 'googlecalendar', name: 'Google Calendar', blurb: 'Schedule demos, block time. Koala notices RSVPs and cancellations.', category: 'calendar', promoted: true, iconUrl: '/integrations/googlecalendar.svg' },
   { toolkit: 'outlook_calendar', name: 'Outlook Calendar', blurb: 'Same, for Microsoft accounts.', category: 'calendar', promoted: true, iconUrl: '/integrations/outlook.svg' },
-  { toolkit: 'calendly', name: 'Calendly', blurb: 'Sync your booking link with Chippi.', category: 'calendar', promoted: true, iconUrl: '/integrations/calendly.svg' },
+  { toolkit: 'calendly', name: 'Calendly', blurb: 'Sync your booking link with Koala.', category: 'calendar', promoted: true, iconUrl: '/integrations/calendly.svg' },
   { toolkit: 'cal', name: 'Cal.com', blurb: 'Open-source booking pages.', category: 'calendar' },
 
   // ── Messaging ────────────────────────────────────────────────────────
-  // Twilio + WhatsApp are the realtor's phone — SMS for US clients, WhatsApp
+  // Twilio + WhatsApp are the rep's phone — SMS for US clients, WhatsApp
   // for international and under-40 segment. Slack/Discord/Teams are internal
   // team comms; the SMS-class tools are client comms.
-  { toolkit: 'twilio', name: 'Twilio', blurb: 'Connect your SMS and voice records so Chippi can read them into the right deal.', category: 'messaging', promoted: true, iconUrl: '/integrations/twilio.svg' },
-  { toolkit: 'whatsapp', name: 'WhatsApp', blurb: 'Bring buyer and agent threads into Chippi so the history lives on the deal.', category: 'messaging', promoted: true, iconUrl: '/integrations/whatsapp.svg' },
-  { toolkit: 'slack', name: 'Slack', blurb: 'Post to your team channel. Chippi drafts replies to your DMs.', category: 'messaging', promoted: true, iconUrl: '/integrations/slack.svg' },
+  { toolkit: 'twilio', name: 'Twilio', blurb: 'Powers click-to-call — Koala places, records, and transcribes your sales calls, then Axil summarizes them.', category: 'messaging', promoted: true, iconUrl: '/integrations/twilio.svg' },
+  { toolkit: 'whatsapp', name: 'WhatsApp', blurb: 'Bring buyer and agent threads into Koala so the history lives on the deal.', category: 'messaging', promoted: true, iconUrl: '/integrations/whatsapp.svg' },
+  { toolkit: 'slack', name: 'Slack', blurb: 'Post to your team channel. Koala drafts replies to your DMs.', category: 'messaging', promoted: true, iconUrl: '/integrations/slack.svg' },
   { toolkit: 'discord', name: 'Discord', blurb: 'Same, for Discord servers.', category: 'messaging', iconUrl: '/integrations/discord.svg' },
   { toolkit: 'microsoft_teams', name: 'Microsoft Teams', blurb: 'Same, for Teams channels.', category: 'messaging', iconUrl: '/integrations/microsoftteams.svg' },
 
@@ -115,7 +115,7 @@ export const INTEGRATIONS: IntegrationApp[] = [
   { toolkit: 'instagram', name: 'Instagram', blurb: 'Surface DMs and listing-post engagement.', category: 'social', promoted: true, iconUrl: '/integrations/instagram.svg' },
   { toolkit: 'linkedin', name: 'LinkedIn', blurb: 'Track outbound and inbound on your professional network.', category: 'social', promoted: true, iconUrl: '/integrations/linkedin.svg' },
   { toolkit: 'reddit', name: 'Reddit', blurb: 'Watch local-market subreddits for buyer signals.', category: 'social', iconUrl: '/integrations/reddit.svg' },
-  { toolkit: 'youtube', name: 'YouTube', blurb: 'Upload listing tours and market-update videos, pull view counts.', category: 'social', promoted: true, iconUrl: '/integrations/youtube.svg' },
+  { toolkit: 'youtube', name: 'YouTube', blurb: 'Upload listing demos and market-update videos, pull view counts.', category: 'social', promoted: true, iconUrl: '/integrations/youtube.svg' },
 
   // ── Ads ──────────────────────────────────────────────────────────────
   // Paid-acquisition reporting and lead-form pulls.
@@ -123,36 +123,36 @@ export const INTEGRATIONS: IntegrationApp[] = [
 
   // ── Payments ─────────────────────────────────────────────────────────
   // Earnest-money deposits, transaction-coordination retainers, listing-prep
-  // fees. Realtors increasingly take money directly instead of waiting on
-  // closing — Chippi can draft and send the payment link.
-  { toolkit: 'stripe', name: 'Stripe', blurb: 'Collect deposits and fees. Chippi acknowledges payments and chases failures.', category: 'payments', promoted: true, iconUrl: '/integrations/stripe.svg' },
+  // fees. Reps increasingly take money directly instead of waiting on
+  // closing — Koala can draft and send the payment link.
+  { toolkit: 'stripe', name: 'Stripe', blurb: 'Collect deposits and fees. Koala acknowledges payments and chases failures.', category: 'payments', promoted: true, iconUrl: '/integrations/stripe.svg' },
 
   // ── Docs ─────────────────────────────────────────────────────────────
-  { toolkit: 'notion', name: 'Notion', blurb: 'Capture deals, tours, and notes in your workspace.', category: 'docs', promoted: true, iconUrl: '/integrations/notion.svg' },
+  { toolkit: 'notion', name: 'Notion', blurb: 'Capture deals, demos, and notes in your workspace.', category: 'docs', promoted: true, iconUrl: '/integrations/notion.svg' },
   { toolkit: 'googledocs', name: 'Google Docs', blurb: 'Open and edit listing descriptions, scripts, briefs.', category: 'docs', iconUrl: '/integrations/googledocs.svg' },
   { toolkit: 'googlesheets', name: 'Google Sheets', blurb: 'Update lead trackers and pipeline reports.', category: 'docs', promoted: true, iconUrl: '/integrations/googlesheets.svg' },
 
   // ── Storage ──────────────────────────────────────────────────────────
-  { toolkit: 'googledrive', name: 'Google Drive', blurb: 'Pull listing photos and disclosures Chippi can attach to drafts.', category: 'storage', iconUrl: '/integrations/googledrive.svg' },
+  { toolkit: 'googledrive', name: 'Google Drive', blurb: 'Pull listing photos and disclosures Koala can attach to drafts.', category: 'storage', iconUrl: '/integrations/googledrive.svg' },
   { toolkit: 'onedrive', name: 'OneDrive', blurb: 'Same, for Microsoft accounts.', category: 'storage', iconUrl: '/integrations/onedrive.svg' },
   { toolkit: 'dropbox', name: 'Dropbox', blurb: 'Same, for Dropbox.', category: 'storage', iconUrl: '/integrations/dropbox.svg' },
 
   // ── CRM (general) ────────────────────────────────────────────────────
-  // HubSpot is the one most realtors land on. The rest are here for the
-  // brokerage that already lives inside Salesforce/Pipedrive/Zoho — we
+  // HubSpot is the one most reps land on. The rest are here for the
+  // team that already lives inside Salesforce/Pipedrive/Zoho — we
   // call out what's distinct so the row doesn't read as catalog padding.
-  { toolkit: 'hubspot', name: 'HubSpot', blurb: 'Sync deals and contacts. Chippi watches stage changes and new contacts.', category: 'crm', promoted: true, iconUrl: '/integrations/hubspot.svg' },
-  { toolkit: 'salesforce', name: 'Salesforce', blurb: 'Mirror to your brokerage Salesforce org.', category: 'crm', iconUrl: '/integrations/salesforce.svg' },
+  { toolkit: 'hubspot', name: 'HubSpot', blurb: 'Sync deals and contacts. Koala watches stage changes and new contacts.', category: 'crm', promoted: true, iconUrl: '/integrations/hubspot.svg' },
+  { toolkit: 'salesforce', name: 'Salesforce', blurb: 'Mirror to your team Salesforce org.', category: 'crm', iconUrl: '/integrations/salesforce.svg' },
   { toolkit: 'pipedrive', name: 'Pipedrive', blurb: 'Push pipeline stages into Pipedrive.', category: 'crm' },
   { toolkit: 'zoho', name: 'Zoho CRM', blurb: 'Two-way sync with Zoho.', category: 'crm', iconUrl: '/integrations/zoho.svg' },
 
-  // ── Real estate ──────────────────────────────────────────────────────
+  // ── Sales ──────────────────────────────────────────────────────
   // Slugs are snake_case to match Composio's catalog convention.
-  { toolkit: 'follow_up_boss', name: 'Follow-up Boss', blurb: 'Sync your Follow-up Boss pipeline.', category: 'real-estate', promoted: true, comingSoon: true },
-  { toolkit: 'compass', name: 'Compass', blurb: 'Sync your Compass pipeline.', category: 'real-estate', promoted: true, comingSoon: true },
-  { toolkit: 'boomtown', name: 'BoomTown', blurb: 'Pull BoomTown leads into Chippi.', category: 'real-estate', promoted: true, comingSoon: true },
-  { toolkit: 'kvcore', name: 'kvCORE', blurb: 'Pull kvCORE leads and tasks into Chippi.', category: 'real-estate', promoted: true, comingSoon: true },
-  { toolkit: 'real_geeks', name: 'Real Geeks', blurb: 'Pull Real Geeks leads into Chippi.', category: 'real-estate', comingSoon: true },
+  { toolkit: 'follow_up_boss', name: 'Follow-up Boss', blurb: 'Sync your Follow-up Boss pipeline.', category: 'sales', promoted: true, comingSoon: true },
+  { toolkit: 'compass', name: 'Compass', blurb: 'Sync your Compass pipeline.', category: 'sales', promoted: true, comingSoon: true },
+  { toolkit: 'boomtown', name: 'BoomTown', blurb: 'Pull BoomTown leads into Koala.', category: 'sales', promoted: true, comingSoon: true },
+  { toolkit: 'kvcore', name: 'kvCORE', blurb: 'Pull kvCORE leads and tasks into Koala.', category: 'sales', promoted: true, comingSoon: true },
+  { toolkit: 'real_geeks', name: 'Real Geeks', blurb: 'Pull Real Geeks leads into Koala.', category: 'sales', comingSoon: true },
 
   // ── Documents + signing ──────────────────────────────────────────────
   { toolkit: 'docusign', name: 'DocuSign', blurb: 'Send contracts and disclosures for signature.', category: 'docs-sign', promoted: true, iconUrl: '/integrations/docusign.svg' },
@@ -163,11 +163,11 @@ export const INTEGRATIONS: IntegrationApp[] = [
   { toolkit: 'trello', name: 'Trello', blurb: 'Boards for prospects, listings, closings.', category: 'tasks', iconUrl: '/integrations/trello.svg' },
 
   // ── Forms / lead intake ──────────────────────────────────────────────
-  { toolkit: 'typeform', name: 'Typeform', blurb: 'Pull form responses into Chippi as new leads.', category: 'forms', iconUrl: '/integrations/typeform.svg' },
+  { toolkit: 'typeform', name: 'Typeform', blurb: 'Pull form responses into Koala as new leads.', category: 'forms', iconUrl: '/integrations/typeform.svg' },
   { toolkit: 'googleforms', name: 'Google Forms', blurb: 'Same, for Google Forms.', category: 'forms', iconUrl: '/integrations/googleforms.svg' },
 
   // ── Video / meetings ─────────────────────────────────────────────────
-  { toolkit: 'zoom', name: 'Zoom', blurb: 'Schedule virtual showings and broker calls.', category: 'video', iconUrl: '/integrations/zoom.svg' },
+  { toolkit: 'zoom', name: 'Zoom', blurb: 'Schedule virtual showings and manager calls.', category: 'video', iconUrl: '/integrations/zoom.svg' },
   { toolkit: 'googlemeet', name: 'Google Meet', blurb: 'Same, for Google Meet.', category: 'video', iconUrl: '/integrations/googlemeet.svg' },
   { toolkit: 'loom', name: 'Loom', blurb: 'Async property walkthroughs and contract explanations buyers can replay.', category: 'video', promoted: true, iconUrl: '/integrations/loom.svg' },
 

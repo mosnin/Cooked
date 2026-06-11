@@ -30,7 +30,7 @@ export function DealCommissionSplits({ dealId, dealValue, dealCommissionRate, in
   const [loading, setLoading] = useState(false);
   const [adding, setAdding] = useState(false);
   const [draft, setDraft] = useState<{ party: CommissionParty; label: string; basis: CommissionBasis; percent: string; flat: string }>({
-    party: 'brokerage',
+    party: 'team',
     label: '',
     basis: 'percent',
     percent: '',
@@ -84,7 +84,7 @@ export function DealCommissionSplits({ dealId, dealValue, dealCommissionRate, in
     const created: CommissionSplit = await res.json();
     setItems((prev) => [...prev, created]);
     setAdding(false);
-    setDraft({ party: 'brokerage', label: '', basis: 'percent', percent: '', flat: '' });
+    setDraft({ party: 'team', label: '', basis: 'percent', percent: '', flat: '' });
   }
 
   async function togglePaid(s: CommissionSplit) {
@@ -190,7 +190,7 @@ export function DealCommissionSplits({ dealId, dealValue, dealCommissionRate, in
                 type="text"
                 value={draft.label}
                 onChange={(e) => setDraft((d) => ({ ...d, label: e.target.value }))}
-                placeholder="Label (e.g. Broker split)"
+                placeholder="Label (e.g. Manager split)"
                 className="text-xs border border-border rounded px-2 py-1 bg-transparent"
                 maxLength={160}
               />

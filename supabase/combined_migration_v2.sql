@@ -32,7 +32,7 @@ CREATE INDEX IF NOT EXISTS "Attachment_conversationId_idx"
   ON "Attachment" ("conversationId")
   WHERE "conversationId" IS NOT NULL;
 
--- ── 3. Brokerage offboarding (20260506000000) ─────────────────────────────────
+-- ── 3. Team offboarding (20260506000000) ─────────────────────────────────
 ALTER TABLE "User"
   ADD COLUMN IF NOT EXISTS status text NOT NULL DEFAULT 'active'
     CHECK (status IN ('active', 'offboarded'));
@@ -44,10 +44,10 @@ ALTER TABLE "User"
   ADD COLUMN IF NOT EXISTS "offboardedToUserId" text
     REFERENCES "User"(id) ON DELETE SET NULL;
 
-CREATE OR REPLACE FUNCTION offboard_brokerage_member(
+CREATE OR REPLACE FUNCTION offboard_team_member(
   p_leaving_user_id     text,
   p_destination_user_id text,
-  p_brokerage_id        text,
+  p_team_id        text,
   p_dry_run             boolean DEFAULT false
 ) RETURNS json
 LANGUAGE plpgsql
@@ -59,8 +59,8 @@ DECLARE
   v_destination_space_id text;
   v_contact_count        integer := 0;
   v_deal_count           integer := 0;
-  v_tour_count           integer := 0;
-  v_open_tour_count      integer := 0;
+  v_demo_count           integer := 0;
+  v_open_demo_count      integer := 0;
 BEGIN
   SELECT id INTO v_leaving_space_id
     FROM "Space" WHERE "ownerId" = p_leaving_user_id FOR UPDATE;
@@ -77,23 +77,23 @@ BEGIN
   END IF;
   IF p_dry_run THEN
     SELECT COUNT(*) INTO v_contact_count FROM "Contact"
-      WHERE "spaceId" = v_leaving_space_id AND "brokerageId" = p_brokerage_id;
+      WHERE "spaceId" = v_leaving_space_id AND "teamId" = p_team_id;
     SELECT COUNT(DISTINCT d.id) INTO v_deal_count FROM "Deal" d
       WHERE d."spaceId" = v_leaving_space_id
         AND d.id IN (SELECT dc."dealId" FROM "DealContact" dc
           JOIN "Contact" c ON c.id = dc."contactId"
-          WHERE c."spaceId" = v_leaving_space_id AND c."brokerageId" = p_brokerage_id);
-    SELECT COUNT(*) INTO v_open_tour_count FROM "Tour" t
+          WHERE c."spaceId" = v_leaving_space_id AND c."teamId" = p_team_id);
+    SELECT COUNT(*) INTO v_open_demo_count FROM "Demo" t
       JOIN "Contact" c ON c.id = t."contactId"
       WHERE t."spaceId" = v_leaving_space_id AND c."spaceId" = v_leaving_space_id
-        AND c."brokerageId" = p_brokerage_id AND t."startsAt" >= now();
+        AND c."teamId" = p_team_id AND t."startsAt" >= now();
     RETURN json_build_object('dryRun', true, 'contactCount', v_contact_count,
-      'dealCount', v_deal_count, 'openTourCount', v_open_tour_count);
+      'dealCount', v_deal_count, 'openDemoCount', v_open_demo_count);
   END IF;
   CREATE TEMP TABLE _moved_contacts ON COMMIT DROP AS
   WITH moved AS (
     UPDATE "Contact" SET "spaceId" = v_destination_space_id
-    WHERE "spaceId" = v_leaving_space_id AND "brokerageId" = p_brokerage_id
+    WHERE "spaceId" = v_leaving_space_id AND "teamId" = p_team_id
     RETURNING id) SELECT id FROM moved;
   GET DIAGNOSTICS v_contact_count = ROW_COUNT;
   UPDATE "ContactActivity" SET "spaceId" = v_destination_space_id
@@ -111,41 +111,41 @@ BEGIN
   UPDATE "DealChecklistItem" SET "spaceId" = v_destination_space_id
     WHERE "dealId" IN (SELECT id FROM _moved_deals);
   WITH moved AS (
-    UPDATE "Tour" SET "spaceId" = v_destination_space_id
+    UPDATE "Demo" SET "spaceId" = v_destination_space_id
     WHERE "spaceId" = v_leaving_space_id
       AND "contactId" IN (SELECT id FROM _moved_contacts)
     RETURNING 1)
-  SELECT COUNT(*) INTO v_tour_count FROM moved;
+  SELECT COUNT(*) INTO v_demo_count FROM moved;
   UPDATE "User" SET status = 'offboarded', "offboardedAt" = now(),
     "offboardedToUserId" = p_destination_user_id WHERE id = p_leaving_user_id;
-  DELETE FROM "BrokerageMembership"
-    WHERE "userId" = p_leaving_user_id AND "brokerageId" = p_brokerage_id;
+  DELETE FROM "TeamMembership"
+    WHERE "userId" = p_leaving_user_id AND "teamId" = p_team_id;
   RETURN json_build_object('dryRun', false, 'contactsMoved', v_contact_count,
-    'dealsMoved', v_deal_count, 'toursMoved', v_tour_count);
+    'dealsMoved', v_deal_count, 'demosMoved', v_demo_count);
 END;
 $$;
 
-GRANT EXECUTE ON FUNCTION offboard_brokerage_member(text, text, text, boolean)
+GRANT EXECUTE ON FUNCTION offboard_team_member(text, text, text, boolean)
   TO authenticated, service_role;
 
 -- ── 4. Commission ledger (20260507000000) ─────────────────────────────────────
-ALTER TABLE "Brokerage"
+ALTER TABLE "Team"
   ADD COLUMN IF NOT EXISTS "defaultAgentRate"  numeric(5,2) NOT NULL DEFAULT 2.5,
-  ADD COLUMN IF NOT EXISTS "defaultBrokerRate" numeric(5,2) NOT NULL DEFAULT 0.5;
+  ADD COLUMN IF NOT EXISTS "defaultManagerRate" numeric(5,2) NOT NULL DEFAULT 0.5;
 
 CREATE TABLE IF NOT EXISTS "CommissionLedger" (
   id               text PRIMARY KEY DEFAULT gen_random_uuid()::text,
-  "brokerageId"    text NOT NULL REFERENCES "Brokerage"(id) ON DELETE CASCADE,
+  "teamId"    text NOT NULL REFERENCES "Team"(id) ON DELETE CASCADE,
   "agentUserId"    text NOT NULL REFERENCES "User"(id) ON DELETE CASCADE,
   "dealId"         text NOT NULL REFERENCES "Deal"(id) ON DELETE CASCADE,
   "closedAt"       timestamptz NOT NULL,
   "dealValue"      numeric(12,2) NOT NULL,
   "agentRate"      numeric(5,2) NOT NULL,
-  "brokerRate"     numeric(5,2) NOT NULL,
+  "managerRate"     numeric(5,2) NOT NULL,
   "referralRate"   numeric(5,2) NOT NULL DEFAULT 0,
   "referralUserId" text REFERENCES "User"(id) ON DELETE SET NULL,
   "agentAmount"    numeric(12,2) NOT NULL,
-  "brokerAmount"   numeric(12,2) NOT NULL,
+  "managerAmount"   numeric(12,2) NOT NULL,
   "referralAmount" numeric(12,2) NOT NULL DEFAULT 0,
   status           text NOT NULL DEFAULT 'pending'
                      CHECK (status IN ('pending','paid','void')),
@@ -156,8 +156,8 @@ CREATE TABLE IF NOT EXISTS "CommissionLedger" (
   UNIQUE ("dealId")
 );
 
-CREATE INDEX IF NOT EXISTS idx_commission_brokerage
-  ON "CommissionLedger" ("brokerageId", "closedAt" DESC);
+CREATE INDEX IF NOT EXISTS idx_commission_team
+  ON "CommissionLedger" ("teamId", "closedAt" DESC);
 CREATE INDEX IF NOT EXISTS idx_commission_agent
   ON "CommissionLedger" ("agentUserId", "closedAt" DESC);
 CREATE INDEX IF NOT EXISTS idx_commission_status
@@ -166,24 +166,24 @@ CREATE INDEX IF NOT EXISTS idx_commission_status
 CREATE OR REPLACE FUNCTION sync_commission_ledger()
 RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
 DECLARE
-  v_brokerage_id text; v_owner_id text;
-  v_agent_rate numeric(5,2); v_broker_rate numeric(5,2);
+  v_team_id text; v_owner_id text;
+  v_agent_rate numeric(5,2); v_manager_rate numeric(5,2);
   v_deal_value numeric(12,2);
 BEGIN
-  SELECT s."brokerageId", s."ownerId" INTO v_brokerage_id, v_owner_id
+  SELECT s."teamId", s."ownerId" INTO v_team_id, v_owner_id
     FROM "Space" s WHERE s.id = NEW."spaceId";
-  IF v_brokerage_id IS NULL THEN RETURN NEW; END IF;
-  SELECT b."defaultAgentRate", b."defaultBrokerRate" INTO v_agent_rate, v_broker_rate
-    FROM "Brokerage" b WHERE b.id = v_brokerage_id;
-  IF v_agent_rate IS NULL OR v_broker_rate IS NULL THEN RETURN NEW; END IF;
+  IF v_team_id IS NULL THEN RETURN NEW; END IF;
+  SELECT b."defaultAgentRate", b."defaultManagerRate" INTO v_agent_rate, v_manager_rate
+    FROM "Team" b WHERE b.id = v_team_id;
+  IF v_agent_rate IS NULL OR v_manager_rate IS NULL THEN RETURN NEW; END IF;
   v_deal_value := COALESCE(NEW.value, 0);
-  INSERT INTO "CommissionLedger" ("brokerageId","agentUserId","dealId","closedAt",
-    "dealValue","agentRate","brokerRate","referralRate","agentAmount","brokerAmount",
+  INSERT INTO "CommissionLedger" ("teamId","agentUserId","dealId","closedAt",
+    "dealValue","agentRate","managerRate","referralRate","agentAmount","managerAmount",
     "referralAmount",status)
-  VALUES (v_brokerage_id, v_owner_id, NEW.id, now(), v_deal_value, v_agent_rate,
-    v_broker_rate, 0,
+  VALUES (v_team_id, v_owner_id, NEW.id, now(), v_deal_value, v_agent_rate,
+    v_manager_rate, 0,
     ROUND((v_deal_value * v_agent_rate / 100)::numeric, 2),
-    ROUND((v_deal_value * v_broker_rate / 100)::numeric, 2),
+    ROUND((v_deal_value * v_manager_rate / 100)::numeric, 2),
     0, 'pending')
   ON CONFLICT ("dealId") DO NOTHING;
   RETURN NEW;
@@ -203,36 +203,36 @@ CREATE TRIGGER trg_deal_won_update
   WHEN (OLD.status IS DISTINCT FROM NEW.status AND NEW.status = 'won')
   EXECUTE FUNCTION sync_commission_ledger();
 
-INSERT INTO "CommissionLedger" ("brokerageId","agentUserId","dealId","closedAt",
-  "dealValue","agentRate","brokerRate","referralRate","agentAmount","brokerAmount",
+INSERT INTO "CommissionLedger" ("teamId","agentUserId","dealId","closedAt",
+  "dealValue","agentRate","managerRate","referralRate","agentAmount","managerAmount",
   "referralAmount",status)
-SELECT s."brokerageId", s."ownerId", d.id, COALESCE(d."updatedAt", now()),
-  COALESCE(d.value, 0), b."defaultAgentRate", b."defaultBrokerRate", 0,
+SELECT s."teamId", s."ownerId", d.id, COALESCE(d."updatedAt", now()),
+  COALESCE(d.value, 0), b."defaultAgentRate", b."defaultManagerRate", 0,
   ROUND((COALESCE(d.value,0) * b."defaultAgentRate" / 100)::numeric, 2),
-  ROUND((COALESCE(d.value,0) * b."defaultBrokerRate" / 100)::numeric, 2),
+  ROUND((COALESCE(d.value,0) * b."defaultManagerRate" / 100)::numeric, 2),
   0, 'pending'
 FROM "Deal" d
 JOIN "Space" s ON s.id = d."spaceId"
-JOIN "Brokerage" b ON b.id = s."brokerageId"
-WHERE d.status = 'won' AND s."brokerageId" IS NOT NULL
+JOIN "Team" b ON b.id = s."teamId"
+WHERE d.status = 'won' AND s."teamId" IS NOT NULL
   AND NOT EXISTS (SELECT 1 FROM "CommissionLedger" cl WHERE cl."dealId" = d.id);
 
 ALTER TABLE "CommissionLedger" ENABLE ROW LEVEL SECURITY;
 
 -- ── 5. Offboarding hardening (20260508000000) ─────────────────────────────────
-REVOKE EXECUTE ON FUNCTION offboard_brokerage_member(text, text, text, boolean)
+REVOKE EXECUTE ON FUNCTION offboard_team_member(text, text, text, boolean)
   FROM authenticated;
 
-CREATE OR REPLACE FUNCTION offboard_brokerage_member(
+CREATE OR REPLACE FUNCTION offboard_team_member(
   p_leaving_user_id     text,
   p_destination_user_id text,
-  p_brokerage_id        text,
+  p_team_id        text,
   p_dry_run             boolean DEFAULT false
 ) RETURNS json LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
 DECLARE
   v_leaving_space_id text; v_destination_space_id text;
   v_contact_count integer := 0; v_deal_count integer := 0;
-  v_tour_count integer := 0; v_open_tour_count integer := 0;
+  v_demo_count integer := 0; v_open_demo_count integer := 0;
   v_dest_status text;
 BEGIN
   SELECT id INTO v_leaving_space_id
@@ -254,23 +254,23 @@ BEGIN
   END IF;
   IF p_dry_run THEN
     SELECT COUNT(*) INTO v_contact_count FROM "Contact"
-      WHERE "spaceId" = v_leaving_space_id AND "brokerageId" = p_brokerage_id;
+      WHERE "spaceId" = v_leaving_space_id AND "teamId" = p_team_id;
     SELECT COUNT(DISTINCT d.id) INTO v_deal_count FROM "Deal" d
       WHERE d."spaceId" = v_leaving_space_id
         AND d.id IN (SELECT dc."dealId" FROM "DealContact" dc
           JOIN "Contact" c ON c.id = dc."contactId"
-          WHERE c."spaceId" = v_leaving_space_id AND c."brokerageId" = p_brokerage_id);
-    SELECT COUNT(*) INTO v_open_tour_count FROM "Tour" t
+          WHERE c."spaceId" = v_leaving_space_id AND c."teamId" = p_team_id);
+    SELECT COUNT(*) INTO v_open_demo_count FROM "Demo" t
       JOIN "Contact" c ON c.id = t."contactId"
       WHERE t."spaceId" = v_leaving_space_id AND c."spaceId" = v_leaving_space_id
-        AND c."brokerageId" = p_brokerage_id AND t."startsAt" >= now();
+        AND c."teamId" = p_team_id AND t."startsAt" >= now();
     RETURN json_build_object('dryRun', true, 'contactCount', v_contact_count,
-      'dealCount', v_deal_count, 'openTourCount', v_open_tour_count);
+      'dealCount', v_deal_count, 'openDemoCount', v_open_demo_count);
   END IF;
   CREATE TEMP TABLE _moved_contacts ON COMMIT DROP AS
   WITH moved AS (
     UPDATE "Contact" SET "spaceId" = v_destination_space_id
-    WHERE "spaceId" = v_leaving_space_id AND "brokerageId" = p_brokerage_id
+    WHERE "spaceId" = v_leaving_space_id AND "teamId" = p_team_id
     RETURNING id) SELECT id FROM moved;
   GET DIAGNOSTICS v_contact_count = ROW_COUNT;
   UPDATE "ContactActivity" SET "spaceId" = v_destination_space_id
@@ -288,44 +288,44 @@ BEGIN
   UPDATE "DealChecklistItem" SET "spaceId" = v_destination_space_id
     WHERE "dealId" IN (SELECT id FROM _moved_deals);
   WITH moved AS (
-    UPDATE "Tour" SET "spaceId" = v_destination_space_id
+    UPDATE "Demo" SET "spaceId" = v_destination_space_id
     WHERE "spaceId" = v_leaving_space_id
       AND "contactId" IN (SELECT id FROM _moved_contacts)
     RETURNING 1)
-  SELECT COUNT(*) INTO v_tour_count FROM moved;
+  SELECT COUNT(*) INTO v_demo_count FROM moved;
   UPDATE "User" SET status = 'offboarded', "offboardedAt" = now(),
     "offboardedToUserId" = p_destination_user_id WHERE id = p_leaving_user_id;
-  DELETE FROM "BrokerageMembership"
-    WHERE "userId" = p_leaving_user_id AND "brokerageId" = p_brokerage_id;
+  DELETE FROM "TeamMembership"
+    WHERE "userId" = p_leaving_user_id AND "teamId" = p_team_id;
   RETURN json_build_object('dryRun', false, 'contactsMoved', v_contact_count,
-    'dealsMoved', v_deal_count, 'toursMoved', v_tour_count);
+    'dealsMoved', v_deal_count, 'demosMoved', v_demo_count);
 END; $$;
 
--- ── 6. Brokerage billing (20260509000000) ─────────────────────────────────────
-ALTER TABLE "Brokerage"
+-- ── 6. Team billing (20260509000000) ─────────────────────────────────────
+ALTER TABLE "Team"
   ADD COLUMN IF NOT EXISTS plan text NOT NULL DEFAULT 'starter'
     CHECK (plan IN ('starter', 'team', 'enterprise'));
 
-ALTER TABLE "Brokerage"
+ALTER TABLE "Team"
   ADD COLUMN IF NOT EXISTS "seatLimit" integer;
 
-ALTER TABLE "Brokerage"
+ALTER TABLE "Team"
   ADD COLUMN IF NOT EXISTS "stripeCustomerId" text;
 
-ALTER TABLE "Brokerage"
+ALTER TABLE "Team"
   ADD COLUMN IF NOT EXISTS "stripeSubscriptionId" text;
 
-ALTER TABLE "Brokerage"
+ALTER TABLE "Team"
   ADD COLUMN IF NOT EXISTS "stripeSubscriptionStatus" text NOT NULL DEFAULT 'inactive'
     CHECK ("stripeSubscriptionStatus" IN ('active','trialing','past_due','canceled','unpaid','inactive'));
 
-ALTER TABLE "Brokerage"
+ALTER TABLE "Team"
   ADD COLUMN IF NOT EXISTS "stripePeriodEnd" timestamptz;
 
-UPDATE "Brokerage" SET "seatLimit" = 5  WHERE plan = 'starter' AND "seatLimit" IS NULL;
-UPDATE "Brokerage" SET "seatLimit" = 15 WHERE plan = 'team'    AND "seatLimit" IS NULL;
+UPDATE "Team" SET "seatLimit" = 5  WHERE plan = 'starter' AND "seatLimit" IS NULL;
+UPDATE "Team" SET "seatLimit" = 15 WHERE plan = 'team'    AND "seatLimit" IS NULL;
 
-UPDATE "Brokerage" b
+UPDATE "Team" b
 SET "stripeCustomerId"         = s."stripeCustomerId",
     "stripeSubscriptionId"     = s."stripeSubscriptionId",
     "stripeSubscriptionStatus" = s."stripeSubscriptionStatus",
@@ -335,12 +335,12 @@ WHERE s."ownerId" = b."ownerId"
   AND b."stripeSubscriptionId" IS NULL
   AND s."stripeSubscriptionId" IS NOT NULL;
 
-CREATE INDEX IF NOT EXISTS idx_brokerage_stripe_sub
-  ON "Brokerage"("stripeSubscriptionId")
+CREATE INDEX IF NOT EXISTS idx_team_stripe_sub
+  ON "Team"("stripeSubscriptionId")
   WHERE "stripeSubscriptionId" IS NOT NULL;
 
-CREATE INDEX IF NOT EXISTS idx_brokerage_stripe_customer
-  ON "Brokerage"("stripeCustomerId")
+CREATE INDEX IF NOT EXISTS idx_team_stripe_customer
+  ON "Team"("stripeCustomerId")
   WHERE "stripeCustomerId" IS NOT NULL;
 
 -- ── 7. Deal review requests (20260510000000) ──────────────────────────────────
@@ -348,7 +348,7 @@ CREATE TABLE IF NOT EXISTS "DealReviewRequest" (
   id                  text PRIMARY KEY DEFAULT gen_random_uuid()::text,
   "dealId"            text NOT NULL REFERENCES "Deal"(id) ON DELETE CASCADE,
   "requestingUserId"  text NOT NULL REFERENCES "User"(id) ON DELETE CASCADE,
-  "brokerageId"       text NOT NULL REFERENCES "Brokerage"(id) ON DELETE CASCADE,
+  "teamId"       text NOT NULL REFERENCES "Team"(id) ON DELETE CASCADE,
   status              text NOT NULL DEFAULT 'open'
     CHECK (status IN ('open', 'approved', 'closed')),
   reason              text NOT NULL,
@@ -366,8 +366,8 @@ CREATE TABLE IF NOT EXISTS "DealReviewComment" (
   "createdAt"       timestamptz NOT NULL DEFAULT now()
 );
 
-CREATE INDEX IF NOT EXISTS idx_dealreview_brokerage_status
-  ON "DealReviewRequest"("brokerageId", status);
+CREATE INDEX IF NOT EXISTS idx_dealreview_team_status
+  ON "DealReviewRequest"("teamId", status);
 CREATE INDEX IF NOT EXISTS idx_dealreview_deal
   ON "DealReviewRequest"("dealId");
 CREATE INDEX IF NOT EXISTS idx_dealreviewcomment_request_created
@@ -378,12 +378,12 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_dealreview_open_per_deal
 ALTER TABLE "DealReviewRequest" ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "DealReviewComment" ENABLE ROW LEVEL SECURITY;
 
--- ── 8. Brokerage templates (20260511000000) ───────────────────────────────────
-CREATE TABLE IF NOT EXISTS "BrokerageTemplate" (
+-- ── 8. Team templates (20260511000000) ───────────────────────────────────
+CREATE TABLE IF NOT EXISTS "TeamTemplate" (
   id                 text        PRIMARY KEY DEFAULT gen_random_uuid()::text,
-  "brokerageId"      text        NOT NULL REFERENCES "Brokerage"(id) ON DELETE CASCADE,
+  "teamId"      text        NOT NULL REFERENCES "Team"(id) ON DELETE CASCADE,
   name               text        NOT NULL,
-  category           text        NOT NULL CHECK (category IN ('follow-up','intro','closing','tour-invite')),
+  category           text        NOT NULL CHECK (category IN ('follow-up','intro','closing','demo-invite')),
   channel            text        NOT NULL CHECK (channel IN ('sms','email','note')),
   subject            text,
   body               text        NOT NULL,
@@ -396,42 +396,42 @@ CREATE TABLE IF NOT EXISTS "BrokerageTemplate" (
 );
 
 ALTER TABLE "MessageTemplate"
-  ADD COLUMN IF NOT EXISTS "sourceTemplateId" text REFERENCES "BrokerageTemplate"(id) ON DELETE SET NULL;
+  ADD COLUMN IF NOT EXISTS "sourceTemplateId" text REFERENCES "TeamTemplate"(id) ON DELETE SET NULL;
 
 ALTER TABLE "MessageTemplate"
   ADD COLUMN IF NOT EXISTS "sourceVersion" integer;
 
-CREATE INDEX IF NOT EXISTS idx_brokerage_template_brokerage_updated
-  ON "BrokerageTemplate" ("brokerageId", "updatedAt" DESC);
+CREATE INDEX IF NOT EXISTS idx_team_template_team_updated
+  ON "TeamTemplate" ("teamId", "updatedAt" DESC);
 
 CREATE INDEX IF NOT EXISTS idx_message_template_source
   ON "MessageTemplate" ("sourceTemplateId")
   WHERE "sourceTemplateId" IS NOT NULL;
 
--- Data migration from legacy '[BROKER_TEMPLATES]' Note rows (idempotent)
+-- Data migration from legacy '[MANAGER_TEMPLATES]' Note rows (idempotent)
 DO $$
 DECLARE
   note_rec record; tmpl jsonb;
-  v_brokerage_id text; v_name text; v_category text; v_body text;
+  v_team_id text; v_name text; v_category text; v_body text;
   v_created_by_raw text; v_created_by text; v_parsed jsonb;
 BEGIN
   FOR note_rec IN
-    SELECT n.id AS note_id, n.content, n."spaceId", s."brokerageId" AS brokerage_id
+    SELECT n.id AS note_id, n.content, n."spaceId", s."teamId" AS team_id
     FROM "Note" n JOIN "Space" s ON s.id = n."spaceId"
-    WHERE n.title = '[BROKER_TEMPLATES]'
+    WHERE n.title = '[MANAGER_TEMPLATES]'
   LOOP
-    IF note_rec.brokerage_id IS NULL THEN CONTINUE; END IF;
+    IF note_rec.team_id IS NULL THEN CONTINUE; END IF;
     BEGIN v_parsed := note_rec.content::jsonb;
     EXCEPTION WHEN others THEN CONTINUE;
     END;
     IF v_parsed IS NULL OR jsonb_typeof(v_parsed) <> 'array' THEN CONTINUE; END IF;
-    v_brokerage_id := note_rec.brokerage_id;
+    v_team_id := note_rec.team_id;
     FOR tmpl IN SELECT * FROM jsonb_array_elements(v_parsed)
     LOOP
       v_name := NULLIF(tmpl->>'name',''); v_category := NULLIF(tmpl->>'category','');
       v_body := NULLIF(tmpl->>'body',''); v_created_by_raw := NULLIF(tmpl->>'createdBy','');
       IF v_name IS NULL OR v_body IS NULL OR v_category IS NULL THEN CONTINUE; END IF;
-      IF v_category NOT IN ('follow-up','intro','closing','tour-invite') THEN CONTINUE; END IF;
+      IF v_category NOT IN ('follow-up','intro','closing','demo-invite') THEN CONTINUE; END IF;
       v_created_by := NULL;
       IF v_created_by_raw IS NOT NULL THEN
         SELECT u.id INTO v_created_by FROM "User" u WHERE u.id = v_created_by_raw LIMIT 1;
@@ -439,41 +439,41 @@ BEGIN
           SELECT u.id INTO v_created_by FROM "User" u WHERE u."clerkId" = v_created_by_raw LIMIT 1;
         END IF;
       END IF;
-      INSERT INTO "BrokerageTemplate" ("brokerageId",name,category,channel,subject,body,
+      INSERT INTO "TeamTemplate" ("teamId",name,category,channel,subject,body,
         version,"publishedAt","publishedCount","createdByUserId")
-      SELECT v_brokerage_id,v_name,v_category,'note',NULL,v_body,1,NULL,0,v_created_by
-      WHERE NOT EXISTS (SELECT 1 FROM "BrokerageTemplate" bt
-        WHERE bt."brokerageId" = v_brokerage_id AND bt.name = v_name);
+      SELECT v_team_id,v_name,v_category,'note',NULL,v_body,1,NULL,0,v_created_by
+      WHERE NOT EXISTS (SELECT 1 FROM "TeamTemplate" bt
+        WHERE bt."teamId" = v_team_id AND bt.name = v_name);
     END LOOP;
   END LOOP;
 END $$;
 
-ALTER TABLE "BrokerageTemplate" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "TeamTemplate" ENABLE ROW LEVEL SECURITY;
 
 -- ── 9. Template published version (20260512000000) ────────────────────────────
-ALTER TABLE "BrokerageTemplate"
+ALTER TABLE "TeamTemplate"
   ADD COLUMN IF NOT EXISTS "publishedVersion" integer;
 
-UPDATE "BrokerageTemplate"
+UPDATE "TeamTemplate"
    SET "publishedVersion" = version
  WHERE "publishedAt" IS NOT NULL AND "publishedVersion" IS NULL;
 
--- ── 10. Brokerage routing (20260513000000) ────────────────────────────────────
-ALTER TABLE "Brokerage"
+-- ── 10. Team routing (20260513000000) ────────────────────────────────────
+ALTER TABLE "Team"
   ADD COLUMN IF NOT EXISTS "autoAssignEnabled" boolean NOT NULL DEFAULT false;
 
-ALTER TABLE "Brokerage"
+ALTER TABLE "Team"
   ADD COLUMN IF NOT EXISTS "assignmentMethod" text NOT NULL DEFAULT 'manual'
     CHECK ("assignmentMethod" IN ('manual','round_robin','score_based'));
 
-ALTER TABLE "Brokerage"
+ALTER TABLE "Team"
   ADD COLUMN IF NOT EXISTS "lastAssignedUserId" text
     REFERENCES "User"(id) ON DELETE SET NULL;
 
 -- ── 11. Deal routing rules (20260514000000) ───────────────────────────────────
 CREATE TABLE IF NOT EXISTS "DealRoutingRule" (
   id                      text PRIMARY KEY DEFAULT gen_random_uuid()::text,
-  "brokerageId"           text NOT NULL REFERENCES "Brokerage"(id) ON DELETE CASCADE,
+  "teamId"           text NOT NULL REFERENCES "Team"(id) ON DELETE CASCADE,
   name                    text NOT NULL,
   priority                integer NOT NULL DEFAULT 100,
   enabled                 boolean NOT NULL DEFAULT true,
@@ -495,10 +495,10 @@ CREATE TABLE IF NOT EXISTS "DealRoutingRule" (
   )
 );
 
-CREATE INDEX IF NOT EXISTS idx_deal_routing_rule_brokerage_priority
-  ON "DealRoutingRule" ("brokerageId", priority ASC, enabled);
-CREATE INDEX IF NOT EXISTS idx_deal_routing_rule_brokerage_enabled
-  ON "DealRoutingRule" ("brokerageId", enabled);
+CREATE INDEX IF NOT EXISTS idx_deal_routing_rule_team_priority
+  ON "DealRoutingRule" ("teamId", priority ASC, enabled);
+CREATE INDEX IF NOT EXISTS idx_deal_routing_rule_team_enabled
+  ON "DealRoutingRule" ("teamId", enabled);
 
 -- ── 12. Routing rules hardening (20260515000000) ──────────────────────────────
 ALTER TABLE "DealRoutingRule" ENABLE ROW LEVEL SECURITY;
@@ -532,7 +532,7 @@ CREATE TABLE IF NOT EXISTS "AgentGoal" (
   "spaceId"      TEXT        NOT NULL REFERENCES "Space"("id") ON DELETE CASCADE,
   "contactId"    TEXT        REFERENCES "Contact"("id") ON DELETE SET NULL,
   "dealId"       TEXT        REFERENCES "Deal"("id") ON DELETE SET NULL,
-  "goalType"     VARCHAR(50) NOT NULL CHECK ("goalType" IN ('follow_up_sequence','tour_booking','offer_progress','deal_close','reengagement','custom')),
+  "goalType"     VARCHAR(50) NOT NULL CHECK ("goalType" IN ('follow_up_sequence','demo_booking','offer_progress','deal_close','reengagement','custom')),
   "description"  TEXT        NOT NULL,
   "instructions" TEXT,
   "status"       VARCHAR(20) NOT NULL DEFAULT 'active' CHECK ("status" IN ('active','completed','cancelled','paused')),
@@ -812,7 +812,7 @@ CREATE TABLE IF NOT EXISTS "Artifact" (
   "stepId"           text        REFERENCES "ExecutionStep"(id) ON DELETE SET NULL,
   "artifactType"     text        NOT NULL CHECK ("artifactType" IN (
                                    'draft_email','draft_sms','deal_update','contact_update',
-                                   'tour_booking','goal_plan','report','raw_output')),
+                                   'demo_booking','goal_plan','report','raw_output')),
   "title"            text        NOT NULL,
   "contentType"      text        NOT NULL DEFAULT 'text/plain',
   "status"           text        NOT NULL DEFAULT 'draft' CHECK ("status" IN (
@@ -830,7 +830,7 @@ CREATE TABLE IF NOT EXISTS "ArtifactVersion" (
   "content"        text        NOT NULL,
   "contentHash"    text        NOT NULL,
   "metadata"       jsonb       DEFAULT '{}',
-  "createdByAgent" text        NOT NULL DEFAULT 'chippi',
+  "createdByAgent" text        NOT NULL DEFAULT 'koala',
   "createdAt"      timestamptz NOT NULL DEFAULT now()
 );
 

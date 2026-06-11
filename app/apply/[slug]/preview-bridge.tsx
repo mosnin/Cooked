@@ -16,7 +16,7 @@ import { useEffect } from 'react';
  * Semantic edits (thank-you copy, page title, intro, etc.) require Save —
  * the iframe re-mounts via the parent's `previewVersion` key bump.
  *
- * Also re-broadcasts the message as a `chippi:preview-update` CustomEvent on
+ * Also re-broadcasts the message as a `koala:preview-update` CustomEvent on
  * `window` so any in-page client component that wants to subscribe can do so
  * without re-implementing the origin check.
  */
@@ -29,7 +29,7 @@ export function PreviewBridge() {
       // Same-origin only — non-negotiable.
       if (e.origin !== window.location.origin) return;
       if (typeof e.data !== 'object' || e.data === null) return;
-      if ((e.data as { type?: unknown }).type !== 'chippi:preview-update') return;
+      if ((e.data as { type?: unknown }).type !== 'koala:preview-update') return;
 
       const c = (e.data as { customization?: Record<string, unknown> }).customization;
       if (!c || typeof c !== 'object') return;
@@ -59,7 +59,7 @@ export function PreviewBridge() {
       // Re-broadcast for in-page listeners (e.g. a future component that
       // wants to live-update thank-you copy without a full reload).
       window.dispatchEvent(
-        new CustomEvent('chippi:preview-update', { detail: c }),
+        new CustomEvent('koala:preview-update', { detail: c }),
       );
     }
 

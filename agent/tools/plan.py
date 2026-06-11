@@ -2,7 +2,7 @@
 
 This is a meta-tool: it doesn't write to the CRM or call any external
 service. Its job is to emit a structured plan event before the agent
-executes a sequence of steps, so the realtor can see what's coming in
+executes a sequence of steps, so the rep can see what's coming in
 the activity feed and in the chat stream.
 
 The agent MUST call create_plan when a task requires 3 or more tool calls
@@ -55,7 +55,7 @@ async def create_plan(
 
     plan = {"task": task.strip(), "steps": clean_steps}
 
-    # Publish to the realtor's activity feed / SSE stream so they see the
+    # Publish to the rep's activity feed / SSE stream so they see the
     # plan before the agent starts executing.
     step_lines = "\n".join(
         f"  {idx + 1}. {s['title']}" + (f": {s['description']}" if s["description"] else "")

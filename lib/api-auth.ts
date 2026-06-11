@@ -16,10 +16,10 @@ import type { Space } from '@/lib/types';
 /**
  * Returns { userId } or a 401/403 NextResponse.
  *
- * Brokerage offboarding status gate: after Clerk auth succeeds we look up the
+ * Team offboarding status gate: after Clerk auth succeeds we look up the
  * User row and reject with 403 if `status === 'offboarded'`. Offboarding is a
- * hard-stop initiated by a broker_owner/broker_admin when an agent leaves the
- * brokerage; their book of business has been reassigned and they must lose API
+ * hard-stop initiated by a manager_owner/manager_admin when an agent leaves the
+ * team; their book of business has been reassigned and they must lose API
  * access immediately, even though their Clerk session may still be valid. This
  * is the single choke-point for API auth, so enforcing it here blocks every
  * protected route uniformly. Resilience: if the User row is missing (user is
@@ -43,7 +43,7 @@ export async function requireAuth(): Promise<{ userId: string } | NextResponse> 
 
     if (userRow && (userRow as { status?: string }).status === 'offboarded') {
       return NextResponse.json(
-        { error: 'Your access has been revoked by your brokerage.', code: 'offboarded' },
+        { error: 'Your access has been revoked by your team.', code: 'offboarded' },
         { status: 403 },
       );
     }
@@ -94,7 +94,7 @@ export function isSubscriptionDelinquent(status: string | null | undefined): boo
 
 /**
  * Verifies the calling user owns the given workspace slug, OR is a
- * broker_owner/broker_admin of the brokerage that manages this space.
+ * manager_owner/manager_admin of the team that manages this space.
  * Returns { userId, space } or a 4xx NextResponse.
  */
 export async function requireSpaceOwner(
@@ -116,7 +116,7 @@ export async function requireSpaceOwner(
     return { userId, space };
   }
 
-  // Broker owner/admin check — allow managing brokerage members' spaces
+  // Manager owner/admin check — allow managing team members' spaces
   const { data: dbUser } = await supabase
     .from('User')
     .select('id')
@@ -124,31 +124,31 @@ export async function requireSpaceOwner(
     .maybeSingle();
 
   if (dbUser) {
-    // Check if the space belongs to a brokerage the user is admin/owner of.
-    // Fetch ALL broker-level memberships rather than .maybeSingle() — a user
-    // who owns/admins more than one brokerage would otherwise make
+    // Check if the space belongs to a team the user is admin/owner of.
+    // Fetch ALL manager-level memberships rather than .maybeSingle() — a user
+    // who owns/admins more than one team would otherwise make
     // .maybeSingle() throw (PostgREST errors on >1 row), 500ing a legitimate
-    // multi-brokerage admin. Mirror the context helpers in lib/permissions.ts:
-    // fetch all, then deterministically prefer broker_owner over broker_admin.
+    // multi-team admin. Mirror the context helpers in lib/permissions.ts:
+    // fetch all, then deterministically prefer manager_owner over manager_admin.
     const { data: memberships } = await supabase
-      .from('BrokerageMembership')
-      .select('role, brokerageId, createdAt')
+      .from('TeamMembership')
+      .select('role, teamId, createdAt')
       .eq('userId', dbUser.id)
-      .in('role', ['broker_owner', 'broker_admin'])
+      .in('role', ['manager_owner', 'manager_admin'])
       .order('createdAt', { ascending: true });
 
-    // The caller may broker-own/admin MORE THAN ONE brokerage. Grant access
+    // The caller may manager-own/admin MORE THAN ONE team. Grant access
     // when the space's owner belongs to ANY of them. The previous code collapsed
-    // the memberships to a single one (broker_owner-first) and checked only that
-    // brokerage, so e.g. a broker_owner of A who is also broker_admin of B was
+    // the memberships to a single one (manager_owner-first) and checked only that
+    // team, so e.g. a manager_owner of A who is also manager_admin of B was
     // wrongly 403'd when opening a space owned by a B member.
-    const brokerBrokerageIds = (memberships ?? []).map((m) => m.brokerageId);
+    const managerTeamIds = (memberships ?? []).map((m) => m.teamId);
 
-    if (brokerBrokerageIds.length > 0) {
+    if (managerTeamIds.length > 0) {
       const { data: spaceOwnerMembership } = await supabase
-        .from('BrokerageMembership')
+        .from('TeamMembership')
         .select('id')
-        .in('brokerageId', brokerBrokerageIds)
+        .in('teamId', managerTeamIds)
         .eq('userId', space.ownerId)
         .limit(1)
         .maybeSingle();

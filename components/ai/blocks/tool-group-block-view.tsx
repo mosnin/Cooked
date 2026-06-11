@@ -7,11 +7,11 @@
  *
  * Decision: groups of 2+ tools collapse here. A single tool keeps the
  * existing per-block rich view (`ToolCallBlockView`) — that's where the
- * inline contacts / deals / tours / properties cards live, and we don't want
+ * inline contacts / deals / demos / properties cards live, and we don't want
  * to bury them inside a collapsed header for the common one-tool turn.
  *
  * Rich result cards from the grouped tools render BELOW the group header so
- * the realtor still sees the answer without expanding. The group itself is
+ * the rep still sees the answer without expanding. The group itself is
  * the meta-line; the data cards are the substance.
  */
 
@@ -20,7 +20,7 @@ import { ToolGroup, type NestedTool, type NestedToolCategory } from '@/component
 import type { ToolCallBlock } from '@/lib/ai-tools/blocks';
 import { ContactsResult } from './tool-results/contacts-result';
 import { DealsResult } from './tool-results/deals-result';
-import { ToursResult } from './tool-results/tours-result';
+import { DemosResult } from './tool-results/demos-result';
 import { PropertiesResult } from './tool-results/properties-result';
 import { AvailabilityPickerCard } from './tool-results/availability-picker-card';
 
@@ -53,7 +53,7 @@ function categorizeToolName(name: string): NestedToolCategory {
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 /** Short prose subtitle derived from args. UUID fields are skipped — they
- *  mean nothing to a realtor. */
+ *  mean nothing to a rep. */
 function argsSubtitle(args: Record<string, unknown> | undefined | null): string | undefined {
   if (!args) return undefined;
   const isUUID = (v: unknown): boolean => typeof v === 'string' && UUID_RE.test(v);
@@ -63,7 +63,7 @@ function argsSubtitle(args: Record<string, unknown> | undefined | null): string 
   if (typeof args.subject === 'string' && args.subject) return args.subject;
   if (typeof args.stage === 'string' && args.stage) return `→ ${args.stage}`;
 
-  const SKIP_KEYS = new Set(['contactId', 'dealId', 'tourId', 'propertyId', 'id']);
+  const SKIP_KEYS = new Set(['contactId', 'dealId', 'demoId', 'propertyId', 'id']);
   const meaningful = Object.entries(args).filter(
     ([k, v]) => !SKIP_KEYS.has(k) && !isUUID(v) && typeof v !== 'object',
   );
@@ -100,8 +100,8 @@ function richResultFor(
   if (block.display === 'deals' && Array.isArray((data as { deals?: unknown[] }).deals)) {
     return <DealsResult data={data as { deals: never[] }} />;
   }
-  if (block.display === 'tours' && Array.isArray((data as { tours?: unknown[] }).tours)) {
-    return <ToursResult data={data as { tours: never[] }} />;
+  if (block.display === 'demos' && Array.isArray((data as { demos?: unknown[] }).demos)) {
+    return <DemosResult data={data as { demos: never[] }} />;
   }
   if (block.display === 'properties' && Array.isArray((data as { properties?: unknown[] }).properties)) {
     return <PropertiesResult data={data as { properties: never[] }} />;
@@ -169,7 +169,7 @@ export function ToolGroupBlockView({ blocks, liveCallIds, onUserIntent }: ToolGr
       : `Task completed with ${failures.length} ${failures.length === 1 ? 'failure' : 'failures'}`;
 
   // First failure's error string is the most useful breadcrumb — surface it
-  // truncated so the realtor sees WHY without expanding. Empty result.error
+  // truncated so the rep sees WHY without expanding. Empty result.error
   // falls back to the summary (handlers sometimes put the reason there).
   const firstFailure = failures[0];
   const failureMessage = firstFailure

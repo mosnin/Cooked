@@ -12,7 +12,7 @@ How sign-up, sign-in, and onboarding work.
 Sign Up (Clerk)  ──→  /auth/redirect  ──→  /setup  ──→  /s/{slug}
 Sign In (Clerk)  ──→  /auth/redirect  ──→  /s/{slug}
                                        └──→  /setup   (if no workspace yet)
-                                       └──→  /broker  (if broker, no personal space)
+                                       └──→  /manager  (if manager, no personal space)
 ```
 
 ### Step by step

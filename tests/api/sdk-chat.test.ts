@@ -6,8 +6,8 @@
  *   - The dual-path router runs in BOTH runtimes: generic Q&A → direct
  *     fast path; action verbs → the agent path.
  *   - The agent path runs IN-PROCESS (no Modal hop) by default, i.e. when
- *     CHIPPI_CHAT_RUNTIME is unset/empty/anything-other-than-modal.
- *   - Only CHIPPI_CHAT_RUNTIME=modal proxies the agent turn to Modal.
+ *     KOALA_CHAT_RUNTIME is unset/empty/anything-other-than-modal.
+ *   - Only KOALA_CHAT_RUNTIME=modal proxies the agent turn to Modal.
  *   - Auth + space resolution + user-message persistence happen on
  *     every path, so we don't write them twice.
  *
@@ -48,7 +48,7 @@ vi.mock('@/lib/telemetry', () => ({
 // Per-test override for the Conversation row resolveConversation looks up.
 // Default undefined → the mock returns a non-matching (Space-shaped) row, so a
 // fresh conversation is minted. Set it to inject a specific row — e.g. a
-// reserved broker/team title — to exercise the #303 write-path isolation guard.
+// reserved manager/team title — to exercise the #303 write-path isolation guard.
 const { convLookup } = vi.hoisted(() => ({
   convLookup: { row: undefined as undefined | { id: string; spaceId: string; title: string } },
 }));
@@ -81,7 +81,7 @@ vi.mock('@/lib/supabase', () => {
 vi.mock('@/lib/ai-tools/context', () => ({
   resolveToolContext: vi.fn(async () => ({
     userId: 'user_clerk_123',
-    space: { id: 's_1', slug: 'jane', name: 'Jane Realty', ownerId: 'u_1' },
+    space: { id: 's_1', slug: 'jane', name: 'Jane Sales', ownerId: 'u_1' },
     signal: new AbortController().signal,
   })),
 }));
@@ -123,7 +123,7 @@ import { saveUserMessage } from '@/lib/ai-tools/persistence';
 
 const mockedSaveUser = vi.mocked(saveUserMessage);
 
-const ORIGINAL_RUNTIME = process.env.CHIPPI_CHAT_RUNTIME;
+const ORIGINAL_RUNTIME = process.env.KOALA_CHAT_RUNTIME;
 const ORIGINAL_MODAL_URL = process.env.MODAL_CHAT_URL;
 const ORIGINAL_SECRET = process.env.AGENT_INTERNAL_SECRET;
 
@@ -133,7 +133,7 @@ beforeEach(() => {
   mockedSaveUser.mockResolvedValue({ messageId: 'msg_user_1' });
   convLookup.row = undefined;
   // Default to unset — every test sets explicitly.
-  delete process.env.CHIPPI_CHAT_RUNTIME;
+  delete process.env.KOALA_CHAT_RUNTIME;
   process.env.MODAL_CHAT_URL = 'https://modal.example/chat';
   process.env.AGENT_INTERNAL_SECRET = 'shh';
   globalThis.fetch = fetchMock as unknown as typeof fetch;
@@ -146,8 +146,8 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  if (ORIGINAL_RUNTIME === undefined) delete process.env.CHIPPI_CHAT_RUNTIME;
-  else process.env.CHIPPI_CHAT_RUNTIME = ORIGINAL_RUNTIME;
+  if (ORIGINAL_RUNTIME === undefined) delete process.env.KOALA_CHAT_RUNTIME;
+  else process.env.KOALA_CHAT_RUNTIME = ORIGINAL_RUNTIME;
   if (ORIGINAL_MODAL_URL === undefined) delete process.env.MODAL_CHAT_URL;
   else process.env.MODAL_CHAT_URL = ORIGINAL_MODAL_URL;
   if (ORIGINAL_SECRET === undefined) delete process.env.AGENT_INTERNAL_SECRET;
@@ -171,37 +171,37 @@ function makeRequest(body: Record<string, unknown> = {}) {
 }
 
 describe('POST /api/ai/task — reserved-title conversationId is not reused (isolation guard, #303)', () => {
-  // A broker_owner also owns their personal realtor space, and the pre-#295
-  // broker/team conversations still live in the shared Conversation table with
+  // A manager_owner also owns their personal rep space, and the pre-#295
+  // manager/team conversations still live in the shared Conversation table with
   // a reserved title prefix. resolveConversation must reject a reserved-title
-  // conversationId (same spaceId but [BROKER_CHIPPI]/[BROKERAGE_CHAT] title) so
-  // realtor turns never append to — or read history from — a broker conversation.
-  it('mints a fresh conversation instead of reusing a [BROKER_CHIPPI] one', async () => {
-    delete process.env.CHIPPI_CHAT_RUNTIME;
-    convLookup.row = { id: 'broker_conv_1', spaceId: 's_1', title: '[BROKER_CHIPPI] private notes' };
+  // conversationId (same spaceId but [MANAGER_KOALA]/[TEAM_CHAT] title) so
+  // rep turns never append to — or read history from — a manager conversation.
+  it('mints a fresh conversation instead of reusing a [MANAGER_KOALA] one', async () => {
+    delete process.env.KOALA_CHAT_RUNTIME;
+    convLookup.row = { id: 'manager_conv_1', spaceId: 's_1', title: '[MANAGER_KOALA] private notes' };
     const res = await POST(
-      makeRequest({ message: 'add Preston as a contact', conversationId: 'broker_conv_1' }),
+      makeRequest({ message: 'add Preston as a contact', conversationId: 'manager_conv_1' }),
     );
     expect(res.status).toBe(200);
     expect(tsStreamMock).toHaveBeenCalledTimes(1);
     const call = tsStreamMock.mock.calls[0][0] as { conversationId: string };
-    expect(call.conversationId).not.toBe('broker_conv_1');
+    expect(call.conversationId).not.toBe('manager_conv_1');
   });
 
-  it('mints a fresh conversation instead of reusing a [BROKERAGE_CHAT] one', async () => {
-    delete process.env.CHIPPI_CHAT_RUNTIME;
-    convLookup.row = { id: 'team_conv_1', spaceId: 's_1', title: '[BROKERAGE_CHAT] standup' };
+  it('mints a fresh conversation instead of reusing a [TEAM_CHAT] one', async () => {
+    delete process.env.KOALA_CHAT_RUNTIME;
+    convLookup.row = { id: 'team_conv_1', spaceId: 's_1', title: '[TEAM_CHAT] standup' };
     await POST(makeRequest({ message: 'add Preston as a contact', conversationId: 'team_conv_1' }));
     const call = tsStreamMock.mock.calls[0][0] as { conversationId: string };
     expect(call.conversationId).not.toBe('team_conv_1');
   });
 
-  it('reuses a plain realtor conversation in the same space (guard is not over-broad)', async () => {
-    delete process.env.CHIPPI_CHAT_RUNTIME;
-    convLookup.row = { id: 'realtor_conv_1', spaceId: 's_1', title: 'Follow up with the Garcias' };
-    await POST(makeRequest({ message: 'add Preston as a contact', conversationId: 'realtor_conv_1' }));
+  it('reuses a plain rep conversation in the same space (guard is not over-broad)', async () => {
+    delete process.env.KOALA_CHAT_RUNTIME;
+    convLookup.row = { id: 'rep_conv_1', spaceId: 's_1', title: 'Follow up with the Garcias' };
+    await POST(makeRequest({ message: 'add Preston as a contact', conversationId: 'rep_conv_1' }));
     const call = tsStreamMock.mock.calls[0][0] as { conversationId: string };
-    expect(call.conversationId).toBe('realtor_conv_1');
+    expect(call.conversationId).toBe('rep_conv_1');
   });
 });
 
@@ -224,7 +224,7 @@ describe('POST /api/ai/task — input validation', () => {
 
 describe('POST /api/ai/task — agent branch (in-process TS is the default)', () => {
   it('routes action verbs to the in-process TS runtime by default (no Modal hop)', async () => {
-    delete process.env.CHIPPI_CHAT_RUNTIME;
+    delete process.env.KOALA_CHAT_RUNTIME;
     // Default makeRequest message is an action verb → agent route, in-process.
     const res = await POST(makeRequest());
     expect(res.status).toBe(200);
@@ -234,14 +234,14 @@ describe('POST /api/ai/task — agent branch (in-process TS is the default)', ()
   });
 
   it('treats any value other than the exact string "modal" as the TS runtime', async () => {
-    process.env.CHIPPI_CHAT_RUNTIME = 'MODAL'; // wrong case → TS default
+    process.env.KOALA_CHAT_RUNTIME = 'MODAL'; // wrong case → TS default
     await POST(makeRequest());
     expect(tsStreamMock).toHaveBeenCalledTimes(1);
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
-  it('proxies action verbs to the Modal agent only when CHIPPI_CHAT_RUNTIME=modal', async () => {
-    process.env.CHIPPI_CHAT_RUNTIME = 'modal';
+  it('proxies action verbs to the Modal agent only when KOALA_CHAT_RUNTIME=modal', async () => {
+    process.env.KOALA_CHAT_RUNTIME = 'modal';
     process.env.MODAL_CHAT_URL = 'https://modal.example/chat';
     const res = await POST(makeRequest());
     expect(res.status).toBe(200);
@@ -249,8 +249,8 @@ describe('POST /api/ai/task — agent branch (in-process TS is the default)', ()
     expect(tsStreamMock).not.toHaveBeenCalled();
   });
 
-  it('returns 503 when CHIPPI_CHAT_RUNTIME=modal but MODAL_CHAT_URL is not configured', async () => {
-    process.env.CHIPPI_CHAT_RUNTIME = 'modal';
+  it('returns 503 when KOALA_CHAT_RUNTIME=modal but MODAL_CHAT_URL is not configured', async () => {
+    process.env.KOALA_CHAT_RUNTIME = 'modal';
     delete process.env.MODAL_CHAT_URL;
     const res = await POST(makeRequest());
     expect(res.status).toBe(503);
@@ -259,7 +259,7 @@ describe('POST /api/ai/task — agent branch (in-process TS is the default)', ()
   });
 
   it('still saves the user message before branching (shared persistence)', async () => {
-    delete process.env.CHIPPI_CHAT_RUNTIME;
+    delete process.env.KOALA_CHAT_RUNTIME;
     await POST(makeRequest({ message: 'find Jane' }));
     expect(mockedSaveUser).toHaveBeenCalledWith(
       expect.objectContaining({ content: 'find Jane' }),
@@ -267,7 +267,7 @@ describe('POST /api/ai/task — agent branch (in-process TS is the default)', ()
   });
 
   it('passes ctx + conversationId + userMessage + model to the TS streamer', async () => {
-    delete process.env.CHIPPI_CHAT_RUNTIME;
+    delete process.env.KOALA_CHAT_RUNTIME;
     await POST(makeRequest({ message: 'add Preston as a contact' }));
     const call = tsStreamMock.mock.calls[0]?.[0] as unknown as {
       ctx: { space: { slug: string } };
@@ -286,7 +286,7 @@ describe('POST /api/ai/task — agent branch (in-process TS is the default)', ()
 // ── Dual-path router (active in BOTH runtimes) ────────────────────────────
 describe('POST /api/ai/task — dual-path router', () => {
   it('routes generic Q&A messages to the direct path (no Modal hop, no agent)', async () => {
-    delete process.env.CHIPPI_CHAT_RUNTIME;
+    delete process.env.KOALA_CHAT_RUNTIME;
     await POST(makeRequest({ message: "what's a CMA?" }));
     expect(directStreamMock).toHaveBeenCalledTimes(1);
     expect(fetchMock).not.toHaveBeenCalled();
@@ -294,7 +294,7 @@ describe('POST /api/ai/task — dual-path router', () => {
   });
 
   it('routes action verbs to the agent path (in-process TS by default)', async () => {
-    delete process.env.CHIPPI_CHAT_RUNTIME;
+    delete process.env.KOALA_CHAT_RUNTIME;
     await POST(makeRequest({ message: 'add Preston as a contact' }));
     expect(tsStreamMock).toHaveBeenCalledTimes(1);
     expect(directStreamMock).not.toHaveBeenCalled();
@@ -302,7 +302,7 @@ describe('POST /api/ai/task — dual-path router', () => {
   });
 
   it('routes attachments without action verbs to the direct path', async () => {
-    delete process.env.CHIPPI_CHAT_RUNTIME;
+    delete process.env.KOALA_CHAT_RUNTIME;
     await POST(
       makeRequest({
         message: 'summarize this document',
@@ -318,10 +318,10 @@ describe('POST /api/ai/task — dual-path router', () => {
   });
 
   it('explicit mode:chat forces the direct path even for an action verb', async () => {
-    delete process.env.CHIPPI_CHAT_RUNTIME;
+    delete process.env.KOALA_CHAT_RUNTIME;
     // "send Preston a follow-up" is an action verb the heuristic router would
     // send to the agent. The composer's explicit Chat pick overrides it — the
-    // realtor asked for a fast answer, not the tool loop.
+    // rep asked for a fast answer, not the tool loop.
     await POST(makeRequest({ message: 'send Preston a follow-up', mode: 'chat' }));
     expect(directStreamMock).toHaveBeenCalledTimes(1);
     expect(tsStreamMock).not.toHaveBeenCalled();
@@ -329,11 +329,11 @@ describe('POST /api/ai/task — dual-path router', () => {
   });
 
   it('explicit mode:agent forces Modal even for a generic question', async () => {
-    delete process.env.CHIPPI_CHAT_RUNTIME;
+    delete process.env.KOALA_CHAT_RUNTIME;
     process.env.MODAL_CHAT_URL = 'https://modal.example/chat';
     // "what's a CMA?" is generic Q&A the heuristic router would keep on the
     // direct path. The explicit Agent pick sends it to Modal (the mandatory
-    // acting runtime) so the realtor's chosen runtime is honored.
+    // acting runtime) so the rep's chosen runtime is honored.
     await POST(makeRequest({ message: "what's a CMA?", mode: 'agent' }));
     expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(directStreamMock).not.toHaveBeenCalled();
@@ -341,9 +341,9 @@ describe('POST /api/ai/task — dual-path router', () => {
   });
 
   it('mode:agent degrades to the in-process TS agent when MODAL_CHAT_URL is unset', async () => {
-    delete process.env.CHIPPI_CHAT_RUNTIME;
+    delete process.env.KOALA_CHAT_RUNTIME;
     delete process.env.MODAL_CHAT_URL;
-    // A missing Modal URL must not fail the one turn the realtor asked to run;
+    // A missing Modal URL must not fail the one turn the rep asked to run;
     // the in-process TS agent has the full tool surface, so we degrade to it.
     await POST(makeRequest({ message: 'add Preston as a contact', mode: 'agent' }));
     expect(tsStreamMock).toHaveBeenCalledTimes(1);
@@ -351,7 +351,7 @@ describe('POST /api/ai/task — dual-path router', () => {
   });
 
   it('passes the resolved chat model into the direct streamer', async () => {
-    delete process.env.CHIPPI_CHAT_RUNTIME;
+    delete process.env.KOALA_CHAT_RUNTIME;
     await POST(makeRequest({ message: 'what is a CMA?' }));
     const call = directStreamMock.mock.calls[0]?.[0] as unknown as {
       model: string;

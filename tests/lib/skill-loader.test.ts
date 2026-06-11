@@ -4,7 +4,7 @@
  * Verifies that user-invocable skills parse their `title`/`prompt`/`order`
  * frontmatter, sort by `order`, and that a skill is offered in the menu iff
  * it declares BOTH a title and a prompt. Also covers the composer's
- * {placeholder} expansion, which decides where the realtor's cursor lands.
+ * {placeholder} expansion, which decides where the rep's cursor lands.
  *
  * The loader reads the real SKILL.md files from disk, so this also fails
  * loudly if a shipped skill's frontmatter is malformed.
@@ -15,7 +15,7 @@ import {
   loadUserInvocableSkills,
   __resetSkillCacheForTests,
 } from '@/lib/ai-tools/skills/loader';
-import { expandSkillPrompt } from '@/components/ui/chippi-prompt-box';
+import { expandSkillPrompt } from '@/components/ui/axil-prompt-box';
 
 beforeEach(() => {
   __resetSkillCacheForTests();

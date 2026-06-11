@@ -3,7 +3,7 @@
  *
  * Positions and sizes are fractions of the (square) canvas so a template is
  * resolution-independent. Colors resolve at draw time: `accent` is the
- * realtor's brand color, `light` and `dark` are fixed.
+ * rep's brand color, `light` and `dark` are fixed.
  */
 
 export type ComposeColor = 'accent' | 'light' | 'dark';

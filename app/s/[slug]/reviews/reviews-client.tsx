@@ -35,7 +35,7 @@ interface Props {
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 // Relative time using Intl.RelativeTimeFormat. Copied verbatim from
-// app/broker/reviews/reviews-client.tsx (formatRelative) to keep styling
+// app/manager/reviews/reviews-client.tsx (formatRelative) to keep styling
 // consistent — over-abstracting a 30-line helper would cost more than
 // duplicating it once.
 export function formatRelative(iso: string): string {
@@ -110,7 +110,7 @@ export function ReviewsClient({ slug, initialReviews }: Props) {
 
   const emptyCopy = (t: Tab): string => {
     if (t === 'open') {
-      return 'No reviews in flight. Flag a deal for broker review from the deal page when you want a second set of eyes.';
+      return 'No reviews in flight. Flag a deal for manager review from the deal page when you want a second set of eyes.';
     }
     if (t === 'resolved') {
       return 'Nothing resolved yet.';
@@ -120,7 +120,7 @@ export function ReviewsClient({ slug, initialReviews }: Props) {
 
   return (
     <div className="space-y-4">
-      {/* Tabs — visual pattern mirrors app/broker/reviews/reviews-client.tsx */}
+      {/* Tabs — visual pattern mirrors app/manager/reviews/reviews-client.tsx */}
       <div className="flex items-center gap-1 border-b border-border pb-0">
         {tabs.map((t) => (
           <button

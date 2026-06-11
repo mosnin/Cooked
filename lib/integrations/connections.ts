@@ -32,7 +32,7 @@ export interface IntegrationConnectionRow {
 /**
  * Best-effort reconcile from Composio → our DB. Pulls every active
  * connection Composio has for this user and upserts any our DB doesn't
- * know about. Recovery path for realtors who completed OAuth on the
+ * know about. Recovery path for reps who completed OAuth on the
  * old broken codebase (where the row was only persisted in the callback,
  * which was failing silently). Idempotent; safe to call on every
  * /settings load.
@@ -174,7 +174,7 @@ export async function upsertByComposioId(args: {
   /** Status to land on. The callback passes 'active' only when Composio's
    *  fetched account status confirms ACTIVE; unconfirmed accounts stay
    *  'pending' so the chat agent never loads tools for a half-finished
-   *  OAuth (which 401s and reads as "Chippi lost my integrations"). */
+   *  OAuth (which 401s and reads as "Koala lost my integrations"). */
   status?: 'active' | 'pending';
 }): Promise<IntegrationConnectionRow | null> {
   const targetStatus = args.status ?? 'active';
@@ -304,7 +304,7 @@ export async function revoke(row: IntegrationConnectionRow): Promise<void> {
 /**
  * Flip the row matching this Composio connection id to 'expired'. Used by
  * the chat agent when the SDK reports the connected account is gone or
- * unauthorized — typically because the realtor revoked our OAuth grant on
+ * unauthorized — typically because the rep revoked our OAuth grant on
  * the provider's side. Reflects truth on the integrations panel (amber
  * dot + "Reconnect") the moment we discover the drift; no toast, no
  * notification, just the page being honest the next time they look.
@@ -319,7 +319,7 @@ export async function markExpiredByComposioId(
   const row = await findByComposioId(composioConnectionId);
   if (!row) return;
   // Don't downgrade an already-revoked or already-expired row — the
-  // realtor's already seen the truth, and a chat-time write would be
+  // rep's already seen the truth, and a chat-time write would be
   // pure churn.
   if (row.status === 'revoked' || row.status === 'expired') return;
   const message = error instanceof Error ? error.message : String(error);

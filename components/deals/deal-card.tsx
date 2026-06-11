@@ -37,7 +37,7 @@ interface DealCardProps {
   ) => void;
   /** Next stage in this pipeline — drives the "Advance stage" button. Null when this is the last stage. */
   nextStage?: DealStage | null;
-  /** Called when the realtor clicks the "Advance" button. */
+  /** Called when the rep clicks the "Advance" button. */
   onAdvanceStage?: (deal: DealWithRelations, nextStageId: string) => void;
   /** Open the deal in the slide-over panel. If omitted, falls back to navigation. */
   onOpenDeal?: (deal: DealWithRelations) => void;

@@ -34,7 +34,7 @@ const ROOT = join(__dirname, '..', '..');
  * is a one-way door; the migration backlog lives in STRICT_DIRS_TODO.
  *
  * Phase 2: `components/onboarding` (Phase 1 also cleaned it) and the
- * three Chippi/agent leaf-component directories where the orange is
+ * three Koala/agent leaf-component directories where the orange is
  * actually built. They're either clean or contain the leaf files.
  */
 const STRICT_DIRS = ['components/onboarding'];
@@ -46,13 +46,13 @@ const STRICT_DIRS = ['components/onboarding'];
  */
 const STRICT_DIRS_TODO = [
   'components/agent',     // mostly leaf files (NAMED_LEAF_FILES) — audit + tag the rest
-  'components/chippi',    // chippi-bar / chippi-avatar / etc. — leaf files; tag the rest
-  'components/contacts',  // CHIPPI_PILL use site lives here; audit other orange usages
+  'components/axil',    // koala-bar / koala-avatar / etc. — leaf files; tag the rest
+  'components/contacts',  // KOALA_PILL use site lives here; audit other orange usages
   'components/leads',     // lead-warm indicator usage — leaf file candidates
   'components/dashboard',
   'components/settings',
   'app/s',
-  'app/broker',
+  'app/manager',
 ];
 
 /**
@@ -61,17 +61,17 @@ const STRICT_DIRS_TODO = [
  * the brand orange contexts.
  */
 const NAMED_LEAF_FILES = new Set<string>([
-  // CHIPPI_AVATAR + CHIPPI_WORDMARK_INLINE + ChippiAuthoredDot all live here
-  'components/agent/chippi-authored.tsx',
+  // KOALA_AVATAR + KOALA_WORDMARK_INLINE + AxilAuthoredDot all live here
+  'components/agent/axil-authored.tsx',
   // AGENT_BADGE
   'components/agent/agent-generated-badge.tsx',
   // LOGO — the brand mark itself
   'components/ui/brand-logo.tsx',
-  // CHIPPI_AVATAR widget
-  'components/agent/chippi-avatar.tsx',
+  // KOALA_AVATAR widget
+  'components/agent/axil-avatar.tsx',
   // ACTIVITY_BAR + LEAD_WARM — the score/progress bar fills
   'components/agent/lead-score-bar.tsx',
-  // The CHIPPI_PILL constant lives in typography.ts
+  // The KOALA_PILL constant lives in typography.ts
   'lib/typography.ts',
   // The colors module itself
   'lib/colors.ts',
@@ -114,13 +114,13 @@ interface Violation {
 
 function scanForOrange(file: string): Violation[] {
   const text = readFileSync(file, 'utf-8');
-  // If the file imports brandOrange OR CHIPPI_PILL, the orange usages
+  // If the file imports brandOrange OR KOALA_PILL, the orange usages
   // are tagged as deliberate. Wholesale allow-list at file granularity
   // — this is a "did the contributor commit to the discipline" test,
   // not a per-line gate.
   const hasBrandOrangeImport =
     /\bbrandOrange\b/.test(text) ||
-    /\bCHIPPI_PILL\b/.test(text) ||
+    /\bKOALA_PILL\b/.test(text) ||
     /\bBRAND_ORANGE_CONTEXTS\b/.test(text);
   if (hasBrandOrangeImport) return [];
 
@@ -160,9 +160,9 @@ describe('STYLESHEET enforcement — brand orange is scarce', () => {
         `${violations.length} orange usage(s) on STRICT product chrome without a brandOrange tag:\n\n` +
         `${formatted}${extra}\n\n` +
         `Either wrap with brandOrange('<CONTEXT>', '...') from lib/colors.ts,\n` +
-        `use one of the five named primitives (ChippiAuthoredDot,\n` +
-        `ChippiWordmarkInline, AgentGeneratedBadge, etc.), or use\n` +
-        `CHIPPI_PILL from lib/typography.ts. Adding a sixth named context\n` +
+        `use one of the five named primitives (AxilAuthoredDot,\n` +
+        `AxilWordmarkInline, AgentGeneratedBadge, etc.), or use\n` +
+        `KOALA_PILL from lib/typography.ts. Adding a sixth named context\n` +
         `requires deleting one of the existing five.\n`,
       );
     }

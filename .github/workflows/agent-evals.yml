@@ -31,7 +31,7 @@ on:
     # Only run on PRs that touch prompt-assembly or tool-definition code
     # so cost stays bounded. Non-prompt PRs don't trigger the eval.
     paths:
-      - 'agent/chippi.py'
+      - 'agent/koala.py'
       - 'agent/orchestrator.py'
       - 'agent/tools/**'
       - 'lib/ai.ts'

@@ -3,11 +3,11 @@
 /**
  * Subscribe — the commit moment, in the onboarding's voice.
  *
- * This is the same calm, paper-flat, Chippi-speaks aesthetic as the
- * conversational onboarding: the brand-warm wash, a serif line in Chippi's
+ * This is the same calm, paper-flat, Koala-speaks aesthetic as the
+ * conversational onboarding: the brand-warm wash, a serif line in Koala's
  * first person, a hairline panel (no shadow, no animated border, no decorative
- * orange), and a soft fade-in arrival. By the time a realtor reaches here
- * they've met Chippi; this should feel like the next sentence, not a pivot to
+ * orange), and a soft fade-in arrival. By the time a rep reaches here
+ * they've met Koala; this should feel like the next sentence, not a pivot to
  * a loud SaaS pricing page.
  *
  * The billing logic is UNCHANGED — auth gate, slug resolution, and the
@@ -28,7 +28,7 @@ const FEATURES = [
   'I draft every follow-up. You approve.',
   'AI lead scoring on every applicant.',
   'Intake links that qualify leads for you.',
-  'Tours scheduled and booked.',
+  'Demos scheduled and booked.',
   'Unlimited contacts and deals.',
   'Notes, calendar, and analytics.',
   'Connect Gmail, Slack, and more.',
@@ -53,7 +53,7 @@ function SubscribeContent() {
 
   // Redirect unauthenticated users.
   if (isLoaded && !isSignedIn) {
-    window.location.href = '/login/realtor';
+    window.location.href = '/login/rep';
     return null;
   }
 
@@ -108,12 +108,12 @@ function SubscribeContent() {
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       >
         <div className="mb-8 flex justify-center">
-          <BrandLogo className="h-6 opacity-90" alt="Chippi" />
+          <BrandLogo className="h-6 opacity-90" alt="Koala" />
         </div>
 
-        {/* Chippi speaks — the focal element. */}
+        {/* Koala speaks — the focal element. */}
         <header className="space-y-2 text-center">
-          <p className="text-sm text-muted-foreground">Chippi Solo.</p>
+          <p className="text-sm text-muted-foreground">Koala Solo.</p>
           <h1 className="text-3xl leading-tight tracking-tight sm:text-[2.5rem]" style={TITLE_FONT}>
             Let&apos;s keep working together.
           </h1>

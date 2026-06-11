@@ -5,8 +5,8 @@ import { requireContactAccess } from '@/lib/api-auth';
 /**
  * POST /api/applications/[id]/message
  *
- * Auth'd endpoint for realtors to send messages to applicants.
- * Creates an ApplicationMessage with senderType: 'realtor'.
+ * Auth'd endpoint for reps to send messages to applicants.
+ * Creates an ApplicationMessage with senderType: 'rep'.
  * Sends email notification to applicant.
  */
 export async function POST(
@@ -55,7 +55,7 @@ export async function POST(
     .insert({
       contactId,
       spaceId: contact.spaceId,
-      senderType: 'realtor',
+      senderType: 'rep',
       content: sanitized,
     })
     .select('id, senderType, content, createdAt')
@@ -139,7 +139,7 @@ async function sendMessageNotification(
   ]);
 
   const businessName = settings?.businessName ?? space?.name ?? 'Your Agent';
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://my.usechippi.com';
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://my.usekoala.com';
 
   let portalUrl = '';
   if (space?.slug && contact.applicationRef) {
@@ -157,7 +157,7 @@ async function sendMessageNotification(
   const FROM =
     process.env.RESEND_FROM_EMAIL?.includes('@')
       ? process.env.RESEND_FROM_EMAIL
-      : `notifications@${process.env.RESEND_FROM_EMAIL ?? 'alerts.usechippi.com'}`;
+      : `notifications@${process.env.RESEND_FROM_EMAIL ?? 'alerts.usekoala.com'}`;
 
   await resend.emails.send({
     from: `${businessName.replace(/[\r\n\t<>"]/g, ' ').slice(0, 100)} <${FROM}>`,
@@ -187,7 +187,7 @@ async function sendMessageNotification(
           ` : ''}
         </td></tr>
         <tr><td style="padding:16px 28px;border-top:1px solid #f1f5f9">
-          <p style="margin:0;font-size:11px;color:#9ca3af">This email was sent by ${safeBizName} via Chippi</p>
+          <p style="margin:0;font-size:11px;color:#9ca3af">This email was sent by ${safeBizName} via Koala</p>
         </td></tr>
       </table>
     </td></tr>

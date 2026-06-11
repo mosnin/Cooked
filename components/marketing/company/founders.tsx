@@ -14,7 +14,7 @@ const FOUNDERS = [
   {
     name: 'Orlando',
     role: 'Co-founder',
-    bio: 'Spent a decade in the short-term rental space. He kept running into the same wall: real-estate software and the workflows around it were built for a pre-AI world. The productivity that’s possible now isn’t the productivity agents actually get.',
+    bio: 'Spent a decade in the short-term rental space. He kept running into the same wall: sales software and the workflows around it were built for a pre-AI world. The productivity that’s possible now isn’t the productivity agents actually get.',
   },
   {
     name: 'Preston',

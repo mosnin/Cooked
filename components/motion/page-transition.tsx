@@ -15,7 +15,7 @@ import { usePathname } from 'next/navigation';
  * layout already short-circuits this for users who opt out.
  *
  * Accepts an optional className so callers can give the wrapper flex
- * sizing — needed on the Chippi chat route where the page must fill
+ * sizing — needed on the Koala chat route where the page must fill
  * the parent flex column for the composer's bottom-pin to work.
  */
 const ROUTE_FADE: Variants = {

@@ -3,8 +3,8 @@
 /**
  * `<InboxDiagram />` — the unified inbox, in here.
  *
- * One beat: the inbox rows settle in, then a Chippi "Draft ready" badge
- * arrives on the top thread — the realtor sees that the moment a lead
+ * One beat: the inbox rows settle in, then a Koala "Draft ready" badge
+ * arrives on the top thread — the rep sees that the moment a lead
  * emails, the reply is already waiting. Same paper-flat vocabulary as the
  * product's communication surface.
  *
@@ -18,10 +18,10 @@ import { motion } from 'motion/react';
 import { cn } from '@/lib/utils';
 import { EASE_APPLE } from '@/lib/motion';
 import {
-  ChippiDiagramShell,
-  DiagramChippiBadge,
+  KoalaDiagramShell,
+  DiagramKoalaBadge,
   useDiagramMotion,
-} from './chippi-diagram-shell';
+} from './koala-diagram-shell';
 
 interface InboxDiagramProps {
   aspect?: 'video' | 'square' | 'wide' | 'tall';
@@ -29,7 +29,7 @@ interface InboxDiagramProps {
 }
 
 const ROWS = [
-  { from: 'Marcus Chen', subject: 'Re: 415 Lexington tour', time: '2m', unread: true },
+  { from: 'Marcus Chen', subject: 'Re: 415 Lexington demo', time: '2m', unread: true },
   { from: 'Priya Nair', subject: 'Mortgage pre-approval letter', time: '18m', unread: true },
   { from: 'Dani Alvarez', subject: 'Thinking about listing in spring', time: '1h', unread: false },
   { from: 'Tom Whitfield', subject: 'Closing docs for 88 Pine', time: '3h', unread: false },
@@ -42,9 +42,9 @@ const PAUSE = 700;
 
 export function InboxDiagram({ aspect = 'video', className }: InboxDiagramProps) {
   return (
-    <ChippiDiagramShell aspect={aspect} pad={6} className={className}>
+    <KoalaDiagramShell aspect={aspect} pad={6} className={className}>
       <InboxContent />
-    </ChippiDiagramShell>
+    </KoalaDiagramShell>
   );
 }
 
@@ -140,7 +140,7 @@ function InboxContent() {
                         animate={phase >= 4 ? { opacity: 1, y: 0 } : { opacity: 0, y: 4 }}
                         transition={{ duration: 0.22, ease: EASE_APPLE }}
                       >
-                        <DiagramChippiBadge label="Draft ready" />
+                        <DiagramKoalaBadge label="Draft ready" />
                       </motion.span>
                     )}
                   </div>

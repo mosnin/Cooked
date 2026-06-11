@@ -5,7 +5,7 @@
  *
  * Cockpit motion rule: an instrument only moves when its reading changes.
  * Used for the sidebar badges and the approvals pill so a count ticking
- * up is something the realtor *sees*, not something they have to notice.
+ * up is something the rep *sees*, not something they have to notice.
  * Confident easing, no bounce — matches the onboarding shell curve.
  */
 

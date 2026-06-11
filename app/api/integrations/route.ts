@@ -1,7 +1,7 @@
 /**
  * GET /api/integrations
  *
- * List the realtor's connections — one row per (toolkit, status) the
+ * List the rep's connections — one row per (toolkit, status) the
  * settings panel renders. Status is the source of truth: 'active' rows
  * appear with a green dot, 'expired' / 'failed' surface a Reconnect
  * affordance, 'revoked' rows are filtered out (no UI noise).
@@ -26,7 +26,7 @@ export async function GET() {
 
   // Reconcile from Composio first — backfills any active connection that
   // Composio knows about but our DB doesn't (the recovery path for
-  // realtors who completed OAuth on the previous codebase where the row
+  // reps who completed OAuth on the previous codebase where the row
   // was only persisted in the callback, which was failing silently).
   // Best-effort: failures don't block the panel from loading.
   if (apiKeySet) {
@@ -34,12 +34,12 @@ export async function GET() {
   }
 
   const all = await listConnections(space.id);
-  // Drop revoked rows — they're audit-only, not realtor-facing.
+  // Drop revoked rows — they're audit-only, not rep-facing.
   const visible = all.filter((c) => c.status !== 'revoked');
 
   // Per-connection trigger summary: 'off' (no curated triggers for that
   // toolkit), 'active' (at least one trigger live), 'paused' (registered
-  // but realtor paused). Drives the "Chippi is watching" / "Paused"
+  // but rep paused). Drives the "Koala is watching" / "Paused"
   // affordance on the connected app card. One DB roundtrip total — not
   // one per connection.
   const triggers = visible.length > 0
@@ -49,7 +49,7 @@ export async function GET() {
   // Setup diagnostics — surfaced on the settings panel when something's
   // missing. The OAuth callback URL Composio redirects to is composed from
   // NEXT_PUBLIC_APP_URL (with APP_URL as fallback). Without either, the
-  // callback URL is undefined, the realtor completes OAuth at the provider,
+  // callback URL is undefined, the rep completes OAuth at the provider,
   // and Composio falls back to its own default — which doesn't land them
   // back in our app. Hardest bug to diagnose without an explicit warning.
   const appUrlSet = Boolean(process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL);

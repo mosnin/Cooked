@@ -2,7 +2,7 @@
 
 Workflow separation guide to prevent accidental cross-system coupling.
 
-This document defines clear boundaries between each major workflow in Chippi. AI agents and contributors must respect these boundaries when making changes.
+This document defines clear boundaries between each major workflow in Koala. AI agents and contributors must respect these boundaries when making changes.
 
 ---
 
@@ -147,7 +147,7 @@ This document defines clear boundaries between each major workflow in Chippi. AI
 
 | Attribute | Detail |
 |---|---|
-| **Purpose** | Triage and follow-up operations for the authenticated realtor |
+| **Purpose** | Triage and follow-up operations for the authenticated rep |
 | **Trigger** | Authenticated workspace usage at `/s/[slug]/*` |
 | **Source of truth** | `Contact`, `Deal`, `DealStage`, `DealContact`, `Message` records |
 | **Key files** | `app/s/[slug]/*`, `app/api/contacts/*`, `app/api/deals/*`, `app/api/stages/*`, `app/api/ai/task/route.ts`, `app/api/ai/task/approve/[requestId]/route.ts` |
@@ -194,11 +194,11 @@ They must **never** share generic completion logic.
 
 | Concept | Scope | Source of truth | What it means |
 |---|---|---|---|
-| Onboarding completion | User/workspace activation | `User.onboardingCompletedAt` | The realtor has set up their workspace and is ready to use the CRM |
-| Application submission | Prospect/lead ingestion | `Contact` record with intake tags | A prospective renter has submitted their information |
+| Onboarding completion | User/workspace activation | `User.onboardingCompletedAt` | The rep has set up their workspace and is ready to use the CRM |
+| Application submission | Prospect/lead ingestion | `Contact` record with intake tags | A prospect has submitted their information |
 
 These two events:
-- Happen to different actors (realtor vs prospect)
+- Happen to different actors (rep vs prospect)
 - Are stored on different models (User vs Contact)
 - Serve different purposes (activation vs ingestion)
 - Must never share a boolean, timestamp, or status field

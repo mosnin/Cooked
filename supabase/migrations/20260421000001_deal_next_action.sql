@@ -1,7 +1,7 @@
 -- Phase 3 of the deals redesign: make "next action" a first-class field.
 --
 -- Before this, the kanban card's "Next: …" line was inferred from
--- followUpAt/closeDate. Inference is fine as a fallback but realtors want to
+-- followUpAt/closeDate. Inference is fine as a fallback but reps want to
 -- state their actual next step explicitly ("Confirm inspection with John",
 -- "Email lender for loan status"). Having a real column means:
 --   * the Today inbox can surface overdue next actions across the pipeline

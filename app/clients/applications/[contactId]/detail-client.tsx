@@ -15,7 +15,7 @@ import { cn } from '@/lib/utils';
 
 interface Message {
   id: string;
-  senderType: 'client' | 'realtor';
+  senderType: 'client' | 'rep';
   body: string;
   createdAt: string;
 }
@@ -193,7 +193,7 @@ function Thread({ contactId, initial }: { contactId: string; initial: Message[] 
     endRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Poll for realtor replies every 30s — calm, no live-indicator chrome.
+  // Poll for rep replies every 30s — calm, no live-indicator chrome.
   useEffect(() => {
     const interval = setInterval(async () => {
       const res = await fetch(`/api/clients/messages?contactId=${encodeURIComponent(contactId)}`);

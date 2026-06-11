@@ -39,7 +39,7 @@ export function OnboardingShell({ stepIndex, totalSteps, stepKey, children, onBa
       {/* Brand-warm wash. Phase 2 bumped light-mode opacity from
           40/30 → 70/50 so the orange is actually perceptible at the
           moment of strongest emotional engagement (onboarding is the
-          realtor's first taste of the brand). Dark mode held at the
+          rep's first taste of the brand). Dark mode held at the
           original 4-3% - bright orange on a dark canvas reads as a
           glow, not a wash. The wrapper imports brandOrange below so
           the stray-orange lint rule recognises this as one of the

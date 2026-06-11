@@ -88,7 +88,7 @@ export async function POST(req: NextRequest) {
     typeof body.instruction === 'string' ? body.instruction.trim() : '';
   if (instruction.length < MIN_INSTRUCTION) {
     return NextResponse.json(
-      { error: 'Write a full sentence — what should Chippi do?' },
+      { error: 'Write a full sentence — what should Koala do?' },
       { status: 400 },
     );
   }

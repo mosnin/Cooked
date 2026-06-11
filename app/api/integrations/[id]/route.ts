@@ -3,7 +3,7 @@
  * PATCH  /api/integrations/[id]   — toggle the connection's triggers
  *                                   between paused and active.
  *
- * Both routes scope by the caller's space — id-guess across realtors
+ * Both routes scope by the caller's space — id-guess across reps
  * is rejected with 403.
  */
 

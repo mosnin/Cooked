@@ -8,7 +8,7 @@ Current as of 2026-05. Read alongside `PRODUCT_SCOPE.md` (what the product is) a
 
 ## Current phase
 
-Chippi is well past initial build. The CRM substrate, public intake, lead scoring, tours, the brokerage tier, and the autonomous agent are all shipped and in use.
+Koala is well past initial build. The CRM substrate, public intake, lead scoring, demos, the team tier, and the autonomous agent are all shipped and in use.
 
 Current work is **depth, not breadth**: making the agent more capable and more reliable, hardening the integrations layer, extending Studio, and bringing usage-based billing to GA. Forward priorities past the active list below are set by the product owner — this file records them once decided; it does not invent them.
 
@@ -22,9 +22,9 @@ Grounded in open PRs and recent branch history. If a change touches these areas,
 |------|------------------|
 | Autonomous agent | Reliability and depth on the Modal agent runtime — event triggers, sweeps, draft quality, tool coverage |
 | Studio | AI content surface — image/video generation, brand kit, compose, schedule/publish — actively being extended |
-| Integrations | Composio toolkits as agent tools (Gmail, HubSpot, Slack, Calendar); Chippi exposed as an MCP server |
-| Chat / cockpit UX | The realtor's chat surface — live status, tool-call rendering, the instrument/cockpit pass |
-| Billing & usage | Per-seat brokerage billing is in place; usage metering and plan enforcement for the agent are being built |
+| Integrations | Composio toolkits as agent tools (Gmail, HubSpot, Slack, Calendar); Koala exposed as an MCP server |
+| Chat / cockpit UX | The rep's chat surface — live status, tool-call rendering, the instrument/cockpit pass |
+| Billing & usage | Per-seat team billing is in place; usage metering and plan enforcement for the agent are being built |
 
 **Rule**: If a fix touches an active area, apply a minimal fix and coordinate — don't assume the current code is final.
 
@@ -45,7 +45,7 @@ Beyond this, forward priorities are owner-set. Don't infer a roadmap from this f
 
 Real candidates, not forbidden — but **do not build speculatively.** Each needs explicit product sign-off before any code (per `AGENTS.md` §3 and §8).
 
-- MLS integration
+- CRM data source integrations / lead enrichment
 - Document e-signature
 - Native mobile app (a PWA manifest exists; a native app does not)
 

@@ -8,7 +8,7 @@ import { useUser } from '@clerk/nextjs';
 import { cn } from '@/lib/utils';
 import { triggerAccountSwitch } from '@/components/dashboard/account-switch';
 import { BrandLogo } from '@/components/brand-logo';
-import { realtorNavItems, realtorMoreNavItems } from '@/lib/nav-items';
+import { repNavItems, repMoreNavItems } from '@/lib/nav-items';
 import type { NavItem, NavChild } from '@/lib/nav-items';
 import { SECTION_LABEL } from '@/lib/typography';
 import { SIDEBAR_WIDTH, SIDEBAR_COLLAPSED } from '@/lib/geometry';
@@ -83,84 +83,84 @@ interface SidebarProps {
   pendingDraftCount?: number;
   overdueFollowUpCount?: number;
   activePropertyCount?: number;
-  isBroker?: boolean;
-  isBrokerOnly?: boolean;
-  brokerageName?: string | null;
-  brokerageRole?: string | null;
-  brokerageMemberships?: { id: string; name: string; role: string }[];
+  isManager?: boolean;
+  isManagerOnly?: boolean;
+  teamName?: string | null;
+  teamRole?: string | null;
+  teamMemberships?: { id: string; name: string; role: string }[];
   isPlatformAdmin?: boolean;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// Broker nav definitions (unchanged structure)
+// Manager nav definitions (unchanged structure)
 // ═══════════════════════════════════════════════════════════════════════════════
 
-// Phase 7 — broker admin sidebar collapses from 14 entries across 5 labeled
+// Phase 7 — manager admin sidebar collapses from 14 entries across 5 labeled
 // sections to 5 primary items + a quiet "More" section for the rest.
 //
 // Primary (daily): Team · Leads · Pipeline · Members · Settings.
 // More (one glance below — the routes that have existing users but don't
-// earn daily prominence): Realtors, Templates, Team Chat, Announcements,
+// earn daily prominence): Reps, Templates, Team Chat, Announcements,
 // Leaderboard, Analytics, Import/Export. Invitations folds into Members.
 // Settings sub-pages (form-builder, tracking, MCP, auto-assignment, routing
-// rules) live behind /broker/settings's own in-page tab strip.
-// Broker nav items extend the shared NavItem with the broker-only
+// rules) live behind /manager/settings's own in-page tab strip.
+// Manager nav items extend the shared NavItem with the manager-only
 // `adminOnly` flag. Rendered through the shared SidebarNavItem accordion
-// (base=""), so children/exact behave exactly like the realtor nav.
-type BrokerNavItem = NavItem & { adminOnly?: boolean };
-type BrokerNavSection = { label: string; items: BrokerNavItem[] };
+// (base=""), so children/exact behave exactly like the rep nav.
+type ManagerNavItem = NavItem & { adminOnly?: boolean };
+type ManagerNavSection = { label: string; items: ManagerNavItem[] };
 
-export const brokerAdminNavSections: BrokerNavSection[] = [
+export const managerAdminNavSections: ManagerNavSection[] = [
   {
     label: '',
     items: [
-      // Chippi-for-Brokers Phase 1 — pinned at the top, mirroring the
-      // realtor sidebar's top-pinned Chippi entry. Same icon (chip avatar
-      // is rendered by the broker nav via FlatNavItem; MessageCircle is the
-      // fallback used elsewhere in the broker nav). The existing
-      // /broker/agent-activity entry was previously also labelled "Chippi"
+      // Koala-for-Managers Phase 1 — pinned at the top, mirroring the
+      // rep sidebar's top-pinned Koala entry. Same icon (chip avatar
+      // is rendered by the manager nav via FlatNavItem; MessageCircle is the
+      // fallback used elsewhere in the manager nav). The existing
+      // /manager/agent-activity entry was previously also labelled "Koala"
       // — that one is the activity feed, not the chat surface; renamed
       // to "Agent activity" below to avoid two nav rows with the same name.
       {
-        href: '/broker',
-        label: 'Chippi',
+        href: '/manager',
+        label: 'Koala',
         icon: MessageCircle,
         exact: true,
         adminOnly: false,
         isAI: true,
-        // Mirrors the realtor Chippi dropdown (Brief / Inbox / History).
-        // Brief and Reviews are real broker routes; "History" points at the
-        // chat home (/broker), where the conversation-history drawer lives.
+        // Mirrors the rep Koala dropdown (Brief / Inbox / History).
+        // Brief and Reviews are real manager routes; "History" points at the
+        // chat home (/manager), where the conversation-history drawer lives.
         children: [
-          { href: '/broker/brief', label: 'Brief' },
-          { href: '/broker/reviews', label: 'Inbox' },
-          { href: '/broker', label: 'History', exact: true },
+          { href: '/manager/brief', label: 'Brief' },
+          { href: '/manager/reviews', label: 'Inbox' },
+          { href: '/manager', label: 'History', exact: true },
         ],
       },
-      { href: '/broker/brief', label: 'Brief', icon: LayoutDashboard, exact: false, adminOnly: false },
-      { href: '/broker/leads', label: 'Leads', icon: PhoneIncoming, exact: false, adminOnly: false },
-      { href: '/broker/people', label: 'People', icon: Users, exact: false, adminOnly: false },
-      { href: '/broker/deals', label: 'Deals', icon: Briefcase, exact: false, adminOnly: false },
-      { href: '/broker/pipeline', label: 'Pipeline', icon: BarChart3, exact: false, adminOnly: false },
-      { href: '/broker/forecast', label: 'Forecast', icon: TrendingUp, exact: false, adminOnly: false },
-      { href: '/broker/properties', label: 'Properties', icon: Building2, exact: false, adminOnly: false },
-      { href: '/broker/reviews', label: 'Reviews', icon: Flag, exact: false, adminOnly: false },
-      { href: '/broker/agent-activity', label: 'Agent activity', icon: Activity, exact: false, adminOnly: false },
-      { href: '/broker/integrations', label: 'Integrations', icon: Plug, exact: false, adminOnly: false },
+      { href: '/manager/brief', label: 'Brief', icon: LayoutDashboard, exact: false, adminOnly: false },
+      { href: '/manager/leads', label: 'Leads', icon: PhoneIncoming, exact: false, adminOnly: false },
+      { href: '/manager/people', label: 'People', icon: Users, exact: false, adminOnly: false },
+      { href: '/manager/deals', label: 'Deals', icon: Briefcase, exact: false, adminOnly: false },
+      { href: '/manager/pipeline', label: 'Pipeline', icon: BarChart3, exact: false, adminOnly: false },
+      { href: '/manager/forecast', label: 'Forecast', icon: TrendingUp, exact: false, adminOnly: false },
+      { href: '/manager/properties', label: 'Properties', icon: Building2, exact: false, adminOnly: false },
+      { href: '/manager/reviews', label: 'Reviews', icon: Flag, exact: false, adminOnly: false },
+      { href: '/manager/agent-activity', label: 'Agent activity', icon: Activity, exact: false, adminOnly: false },
+      { href: '/manager/integrations', label: 'Integrations', icon: Plug, exact: false, adminOnly: false },
       {
-        href: '/broker/settings',
+        href: '/manager/settings',
         label: 'Settings',
         icon: SlidersHorizontal,
         exact: false,
         adminOnly: true,
         // Real settings sub-routes (form-builder, auto-assignment, routing
-        // rules, MCP all exist under app/broker/settings/). Dropdown gives
-        // brokers a direct door without first landing on the tab strip.
+        // rules, MCP all exist under app/manager/settings/). Dropdown gives
+        // managers a direct door without first landing on the tab strip.
         children: [
-          { href: '/broker/settings/form-builder', label: 'Form builder' },
-          { href: '/broker/settings/auto-assignment', label: 'Auto-assignment' },
-          { href: '/broker/settings/routing-rules', label: 'Routing rules' },
-          { href: '/broker/settings/mcp', label: 'MCP' },
+          { href: '/manager/settings/form-builder', label: 'Form builder' },
+          { href: '/manager/settings/auto-assignment', label: 'Auto-assignment' },
+          { href: '/manager/settings/routing-rules', label: 'Routing rules' },
+          { href: '/manager/settings/mcp', label: 'MCP' },
         ],
       },
     ],
@@ -168,58 +168,58 @@ export const brokerAdminNavSections: BrokerNavSection[] = [
   {
     label: 'More',
     items: [
-      { href: '/broker/members', label: 'Members', icon: Users, exact: false, adminOnly: false },
-      { href: '/broker/realtors', label: 'Realtors', icon: UserCircle, exact: false, adminOnly: false },
-      { href: '/broker/templates', label: 'Templates', icon: FileText, exact: false, adminOnly: false },
-      { href: '/broker/leaderboard', label: 'Leaderboard', icon: Trophy, exact: false, adminOnly: false },
-      { href: '/broker/analytics', label: 'Analytics', icon: BarChart3, exact: false, adminOnly: false },
-      { href: '/broker/usage', label: 'Usage', icon: Gauge, exact: false, adminOnly: false },
-      { href: '/broker/import-export', label: 'Import / export', icon: Upload, exact: false, adminOnly: true },
+      { href: '/manager/members', label: 'Members', icon: Users, exact: false, adminOnly: false },
+      { href: '/manager/reps', label: 'Reps', icon: UserCircle, exact: false, adminOnly: false },
+      { href: '/manager/templates', label: 'Templates', icon: FileText, exact: false, adminOnly: false },
+      { href: '/manager/leaderboard', label: 'Leaderboard', icon: Trophy, exact: false, adminOnly: false },
+      { href: '/manager/analytics', label: 'Analytics', icon: BarChart3, exact: false, adminOnly: false },
+      { href: '/manager/usage', label: 'Usage', icon: Gauge, exact: false, adminOnly: false },
+      { href: '/manager/import-export', label: 'Import / export', icon: Upload, exact: false, adminOnly: true },
     ],
   },
 ];
 
-// Phase 7 — realtor-members of a brokerage see their own work first.
+// Phase 7 — rep-members of a team see their own work first.
 // Team-wide tools live one glance below in the More section; routes are
 // unchanged.
-export const brokerMemberNavSections: BrokerNavSection[] = [
+export const managerMemberNavSections: ManagerNavSection[] = [
   {
     label: '',
     items: [
-      { href: '/broker', label: 'My day', icon: LayoutDashboard, exact: true, adminOnly: false },
-      { href: '/broker/my-leads', label: 'My leads', icon: PhoneIncoming, exact: false, adminOnly: false },
+      { href: '/manager', label: 'My day', icon: LayoutDashboard, exact: true, adminOnly: false },
+      { href: '/manager/my-leads', label: 'My leads', icon: PhoneIncoming, exact: false, adminOnly: false },
     ],
   },
   {
     label: 'More',
     items: [
-      { href: '/broker/templates', label: 'Templates', icon: FileText, exact: false, adminOnly: false },
-      { href: '/broker/leaderboard', label: 'Leaderboard', icon: Trophy, exact: false, adminOnly: false },
+      { href: '/manager/templates', label: 'Templates', icon: FileText, exact: false, adminOnly: false },
+      { href: '/manager/leaderboard', label: 'Leaderboard', icon: Trophy, exact: false, adminOnly: false },
     ],
   },
 ];
 
-const brokerSettingsNavSections = [
+const managerSettingsNavSections = [
   {
     label: 'Team',
     items: [
-      { href: '/broker/settings', label: 'General', icon: Settings, exact: true },
-      { href: '/broker/settings/profile', label: 'Profile', icon: UserCircle, exact: false },
-      { href: '/broker/invitations', label: 'Invitations', icon: Mail, exact: false },
-      { href: '/broker/settings/mcp', label: 'MCP', icon: Key, exact: false },
+      { href: '/manager/settings', label: 'General', icon: Settings, exact: true },
+      { href: '/manager/settings/profile', label: 'Profile', icon: UserCircle, exact: false },
+      { href: '/manager/invitations', label: 'Invitations', icon: Mail, exact: false },
+      { href: '/manager/settings/mcp', label: 'MCP', icon: Key, exact: false },
     ],
   },
   {
     label: 'Lead management',
     items: [
-      { href: '/broker/settings/auto-assignment', label: 'Auto-assignment', icon: Shuffle, exact: false },
-      { href: '/broker/settings/routing-rules', label: 'Routing rules', icon: GitBranch, exact: false },
+      { href: '/manager/settings/auto-assignment', label: 'Auto-assignment', icon: Shuffle, exact: false },
+      { href: '/manager/settings/routing-rules', label: 'Routing rules', icon: GitBranch, exact: false },
     ],
   },
   {
     label: 'Account',
     items: [
-      { href: '/broker/billing', label: 'Billing', icon: CreditCard, exact: false },
+      { href: '/manager/billing', label: 'Billing', icon: CreditCard, exact: false },
     ],
   },
 ];
@@ -270,10 +270,10 @@ function doesItemOwnPath(item: NavItem, pathname: string, base: string): boolean
     });
     if (childMatch) return true;
   }
-  // An `exact` parent only owns its own exact route — used by the broker
-  // Chippi entry (/broker), whose href is a prefix of every other broker
-  // route. Without this, a prefix match would light up Chippi on every
-  // broker page. Realtor parents don't set `exact`, so this is a no-op there.
+  // An `exact` parent only owns its own exact route — used by the manager
+  // Koala entry (/manager), whose href is a prefix of every other manager
+  // route. Without this, a prefix match would light up Koala on every
+  // manager page. Rep parents don't set `exact`, so this is a no-op there.
   if (item.exact) {
     return pathname === `${base}${item.href}`;
   }
@@ -281,7 +281,7 @@ function doesItemOwnPath(item: NavItem, pathname: string, base: string): boolean
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// Section label (used in broker nav)
+// Section label (used in manager nav)
 // ═══════════════════════════════════════════════════════════════════════════════
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
@@ -297,7 +297,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// Flat nav item (for broker nav, settings sub-pages)
+// Flat nav item (for manager nav, settings sub-pages)
 // ═══════════════════════════════════════════════════════════════════════════════
 
 function FlatNavItem({
@@ -315,8 +315,8 @@ function FlatNavItem({
   badge?: React.ReactNode;
   /**
    * When true the item renders the chip avatar (chip-avatar.png) instead of
-   * the icon — matches the realtor sidebar's top-pinned Chippi treatment.
-   * Use for the broker's Chippi nav entry only.
+   * the icon — matches the rep sidebar's top-pinned Koala treatment.
+   * Use for the manager's Koala nav entry only.
    */
   isAI?: boolean;
 }) {
@@ -324,7 +324,7 @@ function FlatNavItem({
     <Link
       href={href}
       className={cn(
-        // h-9 row, same height as the realtor nav rows and canonical button
+        // h-9 row, same height as the rep nav rows and canonical button
         // default so every row in the sidebar aligns optically.
         'group relative flex items-center gap-2.5 h-9 pl-3 pr-2.5 rounded-md text-[13px] transition-colors duration-150',
         isActive
@@ -333,7 +333,7 @@ function FlatNavItem({
       )}
     >
       {/* Active accent bar — 2px on the left, foreground tone, rounded
-          corner on the inner edge. Matches the realtor sidebar's active
+          corner on the inner edge. Matches the rep sidebar's active
           rail exactly (STYLESHEET §Border & radius — Active rail). */}
       {isActive && (
         <span
@@ -342,7 +342,7 @@ function FlatNavItem({
         />
       )}
       {isAI ? (
-        /* Chip avatar — same 16×16 rounded-full as the realtor Chippi row */
+        /* Chip avatar — same 16×16 rounded-full as the rep Koala row */
         <img
           src="/chip-avatar.png"
           alt=""
@@ -464,8 +464,8 @@ export function WorkspaceSwitcher({
   currentIcon: Icon,
   slug,
   spaceName,
-  brokerageMemberships,
-  isOnBrokerPage,
+  teamMemberships,
+  isOnManagerPage,
   collapsed = false,
   showQuickCreate = false,
   userEmail = null,
@@ -476,8 +476,8 @@ export function WorkspaceSwitcher({
   currentIcon: React.ComponentType<{ size?: number; className?: string }>;
   slug: string;
   spaceName: string;
-  brokerageMemberships: { id: string; name: string; role: string }[];
-  isOnBrokerPage: boolean;
+  teamMemberships: { id: string; name: string; role: string }[];
+  isOnManagerPage: boolean;
   collapsed?: boolean;
   /** Render the SquarePen "new" quick-create dropdown next to the switcher. */
   showQuickCreate?: boolean;
@@ -494,8 +494,8 @@ export function WorkspaceSwitcher({
   const base = `/s/${slug}`;
   const [drawerExpanded, setDrawerExpanded] = useState(false);
 
-  // Build the workspace list. The realtor's own workspace is always first;
-  // brokerage memberships follow. Each gets a ⌘1/⌘2/⌘3… shortcut so the
+  // Build the workspace list. The rep's own workspace is always first;
+  // team memberships follow. Each gets a ⌘1/⌘2/⌘3… shortcut so the
   // popover doubles as a keyboard switcher — same shape as the inspiration.
   const workspaces: {
     key: string;
@@ -510,16 +510,16 @@ export function WorkspaceSwitcher({
       name: spaceName,
       href: base,
       icon: Briefcase,
-      isCurrent: !isOnBrokerPage,
+      isCurrent: !isOnManagerPage,
     });
   }
-  for (const b of brokerageMemberships) {
+  for (const b of teamMemberships) {
     workspaces.push({
       key: b.id,
       name: b.name,
-      href: '/broker',
+      href: '/manager',
       icon: Building2,
-      isCurrent: isOnBrokerPage,
+      isCurrent: isOnManagerPage,
     });
   }
 
@@ -553,7 +553,7 @@ export function WorkspaceSwitcher({
             <WorkspaceSwitcherRows
               workspaces={workspaces}
               userEmail={userEmail}
-              hasTeam={brokerageMemberships.length > 0}
+              hasTeam={teamMemberships.length > 0}
             />
           </div>
         )}
@@ -599,7 +599,7 @@ export function WorkspaceSwitcher({
           <WorkspaceSwitcherPopoverContent
             workspaces={workspaces}
             userEmail={userEmail}
-            hasTeam={brokerageMemberships.length > 0}
+            hasTeam={teamMemberships.length > 0}
             collapsed={collapsed}
           />
         </Popover>
@@ -648,7 +648,7 @@ function WorkspaceSwitcherRows({
           <Link
             key={w.key}
             href={w.href}
-            onClick={() => { if (!w.isCurrent && w.href === '/broker') triggerAccountSwitch(); }}
+            onClick={() => { if (!w.isCurrent && w.href === '/manager') triggerAccountSwitch(); }}
             className={cn(
               'group flex items-center gap-2.5 h-9 px-2 rounded-md text-[12px] transition-colors duration-150',
               w.isCurrent
@@ -672,7 +672,7 @@ function WorkspaceSwitcherRows({
       })}
       <div className="my-1 mx-1 h-px bg-border/60" />
       <Link
-        href="/brokerage"
+        href="/team"
         className="group flex items-center gap-2 h-9 px-2 rounded-md text-[12px] text-foreground/70 hover:bg-foreground/[0.05] hover:text-foreground transition-colors duration-150"
       >
         <Plus size={13} strokeWidth={1.75} className="flex-shrink-0" />
@@ -796,14 +796,14 @@ function UserFooter({
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// BrokerSidebarConversations — slim broker conversation history rendered when
-// on the broker Chippi page (/broker). Mirrors the realtor SidebarConversations
+// ManagerSidebarConversations — slim manager conversation history rendered when
+// on the manager Koala page (/manager). Mirrors the rep SidebarConversations
 // structure (CHAT HISTORY label + New button + recent list + active rail) but
-// calls the broker-scoped conversations API and links into /broker?conversationId=…
-// instead of /s/[slug]/chippi. Bounded to 6 rows + "See all →" link.
+// calls the manager-scoped conversations API and links into /manager?conversationId=…
+// instead of /s/[slug]/axil. Bounded to 6 rows + "See all →" link.
 // ═══════════════════════════════════════════════════════════════════════════════
 
-function BrokerSidebarConversations() {
+function ManagerSidebarConversations() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const activeId = searchParams.get('conversationId');
@@ -814,7 +814,7 @@ function BrokerSidebarConversations() {
 
   const fetchConversations = useCallback(async () => {
     try {
-      const res = await fetch('/api/ai/broker-conversations');
+      const res = await fetch('/api/ai/manager-conversations');
       if (!res.ok) { setConversations([]); return; }
       const data = await res.json();
       setConversations(Array.isArray(data) ? data : []);
@@ -826,7 +826,7 @@ function BrokerSidebarConversations() {
   useEffect(() => { void fetchConversations(); }, [fetchConversations]);
 
   const handleNew = useCallback(async () => {
-    const res = await fetch('/api/ai/broker-conversations', {
+    const res = await fetch('/api/ai/manager-conversations', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({}),
@@ -834,7 +834,7 @@ function BrokerSidebarConversations() {
     if (!res.ok) return;
     const conv = await res.json();
     setConversations((prev) => (prev ? [conv, ...prev] : [conv]));
-    router.push(`/broker?conversationId=${conv.id}`);
+    router.push(`/manager?conversationId=${conv.id}`);
   }, [router]);
 
   const LIMIT = 6;
@@ -895,7 +895,7 @@ function BrokerSidebarConversations() {
                     )}
                   >
                     <Link
-                      href={`/broker?conversationId=${conv.id}`}
+                      href={`/manager?conversationId=${conv.id}`}
                       className="flex-1 min-w-0 pl-2.5 pr-1 py-1.5"
                     >
                       <p
@@ -929,7 +929,7 @@ function BrokerSidebarConversations() {
 
         {hasMore && (
           <Link
-            href="/broker?view=history"
+            href="/manager?view=history"
             className="mt-1 flex items-center justify-between gap-1 px-2.5 h-8 rounded-md text-[12px] text-muted-foreground hover:text-foreground hover:bg-foreground/[0.04] transition-colors duration-150"
           >
             <span>See all</span>
@@ -942,19 +942,19 @@ function BrokerSidebarConversations() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// Realtor nav — 3 sections: AI at top, Workspace in middle, Settings at bottom
+// Rep nav — 3 sections: AI at top, Workspace in middle, Settings at bottom
 // ═══════════════════════════════════════════════════════════════════════════════
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // ─────────────────────────────────────────────────────────────────────────────
 // Section groupings — sit BETWEEN the existing nav items as small-caps
-// headers. The realtor nav is one flat list in `lib/nav-items.ts` (so any
+// headers. The rep nav is one flat list in `lib/nav-items.ts` (so any
 // route addition picks up shared chrome); the groupings are an inline
 // rendering concern here. Adding a header means picking which existing items
 // belong to which bucket — not a new feature, just a calmer read.
 //
 // The buckets, top → bottom:
-//   • Chippi   → no header (top-pinned, AI)
+//   • Koala   → no header (top-pinned, AI)
 //   • WORKSPACE → daily work (People, Deals, Calendar, Mailbox, Properties, Studio, Files)
 //   • SETUP    → once-and-done (Profile, Intake form)
 //   • Settings → no header (bottom-pinned)
@@ -976,8 +976,8 @@ const SETUP_HREFS = new Set<string>([
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Notification slot — reserved space that sits between the scroll area
-// (RealtorNav, including conversation history on /chippi) and the pinned
-// user footer. The inspiration the realtor shared shows a small
+// (RepNav, including conversation history on /axil) and the pinned
+// user footer. The inspiration the rep shared shows a small
 // "Update available →" card here; we don't have a real notification feed
 // yet, so the slot renders nothing today. Shipping a fake "update card"
 // here would be product theatre — Jobs rule: configuration is failure to
@@ -1001,7 +1001,7 @@ function SidebarNotificationSlot({ collapsed = false }: { collapsed?: boolean })
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Admin console link — platform-admin only. Sits just above the user-footer
-// divider, separated by a hairline. Reads as "leave the realtor app to the
+// divider, separated by a hairline. Reads as "leave the rep app to the
 // internal console" — same nav-row vocabulary (h-9, 13px, subtle hover) but
 // tonally quieter than a CTA: muted-foreground at rest, foreground on hover.
 // Renders in all three sidebar states: expanded, collapsed rail, and footer.
@@ -1051,7 +1051,7 @@ function AdminConsoleLink({ collapsed = false }: { collapsed?: boolean }) {
   );
 }
 
-function RealtorNav({
+function RepNav({
   slug,
   base,
   pathname,
@@ -1071,14 +1071,14 @@ function RealtorNav({
   activePropertyCount: number;
 }) {
   const { collapsed } = useSidebarCollapsed();
-  const settingsItem = realtorNavItems.find((item) => item.href === '/settings')!;
+  const settingsItem = repNavItems.find((item) => item.href === '/settings')!;
 
   // Accordion: at most one parent is expanded at a time. The parent that
   // owns the active route auto-expands; if no parent owns it, everyone
   // stays collapsed. Computed from pathname so route changes (incl. soft
   // navigations) keep the open section in sync without a separate effect.
   const findActiveParentKey = (): string | null => {
-    for (const item of realtorNavItems) {
+    for (const item of repNavItems) {
       if (item.children?.length && doesItemOwnPath(item, pathname, base)) {
         return item.href;
       }
@@ -1098,21 +1098,21 @@ function RealtorNav({
   }, [pathname, base]);
 
   // AI-related items always sit at the top
-  const aiItems = realtorNavItems.filter((item) => item.isAI);
+  const aiItems = repNavItems.filter((item) => item.isAI);
   // Workspace bucket — daily work surfaces (gets the WORKSPACE small-caps
-  // header above it). Filtered through the canonical realtorNavItems order
+  // header above it). Filtered through the canonical repNavItems order
   // so route additions inherit the order without touching this file.
-  const workspaceItems = realtorNavItems.filter(
+  const workspaceItems = repNavItems.filter(
     (item) => !item.isAI && WORKSPACE_HREFS.has(item.href),
   );
   // Setup bucket — once-and-done surfaces (gets the SETUP small-caps header).
-  const setupItems = realtorNavItems.filter(
+  const setupItems = repNavItems.filter(
     (item) => !item.isAI && SETUP_HREFS.has(item.href),
   );
   // Any leaf the buckets above didn't claim — kept appended (no header) so
   // a new route added to `lib/nav-items.ts` still renders. The set-based
   // filter makes the bucketing additive, not exhaustive.
-  const otherItems = realtorNavItems.filter(
+  const otherItems = repNavItems.filter(
     (item) =>
       !item.isAI &&
       item.href !== '/settings' &&
@@ -1121,9 +1121,9 @@ function RealtorNav({
   );
 
   // Route IS the signal for which nav mode this sidebar is in. On
-  // /chippi/* the main links cross-fade out and the conversation history
-  // slides in their place; off Chippi, the reverse.
-  const onChippi = pathname.startsWith(`/s/${slug}/chippi`);
+  // /axil/* the main links cross-fade out and the conversation history
+  // slides in their place; off Koala, the reverse.
+  const onKoala = pathname.startsWith(`/s/${slug}/axil`);
 
   // Badge vocabulary, two tiers:
   //   • Calm count (leads, properties) — muted pill, rounded-md, small.
@@ -1212,10 +1212,10 @@ function RealtorNav({
         collapsed ? 'px-1' : 'px-3',
       )}
     >
-      {/* Two-mode sidebar: on /chippi the conversation history slides in
+      {/* Two-mode sidebar: on /axil the conversation history slides in
           below the main nav. The main destinations (People, Deals,
-          Calendar…) stay visible the whole time — the realtor must always
-          have a door out of Chippi, not just a door in. The Chippi nav
+          Calendar…) stay visible the whole time — the rep must always
+          have a door out of Koala, not just a door in. The Koala nav
           item itself stays pinned at the top regardless so the door in is
           always there too. Settings stays pinned at the bottom.
 
@@ -1227,12 +1227,12 @@ function RealtorNav({
           choice here. In collapsed-rail mode the labels disappear (no
           horizontal room) and the rows render flush. */}
       <div className="space-y-0.5">
-        {/* Always visible — top-pinned AI items (Chippi + future AI rows).
-            No header above this bucket: Chippi is the brand mark; it
+        {/* Always visible — top-pinned AI items (Koala + future AI rows).
+            No header above this bucket: Koala is the brand mark; it
             doesn't need a category to belong to. */}
         {aiItems.map(renderItem)}
 
-        {/* RECORDS — daily work surfaces (the realtor's book of business:
+        {/* RECORDS — daily work surfaces (the rep's book of business:
             People, Deals, Properties, etc.). Labeled to match the
             inspiration's "Records" group above the existing workspace nav
             items — no restructuring of `lib/nav-items.ts`, just a calmer
@@ -1269,18 +1269,18 @@ function RealtorNav({
       </div>
 
       {/* Context-aware second section. Route IS the signal:
-            - On /chippi/* → CHAT HISTORY label + recent conversation list
+            - On /axil/* → CHAT HISTORY label + recent conversation list
               (expanded) or History icon link (collapsed rail). Bounded to
               6 conversations + "See all →" link into the existing in-chat
               history drawer. Animates in/out with the app's standard
               [0.22, 1, 0.36, 1] curve.
-            - Elsewhere → render `realtorMoreNavItems` if it has anything.
+            - Elsewhere → render `repMoreNavItems` if it has anything.
               It's intentionally empty today, but kept as the slot for
               future secondary nav without re-plumbing the layout. */}
       <AnimatePresence initial={false} mode="wait">
-        {onChippi && (
+        {onKoala && (
           <motion.div
-            key="chippi-history"
+            key="koala-history"
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 8 }}
@@ -1291,7 +1291,7 @@ function RealtorNav({
                 <div className="my-2 mx-2 h-px bg-border/60" aria-hidden />
                 <CollapsedTooltip enabled label="Conversations">
                   <Link
-                    href={`/s/${slug}/chippi?view=history`}
+                    href={`/s/${slug}/axil?view=history`}
                     aria-label="Conversation history"
                     className="group relative flex items-center justify-center w-10 h-10 mx-auto rounded-md text-foreground/65 hover:bg-foreground/[0.025] hover:text-foreground transition-colors duration-150"
                   >
@@ -1311,13 +1311,13 @@ function RealtorNav({
         )}
       </AnimatePresence>
 
-      {/* realtorMoreNavItems — the secondary slot for non-Chippi pages.
+      {/* repMoreNavItems — the secondary slot for non-Koala pages.
           Empty today; kept so future additions don't require a layout
           replumb. Only renders when the array has items AND we're not on
-          Chippi (the Chippi state owns this region). */}
-      {realtorMoreNavItems.length > 0 && !onChippi && (
+          Koala (the Koala state owns this region). */}
+      {repMoreNavItems.length > 0 && !onKoala && (
         <div>
-          <div className="space-y-0.5">{realtorMoreNavItems.map(renderItem)}</div>
+          <div className="space-y-0.5">{repMoreNavItems.map(renderItem)}</div>
         </div>
       )}
 
@@ -1350,11 +1350,11 @@ export function Sidebar({
   pendingDraftCount = 0,
   overdueFollowUpCount = 0,
   activePropertyCount = 0,
-  isBroker = false,
-  isBrokerOnly = false,
-  brokerageName = null,
-  brokerageRole = null,
-  brokerageMemberships = [],
+  isManager = false,
+  isManagerOnly = false,
+  teamName = null,
+  teamRole = null,
+  teamMemberships = [],
   isPlatformAdmin = false,
 }: SidebarProps) {
   const pathname = usePathname();
@@ -1376,21 +1376,21 @@ export function Sidebar({
   }, [pathname]);
   const base = `/s/${slug}`;
   const { user } = useUser();
-  // Shared collapse state (provided by the layout). The broker branch below
-  // uses it to rail like the realtor sidebar; the header panel toggle drives it.
-  const { collapsed: brokerCollapsed, toggle: brokerToggle } = useSidebarCollapsed();
+  // Shared collapse state (provided by the layout). The manager branch below
+  // uses it to rail like the rep sidebar; the header panel toggle drives it.
+  const { collapsed: managerCollapsed, toggle: managerToggle } = useSidebarCollapsed();
 
-  // Broker nav accordion — one parent expanded at a time, same contract as
-  // RealtorNav. Declared here (not inside the broker branch) because that
+  // Manager nav accordion — one parent expanded at a time, same contract as
+  // RepNav. Declared here (not inside the manager branch) because that
   // branch returns early and hooks must not live after a conditional return.
-  // base is "" for the broker nav (its hrefs are already absolute, e.g.
-  // /broker/leads), so doesItemOwnPath is called with base "" below.
-  const brokerSections =
-    brokerageRole === 'realtor_member'
-      ? brokerMemberNavSections
-      : brokerAdminNavSections;
-  const findBrokerActiveParentKey = (): string | null => {
-    for (const section of brokerSections) {
+  // base is "" for the manager nav (its hrefs are already absolute, e.g.
+  // /manager/leads), so doesItemOwnPath is called with base "" below.
+  const managerSections =
+    teamRole === 'rep_member'
+      ? managerMemberNavSections
+      : managerAdminNavSections;
+  const findManagerActiveParentKey = (): string | null => {
+    for (const section of managerSections) {
       for (const item of section.items) {
         if (item.children?.length && doesItemOwnPath(item, pathname, '')) {
           return item.href;
@@ -1399,25 +1399,25 @@ export function Sidebar({
     }
     return null;
   };
-  const [brokerExpandedKey, setBrokerExpandedKey] = useState<string | null>(
-    findBrokerActiveParentKey,
+  const [managerExpandedKey, setManagerExpandedKey] = useState<string | null>(
+    findManagerActiveParentKey,
   );
   useEffect(() => {
-    const next = findBrokerActiveParentKey();
-    // Same as RealtorNav: only auto-open when the route maps to a parent.
+    const next = findManagerActiveParentKey();
+    // Same as RepNav: only auto-open when the route maps to a parent.
     // Navigating to a leaf outside any parent leaves the user's last-opened
     // section alone rather than collapsing it on every navigation.
-    if (next) setBrokerExpandedKey(next);
+    if (next) setManagerExpandedKey(next);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname, brokerageRole]);
-  const handleBrokerToggle = (key: string) => () =>
-    setBrokerExpandedKey((prev) => (prev === key ? null : key));
+  }, [pathname, teamRole]);
+  const handleManagerToggle = (key: string) => () =>
+    setManagerExpandedKey((prev) => (prev === key ? null : key));
 
   // Admin console link visibility. The server passes isPlatformAdmin from the
   // DB platformRole; we OR it with the Clerk publicMetadata.role so an admin
   // set via the Clerk Dashboard (before the DB role propagates) still sees the
-  // link. Rendered in every shell — realtor AND broker — because a platform
-  // admin is often also a broker/owner and would otherwise never see it.
+  // link. Rendered in every shell — rep AND manager — because a platform
+  // admin is often also a manager/owner and would otherwise never see it.
   const showAdminLink =
     isPlatformAdmin ||
     (user?.publicMetadata as { role?: string } | undefined)?.role === 'admin';
@@ -1428,20 +1428,20 @@ export function Sidebar({
   // Primary email — used as the muted subtitle in the user footer chip.
   const userEmail = user?.primaryEmailAddress?.emailAddress ?? null;
 
-  const isOnBrokerPage = pathname.startsWith('/broker');
-  const isOnBrokerSettings = pathname.startsWith('/broker/settings');
+  const isOnManagerPage = pathname.startsWith('/manager');
+  const isOnManagerSettings = pathname.startsWith('/manager/settings');
 
-  // ── Broker settings sub-nav ──────────────────────────────────────────────
-  if (isBroker && (isOnBrokerPage || isBrokerOnly) && isOnBrokerSettings) {
+  // ── Manager settings sub-nav ──────────────────────────────────────────────
+  if (isManager && (isOnManagerPage || isManagerOnly) && isOnManagerSettings) {
     return (
       <aside data-dashboard-sidebar className={cn('hidden md:flex flex-col bg-sidebar border border-border/70 rounded-xl overflow-hidden shrink-0 m-3', SIDEBAR_WIDTH)}>
         <div className="px-4 pt-5 pb-3">
-          <BrandLogo className="h-5" alt="Chippi" />
+          <BrandLogo className="h-5" alt="Koala" />
         </div>
 
         <div className="px-3 pb-1">
           <Link
-            href="/broker"
+            href="/manager"
             className="group flex items-center gap-2 h-9 px-2.5 rounded-md text-[13px] font-medium transition-colors duration-150 text-muted-foreground hover:bg-foreground/[0.025] hover:text-foreground"
           >
             <ArrowLeft size={13} strokeWidth={1.75} className="flex-shrink-0" />
@@ -1450,7 +1450,7 @@ export function Sidebar({
         </div>
 
         <nav className="flex-1 px-3 pb-2 space-y-0.5 overflow-y-auto">
-          {brokerSettingsNavSections.map((section) => (
+          {managerSettingsNavSections.map((section) => (
             <div key={section.label}>
               <SectionLabel>{section.label}</SectionLabel>
               {section.items.map((item) => {
@@ -1477,8 +1477,8 @@ export function Sidebar({
             <AdminConsoleLink />
           </>
         )}
-        {/* What's New + user menu chip — same footer slot as the realtor and
-            the main broker sidebar. Settings sub-nav is still an in-app
+        {/* What's New + user menu chip — same footer slot as the rep and
+            the main manager sidebar. Settings sub-nav is still an in-app
             screen, not a separate product, so the same update card and
             user menu belong here. */}
         <SidebarWhatsNew />
@@ -1493,11 +1493,11 @@ export function Sidebar({
     );
   }
 
-  // ── Broker sidebar ───────────────────────────────────────────────────────
-  if (isBroker && (isOnBrokerPage || isBrokerOnly)) {
+  // ── Manager sidebar ───────────────────────────────────────────────────────
+  if (isManager && (isOnManagerPage || isManagerOnly)) {
     return (
-      <aside data-dashboard-sidebar className={cn('group/rail relative hidden md:flex flex-col bg-sidebar border border-border/70 rounded-xl shrink-0 overflow-hidden transition-[width] duration-200 ease-out m-3', brokerCollapsed ? SIDEBAR_COLLAPSED : SIDEBAR_WIDTH)}>
-        {/* Same brand-warm tint as the realtor sidebar so brokers see the
+      <aside data-dashboard-sidebar className={cn('group/rail relative hidden md:flex flex-col bg-sidebar border border-border/70 rounded-xl shrink-0 overflow-hidden transition-[width] duration-200 ease-out m-3', managerCollapsed ? SIDEBAR_COLLAPSED : SIDEBAR_WIDTH)}>
+        {/* Same brand-warm tint as the rep sidebar so managers see the
             same identity when they switch workspaces. */}
         <div
           aria-hidden
@@ -1505,12 +1505,12 @@ export function Sidebar({
         />
         <div className="relative z-10 flex flex-col h-full">
           {/* Brand mark — in collapsed rail mode it doubles as the expand
-              affordance, mirroring the realtor sidebar. */}
-          <div className={cn('pt-5 pb-3', brokerCollapsed ? 'flex justify-center px-2' : 'flex items-center justify-between px-4')}>
-            {brokerCollapsed ? (
+              affordance, mirroring the rep sidebar. */}
+          <div className={cn('pt-5 pb-3', managerCollapsed ? 'flex justify-center px-2' : 'flex items-center justify-between px-4')}>
+            {managerCollapsed ? (
               <button
                 type="button"
-                onClick={brokerToggle}
+                onClick={managerToggle}
                 aria-label="Expand sidebar"
                 title="Expand sidebar"
                 className="flex items-center justify-center w-10 h-10 rounded-md text-muted-foreground/80 transition-colors hover:bg-foreground/[0.04] hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
@@ -1519,10 +1519,10 @@ export function Sidebar({
               </button>
             ) : (
               <>
-                <BrandLogo className="h-5" alt="Chippi" />
+                <BrandLogo className="h-5" alt="Koala" />
                 <button
                   type="button"
-                  onClick={brokerToggle}
+                  onClick={managerToggle}
                   aria-label="Collapse sidebar"
                   title="Collapse sidebar"
                   className="inline-flex items-center justify-center w-7 h-7 rounded-md text-muted-foreground/70 transition-colors hover:bg-foreground/[0.04] hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
@@ -1534,37 +1534,37 @@ export function Sidebar({
           </div>
 
           <WorkspaceSwitcher
-            currentName={brokerageName ?? 'Team'}
+            currentName={teamName ?? 'Team'}
             currentSubtitle="Team"
             currentIcon={Building2}
             slug={slug}
             spaceName={spaceName}
-            brokerageMemberships={brokerageMemberships}
-            isOnBrokerPage={isOnBrokerPage}
-            collapsed={brokerCollapsed}
+            teamMemberships={teamMemberships}
+            isOnManagerPage={isOnManagerPage}
+            collapsed={managerCollapsed}
             userEmail={userEmail}
           />
 
           <div className="mt-3">
-            <SearchPill collapsed={brokerCollapsed} />
+            <SearchPill collapsed={managerCollapsed} />
           </div>
 
-          {/* Broker primary nav — same structural vocabulary as RealtorNav:
+          {/* Manager primary nav — same structural vocabulary as RepNav:
               py-2 vertical breathing, space-y-3 between section groups,
               overflow-y-auto so deep section lists don't push the footer off. */}
           <nav className="flex-1 px-3 py-2 mt-1 space-y-3 overflow-y-auto">
             <div className="space-y-0.5">
-              {brokerSections.map((section) => {
+              {managerSections.map((section) => {
                 const visibleItems = section.items.filter(
                   (item) =>
                     !item.adminOnly ||
-                    brokerageRole === 'broker_owner' ||
-                    brokerageRole === 'broker_admin',
+                    teamRole === 'manager_owner' ||
+                    teamRole === 'manager_admin',
                 );
                 if (visibleItems.length === 0) return null;
                 return (
                   <div key={section.label}>
-                    {!brokerCollapsed && <SectionLabel>{section.label}</SectionLabel>}
+                    {!managerCollapsed && <SectionLabel>{section.label}</SectionLabel>}
                     {visibleItems.map((item) => {
                       const isActive = doesItemOwnPath(item, pathname, '');
                       const hasChildren = !!(item.children && item.children.length > 0);
@@ -1574,22 +1574,22 @@ export function Sidebar({
                         !isActive ? (
                           <span className="inline-flex h-2 w-2 rounded-full bg-lead-hot shrink-0" />
                         ) : undefined;
-                      // Broker hrefs are already absolute, so base="". The
+                      // Manager hrefs are already absolute, so base="". The
                       // shared accordion row handles the chip-avatar (isAI),
                       // chevron dropdown, indented children and active-child
-                      // highlight — identical to the realtor sidebar.
+                      // highlight — identical to the rep sidebar.
                       return (
                         <SidebarNavItem
                           key={item.href}
                           item={item}
                           base=""
-                          collapsed={brokerCollapsed}
+                          collapsed={managerCollapsed}
                           isActive={isActive}
-                          isExpanded={hasChildren && brokerExpandedKey === item.href}
+                          isExpanded={hasChildren && managerExpandedKey === item.href}
                           isChildActive={(child) =>
                             isChildActive(child, pathname, '', searchParamsString)
                           }
-                          onToggle={handleBrokerToggle(item.href)}
+                          onToggle={handleManagerToggle(item.href)}
                           badge={highlightBadge}
                         />
                       );
@@ -1599,32 +1599,32 @@ export function Sidebar({
               })}
             </div>
 
-            {/* Conversation history — mirrors the realtor sidebar's contextual
-                section. Slides in when on the broker Chippi page (/broker exact),
-                same AnimatePresence pattern. Shows broker conversations via the
-                broker-scoped conversations API. Hidden in collapsed rail mode —
+            {/* Conversation history — mirrors the rep sidebar's contextual
+                section. Slides in when on the manager Koala page (/manager exact),
+                same AnimatePresence pattern. Shows manager conversations via the
+                manager-scoped conversations API. Hidden in collapsed rail mode —
                 there's no room for a conversation list at 56px. */}
             <AnimatePresence initial={false} mode="wait">
-              {!brokerCollapsed && pathname === '/broker' && (
+              {!managerCollapsed && pathname === '/manager' && (
                 <motion.div
-                  key="broker-chippi-history"
+                  key="manager-koala-history"
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 8 }}
                   transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  {/* Hairline divider — same as realtor sidebar (mx-3 to match) */}
+                  {/* Hairline divider — same as rep sidebar (mx-3 to match) */}
                   <div className="mx-3 mt-1 mb-2 h-px bg-border/60" aria-hidden />
-                  <BrokerSidebarConversations />
+                  <ManagerSidebarConversations />
                 </motion.div>
               )}
             </AnimatePresence>
           </nav>
 
-          {/* What's New card — same slot as the realtor sidebar. Broker users
+          {/* What's New card — same slot as the rep sidebar. Manager users
               see the same release notes. Collapses to an icon in rail mode,
-              matching the realtor shell. */}
-          <SidebarWhatsNew collapsed={brokerCollapsed} />
+              matching the rep shell. */}
+          <SidebarWhatsNew collapsed={managerCollapsed} />
 
           {showAdminLink && (
             <>
@@ -1632,7 +1632,7 @@ export function Sidebar({
               <AdminConsoleLink />
             </>
           )}
-          {/* User footer — matches the realtor's SidebarUserMenu chip (avatar +
+          {/* User footer — matches the rep's SidebarUserMenu chip (avatar +
               name + email + popover with themes/settings/logout). The old
               UserFooter was a plain link with no popover — swapped for parity. */}
           <div className="border-t border-border/50" />
@@ -1641,19 +1641,19 @@ export function Sidebar({
             displayName={displayName}
             email={userEmail}
             imageUrl={user?.imageUrl}
-            collapsed={brokerCollapsed}
+            collapsed={managerCollapsed}
           />
         </div>
       </aside>
     );
   }
 
-  // ── Realtor workspace sidebar ────────────────────────────────────────────
+  // ── Rep workspace sidebar ────────────────────────────────────────────
   // The SidebarCollapseProvider now lives in the layout (wrapping both this
   // sidebar and the header), so the header's panel toggle and the sidebar
   // share one collapse state.
   return (
-    <RealtorSidebarShell
+    <RepSidebarShell
       slug={slug}
       spaceName={spaceName}
       base={base}
@@ -1663,8 +1663,8 @@ export function Sidebar({
       overdueFollowUpCount={overdueFollowUpCount}
       pendingDraftCount={pendingDraftCount}
       activePropertyCount={activePropertyCount}
-      brokerageMemberships={brokerageMemberships}
-      isOnBrokerPage={isOnBrokerPage}
+      teamMemberships={teamMemberships}
+      isOnManagerPage={isOnManagerPage}
       displayName={displayName}
       imageUrl={user?.imageUrl}
       email={userEmail}
@@ -1674,12 +1674,12 @@ export function Sidebar({
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// Realtor sidebar shell — consumes the collapse context so all subcomponents
+// Rep sidebar shell — consumes the collapse context so all subcomponents
 // can react to width changes via `useSidebarCollapsed()`. The aside container
 // transitions width only on user-toggle (not on initial hydration).
 // ═══════════════════════════════════════════════════════════════════════════════
 
-function RealtorSidebarShell({
+function RepSidebarShell({
   slug,
   spaceName,
   base,
@@ -1689,8 +1689,8 @@ function RealtorSidebarShell({
   overdueFollowUpCount,
   pendingDraftCount,
   activePropertyCount,
-  brokerageMemberships,
-  isOnBrokerPage,
+  teamMemberships,
+  isOnManagerPage,
   displayName,
   imageUrl,
   email,
@@ -1705,8 +1705,8 @@ function RealtorSidebarShell({
   overdueFollowUpCount: number;
   pendingDraftCount: number;
   activePropertyCount: number;
-  brokerageMemberships: { id: string; name: string; role: string }[];
-  isOnBrokerPage: boolean;
+  teamMemberships: { id: string; name: string; role: string }[];
+  isOnManagerPage: boolean;
   displayName: string;
   imageUrl?: string | null;
   email?: string | null;
@@ -1753,7 +1753,7 @@ function RealtorSidebarShell({
             </button>
           ) : (
             <>
-              <BrandLogo className="h-5" alt="Chippi" />
+              <BrandLogo className="h-5" alt="Koala" />
               <button
                 type="button"
                 onClick={toggle}
@@ -1774,15 +1774,15 @@ function RealtorSidebarShell({
             because the row is the workspace identity at that width. */}
         <WorkspaceSwitcher
           currentName={spaceName}
-          currentSubtitle="Solo realtor"
+          currentSubtitle="Solo rep"
           currentIcon={Briefcase}
           slug={slug}
           spaceName={spaceName}
-          // The realtor sidebar stays a realtor surface — no brokerage rows
-          // here. Switching to the brokerage lives on the header ("Switch to
-          // {brokerage}") so the workspace identity here reads clean.
-          brokerageMemberships={[]}
-          isOnBrokerPage={isOnBrokerPage}
+          // The rep sidebar stays a rep surface — no team rows
+          // here. Switching to the team lives on the header ("Switch to
+          // {team}") so the workspace identity here reads clean.
+          teamMemberships={[]}
+          isOnManagerPage={isOnManagerPage}
           collapsed={collapsed}
           showQuickCreate
           userEmail={email}
@@ -1794,7 +1794,7 @@ function RealtorSidebarShell({
         </div>
 
         {/* Primary nav + More + Settings */}
-        <RealtorNav
+        <RepNav
           slug={slug}
           base={base}
           pathname={pathname}
@@ -1806,7 +1806,7 @@ function RealtorSidebarShell({
         />
 
         {/* Notification card slot — reserved space the inspiration the
-            realtor sent shows as an "Update available →" card. We don't
+            rep sent shows as an "Update available →" card. We don't
             have a notification feed yet; the slot returns null today so
             the layout doesn't shift when it's added later. */}
         <SidebarNotificationSlot collapsed={collapsed} />
@@ -1819,7 +1819,7 @@ function RealtorSidebarShell({
 
         {/* Platform-admin console link — only rendered for isPlatformAdmin
             accounts. Separated from the user footer by a hairline so it
-            reads as "this exits the realtor app." Calm; no CTA weight. */}
+            reads as "this exits the rep app." Calm; no CTA weight. */}
         {isPlatformAdmin && (
           <>
             <div className="border-t border-border/60" />

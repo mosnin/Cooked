@@ -13,7 +13,7 @@ export default async function StudioEditPage({
 }: {
   params: Promise<{ slug: string }>;
   // `fileId` comes from the Library "Edit" affordance — the panel hydrates
-  // the source picker from this id so the realtor doesn't have to
+  // the source picker from this id so the rep doesn't have to
   // re-upload an asset that already lives in their files.
   searchParams: Promise<{ fileId?: string }>;
 }) {

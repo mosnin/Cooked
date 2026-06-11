@@ -4,7 +4,7 @@
  * Public endpoint for the UI to fire an agent trigger. Auth + space resolution
  * happen here; the actual rate-limit / dedupe / Redis push / Modal fire logic
  * lives in lib/agent/fire-trigger so server-side mutation routes (contacts,
- * deals, tours) can fire triggers without going through this REST entrypoint.
+ * deals, demos) can fire triggers without going through this REST entrypoint.
  *
  * Secured with Clerk auth. Rate-limited to 20 triggers per space per minute
  * inside the helper.

@@ -2,10 +2,10 @@
  * `update_deal_close_date` — move the projected close date on a Deal.
  *
  * Approval-gated: close date drives the pipeline forecast and "what's
- * closing this month" reports. The realtor sees the new date before
+ * closing this month" reports. The rep sees the new date before
  * we commit.
  *
- * Accepts an ISO datetime OR a small set of relative phrases the realtor
+ * Accepts an ISO datetime OR a small set of relative phrases the rep
  * actually uses ("tomorrow", "next friday", "in 2 weeks"). Anything we
  * can't parse fails with a clear "couldn't read that date" message
  * instead of silently picking a wrong day.

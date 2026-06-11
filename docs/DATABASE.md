@@ -3,7 +3,7 @@
 > Quick reference for the Supabase schema + migration workflow.
 > Complements [ENVIRONMENT.md](../ENVIRONMENT.md) (env setup) and the
 > per-feature specs ([docs/AI_AGENT_SPEC.md](AI_AGENT_SPEC.md),
-> [docs/BROKERAGE_SPEC.md](BROKERAGE_SPEC.md)) which explain WHAT tables
+> [docs/TEAM_SPEC.md](TEAM_SPEC.md)) which explain WHAT tables
 > exist and WHY.
 
 ## Stack
@@ -44,15 +44,15 @@ supabase/
 Examples from the actual tree:
 
 - `20260515000000_routing_rules_hardening.sql`
-- `20260511000000_brokerage_templates.sql`
+- `20260511000000_team_templates.sql`
 - `20260314000000_rls_policies.sql`
 
 Timestamp ensures lexicographic ordering. Pick `HHMMSS = 000000` unless
 you're interleaving migrations on the same day (the existing tree uses
 `000000`–`000007` when multiple land on the same date). Every migration now
 follows the `YYYYMMDDHHMMSS_` convention — the old short-prefix `003_…` file was
-renamed to `20260319000007_tours_applications_pro.sql` so it sorts *after* the
-migration that creates `Tour` (it referenced `Tour` before it existed, which
+renamed to `20260319000007_demos_applications_pro.sql` so it sorts *after* the
+migration that creates `Demo` (it referenced `Demo` before it existed, which
 broke a from-empty migrations replay).
 
 ### Authoring
@@ -61,14 +61,14 @@ broke a from-empty migrations replay).
   `CREATE INDEX IF NOT EXISTS` everywhere. Migrations MUST be
   **idempotent** — they can be re-pasted without breaking.
 - Prefer `CHECK` constraints for enum-ish text columns over a trigger
-  (see `20260511000000_brokerage_templates.sql` line 31 for the
+  (see `20260511000000_team_templates.sql` line 31 for the
   canonical pattern:
-  `CHECK (category IN ('follow-up', 'intro', 'closing', 'tour-invite'))`).
+  `CHECK (category IN ('follow-up', 'intro', 'closing', 'demo-invite'))`).
 - Reference [`supabase/schema.sql`](../supabase/schema.sql) for existing
   table shape when extending.
 - Use `plpgsql` `DO $$ ... $$` blocks for one-shot data migrations —
   guard with `WHERE NOT EXISTS` so a replay is a no-op. See
-  [`supabase/migrations/20260511000000_brokerage_templates.sql`](../supabase/migrations/20260511000000_brokerage_templates.sql)
+  [`supabase/migrations/20260511000000_team_templates.sql`](../supabase/migrations/20260511000000_team_templates.sql)
   for a thorough example (extracts legacy JSON blobs into real rows,
   skips bad inputs with `RAISE NOTICE` instead of aborting, enforces
   `CHECK` constraints manually before the `INSERT`).
@@ -181,10 +181,10 @@ staging Supabase project instead.
 | Add a column | New migration with `ADD COLUMN IF NOT EXISTS` |
 | Add a constraint | New migration; prefer `CHECK` over trigger |
 | Rename a column | **DO NOT.** Add new column, backfill, switch code, drop old in a later migration once no code references it |
-| Backfill data | `DO $$ ... $$` block with `WHERE NOT EXISTS` guard; log skipped rows via `RAISE NOTICE` (pattern: `20260511000000_brokerage_templates.sql`) |
+| Backfill data | `DO $$ ... $$` block with `WHERE NOT EXISTS` guard; log skipped rows via `RAISE NOTICE` (pattern: `20260511000000_team_templates.sql`) |
 | Drop an auto-named FK | Look up `pg_constraint.conname` inside a `DO` block, then `EXECUTE format(...)` (pattern: `20260515000000_routing_rules_hardening.sql`) |
 | Drop a table | New migration with `DROP TABLE IF EXISTS`; typically after a grace period + audit of every `SELECT` |
-| Enable RLS on a new table | `ALTER TABLE "Foo" ENABLE ROW LEVEL SECURITY;` with no policies — defence-in-depth, matches the rest of the brokerage tables |
+| Enable RLS on a new table | `ALTER TABLE "Foo" ENABLE ROW LEVEL SECURITY;` with no policies — defence-in-depth, matches the rest of the team tables |
 
 ## Testing migrations
 

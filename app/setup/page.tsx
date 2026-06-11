@@ -2,11 +2,11 @@ import { auth, currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { OnboardingFlow } from '@/components/onboarding/onboarding-flow';
-import { OnboardingRealtor } from '@/components/onboarding/onboarding-realtor';
-import { OnboardingRealtorV2 } from '@/components/onboarding/onboarding-realtor-v2';
+import { OnboardingRep } from '@/components/onboarding/onboarding-rep';
+import { OnboardingRepV2 } from '@/components/onboarding/onboarding-rep-v2';
 import { ensureOnboardingBackfill } from '@/lib/onboarding';
 
-export const metadata = { title: 'Create your workspace — Chippi' };
+export const metadata = { title: 'Create your workspace — Koala' };
 
 export default async function SetupPage({
   searchParams,
@@ -14,24 +14,24 @@ export default async function SetupPage({
   searchParams?: Promise<{ type?: string; legacy?: string }>;
 }) {
   const { type, legacy } = (await searchParams) ?? {};
-  // Realtor (default) gets the one-screen quick path. Brokers and agents-
-  // joining-a-brokerage get the longer flow that collects brokerage data
-  // via ?type=broker. The quick path itself links over to ?type=broker.
-  const useQuickPath = type !== 'broker';
+  // Rep (default) gets the one-screen quick path. Managers and agents-
+  // joining-a-team get the longer flow that collects team data
+  // via ?type=manager. The quick path itself links over to ?type=manager.
+  const useQuickPath = type !== 'manager';
 
   // V2 storytelling is the live onboarding. Two escape hatches:
-  //   - `?legacy=1` forces V1 for a single request (per-realtor rollback)
+  //   - `?legacy=1` forces V1 for a single request (per-rep rollback)
   //   - NEXT_PUBLIC_ONBOARDING_V2=false forces V1 deploy-wide (incident rollback)
   // V1 stays as that rollback path until V2 proves out — DO NOT refactor it.
   const useV2Onboarding =
     legacy !== '1' && process.env.NEXT_PUBLIC_ONBOARDING_V2 !== 'false';
 
   const { userId } = await auth();
-  if (!userId) redirect('/login/realtor');
+  if (!userId) redirect('/login/rep');
 
   // Belt-and-suspenders: verify this is a real Clerk user, not a stale token.
   const clerkUser = await currentUser();
-  if (!clerkUser) redirect('/login/realtor');
+  if (!clerkUser) redirect('/login/rep');
 
   // On DB error: render error UI. NEVER .catch(() => null) (shows create-workspace
   // form to users who already have one). NEVER throw (generic "Application error").
@@ -85,26 +85,26 @@ export default async function SetupPage({
     // non-fatal
   }
 
-  // Broker-only users who are already set up — go straight to /broker
-  if (dbUser?.accountType === 'broker_only' && dbUser?.onboard) {
-    redirect('/broker');
+  // Manager-only users who are already set up — go straight to /manager
+  if (dbUser?.accountType === 'manager_only' && dbUser?.onboard) {
+    redirect('/manager');
   }
 
-  // Already has a workspace — check if broker first (brokers land on /broker)
+  // Already has a workspace — check if manager first (managers land on /manager)
   if (dbUser?.space?.slug) {
-    // Check if this user is a broker — redirect to broker dashboard instead
+    // Check if this user is a manager — redirect to manager dashboard instead
     if (dbUser?.id) {
-      const { data: brokerMembership } = await supabase
-        .from('BrokerageMembership')
+      const { data: managerMembership } = await supabase
+        .from('TeamMembership')
         .select('id')
         .eq('userId', dbUser.id)
-        .in('role', ['broker_owner', 'broker_admin'])
+        .in('role', ['manager_owner', 'manager_admin'])
         .maybeSingle();
-      if (brokerMembership) {
-        redirect('/broker');
+      if (managerMembership) {
+        redirect('/manager');
       }
     }
-    redirect(`/s/${dbUser.space.slug}/chippi`);
+    redirect(`/s/${dbUser.space.slug}/axil`);
   }
 
   // Create user record if missing.
@@ -170,27 +170,27 @@ export default async function SetupPage({
 
   // Check again after upsert — user may already have a space
   if (resolvedUser?.space?.slug) {
-    redirect(`/s/${resolvedUser.space.slug}/chippi`);
+    redirect(`/s/${resolvedUser.space.slug}/axil`);
   }
 
-  // If the user has a broker_admin membership (e.g. accepted an admin invitation),
-  // set them as broker_only and redirect to /broker — no workspace needed.
+  // If the user has a manager_admin membership (e.g. accepted an admin invitation),
+  // set them as manager_only and redirect to /manager — no workspace needed.
   if (resolvedUser?.id) {
     const { data: adminMembership } = await supabase
-      .from('BrokerageMembership')
+      .from('TeamMembership')
       .select('id')
       .eq('userId', resolvedUser.id)
-      .eq('role', 'broker_admin')
+      .eq('role', 'manager_admin')
       .maybeSingle();
     if (adminMembership) {
-      // Ensure accountType is broker_only and onboarding is marked complete
-      if (resolvedUser.accountType !== 'broker_only' || !resolvedUser.onboard) {
+      // Ensure accountType is manager_only and onboarding is marked complete
+      if (resolvedUser.accountType !== 'manager_only' || !resolvedUser.onboard) {
         await supabase
           .from('User')
-          .update({ accountType: 'broker_only', onboard: true })
+          .update({ accountType: 'manager_only', onboard: true })
           .eq('id', resolvedUser.id);
       }
-      redirect('/broker');
+      redirect('/manager');
     }
   }
 
@@ -206,8 +206,8 @@ export default async function SetupPage({
 
   if (useQuickPath) {
     return useV2Onboarding
-      ? <OnboardingRealtorV2 defaultName={resolvedUser?.name ?? ''} />
-      : <OnboardingRealtor defaultName={resolvedUser?.name ?? ''} />;
+      ? <OnboardingRepV2 defaultName={resolvedUser?.name ?? ''} />
+      : <OnboardingRep defaultName={resolvedUser?.name ?? ''} />;
   }
 
   return (

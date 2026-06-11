@@ -28,7 +28,7 @@
  * the header `## Workspace context` so it knows what it's reading.
  *
  * Caching: process-local map keyed by (spaceId, sha256(message)). TTL 5 min.
- * If the same realtor re-sends the same query in five minutes (refresh, retry
+ * If the same rep re-sends the same query in five minutes (refresh, retry
  * button, conversation restart) we don't pay the embedding cost again.
  */
 

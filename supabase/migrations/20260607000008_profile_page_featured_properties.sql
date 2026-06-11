@@ -1,9 +1,9 @@
 -- ═══════════════════════════════════════════════════════════════════════════
--- ProfilePage.featuredPropertyIds — realtor-curated set + order for the
--- featured listings carousel on the public /p/[slug] page.
+-- ProfilePage.featuredPropertyIds — rep-curated set + order for the
+-- featured products/offerings carousel on the public /p/[slug] page.
 --
 -- Before this column, /p/[slug] auto-pulled the 6 most-recently-updated
--- active listings. The realtor had no say. Now they pick the exact set and
+-- active offerings. The rep had no say. Now they pick the exact set and
 -- the order — array order = render order on the public page.
 --
 -- Empty array (= the default) preserves legacy behaviour: the public-page

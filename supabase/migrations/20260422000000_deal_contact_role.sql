@@ -2,7 +2,7 @@
 --
 -- Before this, DealContact was an untyped join between Deal and Contact.
 -- Every person attached to a deal was just "a contact", which loses the
--- distinction that actually matters to a realtor — "who's the lender?",
+-- distinction that actually matters to a rep — "who's the lender?",
 -- "who's the title company?", "who's the co-agent?".
 --
 -- Role is free-form text with a CHECK constraint; null is allowed so
@@ -12,7 +12,7 @@
 ALTER TABLE "DealContact"
   ADD COLUMN IF NOT EXISTS role TEXT;
 
--- Soft constraint — only block obviously-wrong values. Realtor tooling can
+-- Soft constraint — only block obviously-wrong values. Rep tooling can
 -- evolve the role set without a migration per addition.
 ALTER TABLE "DealContact"
   DROP CONSTRAINT IF EXISTS "DealContact_role_check";
@@ -27,7 +27,7 @@ ALTER TABLE "DealContact"
     'co_agent',
     'lender',
     'title',
-    'escrow',
+    'legal',
     'inspector',
     'appraiser',
     'attorney',

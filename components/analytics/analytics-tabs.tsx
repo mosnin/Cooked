@@ -20,7 +20,7 @@ export function AnalyticsTabs({ slug }: { slug: string }) {
     { href: '/analytics', label: 'Overview', matchPath: '/analytics' },
     { href: '/analytics/leads', label: 'Leads', matchPath: '/analytics/leads' },
     { href: '/analytics/clients', label: 'Clients', matchPath: '/analytics/clients' },
-    { href: '/analytics/tours', label: 'Tours', matchPath: '/analytics/tours' },
+    { href: '/analytics/demos', label: 'Demos', matchPath: '/analytics/demos' },
     { href: '/analytics/pipeline', label: 'Pipeline', matchPath: '/analytics/pipeline' },
     { href: '/analytics/form-traffic', label: 'Form traffic', matchPath: '/analytics/form-traffic' },
   ];

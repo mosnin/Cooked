@@ -39,7 +39,7 @@ export function PropertyPhotoEditor({ value, onChange, max = DEFAULT_MAX }: Prop
   const fileRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
-  // URL of the tile the realtor just promoted to position 0 — drives a brief
+  // URL of the tile the rep just promoted to position 0 — drives a brief
   // 200ms cross-fade on the swapped image so the swap reads as a deliberate
   // beat, not a jump. Cleared after the animation completes.
   const [promotedUrl, setPromotedUrl] = useState<string | null>(null);
@@ -62,7 +62,7 @@ export function PropertyPhotoEditor({ value, onChange, max = DEFAULT_MAX }: Prop
 
   async function handleFiles(e: React.ChangeEvent<HTMLInputElement>) {
     const picked = Array.from(e.target.files ?? []);
-    e.target.value = ''; // let the realtor re-pick the same file
+    e.target.value = ''; // let the rep re-pick the same file
     if (picked.length === 0) return;
 
     setError('');

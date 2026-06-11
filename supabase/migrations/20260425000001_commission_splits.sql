@@ -1,7 +1,7 @@
 -- Phase 10 of the deals redesign: commission split tracking.
 --
--- A realtor lives and dies by commission math: gross commission income
--- (GCI), broker split, co-agent / referral split, and what lands in their
+-- A rep lives and dies by commission math: gross commission income
+-- (GCI), manager split, co-agent / referral split, and what lands in their
 -- pocket. The existing Deal.commissionRate is a single % that's useful for
 -- the per-deal GCI display but ignores every party that might take a slice.
 --
@@ -11,15 +11,15 @@
 -- role catalog (e.g. "referral out to Sarah"); for convenience the canonical
 -- set lives in lib/commissions.ts.
 --
--- paidAt is nullable — realtors can plan splits while the deal is pending
+-- paidAt is nullable — reps can plan splits while the deal is pending
 -- and mark them paid once funded.
 
 CREATE TABLE IF NOT EXISTS "CommissionSplit" (
   id            TEXT         PRIMARY KEY DEFAULT gen_random_uuid()::text,
   "dealId"      TEXT         NOT NULL REFERENCES "Deal"(id) ON DELETE CASCADE,
   "spaceId"     TEXT         NOT NULL REFERENCES "Space"(id) ON DELETE CASCADE,
-  party         TEXT         NOT NULL,           -- 'me' | 'brokerage' | 'co_agent' | 'referral_out' | 'referral_in' | 'other'
-  label         TEXT         NOT NULL,           -- human label, e.g. "Sarah Lee" or "Broker split"
+  party         TEXT         NOT NULL,           -- 'me' | 'team' | 'co_agent' | 'referral_out' | 'referral_in' | 'other'
+  label         TEXT         NOT NULL,           -- human label, e.g. "Sarah Lee" or "Manager split"
   basis         TEXT         NOT NULL CHECK (basis IN ('percent', 'flat')),
   "percentOfGci" NUMERIC(6,3),                   -- when basis='percent', the % of GCI this party takes
   "flatAmount"  NUMERIC(14,2),                   -- when basis='flat', the absolute dollar amount

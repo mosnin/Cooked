@@ -1,20 +1,20 @@
 """Draft message tool — and the explicit-send escape hatches.
 
 draft_message is the DEFAULT outreach path: every contact-facing message
-lands in the realtor's approval inbox as an AgentDraft, and the realtor
+lands in the rep's approval inbox as an AgentDraft, and the rep
 approves before anything ships. Routines and autonomous runs always
 draft — the trust boundary.
 
 send_email_now / send_sms_now are the EXPLICIT-INTENT escape hatches: when
-the realtor uses imperative verbs ("send", "fire off", "shoot them"),
+the rep uses imperative verbs ("send", "fire off", "shoot them"),
 those tools dispatch immediately through the existing /api/agent/send
 delivery path (Resend for email, Telnyx for SMS) and log a ContactActivity
 row instead of creating a draft. No AgentDraft row, no approval step.
-The realtor is in control — they asked, we ship.
+The rep is in control — they asked, we ship.
 
 draft_message auto-dedupes: if a draft for the same contact + channel was
 created in the last 48 hours and is still pending, the existing draft is
-returned instead of a new one. Prevents the agent from burying the realtor
+returned instead of a new one. Prevents the agent from burying the rep
 in copies when it loops.
 """
 
@@ -56,10 +56,10 @@ async def draft_message(
     deal_id: str | None = None,
     priority: int = 0,
 ) -> dict[str, Any]:
-    """Draft a person-facing message for realtor approval; canonical outreach path."""
+    """Draft a person-facing message for rep approval; canonical outreach path."""
     # channel: 'sms' | 'email' | 'note'. subject required for email. SMS keep <160 chars.
     # Identify recipient by contact_id OR recipient_email OR recipient_phone (auto-stubs if missing).
-    # reasoning is shown to realtor. priority 0-100 orders the inbox.
+    # reasoning is shown to rep. priority 0-100 orders the inbox.
     # Auto-dedup: existing pending draft (same contact+channel, <48h) returned, not duplicated.
     # Quote nextStep in your reply so the trust boundary stays visible.
     space_id = ctx.context.space_id
@@ -82,7 +82,7 @@ async def draft_message(
 
     # ── Resolve recipient → contactId ────────────────────────────────────
     # If contact_id was passed, verify it. Otherwise look up by email or
-    # phone in this space; auto-create a stub if missing so the realtor's
+    # phone in this space; auto-create a stub if missing so the rep's
     # explicit "send X to Y" never gets blocked on contact bookkeeping.
     auto_created = False
     contact_name: str | None = None
@@ -115,8 +115,8 @@ async def draft_message(
             contact_name = found.data.get("name", "contact")
         else:
             # Auto-create a minimal stub. Name guessed from the email local
-            # part ("jane.doe" → "Jane Doe") so the realtor sees something
-            # readable in their inbox. The realtor can edit later.
+            # part ("jane.doe" → "Jane Doe") so the rep sees something
+            # readable in their inbox. The rep can edit later.
             new_id = str(uuid.uuid4())
             if clean_email:
                 local = clean_email.split("@", 1)[0]
@@ -182,7 +182,7 @@ async def draft_message(
     expires_at = (datetime.now(timezone.utc) + timedelta(days=7)).isoformat()
     # Stamp trigger provenance on the row when this run was kicked by a
     # Composio trigger. Inbox UI reads AgentDraft.triggerSource to render
-    # the "Chippi noticed because…" breadcrumb so the realtor sees WHY a
+    # the "Koala noticed because…" breadcrumb so the rep sees WHY a
     # draft appeared. Empty dict = chat / routine / sweep run — column
     # stays null and the breadcrumb is hidden.
     trigger_source_raw = getattr(ctx.context, "trigger_source", None) or {}
@@ -249,7 +249,7 @@ async def draft_message(
 
 # ── Send-now escape hatches ─────────────────────────────────────────────
 # draft_message is the DEFAULT. send_email_now and send_sms_now are the
-# explicit-intent paths the agent reaches for only when the realtor used
+# explicit-intent paths the agent reaches for only when the rep used
 # imperative verbs ("send", "fire off", "shoot them"). Both skip the
 # AgentDraft pipeline entirely and dispatch through /api/agent/send, which
 # already handles transport (Resend for email, Telnyx for SMS), contact
@@ -259,9 +259,9 @@ async def draft_message(
 #   - Resolve recipient via contact_id OR recipient_email/phone (same
 #     resolution rules as draft_message, including auto-stub creation).
 #   - Never create an AgentDraft row.
-#   - publish_event so the realtor sees the send land in the activity feed.
+#   - publish_event so the rep sees the send land in the activity feed.
 #   - persist_log with action_type='message_sent', outcome='completed'
-#     so the broker rollup sees a real send, not a draft.
+#     so the manager rollup sees a real send, not a draft.
 
 
 async def _resolve_or_stub_contact(
@@ -444,7 +444,7 @@ async def send_email_now(
     deal_id: str | None = None,
 ) -> dict[str, Any]:
     """Send an email immediately, bypassing the approval queue."""
-    # ONLY when the realtor used an imperative verb ("send", "fire off", "ship it").
+    # ONLY when the rep used an imperative verb ("send", "fire off", "ship it").
     # Routines / autonomous turns must use draft_message instead.
     # Identify by contact_id or recipient_email (auto-stubs if no match).
     # On failure returns {error, code, retryable}; surface in plain English, don't blindly retry.
@@ -540,7 +540,7 @@ async def send_sms_now(
     deal_id: str | None = None,
 ) -> dict[str, Any]:
     """Send an SMS immediately, bypassing the approval queue."""
-    # ONLY when the realtor used an imperative verb. Routines must use draft_message.
+    # ONLY when the rep used an imperative verb. Routines must use draft_message.
     # Identify by contact_id or recipient_phone (auto-stubs if no match).
     # Keep content <160 chars; Telnyx fragments longer messages.
     space_id = ctx.context.space_id

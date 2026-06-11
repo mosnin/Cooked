@@ -27,10 +27,10 @@ async function getConversationAndVerifyOwner(conversationId: string, userId: str
     .maybeSingle();
   if (!user) return null;
 
-  // Surface guard: broker-Chippi and team conversations have their own
-  // broker-gated routes. A broker_owner also owns their personal realtor
+  // Surface guard: manager-Koala and team conversations have their own
+  // manager-gated routes. A manager_owner also owns their personal rep
   // space, so ownership alone is not isolation. Refuse to rename/delete a
-  // broker conversation through the realtor endpoint. The reserved-title
+  // manager conversation through the rep endpoint. The reserved-title
   // check lives in lib/chat/conversation-access.
   if (isReservedConversationTitle((conv as { title?: string }).title)) {
     return null;

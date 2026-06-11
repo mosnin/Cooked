@@ -2,7 +2,7 @@
  * POST /api/ai/attachments — chat attachment upload.
  * DELETE /api/ai/attachments?id=... — remove a chat attachment.
  *
- * The realtor drops a file into the prompt box; the client posts it here, we
+ * The rep drops a file into the prompt box; the client posts it here, we
  * stash it in Wasabi (private), persist a row in `Attachment`, and hand the
  * id back. /api/ai/task hydrates the row and mints a fresh signed URL for the
  * Modal runner each turn; the file-preview UI calls /api/files which mints
@@ -26,7 +26,7 @@ import { uploadObject, deleteObject, getSignedDownloadUrl, buildKey } from '@/li
 
 /** TTL for the URL returned on POST. The chat UI uses it for the inline
  *  preview the moment the upload completes; 20 minutes is long enough for
- *  the realtor to keep editing the message and short enough that the URL
+ *  the rep to keep editing the message and short enough that the URL
  *  isn't useful as a leaked artefact. */
 const POST_RESPONSE_URL_TTL_SECONDS = 60 * 20;
 
@@ -179,7 +179,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Sign a short-lived URL so the realtor's inline preview renders. The
+  // Sign a short-lived URL so the rep's inline preview renders. The
   // DB column is left as-is for backward compatibility (older rows still
   // carry a full public URL; new rows get the signed URL value, which
   // expires — readers must mint fresh URLs via /api/files or /api/ai/task).

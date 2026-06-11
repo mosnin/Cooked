@@ -2,10 +2,10 @@
 --
 -- Lives on SpaceSetting (one-to-one with Space) rather than its own
 -- table because the brief is configured the same way notifications are:
--- one toggle, one schedule, one row per realtor.
+-- one toggle, one schedule, one row per rep.
 --
 -- briefEnabled   — opt out of the brief entirely. Defaults TRUE so
---                  existing realtors start receiving briefs when the
+--                  existing reps start receiving briefs when the
 --                  feature ships; turn off to silence.
 -- briefHour      — hour-of-day (0-23) in the space's timezone (existing
 --                  SpaceSetting.timezone column) at which the brief

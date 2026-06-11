@@ -3,10 +3,10 @@
 /**
  * `<TeamLeaderboardDiagram />` — performance, on one page.
  *
- * One beat: a sortable leaderboard. The second-place realtor closes a
+ * One beat: a sortable leaderboard. The second-place rep closes a
  * deal — their pipeline value snaps to a new total and the row settles
  * into the #1 slot. No ticker counter, no glow, no celebration. The
- * realtor sees the rank change in calm.
+ * rep sees the rank change in calm.
  *
  * Motion contract:
  *   - ≈8s cycle.
@@ -32,16 +32,16 @@ import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '@/lib/utils';
 import { EASE_APPLE } from '@/lib/motion';
 import {
-  ChippiDiagramShell,
+  KoalaDiagramShell,
   useDiagramMotion,
-} from './chippi-diagram-shell';
+} from './koala-diagram-shell';
 
 interface TeamLeaderboardDiagramProps {
   aspect?: 'video' | 'square' | 'wide' | 'tall';
   className?: string;
 }
 
-interface RealtorRow {
+interface RepRow {
   id: string;
   name: string;
   initials: string;
@@ -55,7 +55,7 @@ interface RealtorRow {
 // Lexington deal his pipeline ticks up past Kira's — the only row that
 // changes. Capped at four: the shortest frame (video / wide section) can
 // hold four rows that fill it; a fifth would overflow.
-const ROWS: RealtorRow[] = [
+const ROWS: RepRow[] = [
   {
     id: 'kira',
     name: 'Kira Watanabe',
@@ -104,9 +104,9 @@ export function TeamLeaderboardDiagram({
   className,
 }: TeamLeaderboardDiagramProps) {
   return (
-    <ChippiDiagramShell aspect={aspect} pad={6} className={className}>
+    <KoalaDiagramShell aspect={aspect} pad={6} className={className}>
       <TeamLeaderboardContent />
-    </ChippiDiagramShell>
+    </KoalaDiagramShell>
   );
 }
 
@@ -176,7 +176,7 @@ function TeamLeaderboardContent() {
       {/* Column headers */}
       <div className="flex-shrink-0 grid grid-cols-[20px_1fr_auto_auto] gap-3 px-1 pb-1.5 text-[10px] uppercase tracking-wider text-muted-foreground">
         <span></span>
-        <span>Realtor</span>
+        <span>Rep</span>
         <span className="text-right">Closed</span>
         <span className="text-right">Pipeline</span>
       </div>

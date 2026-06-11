@@ -21,9 +21,9 @@ interface Props {
 }
 
 /**
- * Shared property create/edit form. Field set is intentionally small — a
- * realtor adding a property in the middle of their day shouldn't have to
- * fill twenty boxes. Everything except address is optional.
+ * Shared product create/edit form. Field set is intentionally small — a
+ * rep adding a product in the middle of their day shouldn't have to
+ * fill twenty boxes. Everything except name is optional.
  *
  * All inputs are the canonical <Input> / <Textarea> primitives so the form
  * inherits the product's paper-flat polish (no shadow, 2px focus ring,
@@ -31,9 +31,9 @@ interface Props {
  * still native <select> for keyboard-first speed; they're styled with the
  * same chain as Input so the row visually aligns.
  *
- * Photos live at the top — a property is what it looks like, not what its
- * MLS number is. The featured photo is `photos[0]` (convention reused from
- * the list + detail pages); the editor lets the realtor tap any tile to
+ * Photos live at the top — a product is what it looks like, not what its
+ * catalog number is. The featured photo is `photos[0]` (convention reused from
+ * the list + detail pages); the editor lets the rep tap any tile to
  * promote it. The first uploaded photo is featured by default.
  */
 export function PropertyForm({ initial = {}, onCancel, onSubmit, submitting, submitLabel = 'Save' }: Props) {
@@ -84,9 +84,9 @@ export function PropertyForm({ initial = {}, onCancel, onSubmit, submitting, sub
 
   return (
     <form onSubmit={submit} className="space-y-4">
-      {/* Photos first — the realtor is showing a house, not filing an MLS
-          form. The featured tile sets what the list, the deal card, and
-          the listing detail show. */}
+      {/* Photos first — the rep is pitching a product, not filing a
+          catalog form. The featured tile sets what the list, the deal card,
+          and the offering detail show. */}
       <Field label="Photos">
         <PropertyPhotoEditor
           value={v.photos ?? []}
@@ -94,9 +94,9 @@ export function PropertyForm({ initial = {}, onCancel, onSubmit, submitting, sub
         />
       </Field>
 
-      {/* Address row */}
+      {/* Company address row */}
       <div className="grid grid-cols-[1fr_120px] gap-2">
-        <Field label="Address" required>
+        <Field label="Company address" required>
           <Input
             type="text"
             required
@@ -105,7 +105,7 @@ export function PropertyForm({ initial = {}, onCancel, onSubmit, submitting, sub
             placeholder="123 Main St"
           />
         </Field>
-        <Field label="Unit">
+        <Field label="Suite">
           <Input
             type="text"
             value={v.unitNumber ?? ''}
@@ -128,7 +128,7 @@ export function PropertyForm({ initial = {}, onCancel, onSubmit, submitting, sub
       </div>
 
       <div className="grid grid-cols-2 gap-2">
-        <Field label="MLS #">
+        <Field label="SKU / Catalog #">
           <Input
             type="text"
             value={v.mlsNumber ?? ''}
@@ -136,7 +136,7 @@ export function PropertyForm({ initial = {}, onCancel, onSubmit, submitting, sub
             placeholder="Unique per space"
           />
         </Field>
-        <Field label="Listing URL">
+        <Field label="Offering URL">
           <Input
             type="url"
             value={v.listingUrl ?? ''}

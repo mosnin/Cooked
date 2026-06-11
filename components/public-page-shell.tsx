@@ -26,14 +26,14 @@ interface PublicPageShellProps {
   trustLine: string;
   /** Phrasing for the in-body "with [agent]" line (e.g. "Applying with", "Booking with"). Defaults to "with". */
   agentPresenceLabel?: string;
-  /** Hide the "Powered by Chippi" mark — set on paid tiers (white-label). */
+  /** Hide the "Powered by Koala" mark — set on paid tiers (white-label). */
   hidePoweredBy?: boolean;
   customization?: ShellCustomization;
   /** Cover photo for the desktop blur canvas — matches the public profile /
-   *  intake / tour family aesthetic. Falls back to agentPhoto, then to a
+   *  intake / demo family aesthetic. Falls back to agentPhoto, then to a
    *  neutral gradient. Mobile ignores. */
   coverPhotoUrl?: string | null;
-  /** When set, the realtor's brand at the top deep-links to /p/[slug] so
+  /** When set, the rep's brand at the top deep-links to /p/[slug] so
    *  the applicant has somewhere to land after submission. */
   profileHref?: string | null;
   children: React.ReactNode;
@@ -94,7 +94,7 @@ export function PublicPageShell({
 
   // Pull the blur source the same way the public profile does: cover photo
   // wins, agent face fills in, null falls through to the frame's neutral
-  // gradient. Same identity material across /p, /apply, /book, /tour.
+  // gradient. Same identity material across /p, /apply, /book, /demo.
   const blurSource = coverPhotoUrl || agentPhoto || null;
 
   return (
@@ -168,7 +168,7 @@ export function PublicPageShell({
 
       {/* ── Page content ─────────────────────────────────────────────────── */}
       <main className="max-w-2xl mx-auto px-4 pt-8 sm:pt-10">
-        {/* Cover photo — the realtor's brand banner. Was only ever used as a
+        {/* Cover photo — the rep's brand banner. Was only ever used as a
             48px desktop blur backdrop; render it visibly so the page actually
             shows their cover, consistent with /p/[slug]. */}
         {coverPhotoUrl && (
@@ -227,7 +227,7 @@ export function PublicPageShell({
             )}
           </div>
 
-          {/* Center: realtor footer links or business name */}
+          {/* Center: rep footer links or business name */}
           <div className="flex items-center gap-3">
             {customization?.footerLinks && customization.footerLinks.length > 0 ? (
               customization.footerLinks.slice(0, 2).map((link) => (
@@ -246,7 +246,7 @@ export function PublicPageShell({
             )}
           </div>
 
-          {/* Right: Powered by Chippi — hidden on paid tiers (white-label) */}
+          {/* Right: Powered by Koala — hidden on paid tiers (white-label) */}
           {!hidePoweredBy && (
             <div className="flex items-center gap-1 opacity-30">
               <span className="text-[10px] hidden sm:inline">Powered by</span>
@@ -261,7 +261,7 @@ export function PublicPageShell({
 }
 
 /**
- * Minimal branded wrapper for secondary pages (status, tour manage).
+ * Minimal branded wrapper for secondary pages (status, demo manage).
  */
 export function PublicPageMinimalShell({
   logoUrl,
@@ -273,7 +273,7 @@ export function PublicPageMinimalShell({
 }: {
   logoUrl?: string | null;
   businessName: string;
-  /** Hide the "Powered by Chippi" mark — set on paid tiers (white-label). */
+  /** Hide the "Powered by Koala" mark — set on paid tiers (white-label). */
   hidePoweredBy?: boolean;
   /** Cover photo for desktop blur — same family as /p, /apply, /book. */
   coverPhotoUrl?: string | null;

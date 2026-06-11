@@ -3,7 +3,7 @@
 /**
  * IntegrationsPage — the client body for /integrations.
  *
- * Tells one idea: connect your tools once, and Chippi works inside them.
+ * Tells one idea: connect your tools once, and Koala works inside them.
  * Hero replicates the home-hero atmosphere (AsciiBlob + center-protect
  * radial); a three-step "how it works" explains the Composio connect-then-act
  * model; the catalog renders straight from `lib/integrations/catalog.ts`
@@ -26,7 +26,7 @@ import {
 
 // Category display labels + the order they read on the page. We control the
 // sequence here (catalog order is per-app within a category); this is the
-// scan order a realtor would expect — comms first, then where work lands.
+// scan order a rep would expect — comms first, then where work lands.
 const CATEGORY_ORDER: { key: IntegrationCategory; label: string }[] = [
   { key: 'email', label: 'Email' },
   { key: 'calendar', label: 'Calendar' },
@@ -37,7 +37,7 @@ const CATEGORY_ORDER: { key: IntegrationCategory; label: string }[] = [
   { key: 'docs', label: 'Docs & sheets' },
   { key: 'storage', label: 'Storage' },
   { key: 'crm', label: 'CRM' },
-  { key: 'real-estate', label: 'Real estate' },
+  { key: 'sales', label: 'Sales' },
   { key: 'docs-sign', label: 'Signing' },
   { key: 'tasks', label: 'Tasks' },
   { key: 'forms', label: 'Forms' },
@@ -70,10 +70,10 @@ export function IntegrationsPage() {
         <Reveal className="max-w-3xl">
           <Eyebrow>The catalog</Eyebrow>
           <h2 className="mt-5 font-title text-[clamp(2.25rem,5vw,4rem)] font-normal leading-[1.02] tracking-[-0.025em] text-foreground">
-            {TOTAL} apps Chippi can work inside.
+            {TOTAL} apps Koala can work inside.
           </h2>
           <p className="mt-5 max-w-xl text-lg leading-relaxed text-muted-foreground">
-            Connected through Composio. Each one becomes a tool Chippi can call
+            Connected through Composio. Each one becomes a tool Koala can call
             mid-task, reading what it needs, writing back where the work lives.
           </p>
         </Reveal>
@@ -126,7 +126,7 @@ function Hero() {
 
         <Reveal delay={0.12}>
           <p className="mx-auto mt-7 max-w-2xl text-lg leading-relaxed text-foreground/60 md:text-xl">
-            Connect the tools you already pay for. Chippi connects through
+            Connect the tools you already pay for. Koala connects through
             Composio, then calls each one as a tool while it works, pulling
             data out of your workflows and writing it back where it belongs.
           </p>
@@ -135,7 +135,7 @@ function Hero() {
         <Reveal delay={0.18}>
           <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link
-              href="/login/realtor?intent=signup"
+              href="/login/rep?intent=signup"
               className="inline-flex h-12 items-center justify-center rounded-full bg-brand px-7 text-[15px] font-semibold text-brand-foreground shadow-lg shadow-brand/25 transition-all duration-150 hover:brightness-105 active:scale-[0.98]"
             >
               Start free trial
@@ -159,17 +159,17 @@ const STEPS: { n: string; title: string; body: string }[] = [
   {
     n: '01',
     title: 'connect your tools',
-    body: 'Pick the apps you already work in and authorize them once. Chippi connects through Composio over OAuth. no keys to copy, no scripts to wire.',
+    body: 'Pick the apps you already work in and authorize them once. Koala connects through Composio over OAuth. no keys to copy, no scripts to wire.',
   },
   {
     n: '02',
-    title: 'Chippi uses them as tools',
-    body: 'Once connected, each app becomes a tool Chippi can call mid-task. Ask it to chase a lead or book a tour and it reaches for the right one on its own.',
+    title: 'Koala uses them as tools',
+    body: 'Once connected, each app becomes a tool Koala can call mid-task. Ask it to chase a lead or book a demo and it reaches for the right one on its own.',
   },
   {
     n: '03',
     title: 'data flows both ways',
-    body: 'Chippi pulls what it needs out of your tools and writes results back in. Anything that posts or sends waits for your approval first.',
+    body: 'Koala pulls what it needs out of your tools and writes results back in. Anything that posts or sends waits for your approval first.',
   },
 ];
 
@@ -182,11 +182,11 @@ function HowItWorks() {
       <Reveal className="max-w-3xl">
         <Eyebrow>How it works</Eyebrow>
         <h2 className="mt-5 font-title text-[clamp(2.25rem,5vw,4rem)] font-normal leading-[1.02] tracking-[-0.025em] text-foreground">
-          Connect once. Chippi does the reaching.
+          Connect once. Koala does the reaching.
         </h2>
         <p className="mt-5 max-w-xl text-lg leading-relaxed text-muted-foreground">
           You don&apos;t move data between tabs anymore. You connect a tool, and
-          from then on Chippi works inside it the way you would.
+          from then on Koala works inside it the way you would.
         </p>
       </Reveal>
 
@@ -288,14 +288,14 @@ function ClosingCTA() {
           />
           <div className="relative">
             <h2 className="mx-auto max-w-3xl font-title text-[clamp(2rem,5vw,3.75rem)] font-normal leading-[1.04] tracking-[-0.018em] text-white">
-              Connect your stack. Let Chippi work inside it.
+              Connect your stack. Let Koala work inside it.
             </h2>
             <p className="mx-auto mt-5 max-w-xl text-lg text-white/55">
               Seven days free, cancel anytime. Bring the tools you already use.
             </p>
             <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Link
-                href="/login/realtor?intent=signup"
+                href="/login/rep?intent=signup"
                 className="inline-flex h-12 items-center justify-center rounded-full bg-brand px-7 text-[15px] font-semibold text-brand-foreground shadow-lg shadow-brand/25 transition-all duration-150 hover:brightness-105 active:scale-[0.98]"
               >
                 Start free trial

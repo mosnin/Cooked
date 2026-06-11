@@ -4,24 +4,24 @@
  * `<TeamChatDiagram />` — the room that knows the deal.
  *
  * One beat: a left channel rail (# 415-lexington, # general, # agents) and
- * a conversation pane. A teammate's message appears, then a "@chippi"
- * mention, then a Chippi reply bubble carrying the `DiagramChippiBadge` —
+ * a conversation pane. A teammate's message appears, then a "@koala"
+ * mention, then a Koala reply bubble carrying the `DiagramKoalaBadge` —
  * the one sanctioned orange moment. Then it resets. The pitch in one
- * breath: the conversation lives with the deal, and Chippi joins when
+ * breath: the conversation lives with the deal, and Koala joins when
  * you call it.
  *
  * Bubble vocabulary mirrors the real product (`team-chat-client.tsx`):
  *   - incoming bubble: rounded-lg border border-border/60 bg-background
  *   - @mentions: font-semibold text-foreground
- *   - Chippi reply: "Chippi" name in orange above a paper-flat bubble
- * Brand orange appears ONLY on the Chippi reply — nowhere else.
+ *   - Koala reply: "Koala" name in orange above a paper-flat bubble
+ * Brand orange appears ONLY on the Koala reply — nowhere else.
  *
  * Motion contract:
  *   - ~8.2s cycle.
  *   - 600ms pre-roll.
  *   - Teammate message in (240ms), 900ms beat.
- *   - @chippi mention message in (240ms), 700ms beat.
- *   - Chippi reply bubble in (260ms), 3.0s hold.
+ *   - @koala mention message in (240ms), 700ms beat.
+ *   - Koala reply bubble in (260ms), 3.0s hold.
  *   - Fade out together, 700ms pause, restart.
  *
  * Fit: the channel rail is `hidden md:flex` — on short/narrow boxes the
@@ -36,10 +36,10 @@ import { Hash } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { EASE_APPLE } from '@/lib/motion';
 import {
-  ChippiDiagramShell,
-  DiagramChippiBadge,
+  KoalaDiagramShell,
+  DiagramKoalaBadge,
   useDiagramMotion,
-} from './chippi-diagram-shell';
+} from './koala-diagram-shell';
 
 interface TeamChatDiagramProps {
   aspect?: 'video' | 'square' | 'wide' | 'tall';
@@ -52,7 +52,7 @@ const CHANNELS = [
   { id: 'agents', name: 'agents', active: false },
 ];
 
-// 0 = pre-roll, 1 = teammate msg, 2 = @chippi mention, 3 = Chippi reply, 4 = hold.
+// 0 = pre-roll, 1 = teammate msg, 2 = @koala mention, 3 = Koala reply, 4 = hold.
 type Phase = 0 | 1 | 2 | 3 | 4;
 
 const PHASE_TIMINGS_MS: { phase: Phase; at: number }[] = [
@@ -113,9 +113,9 @@ export function TeamChatDiagram({
   className,
 }: TeamChatDiagramProps) {
   return (
-    <ChippiDiagramShell aspect={aspect} pad={6} className={className}>
+    <KoalaDiagramShell aspect={aspect} pad={6} className={className}>
       <TeamChatContent />
-    </ChippiDiagramShell>
+    </KoalaDiagramShell>
   );
 }
 
@@ -205,10 +205,10 @@ function TeamChatContent() {
           </IncomingBubble>
 
           <IncomingBubble sender="Maya" time="9:25" visible={phase >= 2}>
-            {withMention('@chippi where does this deal stand right now?', '@chippi')}
+            {withMention('@koala where does this deal stand right now?', '@koala')}
           </IncomingBubble>
 
-          {/* Chippi reply — the one sanctioned orange moment. Name in orange
+          {/* Koala reply — the one sanctioned orange moment. Name in orange
               above a paper-flat bubble, mirroring the product bot bubble. */}
           <motion.div
             className="flex flex-col items-start"
@@ -217,7 +217,7 @@ function TeamChatContent() {
             transition={{ duration: 0.26, ease: EASE_APPLE }}
           >
             <div className="mb-1 ml-0.5">
-              <DiagramChippiBadge />
+              <DiagramKoalaBadge />
             </div>
             <div className="max-w-[88%] rounded-lg border border-border/60 bg-background px-3 py-2">
               <p className="text-[13px] text-foreground leading-snug">

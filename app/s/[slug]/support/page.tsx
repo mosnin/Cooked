@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import { getSpaceFromSlug } from '@/lib/space';
 import { SupportView } from './support-view';
 
-export const metadata = { title: 'Support — Chippi' };
+export const metadata = { title: 'Support — Koala' };
 
 export default async function SupportPage({
   params,

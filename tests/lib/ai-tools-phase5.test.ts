@@ -66,7 +66,7 @@ const { notifyNewDealMock } = vi.hoisted(() => ({ notifyNewDealMock: vi.fn(async
 vi.mock('@/lib/notify', () => ({ notifyNewDeal: notifyNewDealMock }));
 
 import { moveDealStageTool } from '@/lib/ai-tools/tools/move-deal-stage';
-import { scheduleTourTool } from '@/lib/ai-tools/tools/schedule-tour';
+import { scheduleDemoTool } from '@/lib/ai-tools/tools/schedule-demo';
 import { addChecklistItemTool } from '@/lib/ai-tools/tools/add-checklist-item';
 import { sendSmsTool } from '@/lib/ai-tools/tools/send-sms';
 import { createDealTool } from '@/lib/ai-tools/tools/create-deal';
@@ -75,7 +75,7 @@ import type { ToolContext } from '@/lib/ai-tools/types';
 function makeCtx(): ToolContext {
   return {
     userId: 'user_1',
-    space: { id: 'space_1', slug: 'jane', name: 'Jane Realty', ownerId: 'u1' },
+    space: { id: 'space_1', slug: 'jane', name: 'Jane Sales', ownerId: 'u1' },
     signal: new AbortController().signal,
   };
 }
@@ -119,15 +119,15 @@ describe('moveDealStageTool', () => {
   });
 });
 
-// ── schedule_tour ────────────────────────────────────────────────────────
-describe('scheduleTourTool', () => {
+// ── schedule_demo ────────────────────────────────────────────────────────
+describe('scheduleDemoTool', () => {
   it('requires approval', () => {
-    expect(scheduleTourTool.requiresApproval).toBe(true);
+    expect(scheduleDemoTool.requiresApproval).toBe(true);
   });
 
   it('rejects a schema with no invitee (neither contactId nor guest fields)', () => {
     expect(() =>
-      scheduleTourTool.parameters.parse({
+      scheduleDemoTool.parameters.parse({
         startsAt: '2026-05-01T14:00:00.000Z',
         endsAt: '2026-05-01T15:00:00.000Z',
       }),
@@ -136,7 +136,7 @@ describe('scheduleTourTool', () => {
 
   it('rejects when endsAt is not after startsAt', () => {
     expect(() =>
-      scheduleTourTool.parameters.parse({
+      scheduleDemoTool.parameters.parse({
         guestName: 'A',
         guestEmail: 'a@b.com',
         startsAt: '2026-05-01T15:00:00.000Z',
@@ -145,17 +145,17 @@ describe('scheduleTourTool', () => {
     ).toThrow();
   });
 
-  it('creates a tour for a walk-in guest', async () => {
+  it('creates a demo for a walk-in guest', async () => {
     mockByTable = {
-      Tour: {
+      Demo: {
         single: {
-          id: 'tour_1',
+          id: 'demo_1',
           startsAt: '2026-05-01T14:00:00.000Z',
           endsAt: '2026-05-01T15:00:00.000Z',
         },
       },
     };
-    const result = await scheduleTourTool.handler(
+    const result = await scheduleDemoTool.handler(
       {
         guestName: 'Walk-in',
         guestEmail: 'walk@in.com',
@@ -165,11 +165,11 @@ describe('scheduleTourTool', () => {
       },
       makeCtx(),
     );
-    expect(result.display).toBe('tours');
-    expect(result.summary).toMatch(/Tour scheduled/);
-    const tours = (result.data as { tours: { contactId: string | null }[] }).tours;
-    expect(tours).toHaveLength(1);
-    expect(tours[0].contactId).toBeNull();
+    expect(result.display).toBe('demos');
+    expect(result.summary).toMatch(/Demo scheduled/);
+    const demos = (result.data as { demos: { contactId: string | null }[] }).demos;
+    expect(demos).toHaveLength(1);
+    expect(demos[0].contactId).toBeNull();
   });
 });
 

@@ -6,7 +6,7 @@
  * fresh each request.
  *
  * Time-neutral on purpose: the server clock is UTC, so "good morning" would be
- * wrong for most realtors. These read warm at any hour.
+ * wrong for most reps. These read warm at any hour.
  */
 export function pickGreeting(firstName: string): string {
   const n = (firstName ?? '').trim();

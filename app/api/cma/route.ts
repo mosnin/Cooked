@@ -1,12 +1,12 @@
 /**
- * CMA reports (realtor-facing) — GET / POST
+ * CMA reports (rep-facing) — GET / POST
  *
  *   GET  ?slug=<slug>  → { reports: [...] }   the space's CMAs, newest first
  *   POST { slug, subjectPropertyId? | subject:{address,...}, title? }
  *        → { report }   builds the CMA, inserts a CmaReport with a shareToken
  *
  * Auth: requireSpaceOwner(slug). Comps come from the space's own Property rows
- * (in-house, no MLS). The analysis is frozen into `payload` at insert time so
+ * (in-house, no CRM). The analysis is frozen into `payload` at insert time so
  * the public page stays stable even if the underlying rows later change.
  */
 

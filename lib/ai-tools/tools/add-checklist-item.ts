@@ -2,12 +2,12 @@
  * `add_checklist_item` — append one item to a deal's closing checklist.
  *
  * Approval-gated. Adding a checklist item is genuinely low-stakes (it's
- * a task the realtor can delete), but it's still a visible mutation that
+ * a task the rep can delete), but it's still a visible mutation that
  * shows up on the pipeline card, so we prompt so the user sees the
  * kind + label + due date before we write.
  *
  * Seeding the full template checklist is a larger, irreversible-looking
- * operation and intentionally out of scope for this tool — the realtor
+ * operation and intentionally out of scope for this tool — the rep
  * already has a "Seed from template" button in the UI.
  */
 

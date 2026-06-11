@@ -36,7 +36,7 @@ export default async function LeadDetailPage({
   const { slug, id } = await params;
 
   const { userId } = await auth();
-  if (!userId) redirect('/login/realtor');
+  if (!userId) redirect('/login/rep');
 
   // Validate UUID format to avoid unnecessary DB round-trips
   const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;

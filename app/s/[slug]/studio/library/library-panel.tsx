@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * LibraryPanel — /s/[slug]/studio/library. A gallery of the realtor's past
+ * LibraryPanel — /s/[slug]/studio/library. A gallery of the rep's past
  * Studio generations, newest first.
  *
  * Paginated 60-at-a-time. Each tile carries an overflow menu with the four
@@ -108,7 +108,7 @@ export function LibraryPanel() {
 
   // Destructive but recoverable — a sonner toast with an inline confirm
   // beats a blocking modal for a single asset. Optimistic remove from the
-  // grid happens only after the realtor confirms in the toast.
+  // grid happens only after the rep confirms in the toast.
   function handleDeleteRequest(item: LibraryItem) {
     if (deletingId) return;
     const toastId = `delete-${item.fileId}`;
@@ -196,7 +196,7 @@ export function LibraryPanel() {
 
   return (
     <div className="space-y-4">
-      {/* Header CTA — the realtor's eye lands here after scanning past
+      {/* Header CTA — the rep's eye lands here after scanning past
           work; the primary action sits inline so "make another one" is
           one click from any tile. */}
       <div className="flex items-center justify-between gap-3">

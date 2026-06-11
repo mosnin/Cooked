@@ -1,9 +1,9 @@
 /**
  * POST /api/studio/edit — transform an uploaded image with fal.ai.
  *
- * The realtor-facing entry point: auth, subscription gate, and rate limiting
+ * The rep-facing entry point: auth, subscription gate, and rate limiting
  * live here; the upload is stored as a File and the transform runs in the
- * shared core (lib/studio/edit.ts), which the Chippi agent's internal route
+ * shared core (lib/studio/edit.ts), which the Koala agent's internal route
  * reuses.
  */
 
@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
 
   // Per-space daily spend cap. Shared budget with /api/studio/generate
   // — both routes deduct from the same StudioGeneration table, so
-  // checkStudioSpendBudget reflects the realtor's total day's burn.
+  // checkStudioSpendBudget reflects the rep's total day's burn.
   const budget = await checkStudioSpendBudget(space.id);
   if (!budget.allowed) {
     return NextResponse.json(

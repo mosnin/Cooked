@@ -28,7 +28,7 @@ import type { AgentEvent } from '@/lib/ai-tools/events';
 import type { MessageBlock, ToolCallBlock } from '@/lib/ai-tools/blocks';
 import { SSEParser } from '@/lib/ai-tools/client/parse-sse';
 import type { PermissionPromptData } from '@/components/ai/blocks/permission-prompt-view';
-import { chippiErrorMessage, classifyError } from '@/lib/ai-tools/chippi-voice';
+import { koalaErrorMessage, classifyError } from '@/lib/ai-tools/koala-voice';
 
 export interface UiMessage {
   id: string;
@@ -58,20 +58,20 @@ export interface UseAgentTaskOptions {
    */
   onConversationCreated?: (conversationId: string) => void;
   /**
-   * Backing API endpoints. Defaults route to the realtor surface; the
-   * broker variant (`/broker/chippi`) overrides both to hit the broker-
-   * gated routes (`resolveBrokerContext()` gates layer 2 of the
+   * Backing API endpoints. Defaults route to the rep surface; the
+   * manager variant (`/manager/koala`) overrides both to hit the manager-
+   * gated routes (`resolveManagerContext()` gates layer 2 of the
    * defense-in-depth chain).
    *
    * - `taskEndpoint`          — POST target for a chat turn.
    * - `conversationsEndpoint` — POST creates a new conversation; the body
-   *                             shape differs per variant (realtor sends
-   *                             `{ slug }`; broker sends nothing because
-   *                             the broker route resolves brokerage from
+   *                             shape differs per variant (rep sends
+   *                             `{ slug }`; manager sends nothing because
+   *                             the manager route resolves team from
    *                             the Clerk session).
    * - `resumeEndpoint`        — POST target for approve / deny resume.
-   *                             Phase 1 doesn't ship broker approvals so
-   *                             the broker variant inherits the realtor
+   *                             Phase 1 doesn't ship manager approvals so
+   *                             the manager variant inherits the rep
    *                             default; Phase 3 will introduce a parallel.
    * - `conversationCreatePayload` — overrides the POST body for create.
    */
@@ -241,17 +241,17 @@ export function useAgentTask(options: UseAgentTaskOptions): UseAgentTaskResult {
   const clearError = useCallback(() => setError(null), []);
 
   /**
-   * Land a Chippi-voiced error line as an assistant message in the transcript.
+   * Land a Axil-voiced error line as an assistant message in the transcript.
    * If we already have an open assistant bubble (the streaming target), we
    * drop its empty content and replace it with the error text so the error
-   * looks like Chippi talking, not like a system warning under a phantom
+   * looks like Axil talking, not like a system warning under a phantom
    * empty bubble.
    *
    * Also writes the same string into the `error` state so any banner-style
    * consumer still has something to render — but the visible affordance is
    * the inline assistant message.
    */
-  const landChippiError = useCallback((message: string) => {
+  const landKoalaError = useCallback((message: string) => {
     setError(message);
     const targetId = streamingMsgIdRef.current;
     const errorBlock: MessageBlock = { type: 'text', content: message };
@@ -318,7 +318,7 @@ export function useAgentTask(options: UseAgentTaskOptions): UseAgentTaskResult {
           // tail assistant bubble at the new id instead of silently
           // no-op'ing every delta. The previous behavior turned every
           // mid-stream wipe into a totally invisible failure for the
-          // realtor.
+          // rep.
           if (!prev.some((m) => m.id === targetId)) {
             const recovered: UiMessage = {
               id: targetId,
@@ -347,7 +347,7 @@ export function useAgentTask(options: UseAgentTaskOptions): UseAgentTaskResult {
         if (!targetId) return;
         // delegate_task is represented by its own live task card (mounted on
         // the subagent_spawned event), not a generic tool row — skip the
-        // tool_call block so the realtor sees one clean card, not both.
+        // tool_call block so the rep sees one clean card, not both.
         if (event.name === 'delegate_task') return;
         setLiveCallIds((s) => {
           const next = new Set(s);
@@ -402,7 +402,7 @@ export function useAgentTask(options: UseAgentTaskOptions): UseAgentTaskResult {
       case 'permission_required': {
         // Always surface the prompt. A hidden tab used to drop the event
         // entirely, which left the chat turn stuck mid-stream with no card
-        // and no resolution when the realtor came back. pendingApproval is
+        // and no resolution when the rep came back. pendingApproval is
         // just state — the inline card renders when the tab is next visible.
         setPendingApproval({
           requestId: event.requestId,
@@ -499,17 +499,17 @@ export function useAgentTask(options: UseAgentTaskOptions): UseAgentTaskResult {
       }
 
       case 'error': {
-        // Server hands us a Chippi-voiced line in `message`; if it didn't
+        // Server hands us a Axil-voiced line in `message`; if it didn't
         // (older server, raw fallback), pick one from the code.
         const text =
           event.message && event.message.length < 400
             ? event.message
-            : chippiErrorMessage(event.code ?? 'internal');
-        landChippiError(text);
+            : koalaErrorMessage(event.code ?? 'internal');
+        landKoalaError(text);
         return;
       }
     }
-  }, [landChippiError]);
+  }, [landKoalaError]);
 
   /**
    * Shared stream consumer. Opens a POST to `url` with `body`, applies every
@@ -541,7 +541,7 @@ export function useAgentTask(options: UseAgentTaskOptions): UseAgentTaskResult {
               setRateLimitSeconds(retryAfter);
             }
           }
-          // Server already speaks Chippi for this route; if not, classify
+          // Server already speaks Axil for this route; if not, classify
           // by HTTP status as a fallback so the user never sees raw text.
           let message: string | undefined;
           try {
@@ -557,14 +557,14 @@ export function useAgentTask(options: UseAgentTaskOptions): UseAgentTaskResult {
                 : res.status === 401 || res.status === 403
                   ? 'auth'
                   : 'internal';
-            message = chippiErrorMessage(code);
+            message = koalaErrorMessage(code);
           }
-          landChippiError(message);
+          landKoalaError(message);
           return;
         }
 
         if (!res.body) {
-          landChippiError(chippiErrorMessage('network'));
+          landKoalaError(koalaErrorMessage('network'));
           return;
         }
 
@@ -580,7 +580,7 @@ export function useAgentTask(options: UseAgentTaskOptions): UseAgentTaskResult {
         const aborted = (err as { name?: string }).name === 'AbortError';
         if (!aborted) {
           const raw = err instanceof Error ? err.message : 'Network error';
-          landChippiError(chippiErrorMessage(classifyError(raw)));
+          landKoalaError(koalaErrorMessage(classifyError(raw)));
         } else {
           // Aborted: just tidy the trailing empty assistant bubble.
           const targetId = streamingMsgIdRef.current;
@@ -602,7 +602,7 @@ export function useAgentTask(options: UseAgentTaskOptions): UseAgentTaskResult {
         setStreamingReasoning('');
       }
     },
-    [abort, applyEvent, landChippiError],
+    [abort, applyEvent, landKoalaError],
   );
 
   /**
@@ -611,9 +611,9 @@ export function useAgentTask(options: UseAgentTaskOptions): UseAgentTaskResult {
    * the new id back from the SSE stream — so we create it client-side first.
    *
    * `conversationsEndpoint` and `conversationCreatePayload` are configurable
-   * so the broker variant can target /api/ai/broker-conversations (gated by
-   * resolveBrokerContext) without a custom hook. Defaults preserve the
-   * realtor behaviour: POST /api/ai/conversations { slug }.
+   * so the manager variant can target /api/ai/manager-conversations (gated by
+   * resolveManagerContext) without a custom hook. Defaults preserve the
+   * rep behaviour: POST /api/ai/conversations { slug }.
    */
   const ensureConversationId = useCallback(async (): Promise<string> => {
     if (conversationIdRef.current) return conversationIdRef.current;
@@ -669,15 +669,15 @@ export function useAgentTask(options: UseAgentTaskOptions): UseAgentTaskResult {
         convId = await ensureConversationId();
       } catch (err) {
         // Conversation creation failed — pull the optimistic placeholders
-        // back so the realtor doesn't see a hung user message + empty
-        // assistant bubble. landChippiError surfaces an error message in
+        // back so the rep doesn't see a hung user message + empty
+        // assistant bubble. landKoalaError surfaces an error message in
         // its place via a fresh assistant entry.
         setMessages((prev) =>
           prev.filter((m) => m.id !== userMsg.id && m.id !== assistantMsgId),
         );
         streamingMsgIdRef.current = null;
         const raw = err instanceof Error ? err.message : '';
-        landChippiError(chippiErrorMessage(classifyError(raw)));
+        landKoalaError(koalaErrorMessage(classifyError(raw)));
         return;
       }
 
@@ -689,7 +689,7 @@ export function useAgentTask(options: UseAgentTaskOptions): UseAgentTaskResult {
         ...(hasAttachments ? { attachmentIds } : {}),
       });
     },
-    [isStreaming, spaceSlug, ensureConversationId, consumeStream, landChippiError, taskEndpoint],
+    [isStreaming, spaceSlug, ensureConversationId, consumeStream, landKoalaError, taskEndpoint],
   );
 
   const approve = useCallback(

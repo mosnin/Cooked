@@ -17,14 +17,14 @@ const parameters = z
       .min(1)
       .max(200)
       .optional()
-      .describe('Free-text search across address, city, MLS number, or exact id.'),
+      .describe('Free-text search across address, city, CRM number, or exact id.'),
     status: z
       .enum(['active', 'pending', 'sold', 'off_market', 'owned'])
       .optional()
       .describe('Filter by listing status.'),
   })
   .refine((v) => v.query || v.status, { message: 'Provide at least one of query or status.' })
-  .describe('Find a property by address, id, MLS number, or status.');
+  .describe('Find a property by address, id, CRM number, or status.');
 
 interface PropertyHit {
   id: string;
@@ -76,7 +76,7 @@ export const findPropertyTool = defineTool<typeof parameters, FindPropertyResult
   name: 'find_property',
   riskLevel: 'safe',
   description:
-    "Find a property by address, MLS number, id, or status. Returns rich detail for a single match or a shortlist (≤8) when ambiguous.",
+    "Find a property by address, CRM number, id, or status. Returns rich detail for a single match or a shortlist (≤8) when ambiguous.",
   parameters,
   requiresApproval: false,
 

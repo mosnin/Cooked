@@ -4,11 +4,11 @@
  * TiptapEditor — the canonical "Google Docs"-style rich text editor.
  *
  * Built on ProseMirror via TipTap. Headless — toolbar is hand-rolled to
- * match Chippi's paper-flat surface (no shadcn dropdowns, no third-party
+ * match Koala's paper-flat surface (no shadcn dropdowns, no third-party
  * chrome that would drag its own design with it).
  *
  * Contract — drop-in replacement for the existing `value`/`onChange`
- * RichTextEditor in /broker/settings:
+ * RichTextEditor in /manager/settings:
  *   - value: HTML string (initialContent)
  *   - onChange: called with HTML string on each update
  *
@@ -20,7 +20,7 @@
  *   - Typography                       (smart quotes, em-dash, ellipsis on the fly)
  *
  * Stylesheet anchors:
- *   - Body type uses Tailwind's `prose` so headings inherit Chippi's
+ *   - Body type uses Tailwind's `prose` so headings inherit Koala's
  *     SF Pro Display stack (via the base layer's `<h*>` rules) and body
  *     reads at the canonical `text-sm`.
  *   - Toolbar: hairline border (`border-border/60`), `bg-muted/30` shell,
@@ -32,7 +32,7 @@
  *     a More button so the toolbar stops pushing the document below the
  *     fold on a phone.
  *   - Read mode (`disabled={true}`) tints the body `bg-muted/10` so the
- *     realtor can tell at a glance whether they're viewing or editing.
+ *     rep can tell at a glance whether they're viewing or editing.
  */
 
 import { useCallback, useEffect, useState } from 'react';
@@ -114,7 +114,7 @@ export function TiptapEditor({
       attributes: {
         class: cn(
           // The editor body. Match the existing document textarea height
-          // so the realtor doesn't feel a layout jump when toggling.
+          // so the rep doesn't feel a layout jump when toggling.
           'min-h-[60vh] px-3.5 py-3 outline-none',
           // `prose` gives us Google-Docs-style body type for free. Use
           // the small scale because the rest of the dashboard reads at
@@ -122,7 +122,7 @@ export function TiptapEditor({
           // inside the surface.
           'prose prose-sm dark:prose-invert max-w-none',
           // Per stylesheet: no shadows, just hairlines. Override prose's
-          // default link blue — Chippi links are foreground underline.
+          // default link blue — Koala links are foreground underline.
           'prose-a:text-foreground prose-a:underline',
           'prose-code:before:content-none prose-code:after:content-none',
           'prose-code:bg-muted prose-code:px-1 prose-code:py-0.5 prose-code:rounded',
@@ -151,7 +151,7 @@ export function TiptapEditor({
     <div
       className={cn(
         'rounded-xl border border-border/70 overflow-hidden',
-        // Read mode: subtle muted tint so the realtor can tell at a glance
+        // Read mode: subtle muted tint so the rep can tell at a glance
         // whether they're viewing or editing. Edit mode: paper-flat card.
         disabled ? 'bg-muted/10' : 'bg-card',
         className,

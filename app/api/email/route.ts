@@ -1,7 +1,7 @@
 /**
  * GET /api/email?slug=xxx&filter=inbox|starred|sent&pageToken=...&q=...
  *
- * The realtor's email, channel-pure (no WhatsApp). Mirrors the calendar
+ * The rep's email, channel-pure (no WhatsApp). Mirrors the calendar
  * pattern — connection presence is part of the payload so the page
  * paints the right shape on first render.
  *
@@ -19,7 +19,7 @@
  *
  * Pagination is Gmail's native `next_page_token`. We pass it through; the
  * client tracks it for "Load more". 30 messages per page — enough to fill
- * a screen, small enough that the realtor isn't waiting on a 200-row
+ * a screen, small enough that the rep isn't waiting on a 200-row
  * fetch when they only wanted the top dozen.
  *
  * No memo: each list call carries a pageToken, so the cache key would be
@@ -68,7 +68,7 @@ export interface EmailListItem {
   threadId: string;
   fromName: string;
   fromAddress: string;
-  /** Realtor's own send: shown in the Sent filter; renders "to <recipient>" */
+  /** Rep's own send: shown in the Sent filter; renders "to <recipient>" */
   toName: string;
   toAddress: string;
   subject: string | null;

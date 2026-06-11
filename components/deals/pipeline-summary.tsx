@@ -29,7 +29,7 @@ interface PipelineSummaryProps {
   onAddDeal: () => void;
   /** Bumped by the parent after the kanban refetches (deal created,
    *  deleted, status changed). Forces this stat strip to re-fetch so the
-   *  KPI numbers don't go stale right after the realtor adds a deal. */
+   *  KPI numbers don't go stale right after the rep adds a deal. */
   refreshKey?: number;
   /** Server-pre-fetched stages for this pipeline. Lets the first paint
    *  carry real KPI numbers instead of zeros that animate up after the
@@ -47,7 +47,7 @@ interface PipelineStats {
   atRisk: number;
   wonThisMonth: number;
   wonThisMonthValue: number;
-  /** A short Chippi narration that names the most-pressing fact. */
+  /** A short Koala narration that names the most-pressing fact. */
   narration: string;
   /** Click the narration to act on it. `null` if there's nothing to do. */
   narrationAction: 'filter-at-risk' | 'filter-closing' | 'add-deal' | null;
@@ -56,7 +56,7 @@ interface PipelineStats {
 /**
  * Stat strip above the deals board.
  *
- * Answers the realtor's morning question — "what's actually moving, what's
+ * Answers the rep's morning question — "what's actually moving, what's
  * stuck, and what closes this month?" — in four cells. Two of the cells
  * (At risk, Closing this month) are also filter triggers: clicking one
  * narrows the kanban below and toggles a pressed state on the cell. The
@@ -186,7 +186,7 @@ export function PipelineSummary({
       }
     }
 
-    // Compose Chippi's one-line narration. Pick the most-pressing fact.
+    // Compose Koala's one-line narration. Pick the most-pressing fact.
     let narration = '';
     let narrationAction: PipelineStats['narrationAction'] = null;
     if (stuckCount > 0) {

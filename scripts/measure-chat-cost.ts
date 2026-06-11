@@ -31,7 +31,7 @@
  *
  * Without them the script throws immediately with a clear message.
  * The service role key bypasses RLS so we see every space's data —
- * we are measuring the system, not one realtor.
+ * we are measuring the system, not one rep.
  *
  * Why a script and not a route: we want the output BEFORE deciding
  * which Phase 4 PRs (B–E) to ship. A CLI script keeps the analysis
@@ -39,7 +39,7 @@
  *
  * NOTE on columns: the migration uses `promptTokens` / `completionTokens`
  * (not `inputTokens` / `outputTokens`). The report labels them as
- * "input"/"output" because that's the language realtors and the API
+ * "input"/"output" because that's the language reps and the API
  * docs use.
  */
 

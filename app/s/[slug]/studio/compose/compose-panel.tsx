@@ -3,7 +3,7 @@
 /**
  * ComposePanel — /s/[slug]/studio/compose.
  *
- * A simple post composer: upload a photo, pick a real-estate template
+ * A simple post composer: upload a photo, pick a sales template
  * (Just Listed, Open House, Just Sold), fill the text, and Studio renders a
  * finished, on-brand 1080² post onto a canvas. Text is drawn deterministically
  * — crisp and exact, never AI-guessed. Save drops the result into Files.

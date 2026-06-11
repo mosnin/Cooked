@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 const BASE_URL = process.env.NEXT_PUBLIC_ROOT_DOMAIN
   ? `https://${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`
-  : 'https://my.usechippi.com';
+  : 'https://my.usekoala.com';
 
 /**
  * GET /.well-known/oauth-protected-resource

@@ -7,7 +7,7 @@
 --      → cohort by SpaceSetting.briefEnabled × briefEnabledAt window
 --      → outcome by existing subscription state. No new infra.
 --
---   2. Which signal sources actually move realtors?
+--   2. Which signal sources actually move reps?
 --      → cardTaps[].source × cardMeta[].source
 --      → tap rate per source, computable in one SQL query.
 --
@@ -21,7 +21,7 @@
 -- server-side (confidence shouldn't leak to the UI contract).
 --
 -- cardTaps grows append-only on every 'acted' PATCH. Idempotent — the
--- API drops duplicates so the realtor tapping the same card twice
+-- API drops duplicates so the rep tapping the same card twice
 -- doesn't double-count.
 --
 -- briefEnabledAt enables the retention cohort split. Stamped on insert

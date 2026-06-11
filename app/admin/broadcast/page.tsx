@@ -3,7 +3,7 @@ import { isPlatformAdmin } from '@/lib/permissions';
 import { redirect } from 'next/navigation';
 import { BroadcastClient, type SegmentKey, type PastBroadcast } from './broadcast-client';
 
-export const metadata = { title: 'Broadcast — Admin — Chippi' };
+export const metadata = { title: 'Broadcast — Admin — Koala' };
 
 const SUBSCRIPTION_SEGMENTS: Record<string, string> = {
   trial: 'trialing',

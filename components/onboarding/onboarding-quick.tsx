@@ -20,10 +20,10 @@ type SlugState =
 
 /**
  * Quick-path onboarding - one screen, two real fields. Replaces the old
- * 9-step realtor onboarding. The activation event (intake link) lives at
+ * 9-step rep onboarding. The activation event (intake link) lives at
  * the bottom of this screen as soon as a valid business name produces a
- * usable slug. Brokers tap the link at the bottom to switch to the longer
- * flow that handles brokerage data.
+ * usable slug. Managers tap the link at the bottom to switch to the longer
+ * flow that handles team data.
  */
 export function OnboardingQuick({ defaultName }: Props) {
   const router = useRouter();
@@ -135,12 +135,12 @@ export function OnboardingQuick({ defaultName }: Props) {
         const completeRes = await fetch('/api/onboarding', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'complete', accountType: 'realtor' }),
+          body: JSON.stringify({ action: 'complete', accountType: 'rep' }),
         });
         if (!completeRes.ok) throw new Error('complete');
 
         toast.success("You're in. Here's your workspace.");
-        router.push(`/s/${slug}/chippi`);
+        router.push(`/s/${slug}/axil`);
       } catch {
         setSubmitError("Couldn't finish setup - usually temporary.");
         setSubmitting(false);
@@ -275,10 +275,10 @@ export function OnboardingQuick({ defaultName }: Props) {
 
         <div className="text-center">
           <a
-            href="/setup?type=broker"
+            href="/setup?type=manager"
             className="text-xs text-muted-foreground hover:text-foreground transition-colors"
           >
-            Setting up a brokerage instead?
+            Setting up a team instead?
           </a>
         </div>
       </div>

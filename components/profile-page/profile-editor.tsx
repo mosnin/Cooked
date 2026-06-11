@@ -1,10 +1,10 @@
 'use client';
 
 /**
- * Editor for the realtor's public "link in bio" page (/p/[slug]).
+ * Editor for the rep's public "link in bio" page (/p/[slug]).
  *
  * Reads and writes the ProfilePage row through /api/profile-page. Three
- * tabs split the surface so the realtor's mental model matches the page
+ * tabs split the surface so the rep's mental model matches the page
  * itself:
  *
  *   Identity  → Profile photo, Headline, Verified badge, Social links
@@ -112,7 +112,7 @@ export function ProfileEditor({ slug }: { slug: string }) {
   const [enabled, setEnabled] = useState(true);
   const [headline, setHeadline] = useState('');
   const [showIntake, setShowIntake] = useState(true);
-  const [showTours, setShowTours] = useState(true);
+  const [showDemos, setShowDemos] = useState(true);
   const [showProperties, setShowProperties] = useState(true);
   const [isVerified, setIsVerified] = useState(false);
   const [socialLinks, setSocialLinks] = useState<Partial<Record<SocialPlatform, string>>>({});
@@ -126,8 +126,8 @@ export function ProfileEditor({ slug }: { slug: string }) {
   const [coverUploading, setCoverUploading] = useState(false);
   const [coverError, setCoverError] = useState('');
   const coverFileRef = useRef<HTMLInputElement>(null);
-  // Profile photo — separate from the dashboard's realtorPhotoUrl. Owned by
-  // a dedicated endpoint so the realtor can swap their public-page face
+  // Profile photo — separate from the dashboard's repPhotoUrl. Owned by
+  // a dedicated endpoint so the rep can swap their public-page face
   // without disturbing the dashboard chrome / intake / booking photo.
   const [profilePhotoUrl, setProfilePhotoUrl] = useState<string | null>(null);
   const [profilePhotoUploading, setProfilePhotoUploading] = useState(false);
@@ -169,7 +169,7 @@ export function ProfileEditor({ slug }: { slug: string }) {
     setEnabled(data.enabled !== false);
     setHeadline(typeof data.headline === 'string' ? data.headline : '');
     setShowIntake(data.showIntake !== false);
-    setShowTours(data.showTours !== false);
+    setShowDemos(data.showDemos !== false);
     setShowProperties(data.showProperties !== false);
     setIsVerified(data.isVerified === true);
     {
@@ -234,7 +234,7 @@ export function ProfileEditor({ slug }: { slug: string }) {
 
   async function handleCoverFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
-    e.target.value = ''; // let the realtor re-pick the same file
+    e.target.value = ''; // let the rep re-pick the same file
     if (!file) return;
 
     // Client-side check is a UX convenience — the server check is authoritative.
@@ -357,7 +357,7 @@ export function ProfileEditor({ slug }: { slug: string }) {
   // properties). The array order is the render order on the public page,
   // so reordering here IS the feature — Save changes persists. PointerSensor
   // handles mouse + pen, TouchSensor handles mobile (a 200ms hold so the
-  // realtor can still scroll); 5px activation distance on the pointer
+  // rep can still scroll); 5px activation distance on the pointer
   // keeps small fidget clicks from starting a drag accidentally. One
   // sensor set, used by every DndContext on the page.
   const dndSensors = useSensors(
@@ -485,7 +485,7 @@ export function ProfileEditor({ slug }: { slug: string }) {
           enabled,
           headline: headline.trim() || null,
           showIntake,
-          showTours,
+          showDemos,
           showProperties,
           isVerified,
           socialLinks: cleanedSocial,
@@ -532,7 +532,7 @@ export function ProfileEditor({ slug }: { slug: string }) {
     <form onSubmit={handleSave} className="space-y-10">
       {/* ── Share ──────────────────────────────────────────────────────────
           Sits ABOVE the tabs — the URL and "view live" are always relevant
-          regardless of which tab the realtor is on. The page-live toggle
+          regardless of which tab the rep is on. The page-live toggle
           also lives here because it's a page-wide kill switch, not a tab
           concern. ──────────────────────────────────────────────────────── */}
       <section className="space-y-4">
@@ -856,11 +856,11 @@ export function ProfileEditor({ slug }: { slug: string }) {
                 help="The button to start an application — your main way to capture a lead."
               />
               <ToggleRow
-                id="showTours"
-                checked={showTours}
-                onChange={setShowTours}
-                label="Book a tour"
-                help="A link to your tour-booking page."
+                id="showDemos"
+                checked={showDemos}
+                onChange={setShowDemos}
+                label="Book a demo"
+                help="A link to your demo-booking page."
               />
               <ToggleRow
                 id="showProperties"
@@ -932,7 +932,7 @@ export function ProfileEditor({ slug }: { slug: string }) {
             <header className="space-y-1">
               <h2 className="text-base font-semibold">Videos</h2>
               <p className={BODY_MUTED}>
-                Paste a YouTube link — a property tour, a market update — and it
+                Paste a YouTube link — a property demo, a market update — and it
                 shows as a playable thumbnail in a &ldquo;Watch&rdquo; section.
                 Drag to reorder.
               </p>
@@ -1083,7 +1083,7 @@ function ToggleRow({
 /** The shared drag-handle button. Used by every sortable row (links,
  *  videos, properties). Reveals on row hover on desktop, always visible on
  *  touch — matches the restraint guidance in STYLESHEET.md (the row
- *  doesn't carry chrome until the realtor reaches for it). */
+ *  doesn't carry chrome until the rep reaches for it). */
 function DragHandle({
   className,
   isDragging,
@@ -1152,7 +1152,7 @@ function LinkRow({
 
   async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
-    e.target.value = ''; // let the realtor re-pick the same file
+    e.target.value = ''; // let the rep re-pick the same file
     if (!file) return;
     if (file.size > 2 * 1024 * 1024) {
       setUploadError('Image must be under 2MB.');

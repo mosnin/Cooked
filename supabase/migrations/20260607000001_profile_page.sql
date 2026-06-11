@@ -1,5 +1,5 @@
 -- ═══════════════════════════════════════════════════════════════════════════
--- ProfilePage — per-realtor config for their public "link in bio" page at
+-- ProfilePage — per-rep config for their public "link in bio" page at
 -- /p/[slug]. One row per space.
 --
 -- Branding (name, photo, bio, social links) is read live from SpaceSetting,
@@ -14,9 +14,9 @@ CREATE TABLE IF NOT EXISTS "ProfilePage" (
   "enabled"        boolean NOT NULL DEFAULT true,
   "headline"       text,
   "showIntake"     boolean NOT NULL DEFAULT true,
-  "showTours"      boolean NOT NULL DEFAULT true,
+  "showDemos"      boolean NOT NULL DEFAULT true,
   "showProperties" boolean NOT NULL DEFAULT true,
-  -- Realtor-added links: [{ id, label, url }].
+  -- Rep-added links: [{ id, label, url }].
   "customLinks"    jsonb   NOT NULL DEFAULT '[]',
   "createdAt"      timestamptz NOT NULL DEFAULT now(),
   "updatedAt"      timestamptz NOT NULL DEFAULT now()

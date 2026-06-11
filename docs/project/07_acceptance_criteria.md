@@ -4,9 +4,9 @@
 
 - User can sign up via Clerk (email/password or OAuth). User row created in Supabase.
 - Authenticated users visiting /sign-in or /sign-up are redirected to /.
-- Unauthenticated users visiting protected routes (/dashboard, /s/*, /admin, /broker) are redirected to /.
+- Unauthenticated users visiting protected routes (/dashboard, /s/*, /admin, /manager) are redirected to /.
 - Non-admin users visiting /admin are redirected to /dashboard.
-- Broker-only users visiting /dashboard are redirected to /broker.
+- Manager-only users visiting /dashboard are redirected to /manager.
 - Logout clears Clerk session.
 
 ## Onboarding
@@ -20,13 +20,13 @@
 ## Dashboard
 
 - Dashboard at /s/[slug] loads within 2 seconds.
-- Summary stats (new applications, total leads, clients, active deals, upcoming tours, follow-ups due) are accurate and match underlying data.
+- Summary stats (new applications, total leads, clients, active deals, upcoming demos, follow-ups due) are accurate and match underlying data.
 - Intake link card shows shareable URL with copy and preview buttons.
-- Tour booking link card shows shareable URL with copy and preview buttons.
+- Demo booking link card shows shareable URL with copy and preview buttons.
 - Recent applications list shows latest 5 intake-sourced leads with score badges.
 - Pipeline card shows deal stages with counts and values.
 - Follow-up widget shows contacts with past-due follow-up dates.
-- Upcoming tours widget shows next 4 scheduled/confirmed tours.
+- Upcoming demos widget shows next 4 scheduled/confirmed demos.
 - Empty states show helpful CTAs (not blank sections).
 
 ## Leads
@@ -43,7 +43,7 @@
 - Contact detail shows all fields, activity log, and linked deals.
 - Activity types: note, call, email, meeting, follow_up.
 - Follow-up dates can be set and appear in dashboard widget.
-- Contacts have lifecycle types: QUALIFICATION, TOUR, APPLICATION.
+- Contacts have lifecycle types: QUALIFICATION, DEMO, APPLICATION.
 - Contact list supports search and filtering.
 
 ## Deals
@@ -54,14 +54,14 @@
 - Deal detail shows activities, linked contacts, and metadata.
 - Deal stages are customizable per space (name, color, position).
 
-## Tours
+## Demos
 
-- Tour booking page at /book/[slug] shows available time slots.
-- Prospects can book tours with name, email, phone, notes.
-- Buffer minutes between tours are enforced.
+- Demo booking page at /book/[slug] shows available time slots.
+- Prospects can book demos with name, email, phone, notes.
+- Buffer minutes between demos are enforced.
 - Availability overrides and blocked dates work correctly.
-- Tour statuses: scheduled, confirmed, completed, cancelled, no_show.
-- Tour manage token allows guests to modify/cancel.
+- Demo statuses: scheduled, confirmed, completed, cancelled, no_show.
+- Demo manage token allows guests to modify/cancel.
 - Waitlist captures prospects when no slots available.
 
 ## AI Assistant
@@ -75,7 +75,7 @@
 
 - Workspace settings save to SpaceSetting record with toast confirmation.
 - Profile updates save to User record.
-- Configure page manages intake page title/intro, tour settings, AI personalization.
+- Configure page manages intake page title/intro, demo settings, AI personalization.
 - Billing page shows subscription status.
 
 ## Billing
@@ -87,22 +87,22 @@
 - Downgrade or plan change shows confirmation dialog with proration details.
 - 7-day free trial displays days remaining and converts automatically.
 
-## Broker Portal
+## Manager Portal
 
-- Broker portal at /broker shows brokerage overview.
-- Realtors list shows all members with their spaces.
+- Manager portal at /manager shows team overview.
+- Reps list shows all members with their spaces.
 - Invitation management: send, view status, cancel.
 - Join code displayed for self-service joining.
-- Non-brokers cannot access /broker routes.
+- Non-managers cannot access /manager routes.
 
 ## Admin
 
 - Admin panel at /admin only accessible to platform admins.
 - User list shows all users with account type, onboarding status.
-- Brokerage list shows all brokerages with owner, status, member count.
-- Individual user/brokerage detail pages work.
+- Team list shows all teams with owner, status, member count.
+- Individual user/team detail pages work.
 - Non-admin redirect to /dashboard.
-- Admin actions (suspend account, change role, manage brokerage) are logged in AuditLog.
+- Admin actions (suspend account, change role, manage team) are logged in AuditLog.
 - Admin cannot remove their own platform admin access.
 
 ## Mobile Responsiveness

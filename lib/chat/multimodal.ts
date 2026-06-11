@@ -12,7 +12,7 @@
  *       forwards Anthropic's `source: { type: 'url' }` shape verbatim.
  *     - PDFs:   `{type: 'document', source: {type: 'url', url}}` — Claude's
  *       PDF support reads page-level layout AND OCRs scanned PDFs. The
- *       same block shape handles realtor contract scans + MLS PDFs.
+ *       same block shape handles rep contract scans + CRM PDFs.
  *
  *   openai (GPT-4o / GPT-5 vision)
  *     - Images: `{type: 'image_url', image_url: {url}}` (OpenAI Chat
@@ -20,7 +20,7 @@
  *     - PDFs:   no native PDF input. v1 strategy: pass a one-line text
  *       block explaining the attachment is unreadable. Sophisticated
  *       PDF-to-image conversion is deferred (see DEFERRED below) — for
- *       v1 we tell the realtor in the response to ask via Claude.
+ *       v1 we tell the rep in the response to ask via Claude.
  *
  *   google (Gemini)
  *     - Both:   `{type: 'image_url', image_url: {url}}` — Gemini-via-
@@ -30,8 +30,8 @@
  *
  *   xai (Grok)
  *     - Images: limited vision support today; the safe play is to drop
- *       the attachments and emit a calm Chippi-voice line in the text
- *       block so the realtor knows to switch models. The router can then
+ *       the attachments and emit a calm Koala-voice line in the text
+ *       block so the rep knows to switch models. The router can then
  *       choose to escalate or not.
  *
  *   deepseek / moonshotai / qwen / unknown
@@ -72,14 +72,14 @@ export interface BuildResult {
   blocks: ContentBlock[];
   /** Attachments the provider can't see — for telemetry / UX surfacing. */
   unsupported: MultimodalAttachment[];
-  /** A one-line Chippi-voice note when we dropped attachments; empty
+  /** A one-line Koala-voice note when we dropped attachments; empty
    *  string when nothing was dropped. The caller can splice this onto
    *  the assistant response or surface as a toast. */
   fallbackNote: string;
 }
 
 /** True when the mime type is an image we can encode for any vision-capable
- *  provider. PNG / JPEG / WebP / GIF cover what realtors actually paste —
+ *  provider. PNG / JPEG / WebP / GIF cover what reps actually paste —
  *  HEIC, AVIF, BMP, TIFF are explicitly not supported (the upload route
  *  rejects them upstream). */
 export function isImageMime(mime: string): boolean {
@@ -237,7 +237,7 @@ export interface SdkBuildResult {
   content: SdkContentPart[];
   /** Attachments the active provider can't consume. */
   unsupported: MultimodalAttachment[];
-  /** One calm Chippi-voice line when attachments were dropped; '' otherwise. */
+  /** One calm Koala-voice line when attachments were dropped; '' otherwise. */
   fallbackNote: string;
 }
 
@@ -339,8 +339,8 @@ function encodePdf(provider: string, a: MultimodalAttachment): ContentBlock[] {
 }
 
 /**
- * One calm sentence telling the realtor an attachment didn't make it to
- * the model — Chippi voice, no apology, no emoji. Sonner toast or inline
+ * One calm sentence telling the rep an attachment didn't make it to
+ * the model — Koala voice, no apology, no emoji. Sonner toast or inline
  * note depending on caller preference.
  */
 function composeFallbackNote(

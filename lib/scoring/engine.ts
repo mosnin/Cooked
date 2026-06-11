@@ -1,5 +1,5 @@
 /**
- * Chippi Proprietary Lead Scoring Engine
+ * Koala Proprietary Lead Scoring Engine
  *
  * Deterministic, weighted scoring system for rental and buyer leads.
  * Produces consistent scores across runs — no LLM dependency for the score itself.
@@ -322,7 +322,7 @@ function scoreEmploymentStability(input: ScoringInput): CategoryResult {
   };
 }
 
-// Rental history (landlord refs, late payments, lease violations) is NOT collected on the intake form.
+// Vendor history (provider references, payment history) is NOT collected on the intake form.
 // Returns neutral score — not included in rental weight calculations.
 function scoreRentalHistory(_input: ScoringInput): CategoryResult {
   return {

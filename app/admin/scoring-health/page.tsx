@@ -3,7 +3,7 @@ import { isPlatformAdmin } from '@/lib/permissions';
 import { redirect } from 'next/navigation';
 import { ScoringHealthClient } from './scoring-health-client';
 
-export const metadata = { title: 'Scoring Health — Admin — Chippi' };
+export const metadata = { title: 'Scoring Health — Admin — Koala' };
 
 export type SpaceFailureRow = {
   spaceId: string;

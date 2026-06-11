@@ -1,14 +1,14 @@
 /**
- * /cma/[token] — the PUBLIC, polished CMA report a realtor shares with a seller.
+ * /cma/[token] — the PUBLIC, polished CMA report a rep shares with a seller.
  *
  * No Clerk gate. Access is the unguessable shareToken; only a `published`
  * report renders (a draft 404s, so a half-finished analysis never leaks). The
- * report renders the frozen `payload`, so it stays stable even if the realtor
+ * report renders the frozen `payload`, so it stays stable even if the rep
  * later edits or deletes the underlying Property rows.
  *
  * Design (Jobs lens): this is a deliverable a seller will read, screenshot, and
  * forward. Paper-flat, one focal element (the suggested range), the comps as a
- * clean table, the realtor's workspace name as the only branding. Print-friendly
+ * clean table, the rep's workspace name as the only branding. Print-friendly
  * via a scoped @media print block — "save as PDF" from the browser is our v1
  * export, no PDF library.
  *

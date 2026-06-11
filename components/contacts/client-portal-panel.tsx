@@ -13,9 +13,9 @@ import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 
 /**
- * Client-portal panel on the realtor contact detail. Mirrors the collapsible
+ * Client-portal panel on the rep contact detail. Mirrors the collapsible
  * <details> pattern used by the other sections. Three things in one calm
- * surface: the portal message thread (realtor replies here), the documents the
+ * surface: the portal message thread (rep replies here), the documents the
  * client uploaded, and a "request info" action.
  *
  * Everything loads lazily on first open so the contact page stays fast.
@@ -23,7 +23,7 @@ import { cn } from '@/lib/utils';
 
 interface Message {
   id: string;
-  senderType: 'client' | 'realtor';
+  senderType: 'client' | 'rep';
   body: string;
   createdAt: string;
 }
@@ -221,13 +221,13 @@ function Thread({
             <p className="py-4 text-center text-sm text-muted-foreground">No portal messages yet.</p>
           ) : (
             messages.map((m) => {
-              const isRealtor = m.senderType === 'realtor';
+              const isRep = m.senderType === 'rep';
               return (
-                <div key={m.id} className={cn('flex', isRealtor ? 'justify-end' : 'justify-start')}>
+                <div key={m.id} className={cn('flex', isRep ? 'justify-end' : 'justify-start')}>
                   <div
                     className={cn(
                       'max-w-[80%] rounded-xl px-3.5 py-2.5',
-                      isRealtor
+                      isRep
                         ? 'rounded-br-sm bg-foreground text-background'
                         : 'rounded-bl-sm bg-muted text-foreground',
                     )}
@@ -237,7 +237,7 @@ function Thread({
                       dateTime={m.createdAt}
                       className={cn(
                         'mt-1 block text-[11px] tabular-nums',
-                        isRealtor ? 'text-background/60' : 'text-muted-foreground',
+                        isRep ? 'text-background/60' : 'text-muted-foreground',
                       )}
                     >
                       {formatTime(m.createdAt)}

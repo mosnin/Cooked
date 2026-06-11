@@ -36,7 +36,7 @@ MODEL_PRICES: dict[str, dict[str, float]] = {
     "gpt-4o":       {"in": 2.50, "out": 10.00},
     "gpt-4.1":      {"in": 2.00, "out": 8.00},
     "gpt-4o-mini":  {"in": 0.15, "out": 0.60},
-    # OpenRouter slugs — realtor-pickable chat models + the autonomous
+    # OpenRouter slugs — rep-pickable chat models + the autonomous
     # fallback chain. Mirrors lib/usage/record-chat-usage.ts; keep in sync.
     "openai/gpt-5.5":            {"in": 5.00, "out": 30.00},
     "openai/gpt-5-mini":         {"in": 0.75, "out": 4.50},

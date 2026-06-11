@@ -4,12 +4,12 @@
  * Why this exists alongside `drafts`:
  *   - The `drafts` source already shows everything the autonomous agent
  *     drafted in response to the GMAIL_NEW_GMAIL_MESSAGE trigger. Those
- *     are the "Chippi did this overnight, approve or edit" cards.
+ *     are the "Koala did this overnight, approve or edit" cards.
  *   - Gmail (this source) covers the gaps the trigger feed never sees:
- *       1. Sent threads gone QUIET — the realtor wrote, the lead didn't
+ *       1. Sent threads gone QUIET — the rep wrote, the lead didn't
  *          come back. Trigger fires on inbound only.
  *       2. Inbound that landed but the agent DECIDED not to draft for
- *          (low-signal judgment). The realtor still wants to see them.
+ *          (low-signal judgment). The rep still wants to see them.
  *   - Together: drafts = "ready to approve", gmail = "needs a human eye."
  *
  * Confidence calibration:
@@ -18,7 +18,7 @@
  *   - Inbound ≤6h ago from known contact, no agent draft produced: 0.82 (urgency 1)
  *
  * Cross-walk: thread participant email ↔ Contact.email (case-insensitive).
- * Unknown senders are dropped — this source is about people the realtor
+ * Unknown senders are dropped — this source is about people the rep
  * has a relationship with, not a generic inbox replacement.
  *
  * Scope discipline (Musk lens): one Composio call per brief generation,
@@ -39,7 +39,7 @@ const FETCH_LOOKBACK_DAYS = 7;
 
 const QUIET_HOT_DAYS = 2;          // hot lead: 2 days of silence is loud
 const QUIET_ANY_DAYS = 4;          // any tier: 4 days before we surface it
-const QUIET_MIN_REALTOR_CHARS = 100; // a "hi" doesn't deserve a follow-up nag
+const QUIET_MIN_REP_CHARS = 100; // a "hi" doesn't deserve a follow-up nag
 
 const INBOUND_RECENT_HOURS = 6;    // freshness window for the "agent skipped" signal
 const DRAFT_LOOKBACK_HOURS = 12;   // window we check for a matching AgentDraft
@@ -54,7 +54,7 @@ type GmailMessage = {
   messageId?: string;
   threadId?: string;
   sender?: string;        // "Name <email@host>" — we extract the address
-  to?: string | string[]; // the realtor's address for inbound; recipient for sent
+  to?: string | string[]; // the rep's address for inbound; recipient for sent
   subject?: string;
   messageText?: string;   // best-available plain body
   preview?: { body?: string } | string;
@@ -107,7 +107,7 @@ export function daysBetween(from: Date, to: Date): number {
  *
  * Encodes the two rules from the spec:
  *   - Hot tier (leadScore >= HOT_LEAD_THRESHOLD): 2+ days of silence → urgency 1, 0.90
- *   - Any tier: 4+ days of silence + last realtor msg >100 chars → urgency 2, 0.85
+ *   - Any tier: 4+ days of silence + last rep msg >100 chars → urgency 2, 0.85
  *
  * The 100-char floor is the cheap proxy for "was this a real touch?"
  * A one-line "got it, thanks" doesn't earn a follow-up nag — that's the
@@ -115,16 +115,16 @@ export function daysBetween(from: Date, to: Date): number {
  */
 export function classifyQuietThread(args: {
   leadScore: number | null;
-  daysSinceLastRealtorMessage: number;
-  lastRealtorMessageChars: number;
+  daysSinceLastRepMessage: number;
+  lastRepMessageChars: number;
 }): { urgency: 1 | 2; confidence: number } | null {
   const isHot = (args.leadScore ?? 0) >= HOT_LEAD_THRESHOLD;
-  if (isHot && args.daysSinceLastRealtorMessage >= QUIET_HOT_DAYS) {
+  if (isHot && args.daysSinceLastRepMessage >= QUIET_HOT_DAYS) {
     return { urgency: 1, confidence: 0.9 };
   }
   if (
-    args.daysSinceLastRealtorMessage >= QUIET_ANY_DAYS &&
-    args.lastRealtorMessageChars > QUIET_MIN_REALTOR_CHARS
+    args.daysSinceLastRepMessage >= QUIET_ANY_DAYS &&
+    args.lastRepMessageChars > QUIET_MIN_REP_CHARS
   ) {
     return { urgency: 2, confidence: 0.85 };
   }
@@ -135,20 +135,20 @@ export function classifyQuietThread(args: {
  *  contact, name when, no exclamation, no emoji. */
 export function evidenceForQuiet(args: {
   contactName: string;
-  daysSinceLastRealtorMessage: number;
+  daysSinceLastRepMessage: number;
   isHot: boolean;
 }): string {
   const dayPhrase =
-    args.daysSinceLastRealtorMessage === 1
+    args.daysSinceLastRepMessage === 1
       ? 'yesterday'
-      : `${args.daysSinceLastRealtorMessage} days ago`;
+      : `${args.daysSinceLastRepMessage} days ago`;
   const tier = args.isHot ? ' Hot tier.' : '';
   return `${args.contactName} hasn't replied since ${dayPhrase}.${tier}`;
 }
 
 /** Build the evidence string for the "agent skipped this inbound" signal. */
 export function evidenceForSkippedInbound(args: { contactName: string }): string {
-  return `${args.contactName} emailed recently. Chippi didn't draft — worth a look.`;
+  return `${args.contactName} emailed recently. Koala didn't draft — worth a look.`;
 }
 
 /** Look up the active Gmail connection for the space. Returns null when
@@ -219,13 +219,13 @@ async function fetchRecentMessages(args: {
   }
 }
 
-/** Look up the realtor's contacts so we can cross-walk participant emails. */
+/** Look up the rep's contacts so we can cross-walk participant emails. */
 async function contactsByEmail(spaceId: string): Promise<Map<string, ContactRow>> {
   const { data, error } = await supabase
     .from('Contact')
     .select('id, name, email, leadScore')
     .eq('spaceId', spaceId)
-    .is('brokerageId', null)
+    .is('teamId', null)
     .not('email', 'is', null);
   if (error || !data) return new Map();
   const map = new Map<string, ContactRow>();
@@ -279,7 +279,7 @@ function msgInstant(m: GmailMessage): number {
   return Number.isFinite(n) ? n : 0;
 }
 
-function isSentByRealtor(m: GmailMessage): boolean {
+function isSentByRep(m: GmailMessage): boolean {
   return Array.isArray(m.labelIds) && m.labelIds.includes('SENT');
 }
 
@@ -315,7 +315,7 @@ export const gmailSource: SignalGatherer = {
       const last = thread[thread.length - 1];
       if (!last) continue;
 
-      // The "other side" of the thread — the participant who isn't the realtor.
+      // The "other side" of the thread — the participant who isn't the rep.
       // For a sent message, that's the `to`. For an inbound, it's the `sender`.
       // Either way, we test both fields so a thread with mixed direction still
       // resolves to one contact.
@@ -345,15 +345,15 @@ export const gmailSource: SignalGatherer = {
         href: `/contacts/${contact.id}`,
       };
 
-      // ── Signals 1 + 2: realtor sent the most recent message, lead quiet.
-      if (isSentByRealtor(last)) {
+      // ── Signals 1 + 2: rep sent the most recent message, lead quiet.
+      if (isSentByRep(last)) {
         const lastSentInstant = msgInstant(last);
         if (lastSentInstant === 0) continue;
         const daysQuiet = daysBetween(new Date(lastSentInstant), now);
         const classification = classifyQuietThread({
           leadScore: contact.leadScore,
-          daysSinceLastRealtorMessage: daysQuiet,
-          lastRealtorMessageChars: bodyChars(last),
+          daysSinceLastRepMessage: daysQuiet,
+          lastRepMessageChars: bodyChars(last),
         });
         if (!classification) continue;
         signals.push({
@@ -364,7 +364,7 @@ export const gmailSource: SignalGatherer = {
           subject,
           evidence: evidenceForQuiet({
             contactName: contact.name,
-            daysSinceLastRealtorMessage: daysQuiet,
+            daysSinceLastRepMessage: daysQuiet,
             isHot: (contact.leadScore ?? 0) >= HOT_LEAD_THRESHOLD,
           }),
           draftedAction: { kind: 'open', href: subject.href },

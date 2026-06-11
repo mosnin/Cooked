@@ -1,4 +1,4 @@
-"""Tool modules for the Chippi agents.
+"""Tool modules for the Koala agents.
 
 Each module is its own surface; the agent factories import what they need
 directly (e.g. `from tools.attachments import read_attachment`). We don't

@@ -5,10 +5,10 @@
  * Mutating but low-risk: writes to Property.photos[] (push, no replace)
  * and copies the storage object to the public property-photos/ prefix so
  * it can be embedded in `<img>` tags on public intake pages, MMS, etc.
- * Original private File row stays where it is — the realtor can use the
+ * Original private File row stays where it is — the rep can use the
  * same source file across multiple properties without re-uploading.
  *
- * Approval: NOT required. The realtor uploaded the file deliberately; the
+ * Approval: NOT required. The rep uploaded the file deliberately; the
  * attach is the obvious next step.
  */
 
@@ -92,7 +92,7 @@ export const attachFileToPropertyTool = defineTool<typeof parameters, AttachResu
     };
 
     // Copy to the public property-photos/ prefix. The original private
-    // file in files/ stays put so the realtor can re-use it.
+    // file in files/ stays put so the rep can re-use it.
     const destKey = buildKey(
       'propertyPhotos',
       ctx.space.id,

@@ -2,10 +2,10 @@
  * `update_deal_probability` — set Deal.probability (0-100).
  *
  * Approval-gated: probability flows into pipeline-weighted forecasting.
- * The realtor sees the new percentage before we commit.
+ * The rep sees the new percentage before we commit.
  *
  * Mirrors the probability-only slice of the Python `update_deal` in
- * `agent/tools/deals.py`. Logs a DealActivity 'note' so the realtor can
+ * `agent/tools/deals.py`. Logs a DealActivity 'note' so the rep can
  * audit who changed it and why.
  *
  * Schema: Deal.probability INTEGER NULL with CHECK (0..100), added in

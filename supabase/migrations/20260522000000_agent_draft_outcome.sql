@@ -1,7 +1,7 @@
 -- Per-draft outcome attribution on AgentDraft.
 --
 -- Phase 12 added `feedback_action` etc., which measures *input quality* — did
--- the realtor approve the draft, edit it, or reject it. That tells us whether
+-- the rep approve the draft, edit it, or reject it. That tells us whether
 -- the draft was good enough to send. It doesn't tell us whether sending it
 -- did anything.
 --
@@ -14,7 +14,7 @@
 --                     the deal isn't in a terminal-kind stage. Best proxy
 --                     we can compute. Does NOT prove causation; multiple
 --                     drafts can fire near a single stage advance, and the
---                     realtor can advance by hand. Treat as correlation.
+--                     rep can advance by hand. Treat as correlation.
 --   'none'         — no observable advance. Either the deal didn't move,
 --                     the draft has no dealId, the deal is gone, or the
 --                     deal is already terminal-stage.

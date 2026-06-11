@@ -2,8 +2,8 @@
  * Central permission helpers for the org/role system.
  *
  * Three account levels:
- *   1. Realtor (default) — solo workspace owner
- *   2. Broker — has a BrokerageMembership with role broker_owner or broker_admin
+ *   1. Rep (default) — solo workspace owner
+ *   2. Manager — has a TeamMembership with role manager_owner or manager_admin
  *   3. Platform Admin — User.platformRole = 'admin' (or Clerk metadata fallback)
  *
  * Always use these helpers in API routes, server actions, and layouts.
@@ -12,7 +12,7 @@
 
 import { auth } from '@clerk/nextjs/server';
 import { supabase } from '@/lib/supabase';
-import type { Brokerage, BrokerageMembership } from '@/lib/types';
+import type { Team, TeamMembership } from '@/lib/types';
 
 // ── Platform admin ────────────────────────────────────────────────────────────
 
@@ -30,7 +30,7 @@ export async function isPlatformAdmin(): Promise<boolean> {
     .select('platformRole, status')
     .eq('clerkId', session.userId)
     .maybeSingle();
-  // Same offboarding gate as getBrokerContext()/requireAuth(): an offboarded
+  // Same offboarding gate as getManagerContext()/requireAuth(): an offboarded
   // user loses admin access immediately, not when their Clerk session expires.
   // Resilient to a missing `status` column (pre-BP1a): undefined !== 'offboarded'.
   if ((data as { status?: string } | null)?.status === 'offboarded') return false;
@@ -51,19 +51,19 @@ export async function requirePlatformAdmin(): Promise<{ clerkUserId: string }> {
   return { clerkUserId: session.userId };
 }
 
-// ── Broker ────────────────────────────────────────────────────────────────────
+// ── Manager ────────────────────────────────────────────────────────────────────
 
-type BrokerContext = {
-  brokerage: Brokerage;
-  membership: BrokerageMembership;
+type ManagerContext = {
+  team: Team;
+  membership: TeamMembership;
   dbUserId: string;
 };
 
 /**
- * Returns the brokerage + membership for the current user if they are a broker
- * (role = broker_owner or broker_admin), or null if they are not.
+ * Returns the team + membership for the current user if they are a manager
+ * (role = manager_owner or manager_admin), or null if they are not.
  */
-export async function getBrokerContext(): Promise<BrokerContext | null> {
+export async function getManagerContext(): Promise<ManagerContext | null> {
   const session = await auth();
   if (!session.userId) return null;
 
@@ -73,64 +73,64 @@ export async function getBrokerContext(): Promise<BrokerContext | null> {
     .eq('clerkId', session.userId)
     .maybeSingle();
   if (!user) return null;
-  // Same offboarding gate as requireAuth(). Broker routes use this helper
-  // (or getBrokerMemberContext below) without going through requireAuth,
+  // Same offboarding gate as requireAuth(). Manager routes use this helper
+  // (or getManagerMemberContext below) without going through requireAuth,
   // so the gate has to live here too — otherwise an offboarded user's
-  // broker-scoped sessions would keep working until their membership row
+  // manager-scoped sessions would keep working until their membership row
   // eventually fell out of the DB. Resilient to a missing `status` column
   // pre-BP1a migration: maybeSingle() returns { status: undefined } which
   // is not === 'offboarded'.
   if ((user as { status?: string }).status === 'offboarded') return null;
 
-  // Fetch all broker-level memberships. A user may own one brokerage and
-  // manage another — prefer broker_owner so they always land on their own brokerage.
+  // Fetch all manager-level memberships. A user may own one team and
+  // manage another — prefer manager_owner so they always land on their own team.
   const { data: memberships } = await supabase
-    .from('BrokerageMembership')
+    .from('TeamMembership')
     .select('*')
     .eq('userId', user.id)
-    .in('role', ['broker_owner', 'broker_admin'])
+    .in('role', ['manager_owner', 'manager_admin'])
     .order('createdAt', { ascending: true });
   if (!memberships?.length) return null;
 
-  // Deterministic pick for a user who is a broker at more than one brokerage:
-  // broker_owner first, then broker_admin, oldest within a tier (query ordered
+  // Deterministic pick for a user who is a manager at more than one team:
+  // manager_owner first, then manager_admin, oldest within a tier (query ordered
   // by createdAt). The old `?? memberships[0]` fell back to PostgREST insertion
-  // order, so the same user could resolve to a different brokerage run-to-run
+  // order, so the same user could resolve to a different team run-to-run
   // and act on the wrong one.
   const membership =
-    memberships.find((m) => m.role === 'broker_owner') ??
-    memberships.find((m) => m.role === 'broker_admin') ??
+    memberships.find((m) => m.role === 'manager_owner') ??
+    memberships.find((m) => m.role === 'manager_admin') ??
     memberships[0];
 
-  const { data: brokerage } = await supabase
-    .from('Brokerage')
+  const { data: team } = await supabase
+    .from('Team')
     .select('*')
-    .eq('id', membership.brokerageId)
+    .eq('id', membership.teamId)
     .maybeSingle();
-  if (!brokerage) return null;
+  if (!team) return null;
 
   return {
-    brokerage: brokerage as Brokerage,
-    membership: membership as BrokerageMembership,
+    team: team as Team,
+    membership: membership as TeamMembership,
     dbUserId: user.id,
   };
 }
 
 /**
- * Require broker access. Throws if the current user is not a broker.
+ * Require manager access. Throws if the current user is not a manager.
  */
-export async function requireBroker(): Promise<BrokerContext> {
-  const ctx = await getBrokerContext();
-  if (!ctx) throw new Error('Forbidden: broker access required');
+export async function requireManager(): Promise<ManagerContext> {
+  const ctx = await getManagerContext();
+  if (!ctx) throw new Error('Forbidden: manager access required');
   return ctx;
 }
 
 /**
- * Returns the brokerage + membership for the current user if they have ANY
- * brokerage membership (including realtor_member). Use this for pages that
- * are accessible to all brokerage members, not just admins/owners.
+ * Returns the team + membership for the current user if they have ANY
+ * team membership (including rep_member). Use this for pages that
+ * are accessible to all team members, not just admins/owners.
  */
-export async function getBrokerMemberContext(): Promise<BrokerContext | null> {
+export async function getManagerMemberContext(): Promise<ManagerContext | null> {
   const session = await auth();
   if (!session.userId) return null;
 
@@ -140,36 +140,36 @@ export async function getBrokerMemberContext(): Promise<BrokerContext | null> {
     .eq('clerkId', session.userId)
     .maybeSingle();
   if (!user) return null;
-  // Offboarding gate — see getBrokerContext above for rationale.
+  // Offboarding gate — see getManagerContext above for rationale.
   if ((user as { status?: string }).status === 'offboarded') return null;
 
   const { data: memberships } = await supabase
-    .from('BrokerageMembership')
+    .from('TeamMembership')
     .select('*')
     .eq('userId', user.id)
-    .in('role', ['broker_owner', 'broker_admin', 'realtor_member'])
+    .in('role', ['manager_owner', 'manager_admin', 'rep_member'])
     .order('createdAt', { ascending: true });
   if (!memberships?.length) return null;
 
-  // Prefer broker_owner > broker_admin > realtor_member, oldest within a tier
-  // (query ordered by createdAt) so a multi-brokerage user resolves
+  // Prefer manager_owner > manager_admin > rep_member, oldest within a tier
+  // (query ordered by createdAt) so a multi-team user resolves
   // deterministically instead of by PostgREST insertion order.
   const membership =
-    memberships.find((m) => m.role === 'broker_owner') ??
-    memberships.find((m) => m.role === 'broker_admin') ??
-    memberships.find((m) => m.role === 'realtor_member') ??
+    memberships.find((m) => m.role === 'manager_owner') ??
+    memberships.find((m) => m.role === 'manager_admin') ??
+    memberships.find((m) => m.role === 'rep_member') ??
     memberships[0];
 
-  const { data: brokerage } = await supabase
-    .from('Brokerage')
+  const { data: team } = await supabase
+    .from('Team')
     .select('*')
-    .eq('id', membership.brokerageId)
+    .eq('id', membership.teamId)
     .maybeSingle();
-  if (!brokerage) return null;
+  if (!team) return null;
 
   return {
-    brokerage: brokerage as Brokerage,
-    membership: membership as BrokerageMembership,
+    team: team as Team,
+    membership: membership as TeamMembership,
     dbUserId: user.id,
   };
 }
@@ -177,32 +177,32 @@ export async function getBrokerMemberContext(): Promise<BrokerContext | null> {
 // ── Role-based permission helpers ─────────────────────────────────────────────
 
 /** Roles that can manage leads (assign, reassign, delete) */
-const LEAD_MANAGEMENT_ROLES = ['broker_owner', 'broker_admin'] as const;
+const LEAD_MANAGEMENT_ROLES = ['manager_owner', 'manager_admin'] as const;
 
-/** Roles that can edit brokerage settings */
-const SETTINGS_EDIT_ROLES = ['broker_owner', 'broker_admin'] as const;
+/** Roles that can edit team settings */
+const SETTINGS_EDIT_ROLES = ['manager_owner', 'manager_admin'] as const;
 
 /** Roles that can manage member roles (promote/demote) */
-const ROLE_MANAGEMENT_ROLES = ['broker_owner', 'broker_admin'] as const;
+const ROLE_MANAGEMENT_ROLES = ['manager_owner', 'manager_admin'] as const;
 
 /**
- * Check if a broker membership role can manage leads (assign, reassign).
- * Only broker_owner and broker_admin can assign leads.
- * realtor_member can only view leads assigned to them.
+ * Check if a manager membership role can manage leads (assign, reassign).
+ * Only manager_owner and manager_admin can assign leads.
+ * rep_member can only view leads assigned to them.
  */
 export function canManageLeads(role: string): boolean {
   return (LEAD_MANAGEMENT_ROLES as readonly string[]).includes(role);
 }
 
 /**
- * Check if a broker membership role can edit brokerage settings.
+ * Check if a manager membership role can edit team settings.
  */
 export function canEditSettings(role: string): boolean {
   return (SETTINGS_EDIT_ROLES as readonly string[]).includes(role);
 }
 
 /**
- * Check if a broker membership role can change other members' roles.
+ * Check if a manager membership role can change other members' roles.
  */
 export function canManageRoles(role: string): boolean {
   return (ROLE_MANAGEMENT_ROLES as readonly string[]).includes(role);
@@ -210,13 +210,13 @@ export function canManageRoles(role: string): boolean {
 
 /**
  * Check if a user with the given role can change the target member's role.
- * - broker_owner can change any non-owner role
- * - broker_admin can promote realtor_member to broker_admin, but cannot demote other admins
+ * - manager_owner can change any non-owner role
+ * - manager_admin can promote rep_member to manager_admin, but cannot demote other admins
  */
 export function canChangeRole(actorRole: string, targetCurrentRole: string): boolean {
-  if (targetCurrentRole === 'broker_owner') return false;
-  if (actorRole === 'broker_owner') return true;
-  if (actorRole === 'broker_admin' && targetCurrentRole === 'realtor_member') return true;
+  if (targetCurrentRole === 'manager_owner') return false;
+  if (actorRole === 'manager_owner') return true;
+  if (actorRole === 'manager_admin' && targetCurrentRole === 'rep_member') return true;
   return false;
 }
 

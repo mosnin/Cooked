@@ -1,7 +1,7 @@
 /**
  * POST /api/agent/briefing/test
  *
- * Send a one-off test brief to the realtor's enabled channels. Composes
+ * Send a one-off test brief to the rep's enabled channels. Composes
  * a fresh brief (or uses today's existing if one's there), persists
  * nothing, never writes to Brief.{email,sms}SentAt so it doesn't
  * clobber the morning send.
@@ -56,7 +56,7 @@ export async function POST() {
     );
   }
 
-  // Compose a fresh brief (don't reuse the saved one — the realtor may
+  // Compose a fresh brief (don't reuse the saved one — the rep may
   // be testing right after fixing something they want reflected).
   const { brief } = await composeBrief(space.id);
 

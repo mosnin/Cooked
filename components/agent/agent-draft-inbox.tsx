@@ -23,7 +23,7 @@ import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { timeAgo } from '@/lib/formatting';
 import { StaggerList, StaggerItem } from '@/components/motion/stagger-list';
-import { ApprovalCelebration, type ApprovalKind } from '@/components/chippi/approval-celebration';
+import { ApprovalCelebration, type ApprovalKind } from '@/components/axil/approval-celebration';
 
 interface DeliveryResult {
   sent: boolean;
@@ -39,7 +39,7 @@ interface DraftContact {
 }
 
 /** Structured provenance for drafts kicked off by an inbound event
- *  (Composio trigger fired, etc.) rather than the realtor's own chat
+ *  (Composio trigger fired, etc.) rather than the rep's own chat
  *  turn. Null on chat/routine/sweep drafts — the breadcrumb just
  *  doesn't render. Persisted on AgentDraft.triggerSource by the
  *  Python drafts tool when ctx.context.trigger_source is populated. */
@@ -67,7 +67,7 @@ interface AgentDraft {
   Contact: DraftContact | null;
 }
 
-/** Slug → realtor-readable phrase. Keep these short — they render
+/** Slug → rep-readable phrase. Keep these short — they render
  *  as a single-line breadcrumb under each draft. */
 const TRIGGER_PHRASE: Record<string, string> = {
   GMAIL_NEW_GMAIL_MESSAGE: 'a new Gmail message arrived',
@@ -114,10 +114,10 @@ const CHANNEL_META = {
 } as const;
 
 // Phase D — autonomy default flip. When the agent is highly confident in a
-// draft, default it to auto-send after a short countdown unless the realtor
+// draft, default it to auto-send after a short countdown unless the rep
 // cancels. Gated by the env flag so we can land the code, dogfood internally,
 // and flip on per-deploy without another release. 80% mirrors the existing
-// confidence "green dot" threshold in the row meta line. 30s gives a realtor
+// confidence "green dot" threshold in the row meta line. 30s gives a rep
 // scanning their inbox time to react without making "auto" feel meaningless.
 const AUTO_SEND_FLAG = process.env.NEXT_PUBLIC_AGENT_AUTO_SEND === 'true';
 const AUTO_SEND_CONFIDENCE_THRESHOLD = 80;
@@ -159,7 +159,7 @@ function DraftRow({
   const Icon = meta.icon;
   // A draft carrying a property packet — recognised by the secure
   // /packet/<token> path the agent's send_property_packet tool produces.
-  // Subtle pill in the meta row so the realtor knows what they're approving
+  // Subtle pill in the meta row so the rep knows what they're approving
   // before reading the body.
   const hasPacket = /\/packet\/[a-zA-Z0-9_-]+/i.test(draft.content);
   const isEdited = editedContent.trim() !== draft.content;
@@ -195,7 +195,7 @@ function DraftRow({
     // Sent successfully → celebrate in place. The parent left the row mounted
     // for us; once the celebration dwell ends we tell it to remove the row.
     // Failed delivery / not-configured paths fall through to the existing
-    // banner so the realtor sees the actionable nudge instead of a win line.
+    // banner so the rep sees the actionable nudge instead of a win line.
     if (result?.sent) {
       const kind: ApprovalKind =
         draft.channel === 'note' ? 'note' : draft.channel === 'email' ? 'email' : 'sms';
@@ -226,7 +226,7 @@ function DraftRow({
 
   // Phase D countdown — counts down once per row when eligible. Tick every
   // 250ms so the displayed seconds feel responsive without thrashing renders.
-  // We start from the moment the row meets all conditions; if the realtor
+  // We start from the moment the row meets all conditions; if the rep
   // edits or actions the row mid-flight, the effect re-evaluates and bails.
   useEffect(() => {
     if (!autoSendEligible) {
@@ -258,7 +258,7 @@ function DraftRow({
   }, [autoSendEligible]);
 
   // When the row is celebrating, the body collapses to one calm sentence —
-  // contact name still anchors the moment so the realtor knows whose row
+  // contact name still anchors the moment so the rep knows whose row
   // they just resolved as the others stagger up to fill the space.
   if (celebrationKind) {
     return (
@@ -422,11 +422,11 @@ function DraftRow({
         </p>
       )}
 
-      {/* Trigger provenance breadcrumb — Chippi-voiced one-liner that
+      {/* Trigger provenance breadcrumb — Koala-voiced one-liner that
           says WHY this draft appeared. Renders only when the row carries
           structured trigger source (Composio fired an event). For chat
           / routine / sweep drafts the field is null and the row stays
-          quiet. This is the "Chippi noticed something for me" trust
+          quiet. This is the "Koala noticed something for me" trust
           moment Phase 4 of the triggers work surfaces. */}
       {(() => {
         const crumb = triggerBreadcrumb(draft.triggerSource);
@@ -813,7 +813,7 @@ export function AgentDraftInbox({ slug }: Props) {
 
       if (!res.ok) {
         // Whole-batch failure (auth, rate limit, validation) — restore the
-        // rows and surface a single error. The realtor can try again.
+        // rows and surface a single error. The rep can try again.
         setDrafts((prev) => {
           const have = new Set(prev.map((d) => d.id));
           return [...snapshot.filter((d) => !have.has(d.id)), ...prev];
@@ -833,7 +833,7 @@ export function AgentDraftInbox({ slug }: Props) {
       const failed = data.results.filter((r) => !r.ok);
       const succeeded = data.results.length - failed.length;
 
-      // Restore any drafts that failed so the realtor can retry them in
+      // Restore any drafts that failed so the rep can retry them in
       // place. Successful ones stay removed.
       if (failed.length) {
         const failedIds = new Set(failed.map((r) => r.draftId));
@@ -858,7 +858,7 @@ export function AgentDraftInbox({ slug }: Props) {
         toast.success(`${succeeded} approved, ${failed.length} got stuck.`);
       }
     } catch {
-      // Network blip — restore the snapshot and let the realtor retry.
+      // Network blip — restore the snapshot and let the rep retry.
       setDrafts((prev) => {
         const have = new Set(prev.map((d) => d.id));
         return [...snapshot.filter((d) => !have.has(d.id)), ...prev];

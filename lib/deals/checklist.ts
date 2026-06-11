@@ -6,7 +6,7 @@
  *     `custom` exists as an escape hatch for user-added rows that don't fit the
  *     canonical flow.
  *   - Due dates are derived from the deal's closeDate via day offsets. When
- *     closeDate is null, items are seeded with dueAt = null and the realtor
+ *     closeDate is null, items are seeded with dueAt = null and the rep
  *     can fill dates in later.
  *   - The template is intentionally residential/buyer-side — commercial and
  *     rental flows can be added later. The UI offers an explicit "seed"
@@ -39,7 +39,7 @@ export interface DealChecklistItem {
 
 /**
  * Residential buyer flow. Offsets are *days from the closeDate*, so a negative
- * offset means "before closing". Items that happen early in escrow (earnest
+ * offset means "before closing". Items that happen early in legal (earnest
  * money, inspection) are pegged to today when closeDate is too far out — we
  * clamp any dueAt earlier than today so the list isn't born already overdue.
  */
@@ -63,7 +63,7 @@ export const BUYER_RESIDENTIAL_TEMPLATE: TemplateItem[] = [
 ];
 
 /**
- * Rental flow. Shorter + landlord-centric. `closing` here means move-in /
+ * Lightweight flow. Shorter + provider-centric. `closing` here means move-in /
  * lease start. Custom items cover application processing, screening, lease
  * signing — things that don't fit the buyer kinds cleanly.
  */

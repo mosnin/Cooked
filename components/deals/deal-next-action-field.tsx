@@ -13,7 +13,7 @@ interface DealNextActionFieldProps {
 
 /**
  * Inline-editable "next action" prompt shown at the top of the deal detail
- * Overview tab. Two fields (text + date) but they save together — the realtor
+ * Overview tab. Two fields (text + date) but they save together — the rep
  * types what they'll do and when, one save button.
  */
 export function DealNextActionField({ dealId, initialAction, initialDueAt }: DealNextActionFieldProps) {

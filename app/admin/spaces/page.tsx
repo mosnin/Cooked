@@ -3,7 +3,7 @@ import { isPlatformAdmin } from '@/lib/permissions';
 import { supabase } from '@/lib/supabase';
 import { SpaceListClient } from './space-list-client';
 
-export const metadata = { title: 'Spaces — Admin — Chippi' };
+export const metadata = { title: 'Spaces — Admin — Koala' };
 
 export default async function AdminSpacesPage() {
   const isAdmin = await isPlatformAdmin();
@@ -12,7 +12,7 @@ export default async function AdminSpacesPage() {
   const { data: spaces, error } = await supabase
     .from('Space')
     .select(
-      'id, slug, name, emoji, ownerId, brokerageId, createdAt, stripeCustomerId, stripeSubscriptionId, stripeSubscriptionStatus, stripePeriodEnd'
+      'id, slug, name, emoji, ownerId, teamId, createdAt, stripeCustomerId, stripeSubscriptionId, stripeSubscriptionStatus, stripePeriodEnd'
     )
     .order('createdAt', { ascending: false })
     .limit(200);
@@ -60,7 +60,7 @@ export default async function AdminSpacesPage() {
           name: s.name,
           emoji: s.emoji,
           ownerId: s.ownerId,
-          brokerageId: s.brokerageId,
+          teamId: s.teamId,
           createdAt: s.createdAt,
           stripeSubscriptionStatus: s.stripeSubscriptionStatus,
           stripePeriodEnd: s.stripePeriodEnd,

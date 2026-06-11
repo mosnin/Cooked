@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * CoreCards — the five things Chippi does, as a Chippi-skinned MagicUI bento.
+ * CoreCards — the five things Koala does, as a Koala-skinned MagicUI bento.
  * The top of each card is a calm media frame (MediaSlot) awaiting a real
  * product capture; the icon + title + description sit clean on the card below.
  * No fake line-art — the frame is honest about what's coming.
@@ -35,9 +35,9 @@ export function CoreCards() {
       <BentoGrid className="mt-12">
         <BentoCard
           name="Reads your inbox, surfaces what matters"
-          description="Gmail and Outlook plug in. Chippi reads every inbound, weighs it against your live deals, and quietly lifts the one to look at first."
+          description="Gmail and Outlook plug in. Koala reads every inbound, weighs it against your live deals, and quietly lifts the one to look at first."
           Icon={Mail}
-          href="/realtors"
+          href="/reps"
           cta="See the inbox"
           className="col-span-3 md:col-span-2"
           background={<CardMedia />}
@@ -47,8 +47,8 @@ export function CoreCards() {
           name="Drafts in your voice"
           description="Every reply written before you open the thread. Read it, edit it, send it. or don't."
           Icon={PenLine}
-          href="/realtors"
-          cta="Meet Chippi"
+          href="/reps"
+          cta="Meet Koala"
           className="col-span-3 md:col-span-1"
           background={<CardMedia />}
         />
@@ -57,17 +57,17 @@ export function CoreCards() {
           name="Knows who to call first"
           description="Every lead scored against your deals, the hottest one rising out of the noise, so your morning starts with the right call."
           Icon={Target}
-          href="/realtors"
+          href="/reps"
           cta="See people"
           className="col-span-3 md:col-span-1"
           background={<CardMedia />}
         />
 
         <BentoCard
-          name="Books the tour"
-          description="Reply with a time; Chippi puts it on every calendar and writes it back to the deal."
+          name="Books the demo"
+          description="Reply with a time; Koala puts it on every calendar and writes it back to the deal."
           Icon={CalendarCheck}
-          href="/realtors"
+          href="/reps"
           cta="See the calendar"
           className="col-span-3 md:col-span-1"
           background={<CardMedia />}
@@ -77,7 +77,7 @@ export function CoreCards() {
           name="Keeps the pipeline honest"
           description="Move a card; the value, the dates, the counterparty all stay in sync. The board reflects reality, not last week."
           Icon={KanbanSquare}
-          href="/realtors"
+          href="/reps"
           cta="See the pipeline"
           className="col-span-3 md:col-span-1"
           background={<CardMedia />}

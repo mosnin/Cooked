@@ -11,7 +11,7 @@ email, and **Sentry** for errors + cron monitoring.
 
 ## 0. First 60 seconds — triage
 
-1. Open the public status page: `https://my.usechippi.com/status` (or the
+1. Open the public status page: `https://my.usekoala.com/status` (or the
    marketing `/status`). It probes the database, the agent runtime config, and
    integrations live at request time. A rose dot there points you straight at
    the failing subsystem.
@@ -132,9 +132,9 @@ Schedules are UTC.
 
 | Cron | Schedule (UTC) | What it does | Disable switch |
 | --- | --- | --- | --- |
-| `lead-sla` | every 15 min | Speed-to-lead sweep: nudges the assigned realtor on un-worked routed leads, escalates cold leads to the broker. | — |
-| `follow-up-reminders` | daily 09:00 | Emails/texts/pushes each realtor a digest of contacts whose follow-up is due. Day-locked against double-send. | — |
-| `broker-weekly-report` | Mon 09:00 | Emails each active brokerage owner a weekly per-agent activity report. Day-locked. | — |
+| `lead-sla` | every 15 min | Speed-to-lead sweep: nudges the assigned rep on un-worked routed leads, escalates cold leads to the manager. | — |
+| `follow-up-reminders` | daily 09:00 | Emails/texts/pushes each rep a digest of contacts whose follow-up is due. Day-locked against double-send. | — |
+| `manager-weekly-report` | Mon 09:00 | Emails each active team owner a weekly per-agent activity report. Day-locked. | — |
 | `agent-sweep` | every 4 h | Triggers the Modal agent for active spaces to pre-stage `AgentDraft`s. Never sends outbound itself. | `CRON_SWEEP_DISABLED=1` |
 | `routines` | hourly | Fires due `Routine`s through the Modal autonomous path. Never sends outbound itself. | `CRON_ROUTINES_DISABLED=1` |
 | `draft-outcomes` | daily 03:00 | Labels sent drafts with a `deal_advanced` / `none` outcome signal. Read-mostly. | `CRON_OUTCOMES_DISABLED=1` |

@@ -3,14 +3,14 @@
  * File row. Read-only.
  *
  * Companion to `list_files`. The model uses list_files to find a file by
- * name, then calls read_file with the id to surface the URL to the realtor
+ * name, then calls read_file with the id to surface the URL to the rep
  * (e.g. "here's the link to your closing disclosure") or to pass to
  * downstream tools like send_email (attachmentFileIds) or
  * attach_file_to_property (fileId).
  *
  * The returned signedUrl is private and expires in 5 minutes. Don't paste
  * it into anything that might persist — the model is told this in the tool
- * description so it doesn't quote the URL back to the realtor as
+ * description so it doesn't quote the URL back to the rep as
  * shareable.
  */
 

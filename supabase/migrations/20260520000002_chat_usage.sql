@@ -1,5 +1,5 @@
 -- ═══════════════════════════════════════════════════════════════════════════
--- ChatUsage — per-turn cost of interactive Chippi chat.
+-- ChatUsage — per-turn cost of interactive Koala chat.
 --
 -- Why a dedicated table: ExecutionStep tracks AUTONOMOUS agent steps (it's
 -- FK'd to AgentTask, which a chat turn doesn't have). Interactive chat
@@ -18,7 +18,7 @@
 CREATE TABLE IF NOT EXISTS "ChatUsage" (
   "id"               text PRIMARY KEY DEFAULT gen_random_uuid()::text,
   "spaceId"          text NOT NULL REFERENCES "Space"("id") ON DELETE CASCADE,
-  -- Clerk userId of the realtor who sent the message. Nullable for
+  -- Clerk userId of the rep who sent the message. Nullable for
   -- backward-compat with older callers that don't thread it through.
   "userId"           text,
   "conversationId"   text,

@@ -1,13 +1,13 @@
-"""Brokerage lead routing — agent assigns a contact to a realtor.
+"""Team lead routing — agent assigns a contact to a rep.
 
-The brokerage routing engine lives in lib/brokerage-routing.ts (TypeScript
+The team routing engine lives in lib/team-routing.ts (TypeScript
 side). This tool gives the agent a way to:
 
   1. Preview what the routing engine would do for a contact (dry run).
   2. Commit the assignment by moving the Contact's spaceId to the
-     destination realtor's space.
+     destination rep's space.
 
-Only works inside a brokerage. Solo realtor spaces get a no-op error.
+Only works inside a team. Solo rep spaces get a no-op error.
 
 Defensive by default: commit=False unless the agent is explicit, so a
 mis-call previews instead of mutating.
@@ -36,8 +36,8 @@ async def route_lead(
     target_user_id: str | None = None,
     commit: bool = False,
 ) -> dict[str, Any]:
-    """Suggest or commit a brokerage routing decision for a contact."""
-    # target_user_id: manual override (brokerage member); else evaluates DealRoutingRule by priority.
+    """Suggest or commit a team routing decision for a contact."""
+    # target_user_id: manual override (team member); else evaluates DealRoutingRule by priority.
     # commit=False (default) previews; commit=True writes the move.
     space_id = ctx.context.space_id
     db = await supabase()
@@ -54,25 +54,25 @@ async def route_lead(
         return {"error": "Contact not found in space"}
     contact = contact_check.data
 
-    # Resolve brokerage from the current space
+    # Resolve team from the current space
     space_row = await (
         db.table("Space")
-        .select("id,ownerId,brokerageId")
+        .select("id,ownerId,teamId")
         .eq("id", space_id)
         .maybe_single()
         .execute()
     )
-    if not space_row.data or not space_row.data.get("brokerageId"):
-        return {"error": "Space is not part of a brokerage — routing only applies inside a brokerage"}
-    brokerage_id = space_row.data["brokerageId"]
+    if not space_row.data or not space_row.data.get("teamId"):
+        return {"error": "Space is not part of a team — routing only applies inside a team"}
+    team_id = space_row.data["teamId"]
 
     # ── Manual override path ──
     if target_user_id:
-        target_space = await _resolve_space_for_user(db, target_user_id, brokerage_id)
+        target_space = await _resolve_space_for_user(db, target_user_id, team_id)
         if not target_space:
-            return {"error": "target_user_id is not an active member of this brokerage"}
+            return {"error": "target_user_id is not an active member of this team"}
         if target_space["id"] == space_id:
-            return {"ok": True, "action": "no-op", "note": "Already in this realtor's space"}
+            return {"ok": True, "action": "no-op", "note": "Already in this rep's space"}
         if not commit:
             return _preview(contact_id, target_user_id, target_space["id"], None)
         return await _commit_route(db, ctx.context, contact_id, target_user_id, target_space["id"], None)
@@ -84,7 +84,7 @@ async def route_lead(
             "id,priority,enabled,leadType,minBudget,maxBudget,matchTag,"
             "destinationUserId,destinationPoolMethod"
         )
-        .eq("brokerageId", brokerage_id)
+        .eq("teamId", team_id)
         .eq("enabled", True)
         .order("priority")
         .execute()
@@ -103,7 +103,7 @@ async def route_lead(
         # routing engine; surface them as "would route via pool" preview.
         dest_user = rule.get("destinationUserId")
         if dest_user:
-            dest_space = await _resolve_space_for_user(db, dest_user, brokerage_id)
+            dest_space = await _resolve_space_for_user(db, dest_user, team_id)
             if dest_space:
                 matched_rule = rule
                 matched_user_id = dest_user
@@ -119,7 +119,7 @@ async def route_lead(
             "ruleMatched": rule.get("id"),
             "note": (
                 f"Rule '{rule.get('id', '')[:8]}' uses pool method "
-                f"'{rule.get('destinationPoolMethod')}' — needs the brokerage "
+                f"'{rule.get('destinationPoolMethod')}' — needs the team "
                 "routing engine to pick a destination."
             ),
         }
@@ -177,15 +177,15 @@ def _rule_matches(rule: dict[str, Any], contact: dict[str, Any]) -> bool:
     return True
 
 
-async def _resolve_space_for_user(db, user_id: str, brokerage_id: str) -> dict[str, Any] | None:
-    """Find the realtor_member's Space inside this brokerage. Returns None if
-    the user isn't an active brokerage member or has no Space."""
+async def _resolve_space_for_user(db, user_id: str, team_id: str) -> dict[str, Any] | None:
+    """Find the rep_member's Space inside this team. Returns None if
+    the user isn't an active team member or has no Space."""
     member = await (
-        db.table("BrokerageMembership")
+        db.table("TeamMembership")
         .select("userId,role")
         .eq("userId", user_id)
-        .eq("brokerageId", brokerage_id)
-        .eq("role", "realtor_member")
+        .eq("teamId", team_id)
+        .eq("role", "rep_member")
         .maybe_single()
         .execute()
     )
@@ -193,9 +193,9 @@ async def _resolve_space_for_user(db, user_id: str, brokerage_id: str) -> dict[s
         return None
     space = await (
         db.table("Space")
-        .select("id,ownerId,brokerageId")
+        .select("id,ownerId,teamId")
         .eq("ownerId", user_id)
-        .eq("brokerageId", brokerage_id)
+        .eq("teamId", team_id)
         .maybe_single()
         .execute()
     )
@@ -212,7 +212,7 @@ async def _commit_route(
 ) -> dict[str, Any]:
     now = datetime.now(timezone.utc).isoformat()
 
-    # Audit log against the SOURCE space first — this is the realtor whose
+    # Audit log against the SOURCE space first — this is the rep whose
     # contact just left, and they need to see why. Once the Contact row
     # moves to the destination space the source space loses access to it,
     # so we have to log before mutating.
@@ -245,7 +245,7 @@ async def _commit_route(
     if not moved.data:
         return {"error": "Contact is no longer in this space — routing aborted"}
 
-    # Mirror the log into the DESTINATION space so the receiving realtor
+    # Mirror the log into the DESTINATION space so the receiving rep
     # also sees a "lead_routed_in" entry on their activity feed.
     try:
         db_ = await supabase()

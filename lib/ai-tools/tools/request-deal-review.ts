@@ -1,7 +1,7 @@
 /**
- * `request_deal_review` — flag a deal for broker sign-off.
+ * `request_deal_review` — flag a deal for manager sign-off.
  *
- * Approval-gated. Brokerage-only — solo agents (no Space.brokerageId)
+ * Approval-gated. Team-only — solo agents (no Space.teamId)
  * get a clean error.
  *
  * Inserts a DealReviewRequest row matching the schema in migration
@@ -25,9 +25,9 @@ const parameters = z
       .trim()
       .min(10)
       .max(1000)
-      .describe('Why the broker should look at this deal. Surfaces verbatim.'),
+      .describe('Why the manager should look at this deal. Surfaces verbatim.'),
   })
-  .describe('Flag a deal for broker review.');
+  .describe('Flag a deal for manager review.');
 
 interface RequestDealReviewResult {
   dealId: string;
@@ -39,7 +39,7 @@ export const requestDealReviewTool = defineTool<typeof parameters, RequestDealRe
   name: 'request_deal_review',
   riskLevel: 'low',
   description:
-    "Brokerage-only. Flag a deal for the broker's review queue. Prompts for approval first.",
+    "Team-only. Flag a deal for the manager's review queue. Prompts for approval first.",
   parameters,
   requiresApproval: true,
   rateLimit: { max: 20, windowSeconds: 3600 },
@@ -67,16 +67,16 @@ export const requestDealReviewTool = defineTool<typeof parameters, RequestDealRe
 
     const { data: space, error: spaceErr } = await supabase
       .from('Space')
-      .select('id, ownerId, brokerageId')
+      .select('id, ownerId, teamId')
       .eq('id', ctx.space.id)
       .maybeSingle();
     if (spaceErr) {
       return { summary: `Workspace lookup failed: ${spaceErr.message}`, display: 'error' };
     }
-    const brokerageId = (space as { brokerageId: string | null } | null)?.brokerageId ?? null;
-    if (!brokerageId) {
+    const teamId = (space as { teamId: string | null } | null)?.teamId ?? null;
+    if (!teamId) {
       return {
-        summary: 'Review requests need a brokerage — this is a solo workspace.',
+        summary: 'Review requests need a team — this is a solo workspace.',
         display: 'error',
       };
     }
@@ -107,7 +107,7 @@ export const requestDealReviewTool = defineTool<typeof parameters, RequestDealRe
       id: reviewId,
       dealId: args.dealId,
       requestingUserId: ownerId,
-      brokerageId,
+      teamId,
       status: 'open',
       reason: args.reason.trim(),
     });

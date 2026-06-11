@@ -1,6 +1,6 @@
 /**
  * Tip categories — earned tips, never generic. Each category is a
- * specific gap in THIS realtor's data named in one Chippi-voiced
+ * specific gap in THIS rep's data named in one Koala-voiced
  * sentence with a deep-link action.
  *
  * Phase C1 ships six categories — five single-subject + one trend:
@@ -13,16 +13,16 @@
  *   overdue_pileup        ≥5 follow-ups ≥3 days overdue (trend tip)
  *
  * Phase C2 adds four multi-week trend tips. Each gates on
- * `spaceHasStabilityHistory` so a brand-new realtor can't fire
+ * `spaceHasStabilityHistory` so a brand-new rep can't fire
  * "your reply rate dropped" with two days of data:
  *
  *   reply_rate_decline    Reply rate dropped ≥15pt week-over-week,
  *                         prior week ≥10 sends.
  *   stage_stagnation      Every active deal in a stage has been there
  *                         21+ days, ≥3 deals in the stage. Per-stage.
- *   tour_conversion_drop  Share of completed tours converting to
+ *   demo_conversion_drop  Share of completed demos converting to
  *                         application/offer dropped 20+pt vs. the
- *                         22-42-day baseline, ≥4 recent tours.
+ *                         22-42-day baseline, ≥4 recent demos.
  *   source_dry_spell      A source that produced ≥5 contacts in the
  *                         prior 90 days has been silent 21+ days AND
  *                         that's ≥2x its median inter-arrival gap.
@@ -57,7 +57,7 @@ export async function tipHotLeadDormant(spaceId: string): Promise<Signal[]> {
     .from('Contact')
     .select('id, name, leadScore, lastContactedAt')
     .eq('spaceId', spaceId)
-    .is('brokerageId', null)
+    .is('teamId', null)
     .gte('leadScore', HOT_LEAD_THRESHOLD)
     .lt('lastContactedAt', sevenDaysAgo.toISOString())
     .order('leadScore', { ascending: false })
@@ -228,19 +228,19 @@ export async function tipPastClientReferral(spaceId: string): Promise<Signal[]> 
   return signals;
 }
 
-// ── 5. Unworked tag — a segment the realtor hasn't touched ───────────────────
+// ── 5. Unworked tag — a segment the rep hasn't touched ───────────────────
 
 export async function tipUnworkedTag(spaceId: string): Promise<Signal[]> {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const twentyOneAgo = new Date(today.getTime() - 21 * MS_PER_DAY);
 
-  // Pull all non-brokerage contacts and bucket by tag.
+  // Pull all non-team contacts and bucket by tag.
   const { data, error } = await supabase
     .from('Contact')
     .select('id, tags, lastContactedAt, leadScore')
     .eq('spaceId', spaceId)
-    .is('brokerageId', null);
+    .is('teamId', null);
 
   if (error || !data) return [];
 
@@ -250,7 +250,7 @@ export async function tipUnworkedTag(spaceId: string): Promise<Signal[]> {
   for (const row of data as Row[]) {
     const tags = Array.isArray(row.tags) ? row.tags : [];
     for (const tag of tags) {
-      // Skip system tags — they're not segments the realtor curated.
+      // Skip system tags — they're not segments the rep curated.
       if (tag === 'new-lead' || tag === 'application-link' || tag.startsWith('_')) continue;
       const bucket = tagBuckets.get(tag) ?? { count: 0, recentTouches: 0, avgScore: 0 };
       bucket.count += 1;
@@ -292,7 +292,7 @@ export async function tipOverduePileup(spaceId: string): Promise<Signal[]> {
     .from('Contact')
     .select('id', { count: 'exact', head: true })
     .eq('spaceId', spaceId)
-    .is('brokerageId', null)
+    .is('teamId', null)
     .lt('followUpAt', threeAgo);
 
   if (error) return [];
@@ -306,7 +306,7 @@ export async function tipOverduePileup(spaceId: string): Promise<Signal[]> {
       kind: 'tip',
       urgency: 2,
       confidence,
-      // Trend tips have no named subject — the subject is the realtor's
+      // Trend tips have no named subject — the subject is the rep's
       // own backlog. Cool-down is per (category, null).
       subject: {
         id: 'overdue_pileup',
@@ -344,7 +344,7 @@ export async function spaceHasStabilityHistory(spaceId: string): Promise<boolean
     .from('Contact')
     .select('id', { count: 'exact', head: true })
     .eq('spaceId', spaceId)
-    .is('brokerageId', null)
+    .is('teamId', null)
     .lt('createdAt', cutoff);
   return (contactCount ?? 0) > 0;
 }
@@ -373,9 +373,9 @@ export function stageStagnationConfidence(deals: number, maxDaysInStage: number)
   return deals >= 5 && maxDaysInStage >= 30 ? 0.92 : 0.85;
 }
 
-/** 0.78 at 4 tours, 0.88 at 6+. */
-export function tourConversionConfidence(recentTours: number): number {
-  return recentTours >= 6 ? 0.88 : 0.78;
+/** 0.78 at 4 demos, 0.88 at 6+. */
+export function demoConversionConfidence(recentDemos: number): number {
+  return recentDemos >= 6 ? 0.88 : 0.78;
 }
 
 export function median(values: number[]): number {
@@ -471,7 +471,7 @@ export async function tipReplyRateDecline(spaceId: string): Promise<Signal[]> {
       subject: {
         id: 'reply_rate_decline',
         name: 'Reply rate dropped',
-        href: '/chippi/activity?filter=sent_no_reply',
+        href: '/axil/activity?filter=sent_no_reply',
       },
       evidence: `Your reply rate dropped from ${priorPct}% to ${currentPct}% this week. Sample is ${current.length} sends.`,
       tipCategory: 'reply_rate_decline',
@@ -555,9 +555,9 @@ export async function tipStageStagnation(spaceId: string): Promise<Signal[]> {
   return signals;
 }
 
-// ── 9. Tour conversion drop — fewer post-tour applications/offers ───────────
+// ── 9. Demo conversion drop — fewer post-demo applications/offers ───────────
 
-export async function tipTourConversionDrop(spaceId: string): Promise<Signal[]> {
+export async function tipDemoConversionDrop(spaceId: string): Promise<Signal[]> {
   if (!(await spaceHasStabilityHistory(spaceId))) return [];
 
   const today = new Date();
@@ -566,19 +566,19 @@ export async function tipTourConversionDrop(spaceId: string): Promise<Signal[]> 
   const baselineStart = new Date(today.getTime() - 42 * MS_PER_DAY);
   const baselineEnd = new Date(today.getTime() - 22 * MS_PER_DAY);
 
-  type TourRow = { id: string; contactId: string | null; endsAt: string };
-  const fetchTours = async (from: Date, to: Date) => {
+  type DemoRow = { id: string; contactId: string | null; endsAt: string };
+  const fetchDemos = async (from: Date, to: Date) => {
     const { data } = await supabase
-      .from('Tour')
+      .from('Demo')
       .select('id, contactId, endsAt')
       .eq('spaceId', spaceId)
       .eq('status', 'completed')
       .gte('endsAt', from.toISOString())
       .lt('endsAt', to.toISOString());
-    return ((data ?? []) as TourRow[]).filter((t) => t.contactId);
+    return ((data ?? []) as DemoRow[]).filter((t) => t.contactId);
   };
-  const recent = await fetchTours(recentStart, today);
-  const baseline = await fetchTours(baselineStart, baselineEnd);
+  const recent = await fetchDemos(recentStart, today);
+  const baseline = await fetchDemos(baselineStart, baselineEnd);
 
   // Sample stability — both windows need a real shape to compare.
   if (recent.length < 4 || baseline.length < 4) return [];
@@ -588,7 +588,7 @@ export async function tipTourConversionDrop(spaceId: string): Promise<Signal[]> 
   );
 
   // Conversion = an AgentDraft tagged application/offer within 7 days,
-  // OR a Deal stage move within 7 days. Both because some realtors stage
+  // OR a Deal stage move within 7 days. Both because some reps stage
   // applications as deal moves; others draft them as messages.
   const { data: drafts } = await supabase
     .from('AgentDraft')
@@ -610,16 +610,16 @@ export async function tipTourConversionDrop(spaceId: string): Promise<Signal[]> 
   type DealRow = { id: string; contactId: string; stageChangedAt: string | null };
   const dealRows = (deals ?? []) as DealRow[];
 
-  const converted = (tour: TourRow): boolean => {
-    const tourEnd = new Date(tour.endsAt).getTime();
+  const converted = (demo: DemoRow): boolean => {
+    const demoEnd = new Date(demo.endsAt).getTime();
     const within7 = (whenIso: string | null): boolean => {
       if (!whenIso) return false;
       const t = new Date(whenIso).getTime();
-      return t > tourEnd && t - tourEnd <= 7 * MS_PER_DAY;
+      return t > demoEnd && t - demoEnd <= 7 * MS_PER_DAY;
     };
     return (
-      draftRows.some((d) => d.contactId === tour.contactId && within7(d.createdAt)) ||
-      dealRows.some((d) => d.contactId === tour.contactId && within7(d.stageChangedAt))
+      draftRows.some((d) => d.contactId === demo.contactId && within7(d.createdAt)) ||
+      dealRows.some((d) => d.contactId === demo.contactId && within7(d.stageChangedAt))
     );
   };
 
@@ -632,7 +632,7 @@ export async function tipTourConversionDrop(spaceId: string): Promise<Signal[]> 
 
   if (drop < 20) return [];
 
-  const confidence = tourConversionConfidence(recent.length);
+  const confidence = demoConversionConfidence(recent.length);
   const baselineFraction = `${baselineConverted} in ${baseline.length}`;
   const recentMovedWord = recentConverted === 0 ? 'None' : String(recentConverted);
 
@@ -643,12 +643,12 @@ export async function tipTourConversionDrop(spaceId: string): Promise<Signal[]> 
       urgency: 2,
       confidence,
       subject: {
-        id: 'tour_conversion_drop',
-        name: 'Tour conversion dropped',
-        href: '/deals?status=tour_completed',
+        id: 'demo_conversion_drop',
+        name: 'Demo conversion dropped',
+        href: '/deals?status=demo_completed',
       },
-      evidence: `${recent.length} tours last three weeks. ${recentMovedWord} moved to application. Last quarter the rate was ${baselineFraction}.`,
-      tipCategory: 'tour_conversion_drop',
+      evidence: `${recent.length} demos last three weeks. ${recentMovedWord} moved to application. Last quarter the rate was ${baselineFraction}.`,
+      tipCategory: 'demo_conversion_drop',
     },
   ];
 }
@@ -666,7 +666,7 @@ export async function tipSourceDrySpell(spaceId: string): Promise<Signal[]> {
     .from('Contact')
     .select('sourceLabel, createdAt')
     .eq('spaceId', spaceId)
-    .is('brokerageId', null)
+    .is('teamId', null)
     .not('sourceLabel', 'is', null)
     .gte('createdAt', ninetyAgo.toISOString());
 
@@ -722,6 +722,6 @@ export const ALL_TIP_CATEGORIES = [
   tipOverduePileup,
   tipReplyRateDecline,
   tipStageStagnation,
-  tipTourConversionDrop,
+  tipDemoConversionDrop,
   tipSourceDrySpell,
 ];

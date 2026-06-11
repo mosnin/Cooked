@@ -19,12 +19,12 @@ export default async function EmbedBookingPage({
 
   const { data: settingsData } = await supabase
     .from('SpaceSetting')
-    .select('businessName, tourDuration, timezone')
+    .select('businessName, demoDuration, timezone')
     .eq('spaceId', space.id)
     .maybeSingle();
 
   const businessName = (settingsData as any)?.businessName || space.name;
-  const duration = (settingsData as any)?.tourDuration || 30;
+  const duration = (settingsData as any)?.demoDuration || 30;
   const timezone = (settingsData as any)?.timezone || 'America/New_York';
 
   // Gate on subscription status — only pause forms for explicitly failed billing

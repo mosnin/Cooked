@@ -12,7 +12,7 @@ function getMimeAndExt(artifactType: string): { mime: string; ext: string } {
     case 'raw_output':
     case 'contact_update':
     case 'deal_update':
-    case 'tour_booking':
+    case 'demo_booking':
     case 'goal_plan':
       return { mime: 'text/plain', ext: 'txt' };
     case 'report':

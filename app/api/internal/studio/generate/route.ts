@@ -1,6 +1,6 @@
 /**
  * POST /api/internal/studio/generate — internal generation endpoint for the
- * Chippi agent (Modal/Python). Authed by AGENT_INTERNAL_SECRET, not Clerk.
+ * Koala agent (Modal/Python). Authed by AGENT_INTERNAL_SECRET, not Clerk.
  *
  * The agent run carries spaceId only, so this route resolves the space
  * owner's Clerk userId for the File / StudioGeneration rows, then runs the
@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Daily spend cap — shared with the realtor-facing route. If the agent
+  // Daily spend cap — shared with the rep-facing route. If the agent
   // path and human path both burn budget, this catches the combined total
   // before fal.ai is called.
   const budget = await checkStudioSpendBudget(spaceId);

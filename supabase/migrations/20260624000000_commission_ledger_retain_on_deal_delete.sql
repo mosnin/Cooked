@@ -1,5 +1,5 @@
 -- ============================================================================
--- CommissionLedger: retain the brokerage's commission books when a Deal is
+-- CommissionLedger: retain the team's commission books when a Deal is
 -- deleted. (Audit data-integrity finding — sibling of #311 which did the same
 -- for agentUserId.)
 --
@@ -7,13 +7,13 @@
 -- ON DELETE CASCADE` (20260507000000_commission_ledger.sql:60). Deleting a Deal
 -- — a normal operational action (deals get removed, merged, cleaned up) —
 -- CASCADE-deleted its commission/payout ledger row, destroying a financial
--- record the brokerage owns and may need for payout reconciliation, disputes,
+-- record the team owns and may need for payout reconciliation, disputes,
 -- and audit. A money ledger must outlive the operational rows it references.
 --
 -- FIX: make dealId nullable and switch the FK to ON DELETE SET NULL, mirroring
 -- the agentUserId fix in 20260619000000. A deleted deal's ledger row survives
--- with dealId = NULL; the brokerage's books stay intact. brokerageId keeps
--- ON DELETE CASCADE — deleting the whole brokerage tenant still clears its
+-- with dealId = NULL; the team's books stay intact. teamId keeps
+-- ON DELETE CASCADE — deleting the whole team tenant still clears its
 -- ledger, which is correct tenant teardown.
 --
 -- Compatibility:

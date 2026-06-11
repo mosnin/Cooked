@@ -7,9 +7,9 @@ import { cn } from '@/lib/utils';
 /**
  * URL-driven tab strip for the deal detail page. Near-copy of the people
  * detail's tab strip (see `app/s/[slug]/contacts/[id]/detail-client.tsx`) so
- * the two surfaces feel identical to a realtor switching back and forth.
+ * the two surfaces feel identical to a rep switching back and forth.
  *
- * The realtor moves between People and Deals all day; their mental model
+ * The rep moves between People and Deals all day; their mental model
  * resets on every transition. Matching the chrome — same border-b-2
  * underline, same `?tab=` URL contract, same `scroll={false}` prefetch
  * behaviour — keeps the transition silent. Consolidating this and the

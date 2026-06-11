@@ -2,7 +2,7 @@
  * `update_deal_value` — change a Deal's monetary value.
  *
  * Approval-gated: the value drives commission math and pipeline reports,
- * so the realtor sees the new number before we commit. The model can pass
+ * so the rep sees the new number before we commit. The model can pass
  * an optional `why` to capture the reasoning in the activity log.
  */
 

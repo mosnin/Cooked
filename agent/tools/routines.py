@@ -1,7 +1,7 @@
-"""Routines tool — create, list, update, delete the realtor's standing
-instructions for Chippi.
+"""Routines tool — create, list, update, delete the rep's standing
+instructions for Koala.
 
-A routine is a sentence and a schedule: the realtor saves an instruction
+A routine is a sentence and a schedule: the rep saves an instruction
 ("draft a check-in for every deal that's gone quiet") and how often it runs
 (hourly / daily / weekdays at a given UTC hour). An hourly cron fires the
 autonomous run with that instruction attached. Like every autonomous path,
@@ -44,7 +44,7 @@ async def manage_routines(
     # ── update only ──
     enabled: bool | None = None,
 ) -> dict[str, Any]:
-    """Manage realtor routines (standing scheduled instructions that DRAFT, never send)."""
+    """Manage rep routines (standing scheduled instructions that DRAFT, never send)."""
     # list: returns all routines.
     # create: needs instruction; cadence hourly|daily|weekdays (default daily); hour 0-23 UTC (default 13).
     # update: needs routine_id + any of instruction/cadence/hour/enabled.
@@ -71,7 +71,7 @@ async def manage_routines(
     if action == "create":
         text = (instruction or "").strip()
         if len(text) < MIN_INSTRUCTION:
-            return {"error": "instruction is required — a full sentence describing what Chippi should do"}
+            return {"error": "instruction is required — a full sentence describing what Koala should do"}
         cad = (cadence or "daily").strip().lower()
         if cad not in VALID_CADENCES:
             return {"error": f"cadence must be one of {sorted(VALID_CADENCES)}"}

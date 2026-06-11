@@ -41,6 +41,6 @@ COMMENT ON COLUMN "AgentTrajectory"."provider" IS
 -- Per-provider rollup. Mirrors ChatUsage_spaceId_provider_idx so the same
 -- "cache hit rate per provider, last 7d" query shape works on either
 -- table. Cheap to maintain; only fires on autonomous-run writes (≤ a
--- handful per realtor per day).
+-- handful per rep per day).
 CREATE INDEX IF NOT EXISTS "AgentTrajectory_spaceId_provider_idx"
   ON "AgentTrajectory" ("spaceId", "provider");

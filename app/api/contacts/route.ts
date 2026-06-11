@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
     .from('Contact')
     .select('*')
     .eq('spaceId', space.id)
-    .is('brokerageId', null); // Exclude brokerage leads — those show on /broker/leads
+    .is('teamId', null); // Exclude team leads — those show on /manager/leads
 
   if (!includeSnoozed && !onlySnoozed) {
     query = query.or(`snoozedUntil.is.null,snoozedUntil.lte.${new Date().toISOString()}`);
@@ -115,7 +115,7 @@ export async function POST(req: NextRequest) {
 
   // Dedupe by email (case-insensitive) within this space. The intake flow
   // and CSV imports occasionally re-create the same person — better to
-  // hand back the existing record than make the realtor merge later.
+  // hand back the existing record than make the rep merge later.
   // No new DB constraint: case-mismatched emails would be rejected by a
   // unique index, which may not be desired across all data.
   if (emailVal) {
@@ -147,7 +147,7 @@ export async function POST(req: NextRequest) {
         .map((t) => t.slice(0, 100))
     : [];
 
-  const VALID_TYPES = ['QUALIFICATION', 'TOUR', 'APPLICATION'] as const;
+  const VALID_TYPES = ['QUALIFICATION', 'DEMO', 'APPLICATION'] as const;
   const contactType = VALID_TYPES.includes(type) ? type : 'QUALIFICATION';
 
   const { data: contact, error } = await supabase.from('Contact').insert({
@@ -183,7 +183,7 @@ export async function POST(req: NextRequest) {
     });
   } catch (e) { console.error('[contacts] notification failed:', e); }
 
-  // Fire the agent trigger so Chippi can act on the new lead in real time
+  // Fire the agent trigger so Koala can act on the new lead in real time
   // instead of waiting for the 4-hour cron sweep. Never lets a trigger
   // failure fail the response — the contact write is what was requested.
   try {

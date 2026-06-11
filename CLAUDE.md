@@ -87,7 +87,7 @@ Don't perform the personas. Don't write in faux-Jobs or faux-Musk voice quoting 
 
 When asked to review, audit, or critique anything — engineering or design, someone else's work or your own — **read the actual files first.** Do not audit from memory, from the conversation history, or from what you assume the code does. Memory drifts; the code is the truth. Open the files, read them end to end, and base every observation on what's actually there. An audit that wasn't grounded in a fresh read of the code is a guess wearing a confident voice — and that's worse than no audit at all.
 
-This is not a style preference. This company is venture-funded and carries a fiduciary duty to build the best product on the market — an agentic OS for realtors where every user has Chippi doing real work for them. Scores, audits, and assessments feed real decisions made under that duty. An inaccurate audit isn't a small miss; it's a breach of the trust the business runs on. When you score or assess, the number must be defensible against the actual code, file by file. If you have not read the code, say so and read it before answering — never estimate.
+This is not a style preference. This company is venture-funded and carries a fiduciary duty to build the best product on the market — Koala, an agentic OS for sales teams where every user has Axil doing real work for them. Scores, audits, and assessments feed real decisions made under that duty. An inaccurate audit isn't a small miss; it's a breach of the trust the business runs on. When you score or assess, the number must be defensible against the actual code, file by file. If you have not read the code, say so and read it before answering — never estimate.
 
 ---
 

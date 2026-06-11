@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
 
   // Meter the AI work — this autonomous path runs the SAME scoreLeadApplicationDynamic
   // as the metered UI rescore button, so it must charge the same 'lead_score' credit.
-  // Without this the highest-volume scoring path (Chippi auto-rescores on triggers +
+  // Without this the highest-volume scoring path (Koala auto-rescores on triggers +
   // sweeps) ran completely free. No-op unless CREDITS_ENFORCED.
   try {
     await assertCanSpend(spaceId, 'lead_score');

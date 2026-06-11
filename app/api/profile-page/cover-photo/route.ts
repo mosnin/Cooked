@@ -1,5 +1,5 @@
 /**
- * POST   /api/profile-page/cover-photo — upload the realtor's public-page cover photo.
+ * POST   /api/profile-page/cover-photo — upload the rep's public-page cover photo.
  * DELETE /api/profile-page/cover-photo — clear it.
  *
  * Image-only, ≤ 5 MB. Stored public-read in Wasabi under
@@ -116,7 +116,7 @@ export async function POST(req: NextRequest) {
   }
 
   // Capture the previous storage key BEFORE the upsert overwrites it.
-  // The DELETE handler intentionally keeps the object so the realtor can
+  // The DELETE handler intentionally keeps the object so the rep can
   // revert; replacement is the explicit "I'm done with that photo"
   // signal, so we clean up. Without this, every cover-photo change
   // leaked the prior object into permanent storage with no DB pointer.
@@ -189,7 +189,7 @@ export async function DELETE() {
   const space = await getSpaceForUser(userId);
   if (!space) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
-  // We don't delete the underlying object — the realtor may want to revert,
+  // We don't delete the underlying object — the rep may want to revert,
   // and the row is the source of truth for what's "live." Lifecycle cleanup
   // for orphaned cover images is a separate concern (Wasabi lifecycle rule).
   const { error: dbErr } = await supabase

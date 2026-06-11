@@ -2,7 +2,7 @@
  * Brief delivery — opt-in email + SMS fan-out.
  *
  * Called inline from the cron right after a Brief row is upserted (so
- * the per-realtor 7am local IS the delivery moment). Per channel:
+ * the per-rep 7am local IS the delivery moment). Per channel:
  *
  *   1. Check the opt-in (briefEmail / briefSms + master toggle).
  *   2. Atomic UPDATE-WHERE-NULL on Brief.{email,sms}SentAt to claim
@@ -109,7 +109,7 @@ async function deliverEmail(ctx: DeliverContext, isEmpty: boolean): Promise<Deli
     });
 
     const result = await resend.emails.send({
-      from: `Chippi <brief@${getBriefDomain()}>`,
+      from: `Koala <brief@${getBriefDomain()}>`,
       to: ctx.space.ownerEmail,
       subject,
       html,
@@ -174,7 +174,7 @@ function classifyResendError(error: { name?: string; message?: string } | null |
 function getBriefDomain(): string {
   // Sender subdomain — keeps brief reputation isolated from
   // notifications@. Env-driven so staging can use a different domain.
-  return process.env.BRIEF_EMAIL_DOMAIN ?? 'alerts.usechippi.com';
+  return process.env.BRIEF_EMAIL_DOMAIN ?? 'alerts.usekoala.com';
 }
 
 // ── SMS ─────────────────────────────────────────────────────────────────────
@@ -196,7 +196,7 @@ async function deliverSms(ctx: DeliverContext, isEmpty: boolean): Promise<Delive
   if (claimErr || !claimed) return 'skipped-already-sent';
 
   try {
-    // Check if this is the realtor's FIRST-EVER brief SMS. If so, send
+    // Check if this is the rep's FIRST-EVER brief SMS. If so, send
     // the one-time opt-in disclosure first as its own message.
     const { count: priorSends } = await supabase
       .from('Brief')
@@ -291,6 +291,6 @@ export function getAppOrigin(): string {
   return (
     process.env.NEXT_PUBLIC_APP_ORIGIN ??
     process.env.NEXT_PUBLIC_VERCEL_URL ??
-    'https://my.usechippi.com'
+    'https://my.usekoala.com'
   ).replace(/\/$/, '');
 }

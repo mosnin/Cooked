@@ -53,7 +53,7 @@ Vercel for frontend and API routes. Supabase for managed PostgreSQL.
 
 ### Email
 
-Resend for transactional email delivery (tour confirmations, waitlist notifications, broker notifications, invitation emails).
+Resend for transactional email delivery (demo confirmations, waitlist notifications, manager notifications, invitation emails).
 
 ### Dark Mode
 

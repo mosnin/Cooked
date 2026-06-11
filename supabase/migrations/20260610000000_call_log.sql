@@ -1,15 +1,16 @@
--- Call log — a realtor clicks "Call" on a contact; Chippi places the call via
--- Telnyx Voice (Call Control), records it, transcribes it, and summarizes it.
+-- Call log — a rep clicks "Call" on a contact; Koala places the call via
+-- Twilio Voice, records it, transcribes it, and summarizes it.
 -- Each placed call gets one CallLog row that the webhook progressively fills in
 -- as the call moves through its lifecycle (initiated → answered → completed) and
 -- the recording lands (recordingUrl + transcript + summary).
 --
--- spaceId links the call to the realtor's workspace; contactId is nullable so a
--- realtor can dial a raw number that isn't yet a contact. telnyxCallId is the
--- Telnyx call_control_id used to correlate inbound webhook events back to the
--- row. RLS is enabled but no policies are added — every read/write goes through
--- the server with the service-role key (same posture as SupportTicket and the
--- client-portal tables), so the table is closed to anon/auth roles by default.
+-- spaceId links the call to the rep's workspace; contactId is nullable so a
+-- rep can dial a raw number that isn't yet a contact. telnyxCallId is the
+-- legacy Telnyx call_control_id column (now used for Twilio call SID) to
+-- correlate inbound webhook events back to the row. RLS is enabled but no
+-- policies are added — every read/write goes through the server with the
+-- service-role key (same posture as SupportTicket and the client-portal
+-- tables), so the table is closed to anon/auth roles by default.
 
 CREATE TABLE IF NOT EXISTS "CallLog" (
   "id"           TEXT        NOT NULL DEFAULT gen_random_uuid()::text,
@@ -42,7 +43,7 @@ CREATE INDEX IF NOT EXISTS "CallLog_spaceId_createdAt_idx"
 CREATE INDEX IF NOT EXISTS "CallLog_contactId_createdAt_idx"
   ON "CallLog" ("contactId", "createdAt" DESC);
 
--- The webhook correlates Telnyx events back to the row by call_control_id.
+-- The webhook correlates Twilio events back to the row by call SID.
 CREATE INDEX IF NOT EXISTS "CallLog_telnyxCallId_idx"
   ON "CallLog" ("telnyxCallId");
 

@@ -2,11 +2,11 @@
  * `add_property` — insert a Property row.
  *
  * Approval-gated: a new listing shows up on the property index immediately.
- * The realtor confirms the address (and any optional details) before we
+ * The rep confirms the address (and any optional details) before we
  * create the row.
  *
  * Mirrors the Python `add_property` in `agent/tools/properties.py`. We keep
- * the field set narrow — the realtor can fill the rest in the property page
+ * the field set narrow — the rep can fill the rest in the property page
  * after creation. Validation matches the DB CHECK constraints from
  * migration 20260425000000_property.sql.
  */
@@ -62,7 +62,7 @@ export const addPropertyTool = defineTool<typeof parameters, AddPropertyResult>(
   name: 'add_property',
   riskLevel: 'low',
   description:
-    'Add a new property to the workspace. Captures address plus optional list price, beds/baths, MLS number. Prompts for approval first.',
+    'Add a new property to the workspace. Captures address plus optional list price, beds/baths, CRM number. Prompts for approval first.',
   parameters,
   requiresApproval: true,
   rateLimit: { max: 30, windowSeconds: 3600 },

@@ -18,7 +18,7 @@ from pydantic import BaseModel, Field
 LeadType = Literal["rental", "buyer", "seller"]
 DealStatus = Literal["active", "won", "lost", "on_hold"]
 Priority = Literal["LOW", "MEDIUM", "HIGH"]
-ContactType = Literal["QUALIFICATION", "TOUR", "APPLICATION"]
+ContactType = Literal["QUALIFICATION", "DEMO", "APPLICATION"]
 DraftChannel = Literal["sms", "email", "note"]
 DraftStatus = Literal["pending", "approved", "dismissed", "sent"]
 ActionOutcome = Literal["completed", "queued_for_approval", "suggested", "failed"]
@@ -97,7 +97,7 @@ class AgentSettings(BaseModel):
     """Per-space agent configuration.
 
     Autonomy modes, per-agent overrides, confidence thresholds, and the
-    enabled-agents list have all been retired — Chippi is one agent and
+    enabled-agents list have all been retired — Koala is one agent and
     every contact-facing action drafts. The DB columns still exist for
     backwards compat with the UI; we just don't read them. `extra="ignore"`
     keeps existing rows loadable without a migration.
@@ -107,7 +107,7 @@ class AgentSettings(BaseModel):
     space_id: str = Field(alias="spaceId")
     enabled: bool = False
     daily_token_budget: int = Field(50_000, alias="dailyTokenBudget")
-    # Realtor-picked primary chat model (OpenRouter slug). None = app default.
+    # Rep-picked primary chat model (OpenRouter slug). None = app default.
     chat_model: str | None = Field(None, alias="chatModel")
 
     model_config = {"populate_by_name": True, "extra": "ignore"}

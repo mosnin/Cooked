@@ -1,4 +1,4 @@
--- E-signature requests — a realtor sends a stored document out for signature
+-- E-signature requests — a rep sends a stored document out for signature
 -- via DocuSign. One row tracks one envelope from creation through completion.
 --
 -- envelopeId is the DocuSign handle; it's nullable because a row can exist

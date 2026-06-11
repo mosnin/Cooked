@@ -1,8 +1,8 @@
--- Waitlist for fully-booked tour slots
-CREATE TABLE IF NOT EXISTS "TourWaitlist" (
+-- Waitlist for fully-booked demo slots
+CREATE TABLE IF NOT EXISTS "DemoWaitlist" (
   id              text PRIMARY KEY DEFAULT gen_random_uuid()::text,
   "spaceId"       text NOT NULL REFERENCES "Space"(id) ON DELETE CASCADE,
-  "propertyProfileId" text REFERENCES "TourPropertyProfile"(id) ON DELETE SET NULL,
+  "propertyProfileId" text REFERENCES "DemoPropertyProfile"(id) ON DELETE SET NULL,
   "guestName"     text NOT NULL,
   "guestEmail"    text NOT NULL,
   "guestPhone"    text,
@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS "TourWaitlist" (
   "createdAt"     timestamptz NOT NULL DEFAULT now()
 );
 
-CREATE INDEX IF NOT EXISTS idx_waitlist_space_date ON "TourWaitlist" ("spaceId", "preferredDate");
-CREATE INDEX IF NOT EXISTS idx_waitlist_status     ON "TourWaitlist" (status);
+CREATE INDEX IF NOT EXISTS idx_waitlist_space_date ON "DemoWaitlist" ("spaceId", "preferredDate");
+CREATE INDEX IF NOT EXISTS idx_waitlist_status     ON "DemoWaitlist" (status);
 
-ALTER TABLE "TourWaitlist" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "DemoWaitlist" ENABLE ROW LEVEL SECURITY;

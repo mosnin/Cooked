@@ -18,16 +18,16 @@ ALTER TABLE "SpaceSetting"
   ADD COLUMN IF NOT EXISTS "buyerFormConfig" jsonb DEFAULT NULL;
 
 -- ============================================================
--- Brokerage: brokerage-level dual form templates
+-- Team: team-level dual form templates
 -- ============================================================
 
--- Rental-specific brokerage template
-ALTER TABLE "Brokerage"
-  ADD COLUMN IF NOT EXISTS "brokerageRentalFormConfig" jsonb DEFAULT NULL;
+-- Rental-specific team template
+ALTER TABLE "Team"
+  ADD COLUMN IF NOT EXISTS "teamRentalFormConfig" jsonb DEFAULT NULL;
 
--- Buyer-specific brokerage template
-ALTER TABLE "Brokerage"
-  ADD COLUMN IF NOT EXISTS "brokerageBuyerFormConfig" jsonb DEFAULT NULL;
+-- Buyer-specific team template
+ALTER TABLE "Team"
+  ADD COLUMN IF NOT EXISTS "teamBuyerFormConfig" jsonb DEFAULT NULL;
 
 -- ============================================================
 -- Contact: which form path the applicant used
@@ -49,11 +49,11 @@ CREATE INDEX IF NOT EXISTS idx_space_setting_rental_form_config
 CREATE INDEX IF NOT EXISTS idx_space_setting_buyer_form_config
   ON "SpaceSetting" USING gin("buyerFormConfig") WHERE "buyerFormConfig" IS NOT NULL;
 
-CREATE INDEX IF NOT EXISTS idx_brokerage_rental_form_config
-  ON "Brokerage" USING gin("brokerageRentalFormConfig") WHERE "brokerageRentalFormConfig" IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_team_rental_form_config
+  ON "Team" USING gin("teamRentalFormConfig") WHERE "teamRentalFormConfig" IS NOT NULL;
 
-CREATE INDEX IF NOT EXISTS idx_brokerage_buyer_form_config
-  ON "Brokerage" USING gin("brokerageBuyerFormConfig") WHERE "brokerageBuyerFormConfig" IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_team_buyer_form_config
+  ON "Team" USING gin("teamBuyerFormConfig") WHERE "teamBuyerFormConfig" IS NOT NULL;
 
 -- Index for filtering contacts by form lead type
 CREATE INDEX IF NOT EXISTS idx_contact_form_lead_type
@@ -64,7 +64,7 @@ CREATE INDEX IF NOT EXISTS idx_contact_form_lead_type
 -- ============================================================
 -- These backfills READ the legacy single-config columns created by
 -- 20260408_add_form_builder.sql (SpaceSetting."formConfig" and
--- Brokerage."brokerageFormConfig"). Because the 20260408_* filenames carry no
+-- Team."teamFormConfig"). Because the 20260408_* filenames carry no
 -- time component, Supabase sorts this file BEFORE add_form_builder.sql, so on a
 -- FRESH database those source columns do not exist yet when this runs. Guard the
 -- backfills behind an existence check so a fresh DB skips them harmlessly (the
@@ -97,24 +97,24 @@ BEGIN
   END IF;
 END $$;
 
--- Brokerage backfill (depends on "Brokerage"."brokerageFormConfig")
+-- Team backfill (depends on "Team"."teamFormConfig")
 DO $$
 BEGIN
   IF EXISTS (
     SELECT 1 FROM information_schema.columns
-    WHERE table_name = 'Brokerage' AND column_name = 'brokerageFormConfig'
+    WHERE table_name = 'Team' AND column_name = 'teamFormConfig'
   ) THEN
-    UPDATE "Brokerage"
-      SET "brokerageRentalFormConfig" = "brokerageFormConfig"
-      WHERE "brokerageFormConfig" IS NOT NULL
-        AND "brokerageRentalFormConfig" IS NULL
-        AND ("brokerageFormConfig"->>'leadType' IS NULL
-             OR "brokerageFormConfig"->>'leadType' IN ('rental', 'general'));
+    UPDATE "Team"
+      SET "teamRentalFormConfig" = "teamFormConfig"
+      WHERE "teamFormConfig" IS NOT NULL
+        AND "teamRentalFormConfig" IS NULL
+        AND ("teamFormConfig"->>'leadType' IS NULL
+             OR "teamFormConfig"->>'leadType' IN ('rental', 'general'));
 
-    UPDATE "Brokerage"
-      SET "brokerageBuyerFormConfig" = "brokerageFormConfig"
-      WHERE "brokerageFormConfig" IS NOT NULL
-        AND "brokerageBuyerFormConfig" IS NULL
-        AND "brokerageFormConfig"->>'leadType' = 'buyer';
+    UPDATE "Team"
+      SET "teamBuyerFormConfig" = "teamFormConfig"
+      WHERE "teamFormConfig" IS NOT NULL
+        AND "teamBuyerFormConfig" IS NULL
+        AND "teamFormConfig"->>'leadType' = 'buyer';
   END IF;
 END $$;

@@ -13,7 +13,7 @@ to send.
 Method:
 1. Capture the lead as a contact if they aren't one already.
 2. Size them up from whatever is known — buyer or seller, their timeline,
-   their budget, how they found the realtor. Name what's still unknown and
+   their budget, how they found the rep. Name what's still unknown and
    worth asking.
 3. Draft a first message: warm, specific, and ending with one easy question
    that moves things forward. Draft it — never send.

@@ -7,13 +7,13 @@
  *
  * Gated on three env vars — with any of them missing this module cleanly
  * no-ops and warns, exactly like lib/sms.ts. It NEVER throws; a broken push
- * subscription can't be allowed to break the lead/tour/deal flow that calls it.
+ * subscription can't be allowed to break the lead/demo/deal flow that calls it.
  *
  *   NEXT_PUBLIC_VAPID_PUBLIC_KEY  — the VAPID public key (also shipped to the
  *                                   browser so it can subscribe)
  *   VAPID_PRIVATE_KEY             — the VAPID private key (server only)
  *   VAPID_SUBJECT                 — a mailto: or https: contact URL for the
- *                                   push service (e.g. mailto:ops@usechippi.com)
+ *                                   push service (e.g. mailto:ops@usekoala.com)
  *
  * Generate a keypair with:  npx web-push generate-vapid-keys
  */

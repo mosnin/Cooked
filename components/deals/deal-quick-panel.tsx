@@ -41,7 +41,7 @@ interface DealQuickPanelProps {
 }
 
 /**
- * Right-side slide-over for a deal. The realtor stays on the kanban, opens
+ * Right-side slide-over for a deal. The rep stays on the kanban, opens
  * the deal, takes action, closes — without ever leaving the page. Inline
  * fields PATCH on blur. Status buttons trigger the parent's existing
  * won/lost dialog flow. Stage selector PATCHes through to the parent so the

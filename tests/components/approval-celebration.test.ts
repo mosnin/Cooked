@@ -17,7 +17,7 @@ import {
   approvalSubjectFromArgs,
   getApprovalSentence,
   type ApprovalKind,
-} from '@/components/chippi/approval-celebration';
+} from '@/components/axil/approval-celebration';
 
 describe('getApprovalSentence', () => {
   it('renders the email line', () => {
@@ -36,8 +36,8 @@ describe('getApprovalSentence', () => {
     expect(getApprovalSentence('stage')).toBe('Moved. The board reflects it.');
   });
 
-  it('renders the tour line', () => {
-    expect(getApprovalSentence('tour')).toBe(
+  it('renders the demo line', () => {
+    expect(getApprovalSentence('demo')).toBe(
       "On the calendar. I'll prep them the day before.",
     );
   });
@@ -92,8 +92,8 @@ describe('approvalKindForTool', () => {
     ['log_call', 'note'],
     ['log_meeting', 'note'],
     ['move_deal_stage', 'stage'],
-    ['schedule_tour', 'tour'],
-    ['reschedule_tour', 'tour'],
+    ['schedule_demo', 'demo'],
+    ['reschedule_demo', 'demo'],
     ['mark_person_hot', 'person-hot'],
     ['mark_person_cold', 'person-cold'],
     ['set_followup', 'followup'],
@@ -105,7 +105,7 @@ describe('approvalKindForTool', () => {
     expect(approvalKindForTool('find_person')).toBeNull();
     expect(approvalKindForTool('draft_email')).toBeNull();
     expect(approvalKindForTool('draft_sms')).toBeNull();
-    expect(approvalKindForTool('cancel_tour')).toBeNull();
+    expect(approvalKindForTool('cancel_demo')).toBeNull();
     expect(approvalKindForTool('pipeline_summary')).toBeNull();
     expect(approvalKindForTool('made_up_tool')).toBeNull();
   });

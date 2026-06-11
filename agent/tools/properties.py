@@ -1,4 +1,15 @@
-"""Property tools — add a property, share a packet with a contact.
+"""Product tools — add a product the team sells, share its packet with a prospect.
+
+In the sales product these manage the team's PRODUCT (what they sell) and the
+PRODUCT PACKET (a sales one-pager / collateral the rep shares with a prospect).
+
+Contract note: the registered tool names stay `add_property` /
+`send_property_packet` and the DB tables stay `Property` / `PropertyPacket`.
+Those identifiers are a cross-runtime contract shared with the TS tool bridge,
+the chat UI's tool-call renderer, the telemetry allowlist, and the agent-eval
+harness, so they are held stable; only the model-facing copy below is sales-
+native. The legacy field set (list price, type, status, etc.) carries product
+metadata — price, plan tier / SKU, and offering status.
 
 Tenant boundary: spaceId is taken from RunContextWrapper, never from LLM
 arguments. Same pattern as every other write tool in this package.
@@ -53,10 +64,11 @@ async def add_property(
     listing_url: str | None = None,
     notes: str | None = None,
 ) -> dict[str, Any]:
-    """Add a property to the realtor's inventory; later linkable to deals and tours."""
-    # address required. Capture only what the realtor named; leave rest null.
-    # list_price in dollars. property_type: single_family|condo|townhouse|multi_family|land|commercial|other.
-    # listing_status: active|pending|sold|off_market|owned (default active).
+    """Add a product the team sells to the catalog; later linkable to deals and demos."""
+    # address: the product's name / identifier (required). Capture only what the rep named; leave rest null.
+    # list_price: price in dollars. property_type: legacy plan-tier / SKU bucket — one of
+    #   single_family|condo|townhouse|multi_family|land|commercial|other (kept for the schema contract).
+    # listing_status: offering status — active|pending|sold|off_market|owned (default active).
     space_id = ctx.context.space_id
     db = await supabase()
 
@@ -124,7 +136,8 @@ async def send_property_packet(
     subject: str | None = None,
     intro_message: str | None = None,
 ) -> dict[str, Any]:
-    """Draft a message to a contact with a shareable property packet URL pre-filled."""
+    """Draft a message to a prospect with a shareable product packet (sales collateral) URL pre-filled."""
+    # The product packet is the sales one-pager / collateral the rep shares with a prospect.
     # Pass exactly one of packet_id or property_id (latter picks newest non-revoked packet).
     # channel: email|sms|note (default email). subject required for email.
     # Creates a pending AgentDraft with same 48h auto-dedup as draft_message.
@@ -188,8 +201,8 @@ async def send_property_packet(
         )
         if not pkts.data:
             return {"error": (
-                f"No packet exists for that property. Create a packet first "
-                f"in the Property page, then call this tool with the packet_id."
+                f"No packet exists for that product. Create a product packet first "
+                f"in the product page, then call this tool with the packet_id."
             )}
         packet = pkts.data[0]
 

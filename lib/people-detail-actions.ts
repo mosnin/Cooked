@@ -3,11 +3,11 @@
  *
  * Same shape as `buildMorningActions`: the page hands in a small bag of
  * facts about the person, this function picks two or three verbs. No
- * configuration. No "let the realtor pick the menu." The state of the
+ * configuration. No "let the rep pick the menu." The state of the
  * person decides.
  *
  * Cap: three actions. Two is normal; three only when there's a clear
- * second axis (e.g. hot person — "send a check-in" AND "schedule a tour").
+ * second axis (e.g. hot person — "send a check-in" AND "schedule a demo").
  *
  * Archived people get nothing — there's nothing useful to do here.
  */
@@ -30,7 +30,7 @@ export type PeopleDetailActionIntent =
   | 'log-call'
   | 'welcome'
   | 'reach-out'
-  | 'schedule-tour';
+  | 'schedule-demo';
 
 export interface PeopleDetailAction {
   id: string;
@@ -44,10 +44,10 @@ export interface PeopleDetailAction {
  * The rules, in order:
  *  - Archived → no actions.
  *  - Has an overdue follow-up (past followUpAt) → "Send a check-in" +
- *    "Clear follow-up". The realtor came here to deal with the overdue.
+ *    "Clear follow-up". The rep came here to deal with the overdue.
  *  - New (created in last 14 days) and never contacted → "Welcome them" +
  *    "Log a call".
- *  - Hot → "Send a check-in" + "Schedule a tour". Two axes, not one.
+ *  - Hot → "Send a check-in" + "Schedule a demo". Two axes, not one.
  *  - Cold and quiet 7+ days → "Send a check-in" + "Log a call".
  *  - Warm or anyone else with daysQuiet → "Reach out" + "Log a call".
  *  - No daysQuiet at all (uncontacted, not new) → "Reach out".
@@ -78,7 +78,7 @@ export function buildPeopleDetailActions(
   if (state.scoreLabel === 'hot') {
     return [
       { id: 'check-in', label: 'Send a check-in', intent: 'check-in' },
-      { id: 'schedule-tour', label: 'Schedule a tour', intent: 'schedule-tour' },
+      { id: 'schedule-demo', label: 'Schedule a demo', intent: 'schedule-demo' },
     ];
   }
 

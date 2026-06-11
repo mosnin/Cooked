@@ -37,8 +37,8 @@ class Settings(BaseSettings):
     agent_internal_secret: str = Field(alias="AGENT_INTERNAL_SECRET", default="")
 
     # Model for the swarm orchestrator's fan-out workers (the swarm sub-
-    # agents). The main Chippi agent's model is the per-workspace pick
-    # (see chippi.py / llm.py); this is swarm-only.
+    # agents). The main Koala agent's model is the per-workspace pick
+    # (see koala.py / llm.py); this is swarm-only.
     worker_model: str = Field(default="x-ai/grok-4.3")
 
     # Context window management

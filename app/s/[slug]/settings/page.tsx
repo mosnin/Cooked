@@ -12,7 +12,7 @@ import { IntakeTrustSignalsForm } from './intake-trust-signals-form';
 import { YourDataSection } from './your-data-section';
 import { McpSection, TemplatesSection } from './integrations-section';
 import { ConnectedAppsSection } from '@/components/settings/connected-apps-section';
-import { MemoryList } from '@/components/chippi/memory-list';
+import { MemoryList } from '@/components/axil/memory-list';
 import { RoutinesManager } from '@/components/routines/routines-manager';
 import { AIProfileForm } from '@/components/profile/ai-profile-form';
 import { ChatModelPicker } from '@/components/agent/chat-model-picker';
@@ -30,18 +30,18 @@ import {
 } from '@/lib/typography';
 
 /**
- * Settings — task-grouped tabs the realtor can hold in their head:
+ * Settings — task-grouped tabs the rep can hold in their head:
  *
  *   Workspace    space name + slug + danger zone
  *   You          profile + bio + AI personalization + chat model
- *   Connections  OAuth apps + message templates (everywhere Chippi acts through)
- *   Memory       what Chippi has learned about this workspace
- *   Routines     the realtor's standing instructions for Chippi
- *   Privacy      notifications + legal + compliance + fair-housing notice
+ *   Connections  OAuth apps + message templates (everywhere Koala acts through)
+ *   Memory       what Koala has learned about this workspace
+ *   Routines     the rep's standing instructions for Koala
+ *   Privacy      notifications + legal + compliance + compliance notice
  *   Developer    MCP + API keys + usage (per-tool cost breakdown)
  *
- * Memory and Routines moved here from the Chippi dropdown — they describe
- * how Chippi WORKS, not what Chippi did today. The daily dropdown is for
+ * Memory and Routines moved here from the Koala dropdown — they describe
+ * how Koala WORKS, not what Koala did today. The daily dropdown is for
  * daily surfaces; configuration belongs in Settings.
  *
  * Tab state lives in `?tab=...` so the URL stays shareable, sub-route
@@ -67,7 +67,7 @@ function isValidTab(v: string | undefined | null): v is TabId {
 }
 
 /**
- * Map legacy tab IDs onto the new structure. The Chippi dropdown reorg
+ * Map legacy tab IDs onto the new structure. The Koala dropdown reorg
  * folded Integrations into Connections, so `?tab=integrations` now lands
  * on the Connections tab. Older aliases fold onto the closest equivalent.
  * Anything unrecognized falls through to the default tab.
@@ -115,7 +115,7 @@ export default async function SettingsPage({
   const activeTab: TabId = legacy?.kind === 'tab' ? legacy.id : 'workspace';
 
   const { userId } = await auth();
-  if (!userId) redirect('/login/realtor');
+  if (!userId) redirect('/login/rep');
 
   const space = await getSpaceFromSlug(slug);
   if (!space) notFound();
@@ -259,14 +259,14 @@ export default async function SettingsPage({
       )}
 
       {/* You — profile photo, bio, AI personalization, chat model. Everything
-          that shapes how Chippi sees the realtor and how the realtor shows
+          that shapes how Koala sees the rep and how the rep shows
           up to leads. Memory has its own tab now. */}
       {activeTab === 'you' && (
         <div className="space-y-12">
           <section className="space-y-5">
             <p className={SECTION_LABEL}>Your profile</p>
             <p className={BODY_MUTED}>
-              The face and voice your leads see on intake forms, tour pages,
+              The face and voice your leads see on intake forms, demo pages,
               and packets.
             </p>
             <ProfileSection slug={space.slug} />
@@ -277,7 +277,7 @@ export default async function SettingsPage({
           >
             <p className={SECTION_LABEL}>AI personalization</p>
             <p className={BODY_MUTED}>
-              Tell Chippi about you so responses feel tailored, not generic.
+              Tell Koala about you so responses feel tailored, not generic.
             </p>
             <AIProfileForm slug={slug} spaceId={space.id} />
           </section>
@@ -285,9 +285,9 @@ export default async function SettingsPage({
             id="chat-model"
             className="space-y-5 pt-10 border-t border-border/60 scroll-mt-24"
           >
-            <p className={SECTION_LABEL}>Chippi&apos;s model</p>
+            <p className={SECTION_LABEL}>Koala&apos;s model</p>
             <p className={BODY_MUTED}>
-              The model Chippi thinks with — in chat and when it works on its
+              The model Koala thinks with — in chat and when it works on its
               own. The default suits almost everyone; switch it only if you
               have a reason to.
             </p>
@@ -296,9 +296,9 @@ export default async function SettingsPage({
         </div>
       )}
 
-      {/* Connections — every place Chippi acts on the realtor's behalf.
+      {/* Connections — every place Koala acts on the rep's behalf.
           OAuth integrations and reusable templates live together because
-          the realtor thinks of them as the same thing: "what Chippi sends
+          the rep thinks of them as the same thing: "what Koala sends
           through." MCP and API keys are developer-flavored and live in
           Developer instead. */}
       {activeTab === 'connections' && (
@@ -307,9 +307,9 @@ export default async function SettingsPage({
             <p className={SECTION_LABEL}>Connected apps</p>
             <p className={BODY_MUTED}>
               Gmail, Outlook, Slack, HubSpot, and the rest. Connect them so
-              Chippi can act on your behalf through your own accounts.
+              Koala can act on your behalf through your own accounts.
             </p>
-            <p className={BODY_MUTED}>Chippi never sends without your tap.</p>
+            <p className={BODY_MUTED}>Koala never sends without your tap.</p>
             <ConnectedAppsSection
               callbackResult={
                 sp.integration === 'connected' || sp.integration === 'failed'
@@ -332,9 +332,9 @@ export default async function SettingsPage({
         </div>
       )}
 
-      {/* Memory — what Chippi has learned about this workspace. Read-only
+      {/* Memory — what Koala has learned about this workspace. Read-only
           here; the correction pattern is "delete the wrong fact and let
-          Chippi re-learn it" — same logic as on the old /chippi/memory
+          Koala re-learn it" — same logic as on the old /axil/memory
           surface. The tab is a mount point; the list component owns the
           empty/loading/error states. */}
       {activeTab === 'memory' && (
@@ -350,10 +350,10 @@ export default async function SettingsPage({
         </div>
       )}
 
-      {/* Routines — the realtor's standing instructions for Chippi. Read
+      {/* Routines — the rep's standing instructions for Koala. Read
           and write through /api/routines; the hourly cron at
           /api/cron/routines fires them. Nothing goes out without the
-          realtor's tap. */}
+          rep's tap. */}
       {activeTab === 'routines' && (
         <div className="space-y-12">
           <section className="space-y-5">
@@ -366,9 +366,9 @@ export default async function SettingsPage({
         </div>
       )}
 
-      {/* Privacy — notifications, legal URL, license, fair-housing notice.
+      {/* Privacy — notifications, legal URL, license, compliance notice.
           Everything compliance-flavored and everything that determines what
-          reaches the realtor. */}
+          reaches the rep. */}
       {activeTab === 'privacy' && (
         <div className="space-y-12">
           <section id="brief" className="space-y-5">
@@ -398,14 +398,14 @@ export default async function SettingsPage({
           >
             <p className={SECTION_LABEL}>Compliance &amp; trust signals</p>
             <p className={BODY_MUTED}>
-              Optional. License number, Fair Housing notice, and Equal Housing
+              Optional. License number, Compliance notice, and compliance
               mark — shown in your intake-form footer.
             </p>
             <IntakeTrustSignalsForm
               slug={space.slug}
               licenseNumber={settings?.intakeLicenseNumber ?? ''}
-              fairHousingNotice={settings?.intakeFairHousingNotice ?? ''}
-              showEqualHousingMark={settings?.intakeShowEqualHousingMark ?? false}
+              complianceNotice={settings?.intakeComplianceNotice ?? ''}
+              showComplianceMark={settings?.intakeShowComplianceMark ?? false}
             />
           </section>
           <section
@@ -423,7 +423,7 @@ export default async function SettingsPage({
       )}
 
       {/* Developer — MCP, API keys, and usage. Anything programmatic or
-          cost-attribution flavored lives here so the realtor side stays
+          cost-attribution flavored lives here so the rep side stays
           calm. */}
       {activeTab === 'developer' && (
         <div className="space-y-12">

@@ -216,7 +216,7 @@ async def create_contact(
     }
 
 
-_VALID_TYPES = {"QUALIFICATION", "TOUR", "APPLICATION"}
+_VALID_TYPES = {"QUALIFICATION", "DEMO", "APPLICATION"}
 
 
 @function_tool(strict_mode=False)
@@ -233,7 +233,7 @@ async def update_contact(
     re_engaged_signal: str | None = None,
 ) -> dict[str, Any]:
     """Update a contact; pass only the fields you want to change."""
-    # add_tags: up to 5 merged with existing. new_pipeline_type: QUALIFICATION|TOUR|APPLICATION.
+    # add_tags: up to 5 merged with existing. new_pipeline_type: QUALIFICATION|DEMO|APPLICATION.
     # follow_up_date: ISO date. brief: 2-3 sentence agent summary (high-importance memory).
     # score_explanation: plain-English reason for lead score (stored as memory).
     # re_engaged_signal: short string; boosts lead score +12 and logs re-engagement.

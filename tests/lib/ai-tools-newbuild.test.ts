@@ -59,7 +59,7 @@ import type { ToolContext } from '@/lib/ai-tools/types';
 function makeCtx(): ToolContext {
   return {
     userId: 'user_1',
-    space: { id: 'space_1', slug: 'jane', name: 'Jane Realty', ownerId: 'u_owner' },
+    space: { id: 'space_1', slug: 'jane', name: 'Jane Sales', ownerId: 'u_owner' },
     signal: new AbortController().signal,
   };
 }
@@ -158,10 +158,10 @@ describe('requestDealReviewTool', () => {
     ).toThrow();
   });
 
-  it('refuses when the workspace has no brokerage', async () => {
+  it('refuses when the workspace has no team', async () => {
     mockByTable = {
       Deal: { single: { id: 'd_1', title: 'Big deal' } },
-      Space: { single: { id: 'space_1', ownerId: 'u_owner', brokerageId: null } },
+      Space: { single: { id: 'space_1', ownerId: 'u_owner', teamId: null } },
     };
     const result = await requestDealReviewTool.handler(
       { dealId: 'd_1', reason: 'Unusual commission split needs sign-off' },

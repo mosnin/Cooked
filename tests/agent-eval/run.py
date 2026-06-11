@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Chippi agent eval runner — tool-routing regression net.
+"""Koala agent eval runner — tool-routing regression net.
 
-Runs each case in cases.json against a real Chippi agent, but with every
+Runs each case in cases.json against a real Koala agent, but with every
 FunctionTool stubbed at the SDK level so no real DB, Composio, or external
 service is touched. The model still sees the full tool catalog and decides
 what to call; we capture the call sequence and score it against the case's
@@ -9,7 +9,7 @@ expected block.
 
 What it catches: routing regressions. "Send X@gmail.com a test email" stopped
 calling draft_message and started calling find_integration_tool. "Find Jane"
-started bouncing through ask_realtor. Every fix to the system prompt or the
+started bouncing through ask_rep. Every fix to the system prompt or the
 tool descriptions risks re-breaking the case it didn't touch — this runner
 re-checks every case in <a minute and exits non-zero on regression.
 
@@ -42,8 +42,8 @@ from typing import Any
 
 
 # ---------------------------------------------------------------------------
-# Path + env setup. Must happen BEFORE we import any chippi/* modules so the
-# `from chippi import …` style imports inside agent/ resolve.
+# Path + env setup. Must happen BEFORE we import any koala/* modules so the
+# `from koala import …` style imports inside agent/ resolve.
 # ---------------------------------------------------------------------------
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent.parent
@@ -99,8 +99,8 @@ _STUB_RETURNS: dict[str, Any] = {
     "update_deal": {"action": "updated", "dealId": "d_eval_stub"},
     "advance_deal_stage": {"action": "advanced", "dealId": "d_eval_stub", "stage": "Under Contract"},
     "request_deal_review": {"action": "requested", "dealId": "d_eval_stub"},
-    "book_tour": {"action": "booked", "tourId": "t_eval_stub", "when": "2026-06-01T14:00:00Z"},
-    "route_lead": {"action": "previewed", "destinationRealtor": "Eval Realtor"},
+    "book_demo": {"action": "booked", "demoId": "t_eval_stub", "when": "2026-06-01T14:00:00Z"},
+    "route_lead": {"action": "previewed", "destinationRep": "Eval Rep"},
     "add_property": {"action": "added", "propertyId": "p_eval_stub"},
     "send_property_packet": {
         "action": "drafted",
@@ -126,7 +126,7 @@ _STUB_RETURNS: dict[str, Any] = {
     "generate_priority_list": {"items": []},
     "process_inbound_message": {"action": "queued"},
     "read_attachment": {"text": "Eval stub attachment body."},
-    "ask_realtor": {"action": "asked", "questionId": "q_eval_stub"},
+    "ask_rep": {"action": "asked", "questionId": "q_eval_stub"},
     "log_activity_run": {"action": "logged"},
     "recall_docs": {"matches": [{"title": "Stub doc", "snippet": "Eval stub."}]},
     "create_plan": {"action": "planned", "planId": "plan_eval_stub", "steps": []},
@@ -168,7 +168,7 @@ class CallRecord:
 
 
 def _build_synthetic_curated_tools(connected_toolkits: list[str]) -> list:
-    """Build the curated FunctionTools the realtor would see in prod.
+    """Build the curated FunctionTools the rep would see in prod.
 
     Real prod (integrations.load_integration_tools) fetches each action's
     JSON schema from Composio via HTTP. For routing assertions we only
@@ -260,7 +260,7 @@ async def run_case(case: dict[str, Any], model: str | None) -> tuple[bool, str, 
     # full agent stack in unnecessarily.
     from agents import RunConfig, Runner
 
-    from chippi import make_chippi_agent
+    from koala import make_koala_agent
     from llm import resolve_chat_model
     from security.context import AgentContext
 
@@ -291,7 +291,7 @@ async def run_case(case: dict[str, Any], model: str | None) -> tuple[bool, str, 
             call_integration_tool,
         ]
 
-    chippi = make_chippi_agent(
+    koala = make_koala_agent(
         workspace_info=workspace_info,
         extra_tools=extra_tools,
         model=resolve_chat_model(model),
@@ -299,10 +299,10 @@ async def run_case(case: dict[str, Any], model: str | None) -> tuple[bool, str, 
 
     # Drop the input guardrail — it queries Supabase for pending drafts,
     # which would fail under stubbed DB. Routing decisions don't need it.
-    chippi.input_guardrails = []
+    koala.input_guardrails = []
 
     captured: list[CallRecord] = []
-    _patch_tools_to_capture(chippi, captured)
+    _patch_tools_to_capture(koala, captured)
 
     ctx = AgentContext(
         space_id="s_eval",
@@ -318,7 +318,7 @@ async def run_case(case: dict[str, Any], model: str | None) -> tuple[bool, str, 
 
     try:
         await Runner.run(
-            chippi,
+            koala,
             input=case["prompt"],
             context=ctx,
             max_turns=10,
@@ -430,7 +430,7 @@ def _provider_key_present() -> tuple[bool, str]:
 
 
 async def main() -> int:
-    parser = argparse.ArgumentParser(description="Chippi tool-routing eval runner")
+    parser = argparse.ArgumentParser(description="Koala tool-routing eval runner")
     parser.add_argument(
         "--model",
         default=None,

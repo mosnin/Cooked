@@ -12,7 +12,7 @@ import { chatRuntime } from '@/lib/ai-tools/runtime-flag';
 /**
  * GET /api/ai/health
  *
- * Non-secret diagnostic for the Chippi chat agent. Answers, in one GET,
+ * Non-secret diagnostic for the Koala chat agent. Answers, in one GET,
  * WHICH provider/model/runtime a chat turn will actually use and whether the
  * required keys are present — so a broken deploy can be diagnosed from the
  * outside without reading logs.

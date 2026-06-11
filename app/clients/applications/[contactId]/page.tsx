@@ -62,7 +62,7 @@ export default async function ApplicationDetailPage({
         <div className="space-y-1.5">
           <p className="text-sm text-muted-foreground">Application.</p>
           <h1 className="text-3xl tracking-tight text-foreground" style={TITLE_FONT}>
-            {app.realtorName ?? 'Your application'}
+            {app.repName ?? 'Your application'}
           </h1>
           <div className="flex flex-wrap items-center gap-2.5">
             <StatusPill status={app.status} />

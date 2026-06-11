@@ -18,11 +18,11 @@ export async function generateMetadata({
 }
 
 /**
- * /s/[slug]/communication — the realtor's email + messages, toggled.
+ * /s/[slug]/communication — the rep's email + messages, toggled.
  *
  * PR #161 shipped a unified inbox feed; PR #165 split into two sidebar
- * items (one for email, one for WhatsApp). The realtor's read was that
- * two competing sidebar items felt like Chippi crammed messages under
+ * items (one for email, one for WhatsApp). The rep's read was that
+ * two competing sidebar items felt like Koala crammed messages under
  * email. The compromise — and the right one — is one sidebar entry with
  * a segmented toggle (Email · Messages) inside this page.
  *

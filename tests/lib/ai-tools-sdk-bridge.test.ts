@@ -26,7 +26,7 @@ import {
 function makeCtx(): ToolContext {
   return {
     userId: 'u_1',
-    space: { id: 's_1', slug: 'jane', name: 'Jane Realty', ownerId: 'u_1' },
+    space: { id: 's_1', slug: 'jane', name: 'Jane Sales', ownerId: 'u_1' },
     signal: new AbortController().signal,
   };
 }
@@ -528,7 +528,7 @@ describe('summariseInterruption', () => {
     }),
   ];
 
-  it('renders the realtor-facing approval message via the original tool definition', () => {
+  it('renders the rep-facing approval message via the original tool definition', () => {
     expect(summariseInterruption('send_thing', { to: 'jane@x.com' }, registry)).toBe(
       'Send to jane@x.com',
     );

@@ -1,22 +1,22 @@
 /**
  * HubSpot signal source — Phase D1.
  *
- * Three signals, each cross-walked back to a Chippi entity so the brief
- * only names people the realtor recognises. The new-contact tip is the
- * one exception — its whole point is "this person isn't in Chippi yet."
+ * Three signals, each cross-walked back to a Koala entity so the brief
+ * only names people the rep recognises. The new-contact tip is the
+ * one exception — its whole point is "this person isn't in Koala yet."
  *
  *   review (1 / 0.85)  HubSpot deal closedate within 7 days, matched to
- *                      a Chippi Deal NOT already in the `closing` stage.
- *                      The realtor's pipeline is out of sync; surface it
+ *                      a Koala Deal NOT already in the `closing` stage.
+ *                      The rep's pipeline is out of sync; surface it
  *                      before the close date arrives.
  *
  *   review (2 / 0.82)  HubSpot deal stage advanced in the last 24h, but
- *                      Chippi Deal stage is earlier. HubSpot is ahead;
- *                      Chippi needs to catch up.
+ *                      Koala Deal stage is earlier. HubSpot is ahead;
+ *                      Koala needs to catch up.
  *
  *   reply  (2 / 0.78)  HubSpot Contact created in the last 24h, no
- *                      matching Chippi Contact by email. A lead landed
- *                      somewhere else; the realtor should pull them in.
+ *                      matching Koala Contact by email. A lead landed
+ *                      somewhere else; the rep should pull them in.
  *
  * Data source: hybrid.
  *
@@ -31,7 +31,7 @@
  * Cross-walk is by email (Contact.email ↔ HubSpot contact.email,
  * case-insensitive) and by deal title for deals. Cross-ID storage
  * (IntegrationExternalId) is deferred — when a HubSpot deal can't match
- * a Chippi Deal by title, the signal is dropped rather than guessed at.
+ * a Koala Deal by title, the signal is dropped rather than guessed at.
  * The brief stays honest.
  */
 
@@ -48,7 +48,7 @@ const CLOSING_STAGE_KIND = 'closing';
 const CLOSE_DATE_WINDOW_DAYS = 7;
 const TRIGGER_WINDOW_HOURS = 24;
 
-type ChippiDealRow = {
+type KoalaDealRow = {
   id: string;
   title: string;
   closeDate: string | null;
@@ -56,7 +56,7 @@ type ChippiDealRow = {
   DealStage: { kind: string | null; position: number } | null;
 };
 
-type ChippiContactRow = {
+type KoalaContactRow = {
   id: string;
   name: string;
   email: string | null;
@@ -79,41 +79,41 @@ interface HubspotContact {
 }
 
 /**
- * Find the Chippi Deal that best matches a HubSpot deal. Case-insensitive
+ * Find the Koala Deal that best matches a HubSpot deal. Case-insensitive
  * title match — the simplest cross-walk that works without an external-id
  * table. When titles drift between systems, the signal silently drops
- * (correct behaviour — we won't name a deal the realtor won't recognise).
+ * (correct behaviour — we won't name a deal the rep won't recognise).
  */
 export function matchDealByTitle(
   hubspotDealName: string | null,
-  chippiDeals: ChippiDealRow[],
-): ChippiDealRow | null {
+  koalaDeals: KoalaDealRow[],
+): KoalaDealRow | null {
   if (!hubspotDealName) return null;
   const needle = hubspotDealName.trim().toLowerCase();
   if (needle.length === 0) return null;
-  return chippiDeals.find((d) => d.title.trim().toLowerCase() === needle) ?? null;
+  return koalaDeals.find((d) => d.title.trim().toLowerCase() === needle) ?? null;
 }
 
 /**
- * Find the Chippi Contact whose email matches a HubSpot contact's email,
+ * Find the Koala Contact whose email matches a HubSpot contact's email,
  * case-insensitively. Whitespace-trimmed.
  */
 export function matchContactByEmail(
   email: string | null,
-  chippiContacts: ChippiContactRow[],
-): ChippiContactRow | null {
+  koalaContacts: KoalaContactRow[],
+): KoalaContactRow | null {
   if (!email) return null;
   const needle = email.trim().toLowerCase();
   if (needle.length === 0) return null;
-  return chippiContacts.find((c) => c.email?.trim().toLowerCase() === needle) ?? null;
+  return koalaContacts.find((c) => c.email?.trim().toLowerCase() === needle) ?? null;
 }
 
 /**
- * Is the Chippi Deal already in the `closing` stage? The closedate
- * signal only fires when Chippi is BEHIND HubSpot — if the realtor has
+ * Is the Koala Deal already in the `closing` stage? The closedate
+ * signal only fires when Koala is BEHIND HubSpot — if the rep has
  * already moved the deal to closing, the systems agree and we say nothing.
  */
-export function isAlreadyClosing(deal: ChippiDealRow): boolean {
+export function isAlreadyClosing(deal: KoalaDealRow): boolean {
   return deal.DealStage?.kind === CLOSING_STAGE_KIND;
 }
 
@@ -280,16 +280,16 @@ function asString(v: unknown): string | null {
 export const hubspotSource: SignalGatherer = {
   source: 'hubspot',
   async gather(spaceId: string): Promise<Signal[]> {
-    // 1. Skip entirely without an active HubSpot connection. The realtor
+    // 1. Skip entirely without an active HubSpot connection. The rep
     //    hasn't connected; we don't poll Composio for nothing.
     const connection = await findActiveConnection(spaceId);
     if (!connection) return [];
 
-    // 2. Pull Chippi-side rows ONCE — the cross-walk references — and
+    // 2. Pull Koala-side rows ONCE — the cross-walk references — and
     //    the trigger rows in parallel.
-    const [chippiDeals, chippiContacts, triggerRows] = await Promise.all([
-      loadChippiDeals(spaceId),
-      loadChippiContacts(spaceId),
+    const [koalaDeals, koalaContacts, triggerRows] = await Promise.all([
+      loadKoalaDeals(spaceId),
+      loadKoalaContacts(spaceId),
       listTriggersForConnection(connection.id).catch(() => []),
     ]);
 
@@ -315,10 +315,10 @@ export const hubspotSource: SignalGatherer = {
 
     // ── Closedate mismatch + stage-advance: both read from the deal list.
     for (const hsDeal of hubspotDeals) {
-      const matched = matchDealByTitle(hsDeal.name, chippiDeals);
+      const matched = matchDealByTitle(hsDeal.name, koalaDeals);
       if (!matched) continue; // can't name it — drop
 
-      // Closedate mismatch: HubSpot says closing soon, Chippi isn't in
+      // Closedate mismatch: HubSpot says closing soon, Koala isn't in
       // closing yet. Highest urgency in this source.
       const closeDays = daysFromNow(hsDeal.closedate);
       if (
@@ -337,24 +337,24 @@ export const hubspotSource: SignalGatherer = {
             name: matched.title,
             href: `/deals/${matched.id}`,
           },
-          evidence: `${matched.title} closes ${formatCloseDate(hsDeal.closedate, closeDays)} in HubSpot — still '${describeChippiStage(matched)}' in Chippi.`,
+          evidence: `${matched.title} closes ${formatCloseDate(hsDeal.closedate, closeDays)} in HubSpot — still '${describeKoalaStage(matched)}' in Koala.`,
           draftedAction: { kind: 'open', href: `/deals/${matched.id}` },
         });
         continue;
       }
 
-      // Stage-advance: HubSpot moved the deal recently, Chippi's stage
+      // Stage-advance: HubSpot moved the deal recently, Koala's stage
       // is earlier. Only fires when the stage-updated trigger has
       // actually delivered in the last 24h (trigger row is the cache).
       if (!stageTriggerFired) continue;
       if (!withinLastHours(hsDeal.hs_lastmodifieddate, TRIGGER_WINDOW_HOURS)) continue;
       const hubspotStage = hsDeal.dealstage;
       if (!hubspotStage) continue;
-      const chippiStage = describeChippiStage(matched);
-      // Lossy comparison — Chippi and HubSpot use different stage labels,
-      // but the realtor knows their own pipeline. Surface the mismatch
+      const koalaStage = describeKoalaStage(matched);
+      // Lossy comparison — Koala and HubSpot use different stage labels,
+      // but the rep knows their own pipeline. Surface the mismatch
       // and let them confirm.
-      if (hubspotStage.toLowerCase() === chippiStage.toLowerCase()) continue;
+      if (hubspotStage.toLowerCase() === koalaStage.toLowerCase()) continue;
       signals.push({
         source: 'hubspot',
         kind: 'review',
@@ -365,17 +365,17 @@ export const hubspotSource: SignalGatherer = {
           name: matched.title,
           href: `/deals/${matched.id}`,
         },
-        evidence: `HubSpot moved the ${matched.title} to '${hubspotStage}'. Chippi still has it at '${chippiStage}'.`,
+        evidence: `HubSpot moved the ${matched.title} to '${hubspotStage}'. Koala still has it at '${koalaStage}'.`,
         draftedAction: { kind: 'open', href: `/deals/${matched.id}` },
       });
     }
 
     // ── New contact: a HubSpot contact created in the last 24h with no
-    //    matching Chippi Contact. The one signal where we name someone
-    //    NOT in Chippi — its whole point is "pull them in."
+    //    matching Koala Contact. The one signal where we name someone
+    //    NOT in Koala — its whole point is "pull them in."
     for (const hsContact of hubspotContacts) {
       if (!withinLastHours(hsContact.createdate, TRIGGER_WINDOW_HOURS)) continue;
-      if (matchContactByEmail(hsContact.email, chippiContacts)) continue;
+      if (matchContactByEmail(hsContact.email, koalaContacts)) continue;
       const name = contactDisplayName(hsContact);
       if (!name) continue;
       signals.push({
@@ -385,14 +385,14 @@ export const hubspotSource: SignalGatherer = {
         confidence: 0.78,
         subject: {
           // The hubspot id is the only stable handle we have for a
-          // contact that isn't in Chippi yet. Deduplication in the
+          // contact that isn't in Koala yet. Deduplication in the
           // composer is by subject.id — prefixing prevents collision
-          // with any Chippi-side card.
+          // with any Koala-side card.
           id: `hubspot:contact:${hsContact.id}`,
           name,
           href: '/contacts',
         },
-        evidence: `New HubSpot contact: ${name}. Not in Chippi.`,
+        evidence: `New HubSpot contact: ${name}. Not in Koala.`,
         draftedAction: { kind: 'open', href: '/contacts' },
       });
     }
@@ -417,27 +417,27 @@ async function findActiveConnection(spaceId: string): Promise<{
   return (data ?? null) as { id: string; userId: string } | null;
 }
 
-async function loadChippiDeals(spaceId: string): Promise<ChippiDealRow[]> {
+async function loadKoalaDeals(spaceId: string): Promise<KoalaDealRow[]> {
   const { data, error } = await supabase
     .from('Deal')
     .select('id, title, closeDate, stageId, DealStage:stageId(kind, position)')
     .eq('spaceId', spaceId)
     .eq('status', 'active');
   if (error || !data) return [];
-  return data as unknown as ChippiDealRow[];
+  return data as unknown as KoalaDealRow[];
 }
 
-async function loadChippiContacts(spaceId: string): Promise<ChippiContactRow[]> {
+async function loadKoalaContacts(spaceId: string): Promise<KoalaContactRow[]> {
   const { data, error } = await supabase
     .from('Contact')
     .select('id, name, email')
     .eq('spaceId', spaceId)
     .not('email', 'is', null);
   if (error || !data) return [];
-  return data as ChippiContactRow[];
+  return data as KoalaContactRow[];
 }
 
-function describeChippiStage(deal: ChippiDealRow): string {
+function describeKoalaStage(deal: KoalaDealRow): string {
   return deal.DealStage?.kind ?? 'open';
 }
 

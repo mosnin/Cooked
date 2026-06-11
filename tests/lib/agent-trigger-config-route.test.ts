@@ -10,7 +10,7 @@ describe('GET /api/agent/trigger/config', () => {
     process.env = {
       ...OLD_ENV,
       AGENT_TRIGGER_OPS_SECRET: 'test-ops-secret',
-      AGENT_IMMEDIATE_EVENTS: 'tour_completed,new_lead',
+      AGENT_IMMEDIATE_EVENTS: 'demo_completed,new_lead',
       AGENT_TRIGGER_DEDUPE_WINDOW_S: '180',
       MODAL_WEBHOOK_URL: 'https://modal.example.com/webhook',
       AGENT_INTERNAL_SECRET: 'secret',
@@ -47,7 +47,7 @@ describe('GET /api/agent/trigger/config', () => {
 
     expect(res.status).toBe(200);
     expect(body.spaceId).toBe('space_1');
-    expect(body.config.immediateEvents).toEqual(['new_lead', 'tour_completed']);
+    expect(body.config.immediateEvents).toEqual(['demo_completed', 'new_lead']);
     expect(body.config.dedupeWindowSeconds).toBe(180);
     expect(body.config.hasModalWebhook).toBe(true);
     expect(body.config.hasRedis).toBe(true);

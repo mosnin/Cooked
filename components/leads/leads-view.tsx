@@ -754,7 +754,7 @@ export function LeadsView({ leads: initialLeads, slug, newLeadIds, loading = fal
                             <span className="opacity-40">·</span>
                             <span className="inline-flex items-center gap-1">
                               <Tag size={10} />
-                              {lead.sourceLabel === 'intake-form' ? 'Intake form' : lead.sourceLabel === 'tour-booking' ? 'Tour booking' : lead.sourceLabel}
+                              {lead.sourceLabel === 'intake-form' ? 'Intake form' : lead.sourceLabel === 'demo-booking' ? 'Demo booking' : lead.sourceLabel}
                             </span>
                           </>
                         )}

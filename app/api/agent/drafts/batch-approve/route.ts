@@ -12,18 +12,18 @@ import { logger } from '@/lib/logger';
  *
  * Mirrors the auth + space-scoping shape of the single-draft PATCH endpoint
  * (`/api/agent/drafts/[id]`). Per-draft failure does NOT fail the batch —
- * the realtor batch-approves 5, four succeed, one returns its error, and the
+ * the rep batch-approves 5, four succeed, one returns its error, and the
  * UI surfaces per-item status from the `results[]` payload.
  *
  * Body: { draftIds: string[] }
  * Returns: { results: [{ draftId, ok, error?, status?, deliveryResult? }] }
  *
- * Server-side scoping: every draftId is verified to belong to the realtor's
+ * Server-side scoping: every draftId is verified to belong to the rep's
  * space AND status='pending'. A compromised client passing ids from another
  * space gets per-item not_found, never an accidental cross-space send.
  *
  * Rate limit: 100 batch-approves per hour per space — one chat session might
- * batch 30-50 drafts; 100 covers the heaviest realtor.
+ * batch 30-50 drafts; 100 covers the heaviest rep.
  */
 
 const MAX_BATCH_SIZE = 50;
@@ -143,7 +143,7 @@ export async function POST(req: NextRequest) {
 
       if (updateError) {
         // Delivery may have already happened — surface the DB error to the
-        // realtor but mark the result as failed so they re-check.
+        // rep but mark the result as failed so they re-check.
         results.push({
           draftId,
           ok: false,

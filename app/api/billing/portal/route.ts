@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
   }
 
   const stripe = getStripe();
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://my.usechippi.com';
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://my.usekoala.com';
 
   const session = await stripe.billingPortal.sessions.create({
     customer: stripeData.stripeCustomerId,

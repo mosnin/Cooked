@@ -6,7 +6,7 @@ How the global search works, common failure modes, and how to fix them.
 
 ## Overview
 
-The global search is triggered by **Cmd+K** (or Ctrl+K) from anywhere in the app. It searches **contacts**, **deals**, and **tours** in parallel and shows results in a modal overlay.
+The global search is triggered by **Cmd+K** (or Ctrl+K) from anywhere in the app. It searches **contacts**, **deals**, and **demos** in parallel and shows results in a modal overlay.
 
 ## Architecture
 
@@ -15,8 +15,8 @@ User types in search modal (Cmd+K)
   → 200ms debounce
   → GET /api/search?slug={slug}&q={query}
   → requireSpaceOwner(slug)  ← authenticates + verifies workspace access
-  → 3 parallel Supabase queries (contacts, deals, tours)
-  → JSON response: { contacts, deals, tours }
+  → 3 parallel Supabase queries (contacts, deals, demos)
+  → JSON response: { contacts, deals, demos }
   → Client renders results grouped by type
 ```
 
@@ -33,16 +33,16 @@ User types in search modal (Cmd+K)
 |--------|------------------------|-----------------|
 | **Contact** | `name`, `email`, `phone` | Name, email/phone, lead score label |
 | **Deal** | `title`, `address` | Title, stage name + color, value |
-| **Tour** | `guestName`, `guestEmail`, `propertyAddress` | Guest name, property/date, status |
+| **Demo** | `guestName`, `guestEmail`, `propertyAddress` | Guest name, property/date, status |
 
 ## Page-level search
 
-Both the **Deals** and **Tours** pages have inline search bars for filtering large datasets client-side.
+Both the **Deals** and **Demos** pages have inline search bars for filtering large datasets client-side.
 
 | Page | File | Fields searched |
 |------|------|----------------|
 | Deals (Pipeline) | `components/deals/kanban-board.tsx` | title, address, description, contact names |
-| Tours | `app/s/[slug]/tours/tours-client.tsx` | guest name, email, phone, property address, notes, linked contact |
+| Demos | `app/s/[slug]/demos/demos-client.tsx` | guest name, email, phone, property address, notes, linked contact |
 
 These are client-side filters (no API call) — they filter the already-loaded data instantly.
 
@@ -58,7 +58,7 @@ These are client-side filters (no API call) — they filter the already-loaded d
 
 **If it happens again:**
 - Check Vercel function logs for `[search]` prefixed errors
-- The route logs specific errors for each entity: `[search] contacts error:`, `[search] deals error:`, `[search] tours error:`
+- The route logs specific errors for each entity: `[search] contacts error:`, `[search] deals error:`, `[search] demos error:`
 - Each query is individually error-handled — one failing table won't block the others
 - Common sub-causes:
   - Supabase env vars missing → `getSupabase()` throws
@@ -73,12 +73,12 @@ These are client-side filters (no API call) — they filter the already-loaded d
 - Does the user own the workspace? `requireSpaceOwner` verifies this
 - Are special characters being stripped? The route sanitizes `, ( ) . : ; ' "` — if the search term is ONLY special characters, it returns empty
 
-### 3. Tours don't appear in results
+### 3. Demos don't appear in results
 
 **Check:**
-- Does the `Tour` table exist? Created by migration `20260319000001_tour_booking.sql`
+- Does the `Demo` table exist? Created by migration `20260319000001_demo_booking.sql`
 - Are the column names correct? The query uses: `guestName`, `guestEmail`, `propertyAddress`, `startsAt`, `status`
-- Tour search failures are non-fatal — contacts and deals will still return even if the Tour query fails
+- Demo search failures are non-fatal — contacts and deals will still return even if the Demo query fails
 
 ### 4. Input sanitization
 

@@ -131,7 +131,7 @@ export function AgentBuilderForm({ slug, spaceId, initialAgent, onSaved }: Agent
           rows={8}
           value={systemPrompt}
           onChange={(e) => setSystemPrompt(e.target.value.slice(0, MAX_PROMPT))}
-          placeholder="You are a real estate lead qualifier. Your job is to analyze lead quality and score prospects based on..."
+          placeholder="You are a sales lead qualifier. Your job is to analyze lead quality and score prospects based on..."
           required
           maxLength={MAX_PROMPT}
           className={cn(

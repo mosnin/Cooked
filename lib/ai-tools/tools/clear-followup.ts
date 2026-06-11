@@ -2,7 +2,7 @@
  * `clear_followup` — drop the scheduled follow-up on a contact.
  *
  * Approval-gated because clearing a follow-up makes the contact disappear
- * from the Today inbox, and the realtor should sign off on that. The model
+ * from the Today inbox, and the rep should sign off on that. The model
  * has to say WHY — that line goes into the activity log so the next
  * person looking at the contact can see what happened.
  */
@@ -46,7 +46,7 @@ export const clearFollowupTool = defineTool<typeof parameters, ClearFollowupResu
       .select('id, name')
       .eq('id', args.personId)
       .eq('spaceId', ctx.space.id)
-      .is('brokerageId', null)
+      .is('teamId', null)
       .maybeSingle();
     if (lookupErr) {
       return { summary: `Contact lookup failed: ${lookupErr.message}`, display: 'error' };
