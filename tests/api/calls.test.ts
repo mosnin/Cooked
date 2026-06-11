@@ -1,49 +1,53 @@
 /**
  * Gating + validation tests for the phone/call layer.
  *
- *  - lib/voice.ts: no env → isVoiceConfigured()/getVoiceConfig() report off and
- *    placeClickToCall no-ops with { ok:false, reason:'not_configured' }, never
- *    making a network call.
+ *  - lib/twilio.ts: no env → isTwilioConfigured()/getTwilioConfig() report off
+ *    and placeClickToCall no-ops with { ok:false, reason:'not_configured' },
+ *    never making a network call.
+ *  - validateTwilioSignature: accepts the documented X-Twilio-Signature scheme
+ *    (HMAC-SHA1 over url + sorted POST params, base64) and rejects everything
+ *    else.
  *  - POST /api/calls: body validation (bad slug, bad number) returns 4xx; and
  *    when voice is unconfigured the row is still logged and the response is a
  *    clean 200 with configured:false — never a 500.
  */
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { NextRequest, NextResponse } from 'next/server';
+import { createHmac } from 'node:crypto';
 
-// ── lib/voice gating ────────────────────────────────────────────────────────
+// ── lib/twilio gating ───────────────────────────────────────────────────────
 
-describe('lib/voice gating', () => {
+describe('lib/twilio gating', () => {
   const saved = {
-    key: process.env.TELNYX_API_KEY,
-    conn: process.env.TELNYX_VOICE_CONNECTION_ID,
-    from: process.env.TELNYX_FROM_NUMBER,
+    sid: process.env.TWILIO_ACCOUNT_SID,
+    token: process.env.TWILIO_AUTH_TOKEN,
+    from: process.env.TWILIO_PHONE_NUMBER,
   };
 
   beforeEach(() => {
-    delete process.env.TELNYX_API_KEY;
-    delete process.env.TELNYX_VOICE_CONNECTION_ID;
-    delete process.env.TELNYX_FROM_NUMBER;
+    delete process.env.TWILIO_ACCOUNT_SID;
+    delete process.env.TWILIO_AUTH_TOKEN;
+    delete process.env.TWILIO_PHONE_NUMBER;
     vi.resetModules();
   });
 
   afterEach(() => {
-    if (saved.key) process.env.TELNYX_API_KEY = saved.key;
-    if (saved.conn) process.env.TELNYX_VOICE_CONNECTION_ID = saved.conn;
-    if (saved.from) process.env.TELNYX_FROM_NUMBER = saved.from;
+    if (saved.sid) process.env.TWILIO_ACCOUNT_SID = saved.sid;
+    if (saved.token) process.env.TWILIO_AUTH_TOKEN = saved.token;
+    if (saved.from) process.env.TWILIO_PHONE_NUMBER = saved.from;
     vi.restoreAllMocks();
   });
 
   it('reports not configured when env is missing', async () => {
-    const voice = await import('@/lib/voice');
-    expect(voice.isVoiceConfigured()).toBe(false);
-    expect(voice.getVoiceConfig()).toBeNull();
+    const twilio = await import('@/lib/twilio');
+    expect(twilio.isTwilioConfigured()).toBe(false);
+    expect(twilio.getTwilioConfig()).toBeNull();
   });
 
   it('placeClickToCall no-ops without a network call when unconfigured', async () => {
     const fetchSpy = vi.spyOn(globalThis, 'fetch');
-    const voice = await import('@/lib/voice');
-    const result = await voice.placeClickToCall({
+    const twilio = await import('@/lib/twilio');
+    const result = await twilio.placeClickToCall({
       spaceId: 'space_1',
       contactId: null,
       agentNumber: '+15551234567',
@@ -54,37 +58,46 @@ describe('lib/voice gating', () => {
   });
 
   it('reports configured when all three env vars are present', async () => {
-    process.env.TELNYX_API_KEY = 'KEY';
-    process.env.TELNYX_VOICE_CONNECTION_ID = 'CONN';
-    process.env.TELNYX_FROM_NUMBER = '+15550000000';
+    process.env.TWILIO_ACCOUNT_SID = 'AC123';
+    process.env.TWILIO_AUTH_TOKEN = 'TOKEN';
+    process.env.TWILIO_PHONE_NUMBER = '+15550000000';
     vi.resetModules();
-    const voice = await import('@/lib/voice');
-    expect(voice.isVoiceConfigured()).toBe(true);
-    expect(voice.getVoiceConfig()).toEqual({
-      apiKey: 'KEY',
-      connectionId: 'CONN',
+    const twilio = await import('@/lib/twilio');
+    expect(twilio.isTwilioConfigured()).toBe(true);
+    expect(twilio.getTwilioConfig()).toEqual({
+      accountSid: 'AC123',
+      authToken: 'TOKEN',
       fromNumber: '+15550000000',
     });
   });
 
   it('toE164 normalizes and rejects junk', async () => {
-    const voice = await import('@/lib/voice');
-    expect(voice.toE164('(555) 123-4567')).toBe('+15551234567');
-    expect(voice.toE164('+447911123456')).toBe('+447911123456');
-    expect(voice.toE164('123')).toBeNull();
-    expect(voice.toE164(null)).toBeNull();
+    const twilio = await import('@/lib/twilio');
+    expect(twilio.toE164('(555) 123-4567')).toBe('+15551234567');
+    expect(twilio.toE164('+447911123456')).toBe('+447911123456');
+    expect(twilio.toE164('123')).toBeNull();
+    expect(twilio.toE164(null)).toBeNull();
   });
 
-  it('client_state round-trips through base64', async () => {
-    const voice = await import('@/lib/voice');
-    const encoded = voice.encodeClientState({ bridgeTo: '+15551112222', spaceId: 's1', contactId: 'c1' });
-    expect(voice.decodeClientState(encoded)).toEqual({
-      bridgeTo: '+15551112222',
-      spaceId: 's1',
-      contactId: 'c1',
-    });
-    expect(voice.decodeClientState(null)).toEqual({});
-    expect(voice.decodeClientState('not-base64-json!!!')).toEqual({});
+  it('validateTwilioSignature accepts the documented scheme and rejects forgeries', async () => {
+    const twilio = await import('@/lib/twilio');
+    const url = 'https://example.com/api/webhooks/twilio-voice?spaceId=s1';
+    const params = { CallSid: 'CA1', CallStatus: 'completed', To: '+15557654321' };
+    const authToken = 'TOKEN';
+
+    // X-Twilio-Signature: HMAC-SHA1(url + concat(sorted key+value), token), base64.
+    let data = url;
+    for (const key of Object.keys(params).sort()) {
+      data += key + params[key as keyof typeof params];
+    }
+    const good = createHmac('sha1', authToken).update(data).digest('base64');
+
+    expect(twilio.validateTwilioSignature(url, params, good, authToken)).toBe(true);
+    expect(twilio.validateTwilioSignature(url, params, 'bogus', authToken)).toBe(false);
+    expect(twilio.validateTwilioSignature(url, params, null, authToken)).toBe(false);
+    expect(
+      twilio.validateTwilioSignature(url, { ...params, CallStatus: 'failed' }, good, authToken),
+    ).toBe(false);
   });
 });
 
@@ -105,10 +118,12 @@ const insertedRow = {
   direction: 'outbound',
   fromNumber: 'unknown',
   toNumber: '+15557654321',
-  telnyxCallId: null,
+  twilioCallSid: null,
   status: 'initiated',
   recordingUrl: null,
+  recordingSid: null,
   transcript: null,
+  transcriptStatus: null,
   summary: null,
   durationSec: null,
   createdAt: '2026-06-02T00:00:00.000Z',
@@ -146,10 +161,10 @@ const fakeSpace = { id: 'space_1', phoneNumber: null } as any;
 describe('POST /api/calls', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    delete process.env.TELNYX_API_KEY;
-    delete process.env.TELNYX_VOICE_CONNECTION_ID;
-    delete process.env.TELNYX_FROM_NUMBER;
-    delete process.env.TELNYX_AGENT_NUMBER;
+    delete process.env.TWILIO_ACCOUNT_SID;
+    delete process.env.TWILIO_AUTH_TOKEN;
+    delete process.env.TWILIO_PHONE_NUMBER;
+    delete process.env.TWILIO_AGENT_NUMBER;
   });
 
   it('returns 400 when slug is missing', async () => {

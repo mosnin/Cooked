@@ -48,10 +48,9 @@ const SOURCE_PHRASE: Record<string, string> = {
   linkedin: 'LinkedIn',
   facebook: 'Facebook',
   instagram: 'Instagram',
-  linkedin: 'LinkedIn',
-  idx_website: 'website',
-  open_houses: 'open-house',
-  follow_up_boss: 'Follow-up Boss',
+  apollo: 'Apollo',
+  company_website: 'website',
+  webinars: 'webinar',
   mailchimp: 'email',
   google_ads: 'Google Ads',
 };

@@ -1,5 +1,5 @@
 /**
- * Twilio Voice integration (replaces the old Telnyx Call Control layer).
+ * Twilio Voice integration — outbound click-to-call, recording, transcription.
  *
  * Places click-to-call calls via the Twilio Programmable Voice REST API and
  * exposes the small helper set the webhook route needs (TwiML generation,
@@ -13,7 +13,7 @@
  * `{ ok: false, reason: 'not_configured' }` — it never throws and never makes a
  * network call, so a deploy without credentials is safe.
  *
- * Flow (agent-first click-to-call, same UX the Telnyx layer offered):
+ * Flow (agent-first click-to-call):
  *   1. We create a call to the AGENT's own phone. Twilio rings the rep and,
  *      once the agent answers, fetches TwiML from our webhook `Url`.
  *   2. That TwiML `<Dial record="record-from-answer-dual">`s the CONTACT, so the
@@ -24,9 +24,9 @@
  *      Twilio transcription callback if one is wired.
  *
  * Context (spaceId / contactId / the number to bridge to) rides on the callback
- * URLs as query params — Twilio has no Telnyx-style `client_state`, and the
- * StatusCallback/recordingStatusCallback URLs are echoed back verbatim, so the
- * webhook can act on the agent leg without a DB round-trip.
+ * URLs as query params — the StatusCallback / recordingStatusCallback / TwiML
+ * URLs are echoed back verbatim, so the webhook can act on the agent leg
+ * without a DB round-trip.
  */
 
 import 'server-only';

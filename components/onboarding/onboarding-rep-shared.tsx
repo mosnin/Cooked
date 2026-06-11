@@ -51,10 +51,9 @@ export const LEAD_SOURCE_OPTIONS: { value: string; label: string; icon?: string 
   { value: 'linkedin', label: 'LinkedIn' },
   { value: 'facebook', label: 'Facebook', icon: '/integrations/facebook.svg' },
   { value: 'instagram', label: 'Instagram', icon: '/integrations/instagram.svg' },
-  { value: 'linkedin', label: 'LinkedIn', icon: '/integrations/linkedin.svg' },
-  { value: 'idx_website', label: 'IDX website' },
-  { value: 'open_houses', label: 'Open houses' },
-  { value: 'follow_up_boss', label: 'Follow-up Boss', icon: '/integrations/follow-up-boss.svg' },
+  { value: 'apollo', label: 'Apollo' },
+  { value: 'company_website', label: 'Company website' },
+  { value: 'webinars', label: 'Webinars' },
   { value: 'mailchimp', label: 'Mailchimp', icon: '/integrations/mailchimp.svg' },
   { value: 'google_ads', label: 'Google Ads', icon: '/integrations/googleads.svg' },
 ];

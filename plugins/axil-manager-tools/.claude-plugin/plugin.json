@@ -1,8 +1,8 @@
 {
-  "name": "koala-manager-tools",
+  "name": "axil-manager-tools",
   "description": "Team management tools for Koala. View team performance, manage unassigned leads, and track agent activity.",
   "version": "1.0.0",
   "author": { "name": "Koala", "url": "https://usekoala.com" },
   "homepage": "https://usekoala.com",
-  "keywords": ["crm", "team", "team", "real-estate", "koala"]
+  "keywords": ["crm", "team", "team", "sales", "koala"]
 }

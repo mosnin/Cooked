@@ -101,8 +101,8 @@ def _extract_docx(data: bytes) -> str:
     try:
         doc = Document(io.BytesIO(data))
         paragraphs = [p.text for p in doc.paragraphs if p.text]
-        # Tables sometimes carry the meat of a real-estate doc (rent rolls,
-        # comparison sheets) so flatten them after the body paragraphs.
+        # Tables sometimes carry the meat of a sales doc (pricing sheets,
+        # competitive comparison grids) so flatten them after the body paragraphs.
         for table in doc.tables:
             for row in table.rows:
                 cells = [c.text.strip() for c in row.cells if c.text and c.text.strip()]

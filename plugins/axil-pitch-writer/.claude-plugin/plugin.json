@@ -1,0 +1,8 @@
+{
+  "name": "axil-pitch-writer",
+  "description": "Generate product pitch copy, social media posts, and email campaigns using your Koala deal data.",
+  "version": "1.0.0",
+  "author": { "name": "Koala", "url": "https://usekoala.com" },
+  "homepage": "https://usekoala.com",
+  "keywords": ["crm", "pitches", "marketing", "sales", "koala"]
+}

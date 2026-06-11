@@ -1,8 +1,0 @@
-{
-  "name": "koala-listing-writer",
-  "description": "Generate property listing copy, social media posts, and email campaigns using your Koala deal data.",
-  "version": "1.0.0",
-  "author": { "name": "Koala", "url": "https://usekoala.com" },
-  "homepage": "https://usekoala.com",
-  "keywords": ["crm", "listings", "marketing", "real-estate", "koala"]
-}

@@ -68,7 +68,7 @@ describe('composeOnboardingDraft', () => {
 
   it('never produces double spaces regardless of input combination', () => {
     const tones = ['warm', 'direct'] as const;
-    const sources = [[], ['linkedin'], ['sphere'], ['idx_website']];
+    const sources = [[], ['linkedin'], ['sphere'], ['company_website']];
     const audiences = [[], ['luxury'], ['renters'], ['sellers']];
     for (const tone of tones) {
       for (const leadSources of sources) {

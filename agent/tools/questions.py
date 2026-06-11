@@ -22,7 +22,9 @@ async def ask_rep(
     contact_id: str | None = None,
     priority: int = 0,
 ) -> dict[str, Any]:
-    """Queue a question for the rep; returns immediately, answer is async."""
+    """Queue a question for the sales rep; returns immediately, answer is async."""
+    # Use when you'd otherwise guess at something the rep cares about (which prospect,
+    # how to position, what to commit to on a deal).
     # question: 10-500 chars. context: optional, <=1000 chars.
     # priority: 0 normal, 50 important, 100 urgent.
     space_id = ctx.context.space_id
