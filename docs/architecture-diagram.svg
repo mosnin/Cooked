@@ -1,0 +1,271 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1760" height="1198" viewBox="0 0 1760 1198" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+<defs><marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9aa3b2"/></marker></defs>
+<rect x="0" y="0" width="1760" height="1198" fill="#fbfcfe"/>
+<text x="26" y="54" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="26" font-weight="800" fill="#11151c">Chippi — System Architecture</text>
+<text x="26" y="76" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13.5" fill="#6b7280">Agentic OS for realtors &amp; brokerages · Next.js 15 / React 19 · Supabase · Clerk · dual agent runtime (TS in-process + Modal Python) · mapped from source, 2026-06</text>
+<rect x="24" y="94" width="1712" height="95" rx="14" fill="#f3f7ff" stroke="#cdd9f0" stroke-width="1.5"/>
+<rect x="24" y="94" width="6" height="95" rx="3" fill="#3b6fd4"/>
+<text x="46" y="135.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="17" font-weight="700" fill="#11151c">Surfaces</text>
+<text x="46" y="154.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11.5" fill="#6b7280">browser + MCP clients</text>
+<rect x="236" y="107" width="213" height="30" rx="8" fill="#ffffff" stroke="#d4e0f5" stroke-width="1"/>
+<text x="342.5" y="126.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">Marketing site (logged-out)</text>
+<rect x="458" y="107" width="256" height="30" rx="8" fill="#ffffff" stroke="#d4e0f5" stroke-width="1"/>
+<text x="586.0" y="126.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">Clerk auth · realtor/broker login</text>
+<rect x="723" y="107" width="220" height="30" rx="8" fill="#ffffff" stroke="#d4e0f5" stroke-width="1"/>
+<text x="833.0" y="126.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">Realtor workspace  /s/[slug]</text>
+<rect x="952" y="107" width="199" height="30" rx="8" fill="#ffffff" stroke="#d4e0f5" stroke-width="1"/>
+<text x="1051.5" y="126.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">Broker dashboard  /broker</text>
+<rect x="1160" y="107" width="178" height="30" rx="8" fill="#ffffff" stroke="#d4e0f5" stroke-width="1"/>
+<text x="1249.0" y="126.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">Platform admin  /admin</text>
+<rect x="1347" y="107" width="291" height="30" rx="8" fill="#ffffff" stroke="#d4e0f5" stroke-width="1"/>
+<text x="1492.5" y="126.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">Public intake  /apply (form + AI chat)</text>
+<rect x="236" y="146" width="156" height="30" rx="8" fill="#ffffff" stroke="#d4e0f5" stroke-width="1"/>
+<text x="314.0" y="165.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">Tour booking  /book</text>
+<rect x="401" y="146" width="178" height="30" rx="8" fill="#ffffff" stroke="#d4e0f5" stroke-width="1"/>
+<text x="490.0" y="165.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">Link-in-bio  /p/[slug]</text>
+<rect x="588" y="146" width="227" height="30" rx="8" fill="#ffffff" stroke="#d4e0f5" stroke-width="1"/>
+<text x="701.5" y="165.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">Tokenized  /cma /packet /tour</text>
+<rect x="824" y="146" width="306" height="30" rx="8" fill="#ffffff" stroke="#d4e0f5" stroke-width="1"/>
+<text x="977.0" y="165.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">Applicant portal  /clients (own session)</text>
+<rect x="1139" y="146" width="156" height="30" rx="8" fill="#ffffff" stroke="#d4e0f5" stroke-width="1"/>
+<text x="1217.0" y="165.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">Demo app  /demo-app</text>
+<rect x="1304" y="146" width="185" height="30" rx="8" fill="#ffffff" stroke="#d4e0f5" stroke-width="1"/>
+<text x="1396.5" y="165.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">MCP clients → claude.ai</text>
+<line x1="880.0" y1="193" x2="880.0" y2="215" stroke="#9aa3b2" stroke-width="2" marker-end="url(#arr)"/>
+<rect x="896.0" y="195" width="52" height="20" rx="10" fill="#eef1f6" stroke="#d4d9e2" stroke-width="1"/>
+<text x="922.0" y="209" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11.5" fill="#525a68" text-anchor="middle">HTTPS</text>
+<rect x="24" y="221" width="1712" height="74" rx="14" fill="#fff8f0" stroke="#f3dcc0" stroke-width="1.5"/>
+<rect x="24" y="221" width="6" height="74" rx="3" fill="#ff964f"/>
+<text x="46" y="252.0" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="17" font-weight="700" fill="#11151c">Edge</text>
+<text x="46" y="271.0" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11.5" fill="#6b7280">middleware.ts</text>
+<rect x="236" y="234" width="114" height="30" rx="8" fill="#ffffff" stroke="#f0ddc4" stroke-width="1"/>
+<text x="293.0" y="253.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">Clerk session</text>
+<rect x="359" y="234" width="341" height="30" rx="8" fill="#ffffff" stroke="#f0ddc4" stroke-width="1"/>
+<text x="529.5" y="253.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">Route protection (/s /broker /admin /setup …)</text>
+<rect x="709" y="234" width="455" height="30" rx="8" fill="#ffffff" stroke="#f0ddc4" stroke-width="1"/>
+<text x="936.5" y="253.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">Public allowlist (/apply /book /p /api/public /webhooks /mcp)</text>
+<rect x="1173" y="234" width="156" height="30" rx="8" fill="#ffffff" stroke="#f0ddc4" stroke-width="1"/>
+<text x="1251.0" y="253.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">Ban / suspend check</text>
+<rect x="1338" y="234" width="185" height="30" rx="8" fill="#ffffff" stroke="#f0ddc4" stroke-width="1"/>
+<text x="1430.5" y="253.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">Safe redirect allowlist</text>
+<rect x="1532" y="234" width="164" height="30" rx="8" fill="#ffffff" stroke="#f0ddc4" stroke-width="1"/>
+<text x="1614.0" y="253.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">Client-portal bypass</text>
+<line x1="880.0" y1="299" x2="880.0" y2="321" stroke="#9aa3b2" stroke-width="2" marker-end="url(#arr)"/>
+<rect x="24" y="327" width="1712" height="134" rx="14" fill="#f6f8fb" stroke="#d8dee8" stroke-width="1.5"/>
+<rect x="24" y="327" width="6" height="134" rx="3" fill="#5566aa"/>
+<text x="46" y="388.0" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="17" font-weight="700" fill="#11151c">Next.js API</text>
+<text x="46" y="407.0" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11.5" fill="#6b7280">312 endpoints (App Router)</text>
+<rect x="236" y="340" width="277" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="374.5" y="359.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">ai · agent  (chat + autonomous, 50+)</text>
+<rect x="522" y="340" width="57" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="550.5" y="359.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">swarm</text>
+<rect x="588" y="340" width="78" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="627.0" y="359.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">contacts</text>
+<rect x="675" y="340" width="57" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="703.5" y="359.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">deals</text>
+<rect x="741" y="340" width="64" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="773.0" y="359.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">stages</text>
+<rect x="814" y="340" width="85" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="856.5" y="359.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">pipelines</text>
+<rect x="908" y="340" width="57" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="936.5" y="359.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">tours</text>
+<rect x="974" y="340" width="93" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="1020.5" y="359.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">properties</text>
+<rect x="1076" y="340" width="78" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="1115.0" y="359.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">calendar</text>
+<rect x="1163" y="340" width="64" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="1195.0" y="359.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">studio</text>
+<rect x="1236" y="340" width="100" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="1286.0" y="359.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">broker (44)</text>
+<rect x="1345" y="340" width="93" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="1391.5" y="359.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">brokerages</text>
+<rect x="1447" y="340" width="71" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="1482.5" y="359.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">billing</text>
+<rect x="1527" y="340" width="107" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="1580.5" y="359.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">integrations</text>
+<rect x="1643" y="340" width="71" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="1678.5" y="359.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">clients</text>
+<rect x="236" y="379" width="107" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="289.5" y="398.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">applications</text>
+<rect x="352" y="379" width="57" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="380.5" y="398.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">calls</text>
+<rect x="418" y="379" width="78" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="457.0" y="398.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">whatsapp</text>
+<rect x="505" y="379" width="57" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="533.5" y="398.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">email</text>
+<rect x="571" y="379" width="57" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="599.5" y="398.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">esign</text>
+<rect x="637" y="379" width="54" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="664.0" y="398.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">cma</text>
+<rect x="700" y="379" width="64" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="732.0" y="398.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">packet</text>
+<rect x="773" y="379" width="142" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="844.0" y="398.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">documents · files</text>
+<rect x="924" y="379" width="57" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="952.5" y="398.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">notes</text>
+<rect x="990" y="379" width="78" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="1029.0" y="398.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">routines</text>
+<rect x="1077" y="379" width="114" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="1134.0" y="398.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">custom-agents</text>
+<rect x="1200" y="379" width="85" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="1242.5" y="398.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">vectorize</text>
+<rect x="1294" y="379" width="64" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="1326.0" y="398.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">search</text>
+<rect x="1367" y="379" width="121" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="1427.5" y="398.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">mcp · mcp-keys</text>
+<rect x="1497" y="379" width="71" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="1532.5" y="398.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">account</text>
+<rect x="1577" y="379" width="54" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="1604.0" y="398.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">push</text>
+<rect x="236" y="418" width="85" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="278.5" y="437.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">affiliate</text>
+<rect x="330" y="418" width="71" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="365.5" y="437.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">support</text>
+<rect x="410" y="418" width="78" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="449.0" y="437.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">webhooks</text>
+<rect x="497" y="418" width="54" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="524.0" y="437.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">cron</text>
+<rect x="560" y="418" width="71" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="595.5" y="437.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">inngest</text>
+<rect x="640" y="418" width="64" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="672.0" y="437.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">public</text>
+<line x1="880.0" y1="465" x2="880.0" y2="487" stroke="#9aa3b2" stroke-width="2" marker-end="url(#arr)"/>
+<rect x="24" y="493" width="1712" height="95" rx="14" fill="#f6f8fb" stroke="#d8dee8" stroke-width="1.5"/>
+<rect x="24" y="493" width="6" height="95" rx="3" fill="#5566aa"/>
+<text x="46" y="534.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="17" font-weight="700" fill="#11151c">Core services</text>
+<text x="46" y="553.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11.5" fill="#6b7280">lib/*</text>
+<rect x="236" y="506" width="448" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="460.0" y="525.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">lead-scoring (deterministic engine · gpt-4.1-mini summaries)</text>
+<rect x="693" y="506" width="263" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="824.5" y="525.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">notify · email · sms · tour-emails</text>
+<rect x="965" y="506" width="320" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="1125.0" y="525.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">permissions · api-auth  (offboarding gate)</text>
+<rect x="1294" y="506" width="320" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="1454.0" y="525.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">embeddings · vectorize · zilliz (pgvector)</text>
+<rect x="236" y="545" width="142" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="307.0" y="564.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">brokerage-routing</text>
+<rect x="387" y="545" width="100" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="437.0" y="564.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">commissions</text>
+<rect x="496" y="545" width="128" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="560.0" y="564.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">brokerage-seats</text>
+<rect x="633" y="545" width="135" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="700.5" y="564.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">billing (Stripe)</text>
+<rect x="777" y="545" width="135" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="844.5" y="564.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">storage (Wasabi)</text>
+<rect x="921" y="545" width="121" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="981.5" y="564.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">usage · ledger</text>
+<rect x="1051" y="545" width="78" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="1090.0" y="564.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">briefing</text>
+<rect x="1138" y="545" width="78" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="1177.0" y="564.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">calendar</text>
+<rect x="1225" y="545" width="135" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="1292.5" y="564.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">studio · publish</text>
+<rect x="1369" y="545" width="107" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="1422.5" y="564.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">integrations</text>
+<rect x="1485" y="545" width="142" height="30" rx="8" fill="#ffffff" stroke="#e0e5ee" stroke-width="1"/>
+<text x="1556.0" y="564.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">inngest functions</text>
+<line x1="880.0" y1="592" x2="880.0" y2="614" stroke="#9aa3b2" stroke-width="2" marker-end="url(#arr)"/>
+<rect x="24" y="620" width="1712" height="95" rx="14" fill="#fff4ea" stroke="#f6cfa6" stroke-width="1.5"/>
+<rect x="24" y="620" width="6" height="95" rx="3" fill="#ff7a1a"/>
+<text x="46" y="661.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="17" font-weight="700" fill="#11151c">Chippi runtime</text>
+<text x="46" y="680.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11.5" fill="#6b7280">the product · lib/ai-tools (TS, default)</text>
+<rect x="236" y="633" width="277" height="30" rx="8" fill="#ffffff" stroke="#f6d9bf" stroke-width="1"/>
+<text x="374.5" y="652.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">runtime-flag  CHIPPI_CHAT_RUNTIME=ts</text>
+<rect x="522" y="633" width="235" height="30" rx="8" fill="#ffffff" stroke="#f6d9bf" stroke-width="1"/>
+<text x="639.5" y="652.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">@openai/agents in-process loop</text>
+<rect x="766" y="633" width="156" height="30" rx="8" fill="#ffffff" stroke="#f6d9bf" stroke-width="1"/>
+<text x="844.0" y="652.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">registry · 55 tools</text>
+<rect x="931" y="633" width="377" height="30" rx="8" fill="#ffffff" stroke="#f6d9bf" stroke-width="1"/>
+<text x="1119.5" y="652.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">approval-gated mutations (SSE permission_required)</text>
+<rect x="1317" y="633" width="206" height="30" rx="8" fill="#ffffff" stroke="#f6d9bf" stroke-width="1"/>
+<text x="1420.0" y="652.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">execute · rate-limit · zod</text>
+<rect x="236" y="672" width="277" height="30" rx="8" fill="#ffffff" stroke="#f6d9bf" stroke-width="1"/>
+<text x="374.5" y="691.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">skills / sub-agents  (delegate_task)</text>
+<rect x="522" y="672" width="149" height="30" rx="8" fill="#ffffff" stroke="#f6d9bf" stroke-width="1"/>
+<text x="596.5" y="691.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">context-enrichment</text>
+<rect x="680" y="672" width="235" height="30" rx="8" fill="#ffffff" stroke="#f6d9bf" stroke-width="1"/>
+<text x="797.5" y="691.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">system-prompt (+ personalized)</text>
+<rect x="924" y="672" width="220" height="30" rx="8" fill="#ffffff" stroke="#f6d9bf" stroke-width="1"/>
+<text x="1034.0" y="691.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">persistence → Message.blocks</text>
+<rect x="1153" y="672" width="291" height="30" rx="8" fill="#ffffff" stroke="#f6d9bf" stroke-width="1"/>
+<text x="1298.5" y="691.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">per-workspace model (OpenRouter-first)</text>
+<line x1="880.0" y1="719" x2="880.0" y2="741" stroke="#9aa3b2" stroke-width="2" marker-end="url(#arr)"/>
+<rect x="896.0" y="721" width="237" height="20" rx="10" fill="#eef1f6" stroke="#d4d9e2" stroke-width="1"/>
+<text x="1014.5" y="735" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11.5" fill="#525a68" text-anchor="middle">delegate_task / autonomous → Modal</text>
+<rect x="24" y="747" width="1712" height="95" rx="14" fill="#fff4ea" stroke="#f6cfa6" stroke-width="1.5"/>
+<rect x="24" y="747" width="6" height="95" rx="3" fill="#ff7a1a"/>
+<text x="46" y="788.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="17" font-weight="700" fill="#11151c">Modal sandbox</text>
+<text x="46" y="807.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11.5" fill="#6b7280">agent/* (Python, autonomous + swarm)</text>
+<rect x="236" y="760" width="313" height="30" rx="8" fill="#ffffff" stroke="#f6d9bf" stroke-width="1"/>
+<text x="392.5" y="779.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">modal_app.py  chat_turn / run_now / swarm</text>
+<rect x="558" y="760" width="320" height="30" rx="8" fill="#ffffff" stroke="#f6d9bf" stroke-width="1"/>
+<text x="718.0" y="779.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">orchestrator  (budget · run-lock · memory)</text>
+<rect x="887" y="760" width="235" height="30" rx="8" fill="#ffffff" stroke="#f6d9bf" stroke-width="1"/>
+<text x="1004.5" y="779.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">chippi.py + modules · 53 tools</text>
+<rect x="1131" y="760" width="263" height="30" rx="8" fill="#ffffff" stroke="#f6d9bf" stroke-width="1"/>
+<text x="1262.5" y="779.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">chippi_broker.py  (chief-of-staff)</text>
+<rect x="1403" y="760" width="306" height="30" rx="8" fill="#ffffff" stroke="#f6d9bf" stroke-width="1"/>
+<text x="1556.0" y="779.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">swarm_orchestrator  (wave decomposition)</text>
+<rect x="236" y="799" width="227" height="30" rx="8" fill="#ffffff" stroke="#f6d9bf" stroke-width="1"/>
+<text x="349.5" y="818.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">curated Composio tools (≤100)</text>
+<rect x="472" y="799" width="405" height="30" rx="8" fill="#ffffff" stroke="#f6d9bf" stroke-width="1"/>
+<text x="674.5" y="818.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">trigger flow: fireAgentTrigger → Redis queue → webhook</text>
+<rect x="886" y="799" width="504" height="30" rx="8" fill="#ffffff" stroke="#f6d9bf" stroke-width="1"/>
+<text x="1138.0" y="818.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">10 Vercel crons: sweep · sla · routines · briefing · outcomes · gc …</text>
+<line x1="880.0" y1="846" x2="880.0" y2="868" stroke="#9aa3b2" stroke-width="2" marker-end="url(#arr)"/>
+<rect x="24" y="874" width="1712" height="134" rx="14" fill="#eef7f1" stroke="#c9e3d3" stroke-width="1.5"/>
+<rect x="24" y="874" width="6" height="134" rx="3" fill="#2f9e6b"/>
+<text x="46" y="935.0" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="17" font-weight="700" fill="#11151c">Data stores</text>
+<text x="46" y="954.0" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11.5" fill="#6b7280">source of truth</text>
+<rect x="236" y="887" width="348" height="30" rx="8" fill="#ffffff" stroke="#d4e8dc" stroke-width="1"/>
+<text x="410.0" y="906.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">Supabase Postgres · 99 tables · 147 migrations</text>
+<rect x="593" y="887" width="391" height="30" rx="8" fill="#ffffff" stroke="#d4e8dc" stroke-width="1"/>
+<text x="788.5" y="906.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">User · Space · SpaceSetting · Brokerage · Membership</text>
+<rect x="993" y="887" width="334" height="30" rx="8" fill="#ffffff" stroke="#d4e8dc" stroke-width="1"/>
+<text x="1160.0" y="906.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">Contact · Deal · DealStage · Tour · Property</text>
+<rect x="236" y="926" width="440" height="30" rx="8" fill="#ffffff" stroke="#d4e8dc" stroke-width="1"/>
+<text x="456.0" y="945.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">Conversation · Message · BrokerConversation · BrokerMessage</text>
+<rect x="685" y="926" width="412" height="30" rx="8" fill="#ffffff" stroke="#d4e8dc" stroke-width="1"/>
+<text x="891.0" y="945.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">Invitation · AuditLog · BrokerNotification · Attachment</text>
+<rect x="1106" y="926" width="270" height="30" rx="8" fill="#ffffff" stroke="#d4e8dc" stroke-width="1"/>
+<text x="1241.0" y="945.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">RPC: match_documents · reorder_deal</text>
+<rect x="236" y="965" width="405" height="30" rx="8" fill="#ffffff" stroke="#d4e8dc" stroke-width="1"/>
+<text x="438.5" y="984.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">pgvector  DocumentEmbedding (hybrid BM25 + cosine RRF)</text>
+<rect x="650" y="965" width="682" height="30" rx="8" fill="#ffffff" stroke="#d4e8dc" stroke-width="1"/>
+<text x="991.0" y="984.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">Upstash Redis: trigger queue · dedupe · rate-limit · run-lock · pending-approval · slug cache</text>
+<line x1="880.0" y1="1012" x2="880.0" y2="1034" stroke="#9aa3b2" stroke-width="2" marker-end="url(#arr)"/>
+<rect x="24" y="1040" width="1712" height="134" rx="14" fill="#f4f0fb" stroke="#ddd0f0" stroke-width="1.5"/>
+<rect x="24" y="1040" width="6" height="134" rx="3" fill="#7e57c2"/>
+<text x="46" y="1101.0" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="17" font-weight="700" fill="#11151c">External</text>
+<text x="46" y="1120.0" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11.5" fill="#6b7280">3rd-party services</text>
+<rect x="236" y="1053" width="107" height="30" rx="8" fill="#ffffff" stroke="#e4d8f3" stroke-width="1"/>
+<text x="289.5" y="1072.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">Clerk (auth)</text>
+<rect x="352" y="1053" width="320" height="30" rx="8" fill="#ffffff" stroke="#e4d8f3" stroke-width="1"/>
+<text x="512.0" y="1072.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">OpenAI (scoring · embeddings · Agents SDK)</text>
+<rect x="681" y="1053" width="192" height="30" rx="8" fill="#ffffff" stroke="#e4d8f3" stroke-width="1"/>
+<text x="777.0" y="1072.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">OpenRouter (chat models)</text>
+<rect x="882" y="1053" width="171" height="30" rx="8" fill="#ffffff" stroke="#e4d8f3" stroke-width="1"/>
+<text x="967.5" y="1072.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">Modal (agent sandbox)</text>
+<rect x="1062" y="1053" width="156" height="30" rx="8" fill="#ffffff" stroke="#e4d8f3" stroke-width="1"/>
+<text x="1140.0" y="1072.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">fal.ai (Studio gen)</text>
+<rect x="1227" y="1053" width="121" height="30" rx="8" fill="#ffffff" stroke="#e4d8f3" stroke-width="1"/>
+<text x="1287.5" y="1072.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">Resend (email)</text>
+<rect x="1357" y="1053" width="164" height="30" rx="8" fill="#ffffff" stroke="#e4d8f3" stroke-width="1"/>
+<text x="1439.0" y="1072.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">Telnyx (SMS · voice)</text>
+<rect x="236" y="1092" width="206" height="30" rx="8" fill="#ffffff" stroke="#e4d8f3" stroke-width="1"/>
+<text x="339.0" y="1111.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">Stripe (billing · 3 tiers)</text>
+<rect x="451" y="1092" width="185" height="30" rx="8" fill="#ffffff" stroke="#e4d8f3" stroke-width="1"/>
+<text x="543.5" y="1111.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">Google Calendar (OAuth)</text>
+<rect x="645" y="1092" width="256" height="30" rx="8" fill="#ffffff" stroke="#e4d8f3" stroke-width="1"/>
+<text x="773.0" y="1111.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">Composio (toolkits → agent tools)</text>
+<rect x="910" y="1092" width="142" height="30" rx="8" fill="#ffffff" stroke="#e4d8f3" stroke-width="1"/>
+<text x="981.0" y="1111.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">Wasabi (S3 files)</text>
+<rect x="1061" y="1092" width="135" height="30" rx="8" fill="#ffffff" stroke="#e4d8f3" stroke-width="1"/>
+<text x="1128.5" y="1111.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">Web Push (VAPID)</text>
+<rect x="1205" y="1092" width="178" height="30" rx="8" fill="#ffffff" stroke="#e4d8f3" stroke-width="1"/>
+<text x="1294.0" y="1111.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">Sentry (observability)</text>
+<rect x="1392" y="1092" width="156" height="30" rx="8" fill="#ffffff" stroke="#e4d8f3" stroke-width="1"/>
+<text x="1470.0" y="1111.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">Inngest (workflows)</text>
+<rect x="236" y="1131" width="199" height="30" rx="8" fill="#ffffff" stroke="#e4d8f3" stroke-width="1"/>
+<text x="335.5" y="1150.5" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1f2430" text-anchor="middle">FirstPromoter (affiliate)</text>
+</svg>

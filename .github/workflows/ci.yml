@@ -1,0 +1,89 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+# Placeholder env shared by the test and build steps. These satisfy the
+# hard-required set in lib/env.ts (Supabase, OpenAI, Clerk) so boot-time env
+# validation passes in CI without exposing real secrets. Optional vars
+# (Stripe, Upstash, Modal, etc.) are intentionally absent — lib/env.ts warns
+# on those rather than failing.
+env:
+  NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder
+  SUPABASE_SERVICE_ROLE_KEY: placeholder
+  OPENAI_API_KEY: placeholder
+  CLERK_SECRET_KEY: placeholder
+  NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: placeholder
+
+jobs:
+  lint-typecheck-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fail on stray package-lock.json
+        run: |
+          if [ -f package-lock.json ]; then
+            echo "::error::package-lock.json is committed. This repo uses pnpm only — delete it."
+            exit 1
+          fi
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      # Lockfile is committed and clean. A frozen install fails the build if
+      # package.json and pnpm-lock.yaml drift — fix the lockfile, never the flag.
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Unit tests (Vitest)
+        run: pnpm test
+
+      - name: E2E tests (Vitest)
+        run: pnpm exec vitest run tests/e2e
+
+      - name: Contract tests
+        run: pnpm test:contract
+
+      # Production build. Also exercises boot-time env validation
+      # (instrumentation.ts → lib/env.ts) against the placeholder env above.
+      - name: Build
+        run: pnpm build
+
+  # Keeps docs/repo-map.generated.md honest: it is derived from the source tree,
+  # so if a PR adds a route/table/tool/cron without regenerating, this fails.
+  # Pure Python (no Node deps) → runs in parallel with the main job.
+  repo-map:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Regenerate repo map
+        run: python3 scripts/gen_repo_map.py
+
+      - name: Fail if the repo map is stale
+        run: |
+          if ! git diff --quiet docs/repo-map.generated.md; then
+            echo "::error::docs/repo-map.generated.md is out of date. Run 'python3 scripts/gen_repo_map.py' and commit the result."
+            git diff docs/repo-map.generated.md
+            exit 1
+          fi

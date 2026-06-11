@@ -1,0 +1,352 @@
+{
+  "$schema_note": "Each case is one realtor utterance + the routing assertions the model must satisfy. The model is run against the real prompt with real tool surface, but tool execution is stubbed — so what we score is *which* tool the model picked, not whether the side effects worked.",
+  "_field_help": {
+    "prompt": "What the realtor types into chat.",
+    "context.connected_toolkits": "Toolkit slugs to inject into workspace_info as 'Connected integrations'. Empty list = native catalog only. Non-empty adds (a) the curated FunctionTools for each toolkit's top-N actions (per integrations_curated.CURATED_ACTIONS) and (b) find_integration_tool + call_integration_tool dispatcher fallback.",
+    "expected.tool_calls_must_include": "Tool names that MUST appear in the run's tool-call sequence (order-agnostic).",
+    "expected.tool_calls_must_not_include": "Tool names that MUST NOT appear in the run's tool-call sequence.",
+    "expected.must_pass_arg": "For each tool name in must_include, optionally require an argument key be present and non-empty on at least one call to that tool.",
+    "expected.must_query_match": "For find_integration_tool calls, the `query` arg (lowercased) must contain at least one of these substrings on at least one call.",
+    "expected.tool_calls_must_include_any_of": "Disjunctive must-include — each inner list is a group; at least one tool from each group must fire. Use this when the architecture has multiple valid routings (e.g. curated `gmail_send_email` OR fallback `find_integration_tool` are both correct).",
+    "expected.max_tool_calls": "Run fails if model fires more than N tool calls — catches loops and over-eager dispatch storms.",
+    "rationale": "Human-facing one-liner so a future maintainer knows why this case exists."
+  },
+  "cases": [
+    {
+      "id": "outreach-raw-email",
+      "prompt": "send sarah@acme.com a test email",
+      "context": {"connected_toolkits": ["gmail", "hubspot"]},
+      "expected": {
+        "tool_calls_must_include": ["draft_message"],
+        "tool_calls_must_not_include": [
+          "find_integration_tool",
+          "call_integration_tool",
+          "create_contact",
+          "gmail_send_email",
+          "gmail_create_email_draft",
+          "hubspot_create_contact"
+        ],
+        "must_pass_arg": {"draft_message": ["recipient_email"]},
+        "max_tool_calls": 4
+      },
+      "rationale": "Outreach to a raw email goes through draft_message with recipient_email; auto-stub handles the missing contact. Model must not pre-call create_contact, bypass the draft pipeline via gmail_send_email (curated), or fall back to the dispatcher. The draft pipeline is the only sanctioned outreach path — the trust contract."
+    },
+    {
+      "id": "outreach-raw-email-no-toolkits",
+      "prompt": "Email jane@example.com — short intro, ask if she's still looking in Austin",
+      "context": {"connected_toolkits": []},
+      "expected": {
+        "tool_calls_must_include": ["draft_message"],
+        "tool_calls_must_not_include": ["find_integration_tool", "call_integration_tool", "create_contact"],
+        "must_pass_arg": {"draft_message": ["recipient_email", "subject"]},
+        "max_tool_calls": 3
+      },
+      "rationale": "Even with zero integrations connected, draft_message is the path — the realtor's approved inbox handles delivery. Email channel requires subject."
+    },
+    {
+      "id": "outreach-raw-phone-sms",
+      "prompt": "Text +14155551234 — 'running 10 min late for our 2pm'",
+      "context": {"connected_toolkits": []},
+      "expected": {
+        "tool_calls_must_include": ["draft_message"],
+        "tool_calls_must_not_include": ["find_integration_tool", "call_integration_tool", "create_contact"],
+        "must_pass_arg": {"draft_message": ["recipient_phone"]},
+        "max_tool_calls": 3
+      },
+      "rationale": "SMS to raw phone routes through draft_message with recipient_phone, not the dispatcher."
+    },
+    {
+      "id": "calendar-read-google",
+      "prompt": "Check my google calendar for tomorrow",
+      "context": {"connected_toolkits": ["googlecalendar", "gmail"]},
+      "expected": {
+        "tool_calls_must_include_any_of": [["googlecalendar_events_list", "find_integration_tool"]],
+        "tool_calls_must_not_include": ["draft_message", "find_contacts"],
+        "max_tool_calls": 5
+      },
+      "rationale": "No native calendar tool. New curated path: googlecalendar_events_list directly. Old fallback: find_integration_tool. Either is fine; both routes lead to the right action."
+    },
+    {
+      "id": "emails-read",
+      "prompt": "Read my recent emails",
+      "context": {"connected_toolkits": ["gmail"]},
+      "expected": {
+        "tool_calls_must_include_any_of": [["gmail_fetch_emails", "gmail_list_threads", "find_integration_tool"]],
+        "tool_calls_must_not_include": ["draft_message", "find_contacts"],
+        "max_tool_calls": 5
+      },
+      "rationale": "Inbox reads. Curated path: gmail_fetch_emails or gmail_list_threads. Fallback: find_integration_tool. draft_message would be the recipient/reader inversion bug."
+    },
+    {
+      "id": "contact-lookup-native",
+      "prompt": "Find Jane Smith in my contacts",
+      "context": {"connected_toolkits": ["hubspot", "gmail"]},
+      "expected": {
+        "tool_calls_must_include": ["find_contacts"],
+        "tool_calls_must_not_include": [
+          "find_integration_tool",
+          "call_integration_tool",
+          "hubspot_list_contacts"
+        ],
+        "must_pass_arg": {"find_contacts": ["name_contains"]},
+        "max_tool_calls": 3
+      },
+      "rationale": "'My contacts' = native CRM, not HubSpot — even when HubSpot is connected. Don't punt to the dispatcher OR hubspot_list_contacts."
+    },
+    {
+      "id": "contact-email-lookup",
+      "prompt": "What's John's email?",
+      "context": {"connected_toolkits": ["gmail"]},
+      "expected": {
+        "tool_calls_must_include": ["find_contacts"],
+        "tool_calls_must_not_include": ["ask_realtor", "find_integration_tool"],
+        "must_pass_arg": {"find_contacts": ["name_contains"]},
+        "max_tool_calls": 3
+      },
+      "rationale": "A CRM lookup answers this — don't bounce it back to the realtor and don't search Gmail for it."
+    },
+    {
+      "id": "create-deal-native",
+      "prompt": "Create a new deal for the Patel listing",
+      "context": {"connected_toolkits": []},
+      "expected": {
+        "tool_calls_must_include": ["create_deal"],
+        "tool_calls_must_not_include": ["find_integration_tool", "ask_realtor"],
+        "max_tool_calls": 4
+      },
+      "rationale": "Deal creation is core CRM — fire create_deal. find_contacts to link is acceptable; the dispatcher is not."
+    },
+    {
+      "id": "create-contact-native",
+      "prompt": "Add a new buyer lead: Marcus Chen, marcus@chen.io, looking in Brooklyn 1.2M budget",
+      "context": {"connected_toolkits": ["hubspot"]},
+      "expected": {
+        "tool_calls_must_include": ["create_contact"],
+        "tool_calls_must_not_include": [
+          "find_integration_tool",
+          "call_integration_tool",
+          "draft_message",
+          "hubspot_create_contact"
+        ],
+        "max_tool_calls": 4
+      },
+      "rationale": "'Add a lead' is the create_contact verb — native CRM is the source of truth. Don't push it through HubSpot's curated tool or dispatcher even when HubSpot is connected."
+    },
+    {
+      "id": "sweep-followup",
+      "prompt": "Follow up with the buyers who toured this weekend",
+      "context": {"connected_toolkits": []},
+      "expected": {
+        "tool_calls_must_include": ["find_contacts"],
+        "tool_calls_must_not_include": ["find_integration_tool"],
+        "max_tool_calls": 12
+      },
+      "rationale": "Multi-step: find the candidate contacts, draft outreach to each. find_contacts is the first move; draft_message is acceptable for the follow-ups. Drafts get batch-approved in the realtor's inbox — Chippi never sends."
+    },
+    {
+      "id": "ambiguous-the-team",
+      "prompt": "Send the team an update",
+      "context": {"connected_toolkits": ["slack", "gmail"]},
+      "expected": {
+        "tool_calls_must_include": ["ask_realtor"],
+        "tool_calls_must_not_include": ["draft_message", "call_integration_tool"],
+        "max_tool_calls": 2
+      },
+      "rationale": "'The team' has no referent — there's no Team table, no clear recipient list. Ask before drafting or posting anything."
+    },
+    {
+      "id": "ambiguous-empty-message",
+      "prompt": "Reach out to that buyer",
+      "context": {"connected_toolkits": []},
+      "expected": {
+        "tool_calls_must_include": ["ask_realtor"],
+        "tool_calls_must_not_include": ["draft_message", "create_contact"],
+        "max_tool_calls": 2
+      },
+      "rationale": "No referent for 'that buyer' — model would have to invent a recipient. One question, no menu."
+    },
+    {
+      "id": "slack-post",
+      "prompt": "Post on my #deals slack channel that the Lopez offer just came in",
+      "context": {"connected_toolkits": ["slack"]},
+      "expected": {
+        "tool_calls_must_include_any_of": [["slack_send_message", "find_integration_tool"]],
+        "tool_calls_must_not_include": ["draft_message"],
+        "max_tool_calls": 5
+      },
+      "rationale": "Slack posting. Curated: slack_send_message. Fallback: find_integration_tool. draft_message is for person-to-person, not channel broadcasts."
+    },
+    {
+      "id": "linkedin-post",
+      "prompt": "Post on LinkedIn that 412 Elm just went under contract",
+      "context": {"connected_toolkits": ["linkedin"]},
+      "expected": {
+        "tool_calls_must_include_any_of": [["linkedin_create_linked_in_post", "find_integration_tool"]],
+        "tool_calls_must_not_include": ["draft_message"],
+        "max_tool_calls": 5
+      },
+      "rationale": "LinkedIn is integrations-only. Curated: linkedin_create_linked_in_post. Fallback: find_integration_tool."
+    },
+    {
+      "id": "hubspot-list-contacts",
+      "prompt": "List my HubSpot contacts in the Negotiation stage",
+      "context": {"connected_toolkits": ["hubspot"]},
+      "expected": {
+        "tool_calls_must_include_any_of": [["hubspot_list_contacts", "find_integration_tool"]],
+        "tool_calls_must_not_include": ["find_contacts"],
+        "max_tool_calls": 5
+      },
+      "rationale": "Realtor named HubSpot explicitly — read that system, not the native CRM. Curated: hubspot_list_contacts. Fallback: find_integration_tool."
+    },
+    {
+      "id": "calendar-schedule",
+      "prompt": "Schedule a tour for Jane at 412 Elm Friday at 2pm",
+      "context": {"connected_toolkits": []},
+      "expected": {
+        "tool_calls_must_include": ["book_tour"],
+        "tool_calls_must_not_include": ["find_integration_tool", "call_integration_tool"],
+        "max_tool_calls": 5
+      },
+      "rationale": "book_tour is the native lifecycle move — schedules the tour AND fires the calendar invite. Don't bypass it for Google Calendar."
+    },
+    {
+      "id": "advance-deal-stage",
+      "prompt": "Move the Chen deal to Under Contract",
+      "context": {"connected_toolkits": []},
+      "expected": {
+        "tool_calls_must_include": ["advance_deal_stage"],
+        "tool_calls_must_not_include": ["find_integration_tool", "update_deal"],
+        "max_tool_calls": 4
+      },
+      "rationale": "Stage moves go through advance_deal_stage (handles probability + audit). update_deal is the wrong tool for stage changes."
+    },
+    {
+      "id": "memory-recall",
+      "prompt": "What did Jane say about her budget last time we talked?",
+      "context": {"connected_toolkits": []},
+      "expected": {
+        "tool_calls_must_include": ["recall_memory"],
+        "tool_calls_must_not_include": ["find_integration_tool"],
+        "max_tool_calls": 4
+      },
+      "rationale": "Conversation history with a specific contact = recall_memory. Don't fabricate, don't dispatch."
+    },
+    {
+      "id": "intake-form-read",
+      "prompt": "Show me my buyer intake form",
+      "context": {"connected_toolkits": []},
+      "expected": {
+        "tool_calls_must_include": ["get_intake_form"],
+        "tool_calls_must_not_include": ["find_integration_tool", "recall_docs"],
+        "max_tool_calls": 3
+      },
+      "rationale": "Intake form is a native object with its own tool — not in docs and not an integration."
+    },
+    {
+      "id": "app-help-question",
+      "prompt": "Why isn't my Gmail showing as connected?",
+      "context": {"connected_toolkits": []},
+      "expected": {
+        "tool_calls_must_include": ["recall_docs"],
+        "tool_calls_must_not_include": ["find_integration_tool", "draft_message"],
+        "max_tool_calls": 3
+      },
+      "rationale": "'Why isn't X working' is help-desk — recall_docs. Don't guess at app behavior, don't try to dispatch Gmail."
+    },
+    {
+      "id": "studio-image",
+      "prompt": "Make me a listing graphic for 412 Elm — modern, sage green",
+      "context": {"connected_toolkits": []},
+      "expected": {
+        "tool_calls_must_include": ["generate_studio_image"],
+        "tool_calls_must_not_include": ["find_integration_tool", "draft_message"],
+        "max_tool_calls": 4
+      },
+      "rationale": "Marketing content = Studio. Make it, don't describe what you'd make."
+    },
+    {
+      "id": "outreach-known-contact-by-name",
+      "prompt": "Email Jane Chen — ask if she's still interested in 412 Elm",
+      "context": {"connected_toolkits": ["gmail"]},
+      "expected": {
+        "tool_calls_must_include": ["draft_message"],
+        "tool_calls_must_not_include": [
+          "create_contact",
+          "call_integration_tool",
+          "gmail_send_email",
+          "gmail_create_email_draft"
+        ],
+        "must_pass_arg": {"draft_message": ["subject"]},
+        "max_tool_calls": 5
+      },
+      "rationale": "Email to a name → find_contacts to resolve, then draft_message. Curated gmail_send_email is forbidden because it would bypass the realtor's approval gate — the trust contract is non-negotiable."
+    },
+    {
+      "id": "no-tool-greeting",
+      "prompt": "hey",
+      "context": {"connected_toolkits": []},
+      "expected": {
+        "tool_calls_must_not_include": ["find_integration_tool", "draft_message", "create_contact", "find_contacts"],
+        "max_tool_calls": 1
+      },
+      "rationale": "Greeting takes zero tool calls. Catches the over-eager 'I should sweep on hello' loop."
+    },
+    {
+      "id": "outreach-multiple-recipients",
+      "prompt": "Send a check-in to my three hottest buyers",
+      "context": {"connected_toolkits": []},
+      "expected": {
+        "tool_calls_must_include": ["find_contacts"],
+        "tool_calls_must_not_include": ["find_integration_tool"],
+        "max_tool_calls": 12
+      },
+      "rationale": "Sweep-shaped: find candidates first, draft per-contact. draft_message is acceptable as a follow-up but not a hard requirement (model may plan first via create_plan)."
+    },
+    {
+      "id": "stale-leads-sweep",
+      "prompt": "Who haven't I followed up with this week?",
+      "context": {"connected_toolkits": []},
+      "expected": {
+        "tool_calls_must_include": ["find_contacts"],
+        "tool_calls_must_not_include": ["find_integration_tool"],
+        "must_pass_arg": {"find_contacts": ["no_followup_quiet_days"]},
+        "max_tool_calls": 4
+      },
+      "rationale": "Stale-lead question maps to find_contacts(no_followup_quiet_days=...). The arg is the whole point of the tool."
+    },
+    {
+      "id": "stalled-deals",
+      "prompt": "What deals are stalling?",
+      "context": {"connected_toolkits": []},
+      "expected": {
+        "tool_calls_must_include": ["find_deals"],
+        "tool_calls_must_not_include": ["find_integration_tool"],
+        "must_pass_arg": {"find_deals": ["stalled_days"]},
+        "max_tool_calls": 4
+      },
+      "rationale": "Stalled deals = find_deals(stalled_days=...). The named filter is the right call."
+    },
+    {
+      "id": "send-property-packet",
+      "prompt": "Send the 412 Elm packet to Marcus Chen",
+      "context": {"connected_toolkits": ["gmail"]},
+      "expected": {
+        "tool_calls_must_include": ["send_property_packet"],
+        "tool_calls_must_not_include": ["find_integration_tool", "call_integration_tool"],
+        "max_tool_calls": 5
+      },
+      "rationale": "Packet share is a dedicated native tool — it drafts a share message with the secure URL. Don't reinvent it with draft_message or dispatch via Gmail."
+    },
+    {
+      "id": "store-fact",
+      "prompt": "Remember that the Lopez family needs to close before August 15 for the school deadline",
+      "context": {"connected_toolkits": []},
+      "expected": {
+        "tool_calls_must_include": ["store_memory"],
+        "tool_calls_must_not_include": ["find_integration_tool", "draft_message"],
+        "max_tool_calls": 4
+      },
+      "rationale": "'Remember that X' is store_memory verbatim — durable fact about a contact."
+    }
+  ]
+}

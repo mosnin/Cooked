@@ -1,0 +1,18 @@
+'use client';
+
+export default function BrokerUsageError({ reset }: { error: Error; reset: () => void }) {
+  return (
+    <div className="flex min-h-[40vh] items-center justify-center">
+      <div className="text-center space-y-3 p-6">
+        <h2 className="text-base font-semibold">Couldn&apos;t load usage</h2>
+        <p className="text-sm text-muted-foreground">Usually temporary.</p>
+        <button
+          onClick={reset}
+          className="text-sm text-primary font-medium hover:underline underline-offset-2"
+        >
+          Try again
+        </button>
+      </div>
+    </div>
+  );
+}
